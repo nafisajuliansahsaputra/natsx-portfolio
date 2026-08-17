@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+
 import SiteHeader from "@/components/layout/SiteHeader";
+
+import {
+  getProjectYearRange,
+  projects,
+} from "@/data/projects";
+
 import styles from "./Work.module.css";
 
 export const metadata: Metadata = {
@@ -9,36 +16,13 @@ export const metadata: Metadata = {
     "Selected projects by NATSX across product design, development, identity, and creative direction.",
 };
 
-const projects = [
-  {
-    number: "01",
-    title: "Spall Spill",
-    year: "2026",
-    categories: [
-      "Product Design",
-      "Web Development",
-      "Creative Direction",
-    ],
-    slug: "spall-spill",
-  },
-  {
-    number: "02",
-    title: "5AM Vision",
-    year: "2026",
-    categories: ["Brand Identity", "Creative Direction"],
-    slug: "5am-vision",
-  },
-  {
-    number: "03",
-    title: "Indonesia Stay",
-    year: "2026",
-    categories: ["Product Design", "UI/UX Design"],
-    slug: "indonesia-stay",
-  },
-];
-
 export default function WorkPage() {
-  const projectCount = String(projects.length).padStart(2, "0");
+  const projectCount = String(
+    projects.length,
+  ).padStart(2, "0");
+
+  const projectPeriod =
+    getProjectYearRange(projects);
 
   return (
     <>
@@ -65,19 +49,27 @@ export default function WorkPage() {
 
               <div className={styles.intro}>
                 <p>
-                  A growing archive of projects across design, development,
-                  identity, and digital experiences.
+                  A growing archive of projects
+                  across design, development,
+                  identity, and digital
+                  experiences.
                 </p>
 
                 <div className={styles.introMeta}>
                   <div>
-                    <span className={styles.metaLabel}>Projects</span>
+                    <span className={styles.metaLabel}>
+                      Projects
+                    </span>
+
                     <span>{projectCount}</span>
                   </div>
 
                   <div>
-                    <span className={styles.metaLabel}>Period</span>
-                    <span>2024—2026</span>
+                    <span className={styles.metaLabel}>
+                      Period
+                    </span>
+
+                    <span>{projectPeriod}</span>
                   </div>
                 </div>
               </div>
@@ -110,9 +102,13 @@ export default function WorkPage() {
                     <h2>{project.title}</h2>
 
                     <div className={styles.categories}>
-                      {project.categories.map((category) => (
-                        <span key={category}>{category}</span>
-                      ))}
+                      {project.disciplines.map(
+                        (discipline) => (
+                          <span key={discipline}>
+                            {discipline}
+                          </span>
+                        ),
+                      )}
                     </div>
                   </div>
 
@@ -140,8 +136,9 @@ export default function WorkPage() {
 
               <div className={styles.closingMain}>
                 <p>
-                  The archive keeps growing as new ideas become
-                  real projects.
+                  The archive keeps growing
+                  as new ideas become real
+                  projects.
                 </p>
 
                 <Link

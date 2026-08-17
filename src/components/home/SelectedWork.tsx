@@ -1,42 +1,22 @@
+import Link from "next/link";
+
+import {
+  featuredProjects,
+  getProjectYearRange,
+  type ProjectHomeVisual,
+} from "@/data/projects";
+
 import styles from "./SelectedWork.module.css";
 
-const projects = [
-  {
-    number: "01",
-    title: "Spall Spill",
-    year: "2026",
-    categories: [
-      "Product Design",
-      "Web Development",
-      "Creative Direction",
-    ],
-    slug: "spall-spill",
-    layout: "wide",
-    visual: "spall",
-  },
-  {
-    number: "02",
-    title: "5AM Vision",
-    year: "2026",
-    categories: ["Brand Identity", "Creative Direction"],
-    slug: "5am-vision",
-    layout: "right",
-    visual: "vision",
-  },
-  {
-    number: "03",
-    title: "Indonesia Stay",
-    year: "2026",
-    categories: ["Product Design", "UI/UX Design"],
-    slug: "indonesia-stay",
-    layout: "left",
-    visual: "stay",
-  },
-];
-
 export default function SelectedWork() {
+  const yearRange =
+    getProjectYearRange(featuredProjects);
+
   return (
-    <section className={styles.section} id="work">
+    <section
+      className={styles.section}
+      id="work"
+    >
       <div className="site-container">
         <header className={styles.header}>
           <div className={styles.headerMeta}>
@@ -50,81 +30,152 @@ export default function SelectedWork() {
             Work<span>.</span>
           </h2>
 
-          <div className={styles.headerDescription}>
+          <div
+            className={
+              styles.headerDescription
+            }
+          >
             <p>
-              A selection of projects across design, development, identity,
+              A selection of projects across
+              design, development, identity,
               and digital experiences.
             </p>
 
-            <span className={styles.yearRange}>2024—2026</span>
+            <span
+              className={styles.yearRange}
+            >
+              {yearRange}
+            </span>
+
+            <Link
+              href="/work"
+              className={styles.projectLink}
+            >
+              View All Work
+              <span>↗</span>
+            </Link>
           </div>
         </header>
 
         <div className={styles.projects}>
-          {projects.map((project) => (
-            <article
-              className={`${styles.project} ${
-                styles[`layout_${project.layout}`]
-              }`}
-              key={project.slug}
-            >
-              <div className={styles.projectHeader}>
-                <span className={styles.projectNumber}>
-                  {project.number}
-                </span>
-
-                <h3 className={styles.projectTitle}>
-                  {project.title}
-                </h3>
-
-                <span className={styles.projectYear}>
-                  {project.year}
-                </span>
-              </div>
-
-              <div
-                className={`${styles.visual} ${
-                  styles[`visual_${project.visual}`]
+          {featuredProjects.map(
+            (project) => (
+              <article
+                className={`${styles.project} ${
+                  styles[
+                    `layout_${project.home.layout}`
+                  ]
                 }`}
+                key={project.slug}
               >
-                <ProjectArtwork variant={project.visual} />
-              </div>
+                <div
+                  className={
+                    styles.projectHeader
+                  }
+                >
+                  <span
+                    className={
+                      styles.projectNumber
+                    }
+                  >
+                    {project.number}
+                  </span>
 
-              <div className={styles.projectFooter}>
-                <div className={styles.categories}>
-                  {project.categories.map((category) => (
-                    <span key={category}>{category}</span>
-                  ))}
+                  <h3
+                    className={
+                      styles.projectTitle
+                    }
+                  >
+                    {project.title}
+                  </h3>
+
+                  <span
+                    className={
+                      styles.projectYear
+                    }
+                  >
+                    {project.year}
+                  </span>
                 </div>
 
-                <a
-                  href={`/work/${project.slug}`}
-                  className={styles.projectLink}
+                <div
+                  className={`${styles.visual} ${
+                    styles[
+                      `visual_${project.home.visual}`
+                    ]
+                  }`}
                 >
-                  View Project
-                  <span>↗</span>
-                </a>
-              </div>
-            </article>
-          ))}
+                  <ProjectArtwork
+                    variant={
+                      project.home.visual
+                    }
+                  />
+                </div>
+
+                <div
+                  className={
+                    styles.projectFooter
+                  }
+                >
+                  <div
+                    className={
+                      styles.categories
+                    }
+                  >
+                    {project.disciplines.map(
+                      (discipline) => (
+                        <span
+                          key={discipline}
+                        >
+                          {discipline}
+                        </span>
+                      ),
+                    )}
+                  </div>
+
+                  <Link
+                    href={`/work/${project.slug}`}
+                    className={
+                      styles.projectLink
+                    }
+                  >
+                    View Project
+                    <span>↗</span>
+                  </Link>
+                </div>
+              </article>
+            ),
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-function ProjectArtwork({ variant }: { variant: string }) {
+function ProjectArtwork({
+  variant,
+}: {
+  variant: ProjectHomeVisual;
+}) {
   if (variant === "vision") {
     return (
-      <div className={styles.visionArtwork}>
-        <div className={styles.visionOrb} />
+      <div
+        className={styles.visionArtwork}
+      >
+        <div
+          className={styles.visionOrb}
+        />
 
-        <div className={styles.visionType}>
+        <div
+          className={styles.visionType}
+        >
           <span>5AM</span>
           <span>VISION</span>
         </div>
 
-        <span className={styles.visualLabel}>
+        <span
+          className={styles.visualLabel}
+        >
           Brand Identity
         </span>
       </div>
@@ -133,17 +184,31 @@ function ProjectArtwork({ variant }: { variant: string }) {
 
   if (variant === "stay") {
     return (
-      <div className={styles.stayArtwork}>
-        <div className={styles.stayArch} />
+      <div
+        className={styles.stayArtwork}
+      >
+        <div
+          className={styles.stayArch}
+        />
 
-        <div className={styles.stayWindow}>
-          <div className={styles.stayWindowTop}>
+        <div
+          className={styles.stayWindow}
+        >
+          <div
+            className={
+              styles.stayWindowTop
+            }
+          >
             <span />
             <span />
             <span />
           </div>
 
-          <div className={styles.stayWindowContent}>
+          <div
+            className={
+              styles.stayWindowContent
+            }
+          >
             <p>
               Find your
               <br />
@@ -152,11 +217,15 @@ function ProjectArtwork({ variant }: { variant: string }) {
               Indonesia.
             </p>
 
-            <span>Explore stays ↗</span>
+            <span>
+              Explore stays ↗
+            </span>
           </div>
         </div>
 
-        <span className={styles.visualLabel}>
+        <span
+          className={styles.visualLabel}
+        >
           Product Design / UI UX
         </span>
       </div>
@@ -166,14 +235,24 @@ function ProjectArtwork({ variant }: { variant: string }) {
   return (
     <div className={styles.spallArtwork}>
       <div className={styles.spallBrowser}>
-        <div className={styles.spallBrowserTop}>
+        <div
+          className={styles.spallBrowserTop}
+        >
           <span />
           <span />
           <span />
         </div>
 
-        <div className={styles.spallBrowserBody}>
-          <span className={styles.spallMiniLabel}>
+        <div
+          className={
+            styles.spallBrowserBody
+          }
+        >
+          <span
+            className={
+              styles.spallMiniLabel
+            }
+          >
             SPALL SPILL
           </span>
 
@@ -193,7 +272,9 @@ function ProjectArtwork({ variant }: { variant: string }) {
         <strong>SPILL</strong>
       </div>
 
-      <span className={styles.visualLabel}>
+      <span
+        className={styles.visualLabel}
+      >
         Product / Development
       </span>
     </div>

@@ -1,12 +1,31 @@
 export type ProjectTheme = "spall" | "vision" | "stay";
 
+export type ProjectHomeLayout =
+  | "wide"
+  | "right"
+  | "left";
+
+export type ProjectHomeVisual =
+  | "spall"
+  | "vision"
+  | "stay";
+
 export type Project = {
   slug: string;
   number: string;
   title: string;
   year: string;
   period: string;
+
   theme: ProjectTheme;
+
+  featured: boolean;
+  featuredOrder: number;
+
+  home: {
+    layout: ProjectHomeLayout;
+    visual: ProjectHomeVisual;
+  };
 
   disciplines: string[];
 
@@ -15,6 +34,7 @@ export type Project = {
 
   overview: string[];
   role: string[];
+
   website?: string;
 
   visualLabels: {
@@ -32,7 +52,16 @@ export const projects: Project[] = [
     title: "Spall Spill",
     year: "2026",
     period: "2025—2026",
+
     theme: "spall",
+
+    featured: true,
+    featuredOrder: 1,
+
+    home: {
+      layout: "wide",
+      visual: "spall",
+    },
 
     disciplines: [
       "Product Design",
@@ -41,14 +70,14 @@ export const projects: Project[] = [
     ],
 
     summary:
-      "A curated digital product experience built around discovering, organizing, and sharing products through a more considered interface",
+      "A curated digital product experience built around discovering, organizing, and sharing products through a more considered interface.",
 
     statement:
       "Turning a simple product catalog into a curated digital experience",
 
     overview: [
       "Spall Spill is an independent digital product where design, development, content structure, and interaction are treated as one connected experience.",
-      "The project became an opportunity to explore how a product-focused platform could feel more personal, curated, and visually distinctive without sacrificing clarity or usability",
+      "The project became an opportunity to explore how a product-focused platform could feel more personal, curated, and visually distinctive without sacrificing clarity or usability.",
     ],
 
     role: [
@@ -74,7 +103,16 @@ export const projects: Project[] = [
     title: "5AM Vision",
     year: "2026",
     period: "2026",
+
     theme: "vision",
+
+    featured: true,
+    featuredOrder: 2,
+
+    home: {
+      layout: "right",
+      visual: "vision",
+    },
 
     disciplines: [
       "Brand Identity",
@@ -85,7 +123,7 @@ export const projects: Project[] = [
       "A visual identity and creative direction system shaped for a multidisciplinary creative brand.",
 
     statement:
-      "Building an identity that can stretch across strategy, design, story, and creative direction.",
+      "Building an identity that can stretch across strategy, design, story, and creative direction",
 
     overview: [
       "5AM Vision explores how a creative identity can remain clear and recognizable while operating across different disciplines and types of work.",
@@ -113,7 +151,16 @@ export const projects: Project[] = [
     title: "Indonesia Stay",
     year: "2026",
     period: "2026",
+
     theme: "stay",
+
+    featured: true,
+    featuredOrder: 3,
+
+    home: {
+      layout: "left",
+      visual: "stay",
+    },
 
     disciplines: [
       "Product Design",
@@ -124,7 +171,7 @@ export const projects: Project[] = [
       "A digital accommodation booking concept designed for travelers discovering and planning stays across Indonesia.",
 
     statement:
-      "Making travel discovery feel clear, useful, and distinctly connected to Indonesia.",
+      "Making travel discovery feel clear, useful, and distinctly connected to Indonesia",
 
     overview: [
       "Indonesia Stay is a product design exploration focused on accommodation discovery and booking for travelers visiting Indonesia.",
@@ -147,11 +194,24 @@ export const projects: Project[] = [
   },
 ];
 
-export function getProjectBySlug(slug: string) {
-  return projects.find((project) => project.slug === slug);
+export const featuredProjects = projects
+  .filter((project) => project.featured)
+  .sort(
+    (a, b) =>
+      a.featuredOrder - b.featuredOrder,
+  );
+
+export function getProjectBySlug(
+  slug: string,
+) {
+  return projects.find(
+    (project) => project.slug === slug,
+  );
 }
 
-export function getNextProject(slug: string) {
+export function getNextProject(
+  slug: string,
+) {
   const currentIndex = projects.findIndex(
     (project) => project.slug === slug,
   );
@@ -160,5 +220,28 @@ export function getNextProject(slug: string) {
     return undefined;
   }
 
-  return projects[(currentIndex + 1) % projects.length];
+  return projects[
+    (currentIndex + 1) % projects.length
+  ];
+}
+
+export function getProjectYearRange(
+  source: Project[] = projects,
+) {
+  const years = source
+    .map((project) => Number(project.year))
+    .filter(Number.isFinite);
+
+  if (years.length === 0) {
+    return "";
+  }
+
+  const earliest = Math.min(...years);
+  const latest = Math.max(...years);
+
+  if (earliest === latest) {
+    return String(latest);
+  }
+
+  return `${earliest}—${latest}`;
 }
