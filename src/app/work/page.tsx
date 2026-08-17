@@ -145,7 +145,7 @@ export default function WorkPage() {
                 </p>
 
                 <Link
-                  href="/#contact"
+                  href="/contact"
                   className={styles.contactLink}
                 >
                   Start a conversation

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+
+import InnerFooter from "@/components/layout/InnerFooter";
+
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     default: "NATSX — Digital Creator",
     template: "%s — NATSX",
   },
+
   description:
     "Portfolio of NATSX, a multidisciplinary digital creator working across design, development, motion, and visual experiences.",
 };
@@ -24,7 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={plusJakartaSans.variable}>{children}</body>
+      <body className={plusJakartaSans.variable}>
+        {children}
+
+        <InnerFooter />
+      </body>
     </html>
   );
 }

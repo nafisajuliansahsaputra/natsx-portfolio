@@ -86,22 +86,28 @@ export default function ContactFooter() {
             />
           </div>
 
-          <div className={styles.footerMeta}>
-            <div>
-              <span className={styles.metaLabel}>Designed & built by</span>
-              <span>Nafisa Juliansah Saputra</span>
-            </div>
+<div className={styles.footerMeta}>
+  <div>
+    <span className={styles.metaLabel}>
+      Designed & built by
+    </span>
 
-            <div>
-              <span className={styles.metaLabel}>Creative identity</span>
-              <span>NATSX</span>
-            </div>
+    <span>Nafisa Juliansah Saputra</span>
+  </div>
 
-            <div className={styles.copyright}>
-              <span>© 2026</span>
-              <span>Indonesia</span>
-            </div>
-          </div>
+  <div>
+    <span className={styles.metaLabel}>
+      Portfolio
+    </span>
+
+    <span>NATSX / Digital Creator</span>
+  </div>
+
+  <div className={styles.copyright}>
+    <span>© 2026 NATSX</span>
+    <span>Indonesia</span>
+  </div>
+</div>
         </footer>
       </div>
     </section>
