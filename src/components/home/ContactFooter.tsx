@@ -48,14 +48,20 @@ export default function ContactFooter() {
             href="/contact"
             className={styles.mainLink}
           >
-            <h2 className={styles.heading}>
-              Let&apos;s make
-              <br />
-              something worth
-              <br />
-              experiencing
-              <span>.</span>
-            </h2>
+<h2 className={styles.heading}>
+  <span className={styles.headingLine}>
+    Let&apos;s make
+  </span>
+
+  <span className={styles.headingLine}>
+    something worth
+  </span>
+
+  <span className={styles.headingLine}>
+    experiencing
+    <span className={styles.headingAccent}>.</span>
+  </span>
+</h2>
 
             <span
               className={styles.mainArrow}
