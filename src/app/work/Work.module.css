@@ -59,7 +59,7 @@
 }
 
 .heroMain {
-  margin-top: clamp(72px, 8vw, 120px);
+  margin-top: clamp(90px, 10vw, 150px);
 
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -446,35 +446,209 @@
 ========================= */
 
 @media (max-width: 960px) {
+  /* =========================
+     HERO
+  ========================= */
+
+  .hero {
+    padding-block:
+      72px
+      88px;
+  }
+
+  .label {
+    gap: 9px;
+
+    font-size: 10px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .heroIndex {
+    font-size: 9px;
+  }
+
   .heroMain {
-    display: block;
+    margin-top: 76px;
+
+    display: grid;
+    grid-template-columns:
+      repeat(12, minmax(0, 1fr));
+
+    column-gap:
+      clamp(16px, 2vw, 24px);
+
+    align-items: end;
   }
 
   .heading {
-    font-size: clamp(96px, 16vw, 150px);
+    grid-column: 1 / span 6;
+
+    font-size: clamp(
+      84px,
+      14vw,
+      112px
+    );
+
+    line-height: 0.8;
   }
 
   .intro {
-    max-width: 620px;
+    grid-column: 7 / -1;
 
-    margin-top: 70px;
-    margin-left: auto;
+    max-width: none;
+
+    margin: 0;
+    padding-bottom: 2px;
+  }
+
+  .intro > p {
+    max-width: 340px;
+
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .introMeta {
+    max-width: 340px;
+
+    margin-top: 38px;
+
+    padding-top: 16px;
+  }
+
+  .introMeta > div {
+    font-size: 10px;
+  }
+
+  .metaLabel {
+    font-size: 8px;
+  }
+
+  /* =========================
+     ARCHIVE
+  ========================= */
+
+  .archive {
+    padding-block:
+      62px
+      120px;
+  }
+
+  .archiveHeader {
+    padding-bottom: 18px;
+
+    font-size: 10px;
+  }
+
+  .archiveCount {
+    font-size: 9px;
+  }
+
+  /* =========================
+     PROJECT LIST
+  ========================= */
+
+  .project {
+    min-width: 0;
+    min-height: 156px;
+
+    padding-block: 38px;
+
+    column-gap:
+      clamp(14px, 2vw, 22px);
+  }
+
+  .projectNumber {
+    grid-column: 1;
+
+    padding-top: 5px;
+
+    font-size: 10px;
   }
 
   .projectMain {
-    grid-column: 2 / span 6;
+    grid-column: 2 / span 7;
+
+    min-width: 0;
+  }
+
+  .projectMain h2 {
+    font-size: clamp(
+      42px,
+      6.6vw,
+      56px
+    );
+  }
+
+  .categories {
+    margin-top: 18px;
+
+    font-size: 10px;
+    line-height: 1.55;
+  }
+
+  .categories span:not(:last-child)::after {
+    margin-inline: 7px;
   }
 
   .projectMeta {
-    grid-column: 9 / span 2;
+    grid-column: 10 / span 1;
+
+    min-height: auto;
+
+    justify-content: flex-start;
+
+    font-size: 10px;
+  }
+
+  .projectArrow {
+    grid-column: 12 / -1;
+
+    width: 48px;
+
+    font-size: 18px;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  .closing {
+    margin-top: 110px;
+
+    padding-top: 22px;
   }
 
   .closingLabel {
     grid-column: 1 / span 4;
+
+    gap: 9px;
+
+    font-size: 9px;
   }
 
   .closingMain {
     grid-column: 6 / -1;
+
+    gap: 32px;
+  }
+
+  .closingMain p {
+    font-size: clamp(
+      30px,
+      4.8vw,
+      40px
+    );
+
+    line-height: 1;
+  }
+
+  .contactLink {
+    font-size: 11px;
   }
 }
 
@@ -483,10 +657,14 @@
 ========================= */
 
 @media (max-width: 700px) {
+  /* =========================
+     HERO
+  ========================= */
+
   .hero {
     padding-block:
-      80px
-      90px;
+      64px
+      78px;
   }
 
   .heroIndex {
@@ -494,71 +672,131 @@
   }
 
   .heroMain {
-    margin-top: 80px;
+    margin-top: 58px;
+
+    display: block;
   }
 
   .heading {
-    font-size: clamp(88px, 28vw, 128px);
+    font-size: clamp(
+      82px,
+      25vw,
+      104px
+    );
 
-    line-height: 0.82;
+    line-height: 0.8;
   }
 
   .intro {
-    margin-top: 64px;
+    max-width: 340px;
+
+    margin-top: 48px;
   }
 
   .intro > p {
-    max-width: 430px;
+    max-width: 325px;
+
+    font-size: 13.5px;
+    line-height: 1.68;
   }
 
   .introMeta {
-    margin-top: 44px;
+    max-width: 325px;
+
+    margin-top: 34px;
+
+    padding-top: 15px;
+
+    gap: 18px;
   }
+
+  .introMeta > div {
+    gap: 6px;
+
+    font-size: 10px;
+  }
+
+  /* =========================
+     ARCHIVE
+  ========================= */
 
   .archive {
     padding-block:
-      54px
-      110px;
+      52px
+      104px;
+  }
+
+  .archiveHeader {
+    padding-bottom: 16px;
+
+    font-size: 10px;
   }
 
   .archiveCount {
     display: none;
   }
 
+  /* =========================
+     PROJECT ROW
+  ========================= */
+
   .project {
     grid-template-columns:
-      34px
+      26px
       minmax(0, 1fr)
-      auto;
+      40px;
 
-    column-gap: 12px;
+    column-gap: 10px;
 
+    min-width: 0;
     min-height: auto;
 
-    padding-block: 38px;
+    padding-block:
+      32px
+      34px;
 
     align-items: start;
   }
 
   .projectNumber {
     grid-column: 1;
+    grid-row: 1;
 
     padding-top: 4px;
+
+    font-size: 9px;
   }
 
   .projectMain {
     grid-column: 2;
+    grid-row: 1;
+
+    min-width: 0;
   }
 
   .projectMain h2 {
-    font-size: clamp(38px, 11vw, 54px);
+    font-size: clamp(
+      35px,
+      9.4vw,
+      41px
+    );
+
+    line-height: 0.96;
+
+    letter-spacing: -0.06em;
   }
 
   .categories {
-    margin-top: 18px;
+    margin-top: 15px;
 
-    font-size: 10px;
-    line-height: 1.7;
+    gap: 0;
+
+    font-size: 9px;
+    line-height: 1.65;
+  }
+
+  .categories span:not(:last-child)::after {
+    margin-inline: 6px;
   }
 
   .projectMeta {
@@ -567,12 +805,15 @@
 
     min-height: auto;
 
-    margin-top: 28px;
+    margin-top: 18px;
 
+    display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    align-items: center;
 
-    gap: 20px;
+    gap: 16px;
+
+    font-size: 9px;
   }
 
   .viewLabel {
@@ -583,26 +824,117 @@
     grid-column: 3;
     grid-row: 1;
 
-    width: 42px;
+    width: 40px;
 
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .project:hover .projectMain h2 {
     transform: none;
   }
 
+  /* =========================
+     CLOSING
+  ========================= */
+
   .closing {
-    margin-top: 90px;
+    margin-top: 82px;
+
+    padding-top: 20px;
 
     display: block;
   }
 
+  .closingLabel {
+    font-size: 9px;
+  }
+
   .closingMain {
-    margin-top: 70px;
+    margin-top: 58px;
+
+    gap: 28px;
   }
 
   .closingMain p {
-    font-size: clamp(34px, 10vw, 48px);
+    max-width: 340px;
+
+    font-size: clamp(
+      34px,
+      10vw,
+      42px
+    );
+
+    line-height: 0.98;
+  }
+
+  .contactLink {
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 370px) {
+  .hero {
+    padding-block:
+      58px
+      72px;
+  }
+
+  .heroMain {
+    margin-top: 52px;
+  }
+
+  .heading {
+    font-size: clamp(
+      76px,
+      24vw,
+      90px
+    );
+  }
+
+  .intro {
+    margin-top: 42px;
+  }
+
+  .intro > p {
+    font-size: 13px;
+  }
+
+  .project {
+    grid-template-columns:
+      24px
+      minmax(0, 1fr)
+      38px;
+
+    column-gap: 8px;
+
+    padding-block: 30px;
+  }
+
+  .projectMain h2 {
+    font-size: clamp(
+      33px,
+      9vw,
+      37px
+    );
+  }
+
+  .categories {
+    font-size: 8.5px;
+  }
+
+  .projectArrow {
+    width: 38px;
+  }
+
+  .closingMain p {
+    font-size: clamp(
+      32px,
+      9.5vw,
+      38px
+    );
   }
 }
