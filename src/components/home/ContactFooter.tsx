@@ -1,24 +1,28 @@
 import Image from "next/image";
+import Link from "next/link";
+
+import { site } from "@/data/site";
+
 import styles from "./ContactFooter.module.css";
 
-const socials = [
+const contactLinks = [
   {
     label: "Email",
-    href: "mailto:your-email@example.com",
+    href: `mailto:${site.email}`,
   },
-  {
-    label: "LinkedIn",
-    href: "#",
-  },
-  {
-    label: "Instagram",
-    href: "#",
-  },
+
+  ...site.socials.map((social) => ({
+    label: social.label,
+    href: social.href,
+  })),
 ];
 
 export default function ContactFooter() {
   return (
-    <section className={styles.section} id="contact">
+    <section
+      className={styles.section}
+      id="contact"
+    >
       <div className="site-container">
         <div className={styles.top}>
           <div className={styles.label}>
@@ -26,16 +30,22 @@ export default function ContactFooter() {
             <span>06 / Contact</span>
           </div>
 
-          <span className={styles.availability}>
-            Open to selected opportunities
+          <span
+            className={styles.availability}
+          >
+            {site.availability.statusLines.join(
+              " ",
+            )}
           </span>
         </div>
 
         <div className={styles.main}>
-          <p className={styles.eyebrow}>Have an idea?</p>
+          <p className={styles.eyebrow}>
+            Have an idea?
+          </p>
 
-          <a
-            href="mailto:your-email@example.com"
+          <Link
+            href="/contact"
             className={styles.mainLink}
           >
             <h2 className={styles.heading}>
@@ -43,33 +53,56 @@ export default function ContactFooter() {
               <br />
               something worth
               <br />
-              experiencing<span>.</span>
+              experiencing
+              <span>.</span>
             </h2>
 
-            <span className={styles.mainArrow}>↗</span>
-          </a>
+            <span
+              className={styles.mainArrow}
+            >
+              ↗
+            </span>
+          </Link>
         </div>
 
         <div className={styles.contactRow}>
-          <p className={styles.contactIntro}>
-            For collaborations, freelance work, creative projects,
-            or just a good conversation.
+          <p
+            className={styles.contactIntro}
+          >
+            For collaborations, freelance
+            work, creative projects, or just a
+            good conversation.
           </p>
 
           <div className={styles.socials}>
-            {socials.map((social) => (
+            {contactLinks.map((item) => (
               <a
-                href={social.href}
-                key={social.label}
-                target={social.href.startsWith("http") ? "_blank" : undefined}
+                href={item.href}
+                key={item.label}
+                target={
+                  item.href.startsWith(
+                    "http",
+                  )
+                    ? "_blank"
+                    : undefined
+                }
                 rel={
-                  social.href.startsWith("http")
+                  item.href.startsWith(
+                    "http",
+                  )
                     ? "noreferrer"
                     : undefined
                 }
               >
-                <span>{social.label}</span>
-                <span className={styles.socialArrow}>↗</span>
+                <span>{item.label}</span>
+
+                <span
+                  className={
+                    styles.socialArrow
+                  }
+                >
+                  ↗
+                </span>
               </a>
             ))}
           </div>
@@ -86,28 +119,45 @@ export default function ContactFooter() {
             />
           </div>
 
-<div className={styles.footerMeta}>
-  <div>
-    <span className={styles.metaLabel}>
-      Designed & built by
-    </span>
+          <div
+            className={styles.footerMeta}
+          >
+            <div>
+              <span
+                className={
+                  styles.metaLabel
+                }
+              >
+                Designed & built by
+              </span>
 
-    <span>Nafisa Juliansah Saputra</span>
-  </div>
+              <span>{site.person}</span>
+            </div>
 
-  <div>
-    <span className={styles.metaLabel}>
-      Portfolio
-    </span>
+            <div>
+              <span
+                className={
+                  styles.metaLabel
+                }
+              >
+                Portfolio
+              </span>
 
-    <span>NATSX / Digital Creator</span>
-  </div>
+              <span>
+                {site.name} / {site.role}
+              </span>
+            </div>
 
-  <div className={styles.copyright}>
-    <span>© 2026 NATSX</span>
-    <span>Indonesia</span>
-  </div>
-</div>
+            <div
+              className={styles.copyright}
+            >
+              <span>
+                © {site.year} {site.name}
+              </span>
+
+              <span>{site.location}</span>
+            </div>
+          </div>
         </footer>
       </div>
     </section>

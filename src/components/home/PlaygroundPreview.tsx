@@ -1,39 +1,18 @@
-import styles from "./PlaygroundPreview.module.css";
+import Link from "next/link";
 
-const experiments = [
-  {
-    number: "01",
-    title: "Generative Visual",
-    category: "AI / Visual Study",
-    layout: "large",
-    visual: "generative",
-  },
-  {
-    number: "02",
-    title: "Type in Motion",
-    category: "Motion / Typography",
-    layout: "portrait",
-    visual: "type",
-  },
-  {
-    number: "03",
-    title: "Form Study",
-    category: "3D / Experiment",
-    layout: "square",
-    visual: "form",
-  },
-  {
-    number: "04",
-    title: "Poster System",
-    category: "Graphic / Typography",
-    layout: "wide",
-    visual: "poster",
-  },
-];
+import {
+  featuredPlaygroundItems,
+  type PlaygroundPreviewVisual,
+} from "@/data/playground";
+
+import styles from "./PlaygroundPreview.module.css";
 
 export default function PlaygroundPreview() {
   return (
-    <section className={styles.section} id="playground">
+    <section
+      className={styles.section}
+      id="playground"
+    >
       <div className="site-container">
         <header className={styles.header}>
           <div className={styles.label}>
@@ -50,70 +29,114 @@ export default function PlaygroundPreview() {
 
             <div className={styles.headerRight}>
               <p>
-                A space for experiments, visual studies, motion, and ideas
-                explored outside structured project work.
+                A space for experiments,
+                visual studies, motion, and
+                ideas explored outside
+                structured project work.
               </p>
 
-              <a href="/playground" className={styles.allLink}>
-                Explore Playground <span>↗</span>
-              </a>
+              <Link
+                href="/playground"
+                className={styles.allLink}
+              >
+                Explore Playground
+                <span>↗</span>
+              </Link>
             </div>
           </div>
         </header>
 
         <div className={styles.gallery}>
-          {experiments.map((experiment) => (
-            <article
-              className={`${styles.item} ${
-                styles[`layout_${experiment.layout}`]
-              }`}
-              key={experiment.number}
-            >
-              <a
-                href="/playground"
-                className={styles.visualLink}
-                aria-label={`View ${experiment.title}`}
+          {featuredPlaygroundItems.map(
+            (experiment) => (
+              <article
+                className={`${styles.item} ${
+                  styles[
+                    `layout_${experiment.preview.layout}`
+                  ]
+                }`}
+                key={experiment.slug}
               >
-                <div
-                  className={`${styles.visual} ${
-                    styles[`visual_${experiment.visual}`]
-                  }`}
+                <Link
+                  href="/playground"
+                  className={styles.visualLink}
+                  aria-label={`View ${experiment.title}`}
                 >
-                  <ExperimentArtwork variant={experiment.visual} />
+                  <div
+                    className={`${styles.visual} ${
+                      styles[
+                        `visual_${experiment.preview.visual}`
+                      ]
+                    }`}
+                  >
+                    <ExperimentArtwork
+                      variant={
+                        experiment.preview
+                          .visual
+                      }
+                    />
 
-                  <span className={styles.hoverLabel}>
-                    View Experiment ↗
+                    <span
+                      className={
+                        styles.hoverLabel
+                      }
+                    >
+                      View Experiment ↗
+                    </span>
+                  </div>
+                </Link>
+
+                <div className={styles.meta}>
+                  <div>
+                    <span
+                      className={styles.number}
+                    >
+                      {experiment.number}
+                    </span>
+
+                    <h3>
+                      {experiment.title}
+                    </h3>
+                  </div>
+
+                  <span
+                    className={styles.category}
+                  >
+                    {experiment.category}
                   </span>
                 </div>
-              </a>
-
-              <div className={styles.meta}>
-                <div>
-                  <span className={styles.number}>
-                    {experiment.number}
-                  </span>
-
-                  <h3>{experiment.title}</h3>
-                </div>
-
-                <span className={styles.category}>
-                  {experiment.category}
-                </span>
-              </div>
-            </article>
-          ))}
+              </article>
+            ),
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-function ExperimentArtwork({ variant }: { variant: string }) {
+function ExperimentArtwork({
+  variant,
+}: {
+  variant: PlaygroundPreviewVisual;
+}) {
   if (variant === "generative") {
     return (
-      <div className={styles.generativeArtwork}>
-        <div className={styles.generativeCircle} />
-        <div className={styles.generativeGrid} />
+      <div
+        className={
+          styles.generativeArtwork
+        }
+      >
+        <div
+          className={
+            styles.generativeCircle
+          }
+        />
+
+        <div
+          className={
+            styles.generativeGrid
+          }
+        />
 
         <span className={styles.artLabel}>
           GENERATIVE / 001
@@ -138,6 +161,7 @@ function ExperimentArtwork({ variant }: { variant: string }) {
     return (
       <div className={styles.formArtwork}>
         <div className={styles.formShape} />
+
         <span>FORM / STUDY</span>
       </div>
     );
@@ -145,7 +169,9 @@ function ExperimentArtwork({ variant }: { variant: string }) {
 
   return (
     <div className={styles.posterArtwork}>
-      <span className={styles.posterSmall}>KEEP</span>
+      <span className={styles.posterSmall}>
+        KEEP
+      </span>
 
       <strong>
         MAKING
