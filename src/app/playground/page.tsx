@@ -12,6 +12,7 @@ import styles from "./Playground.module.css";
 
 export const metadata: Metadata = {
   title: "Playground",
+
   description:
     "A collection of experiments, visual studies, motion, typography, and creative explorations by NATSX.",
 };
@@ -27,15 +28,21 @@ function ExperimentVisual({
         className={`${styles.visual} ${styles.generativeVisual}`}
       >
         <div
-          className={styles.generativeGrid}
+          className={
+            styles.generativeGrid
+          }
         />
 
         <div
-          className={styles.generativeCircle}
+          className={
+            styles.generativeCircle
+          }
         />
 
         <div
-          className={styles.generativeSquare}
+          className={
+            styles.generativeSquare
+          }
         />
 
         <span
@@ -58,12 +65,16 @@ function ExperimentVisual({
       <div
         className={`${styles.visual} ${styles.motionVisual}`}
       >
-        <div className={styles.motionWord}>
+        <div
+          className={styles.motionWord}
+        >
           <span>MO</span>
           <span>VE</span>
         </div>
 
-        <span className={styles.motionMeta}>
+        <span
+          className={styles.motionMeta}
+        >
           TYPE
           <br />
           IN
@@ -71,7 +82,9 @@ function ExperimentVisual({
           MOTION
         </span>
 
-        <div className={styles.motionLine} />
+        <div
+          className={styles.motionLine}
+        />
       </div>
     );
   }
@@ -82,16 +95,24 @@ function ExperimentVisual({
         className={`${styles.visual} ${styles.formVisual}`}
       >
         <div
-          className={styles.formCircleLarge}
+          className={
+            styles.formCircleLarge
+          }
         />
 
         <div
-          className={styles.formCircleSmall}
+          className={
+            styles.formCircleSmall
+          }
         />
 
-        <div className={styles.formBlock} />
+        <div
+          className={styles.formBlock}
+        />
 
-        <span className={styles.formLabel}>
+        <span
+          className={styles.formLabel}
+        >
           FORM
           <br />
           STUDY
@@ -104,19 +125,33 @@ function ExperimentVisual({
     <div
       className={`${styles.visual} ${styles.posterVisual}`}
     >
-      <div className={styles.posterTop}>
+      <div
+        className={styles.posterTop}
+      >
         <span>NATSX</span>
-        <span>04 / PLAY</span>
+
+        <span>
+          04 / PLAY
+        </span>
       </div>
 
-      <div className={styles.posterWords}>
+      <div
+        className={styles.posterWords}
+      >
         <span>MAKE</span>
         <span>TRY</span>
         <span>REPEAT</span>
       </div>
 
-      <div className={styles.posterBottom}>
-        <span>VISUAL EXPERIMENT</span>
+      <div
+        className={
+          styles.posterBottom
+        }
+      >
+        <span>
+          VISUAL EXPERIMENT
+        </span>
+
         <span>2026</span>
       </div>
     </div>
@@ -132,27 +167,55 @@ export default function PlaygroundPage() {
     <>
       <SiteHeader />
 
-      <main className={styles.page}>
+      <main
+        className={styles.page}
+        data-motion-page="playground"
+      >
+        {/* =========================
+            HERO
+        ========================= */}
+
         <section className={styles.hero}>
           <div className="site-container">
-            <div className={styles.heroTop}>
-              <div className={styles.label}>
-                <span className={styles.dot} />
+            <div
+              className={styles.heroTop}
+              data-motion-playground-hero-piece="top"
+            >
+              <div
+                className={styles.label}
+              >
+                <span
+                  className={styles.dot}
+                />
+
                 <span>
-                  Playground / Experiments
+                  Playground /
+                  Experiments
                 </span>
               </div>
 
               <span
-                className={styles.heroMeta}
+                className={
+                  styles.heroMeta
+                }
               >
-                Curious / Uncommissioned /
+                Curious /
+                Uncommissioned /
                 Ongoing
               </span>
             </div>
 
-            <div className={styles.heroMain}>
-              <h1 className={styles.heading}>
+            <div
+              className={
+                styles.heroMain
+              }
+            >
+              <h1
+                className={
+                  styles.heading
+                }
+                data-motion-playground-hero-piece="title"
+              >
                 Where ideas
                 <br />
                 get to wander
@@ -160,33 +223,52 @@ export default function PlaygroundPage() {
               </h1>
 
               <div
-                className={styles.heroIntro}
+                className={
+                  styles.heroIntro
+                }
+                data-motion-playground-hero-piece="intro"
               >
                 <p>
-                  A space for experiments,
-                  visual studies, motion,
+                  A space for
+                  experiments, visual
+                  studies, motion,
                   typography, and ideas
-                  explored outside structured
-                  project work.
+                  explored outside
+                  structured project
+                  work.
                 </p>
 
                 <span>
                   No fixed outcome.
                   <br />
-                  Just something worth trying.
+                  Just something worth
+                  trying.
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className={styles.gallery}>
+        {/* =========================
+            GALLERY
+        ========================= */}
+
+        <section
+          className={styles.gallery}
+        >
           <div className="site-container">
             <div
-              className={styles.galleryHeader}
+              className={
+                styles.galleryHeader
+              }
+              data-motion-scroll="playground-gallery-header"
             >
-              <div className={styles.label}>
-                <span className={styles.dot} />
+              <div
+                className={styles.label}
+              >
+                <span
+                  className={styles.dot}
+                />
 
                 <span>
                   Current Experiments
@@ -194,15 +276,19 @@ export default function PlaygroundPage() {
               </div>
 
               <span
-                className={styles.galleryCount}
+                className={
+                  styles.galleryCount
+                }
               >
-                {experimentCount} / Ongoing
-                Collection
+                {experimentCount} /
+                Ongoing Collection
               </span>
             </div>
 
             <div
-              className={styles.galleryGrid}
+              className={
+                styles.galleryGrid
+              }
             >
               {playgroundItems.map(
                 (experiment) => (
@@ -210,12 +296,16 @@ export default function PlaygroundPage() {
                     className={
                       styles.experiment
                     }
-                    key={experiment.slug}
+                    key={
+                      experiment.slug
+                    }
+                    data-motion-scroll="playground-experiment"
                   >
                     <div
                       className={
                         styles.visualWrap
                       }
+                      data-motion-piece="visual"
                     >
                       <ExperimentVisual
                         type={
@@ -228,6 +318,7 @@ export default function PlaygroundPage() {
                       className={
                         styles.experimentInfo
                       }
+                      data-motion-piece="info"
                     >
                       <div
                         className={
@@ -235,11 +326,15 @@ export default function PlaygroundPage() {
                         }
                       >
                         <span>
-                          {experiment.number}
+                          {
+                            experiment.number
+                          }
                         </span>
 
                         <h2>
-                          {experiment.title}
+                          {
+                            experiment.title
+                          }
                         </h2>
                       </div>
 
@@ -249,7 +344,9 @@ export default function PlaygroundPage() {
                         }
                       >
                         <span>
-                          {experiment.category}
+                          {
+                            experiment.category
+                          }
                         </span>
 
                         <p>
@@ -266,25 +363,37 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
+        {/* =========================
+            MANIFESTO
+        ========================= */}
+
         <section
-          className={styles.manifesto}
+          className={
+            styles.manifesto
+          }
         >
           <div className="site-container">
             <div
               className={
                 styles.manifestoGrid
               }
+              data-motion-scroll="playground-manifesto"
             >
               <div
                 className={
                   styles.manifestoLabel
                 }
+                data-motion-piece="label"
               >
                 <span
-                  className={styles.darkDot}
+                  className={
+                    styles.darkDot
+                  }
                 />
 
-                <span>Why Playground?</span>
+                <span>
+                  Why Playground?
+                </span>
               </div>
 
               <div
@@ -292,7 +401,9 @@ export default function PlaygroundPage() {
                   styles.manifestoMain
                 }
               >
-                <h2>
+                <h2
+                  data-motion-piece="title"
+                >
                   Not everything
                   <br />
                   needs a brief to be
@@ -305,22 +416,26 @@ export default function PlaygroundPage() {
                   className={
                     styles.manifestoCopy
                   }
+                  data-motion-piece="copy"
                 >
                   <p>
-                    Some ideas exist simply
-                    because they are
-                    interesting enough to
-                    explore.
+                    Some ideas exist
+                    simply because they
+                    are interesting
+                    enough to explore.
                   </p>
 
                   <p>
-                    The playground is where I
-                    can test those ideas,
-                    learn something new,
-                    break familiar patterns,
-                    and occasionally discover
-                    something worth carrying
-                    into real project work.
+                    The playground is
+                    where I can test
+                    those ideas, learn
+                    something new,
+                    break familiar
+                    patterns, and
+                    occasionally
+                    discover something
+                    worth carrying into
+                    real project work.
                   </p>
                 </div>
               </div>
@@ -328,20 +443,33 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
-        <section className={styles.closing}>
+        {/* =========================
+            CLOSING
+        ========================= */}
+
+        <section
+          className={styles.closing}
+        >
           <div className="site-container">
             <div
-              className={styles.closingGrid}
+              className={
+                styles.closingGrid
+              }
+              data-motion-scroll="playground-closing"
             >
               <div
                 className={
                   styles.closingLabel
                 }
+                data-motion-piece="label"
               >
-                <span className={styles.dot} />
+                <span
+                  className={styles.dot}
+                />
 
                 <span>
-                  Looking for finished work?
+                  Looking for finished
+                  work?
                 </span>
               </div>
 
@@ -349,9 +477,11 @@ export default function PlaygroundPage() {
                 className={
                   styles.closingMain
                 }
+                data-motion-piece="main"
               >
                 <p>
-                  Experiments are one side.
+                  Experiments are one
+                  side.
                   <br />
                   Projects are the other
                   <span>.</span>
@@ -364,6 +494,7 @@ export default function PlaygroundPage() {
                   }
                 >
                   Explore selected work
+
                   <span>↗</span>
                 </Link>
               </div>

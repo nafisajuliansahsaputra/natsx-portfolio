@@ -1,4 +1,7 @@
-import type { CSSProperties } from "react";
+import type {
+  CSSProperties,
+} from "react";
+
 import type { Metadata } from "next";
 
 import Link from "next/link";
@@ -23,7 +26,8 @@ type ProjectPageProps = {
 const themeStyles = {
   spall: {
     "--project-accent": "#5862EC",
-    "--project-accent-on-dark": "#5862EC",
+    "--project-accent-on-dark":
+      "#5862EC",
     "--project-on-accent": "#111111",
     "--project-secondary": "#D8D7D1",
     "--project-surface": "#111111",
@@ -31,7 +35,8 @@ const themeStyles = {
 
   vision: {
     "--project-accent": "#0F1B2D",
-    "--project-accent-on-dark": "#D8DCE3",
+    "--project-accent-on-dark":
+      "#D8DCE3",
     "--project-on-accent": "#F7F6F2",
     "--project-secondary": "#D8DCE3",
     "--project-surface": "#111111",
@@ -39,7 +44,8 @@ const themeStyles = {
 
   stay: {
     "--project-accent": "#5862EC",
-    "--project-accent-on-dark": "#5862EC",
+    "--project-accent-on-dark":
+      "#5862EC",
     "--project-on-accent": "#111111",
     "--project-secondary": "#D9E2DD",
     "--project-surface": "#171717",
@@ -57,7 +63,8 @@ export async function generateMetadata({
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const project = getProjectBySlug(slug);
+  const project =
+    getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -76,16 +83,20 @@ export default async function ProjectPage({
 }: ProjectPageProps) {
   const { slug } = await params;
 
-  const project = getProjectBySlug(slug);
+  const project =
+    getProjectBySlug(slug);
 
   if (!project) {
     notFound();
   }
 
-  const nextProject = getNextProject(project.slug);
+  const nextProject =
+    getNextProject(project.slug);
 
-const projectStyle =
-  themeStyles[project.theme] as unknown as CSSProperties;
+  const projectStyle =
+    themeStyles[
+      project.theme
+    ] as unknown as CSSProperties;
 
   return (
     <>
@@ -94,6 +105,7 @@ const projectStyle =
       <main
         className={styles.page}
         style={projectStyle}
+        data-motion-page="project-detail"
       >
         {/* =========================
             PROJECT HERO
@@ -101,7 +113,10 @@ const projectStyle =
 
         <section className={styles.hero}>
           <div className="site-container">
-            <div className={styles.heroTop}>
+            <div
+              className={styles.heroTop}
+              data-motion-project-hero-piece="top"
+            >
               <Link
                 href="/work"
                 className={styles.backLink}
@@ -110,53 +125,117 @@ const projectStyle =
                 All Work
               </Link>
 
-              <span className={styles.projectIndex}>
-                Project {project.number} / {project.year}
+              <span
+                className={
+                  styles.projectIndex
+                }
+              >
+                Project {project.number} /{" "}
+                {project.year}
               </span>
             </div>
 
-            <div className={styles.heroTitle}>
-              <h1>{project.title}</h1>
+            <div
+              className={styles.heroTitle}
+              data-motion-project-hero-piece="title"
+            >
+              <h1>
+                {project.title}
+              </h1>
             </div>
 
-            <div className={styles.heroBottom}>
-              <div className={styles.disciplines}>
+            <div
+              className={
+                styles.heroBottom
+              }
+            >
+              <div
+                className={
+                  styles.disciplines
+                }
+                data-motion-project-hero-piece="disciplines"
+              >
                 {project.disciplines.map(
                   (discipline) => (
-                    <span key={discipline}>
+                    <span
+                      key={discipline}
+                    >
                       {discipline}
                     </span>
                   ),
                 )}
               </div>
 
-              <p>{project.summary}</p>
+              <p
+                data-motion-project-hero-piece="summary"
+              >
+                {project.summary}
+              </p>
             </div>
           </div>
         </section>
 
         {/* =========================
-            COVER VISUAL
+            COVER
         ========================= */}
 
-        <section className={styles.coverSection}>
+        <section
+          className={
+            styles.coverSection
+          }
+        >
           <div className="site-container">
-            <div className={styles.coverVisual}>
-              <div className={styles.coverGrid} />
+            <div
+              className={
+                styles.coverVisual
+              }
+              data-motion-scroll="project-cover"
+            >
+              <div
+                className={
+                  styles.coverGrid
+                }
+              />
 
-              <span className={styles.coverMeta}>
-                {project.visualLabels.cover}
+              <span
+                className={
+                  styles.coverMeta
+                }
+              >
+                {
+                  project.visualLabels
+                    .cover
+                }
               </span>
 
-              <span className={styles.coverNumber}>
+              <span
+                className={
+                  styles.coverNumber
+                }
+              >
                 {project.number}
               </span>
 
-              <div className={styles.coverShapeOne} />
-              <div className={styles.coverShapeTwo} />
+              <div
+                className={
+                  styles.coverShapeOne
+                }
+              />
 
-              <div className={styles.coverWord}>
-                <span>{project.title}</span>
+              <div
+                className={
+                  styles.coverShapeTwo
+                }
+              />
+
+              <div
+                className={
+                  styles.coverWord
+                }
+              >
+                <span>
+                  {project.title}
+                </span>
               </div>
             </div>
           </div>
@@ -166,21 +245,49 @@ const projectStyle =
             OVERVIEW
         ========================= */}
 
-        <section className={styles.overview}>
+        <section
+          className={styles.overview}
+        >
           <div className="site-container">
-            <div className={styles.overviewGrid}>
-              <div className={styles.sectionLabel}>
-                <span className={styles.dot} />
-                <span>Project Overview</span>
+            <div
+              className={
+                styles.overviewGrid
+              }
+              data-motion-scroll="project-overview"
+            >
+              <div
+                className={
+                  styles.sectionLabel
+                }
+                data-motion-piece="label"
+              >
+                <span
+                  className={styles.dot}
+                />
+
+                <span>
+                  Project Overview
+                </span>
               </div>
 
-              <div className={styles.overviewMain}>
-                <h2>
+              <div
+                className={
+                  styles.overviewMain
+                }
+              >
+                <h2
+                  data-motion-piece="title"
+                >
                   {project.statement}
                   <span>.</span>
                 </h2>
 
-                <div className={styles.overviewCopy}>
+                <div
+                  className={
+                    styles.overviewCopy
+                  }
+                  data-motion-piece="copy"
+                >
                   {project.overview.map(
                     (paragraph) => (
                       <p key={paragraph}>
@@ -192,49 +299,89 @@ const projectStyle =
               </div>
             </div>
 
-            <div className={styles.projectDetails}>
+            <div
+              className={
+                styles.projectDetails
+              }
+              data-motion-scroll="project-details"
+            >
               <div>
-                <span className={styles.detailLabel}>
+                <span
+                  className={
+                    styles.detailLabel
+                  }
+                >
                   Year
                 </span>
 
-                <span>{project.year}</span>
+                <span>
+                  {project.year}
+                </span>
               </div>
 
               <div>
-                <span className={styles.detailLabel}>
+                <span
+                  className={
+                    styles.detailLabel
+                  }
+                >
                   Period
                 </span>
 
-                <span>{project.period}</span>
+                <span>
+                  {project.period}
+                </span>
               </div>
 
               <div>
-                <span className={styles.detailLabel}>
+                <span
+                  className={
+                    styles.detailLabel
+                  }
+                >
                   Role
                 </span>
 
-                <div className={styles.roleList}>
-                  {project.role.map((role) => (
-                    <span key={role}>
-                      {role}
-                    </span>
-                  ))}
+                <div
+                  className={
+                    styles.roleList
+                  }
+                >
+                  {project.role.map(
+                    (role) => (
+                      <span key={role}>
+                        {role}
+                      </span>
+                    ),
+                  )}
                 </div>
               </div>
 
               <div>
-                <span className={styles.detailLabel}>
+                <span
+                  className={
+                    styles.detailLabel
+                  }
+                >
                   Status
                 </span>
 
-                <span>Selected Project</span>
+                <span>
+                  Selected Project
+                </span>
               </div>
             </div>
 
             {project.website && (
-              <div className={styles.websiteRow}>
-                <span>Live Project</span>
+              <div
+                className={
+                  styles.websiteRow
+                }
+                data-motion-scroll="project-website"
+              >
+                <span>
+                  Live Project
+                </span>
 
                 <a
                   href={project.website}
@@ -253,25 +400,50 @@ const projectStyle =
             VISUAL 01
         ========================= */}
 
-        <section className={styles.visualStory}>
+        <section
+          className={
+            styles.visualStory
+          }
+        >
           <div className="site-container">
-            <div className={styles.visualWide}>
-              <div className={styles.interfaceFrame}>
+            <div
+              className={
+                styles.visualWide
+              }
+              data-motion-scroll="project-wide-visual"
+            >
+              <div
+                className={
+                  styles.interfaceFrame
+                }
+              >
                 <div
-                  className={styles.interfaceTop}
+                  className={
+                    styles.interfaceTop
+                  }
                 >
-                  <span>NATSX / PROJECT</span>
+                  <span>
+                    NATSX / PROJECT
+                  </span>
 
                   <span>
-                    {project.visualLabels.first}
+                    {
+                      project.visualLabels
+                        .first
+                    }
                   </span>
                 </div>
 
                 <div
-                  className={styles.interfaceBody}
+                  className={
+                    styles.interfaceBody
+                  }
                 >
                   <div
-                    className={styles.interfaceSidebar}
+                    className={
+                      styles
+                        .interfaceSidebar
+                    }
                   >
                     <span>01</span>
                     <span>02</span>
@@ -279,18 +451,27 @@ const projectStyle =
                   </div>
 
                   <div
-                    className={styles.interfaceContent}
+                    className={
+                      styles
+                        .interfaceContent
+                    }
                   >
                     <span>
                       {project.title}
                     </span>
 
                     <div
-                      className={styles.interfaceCardLarge}
+                      className={
+                        styles
+                          .interfaceCardLarge
+                      }
                     />
 
                     <div
-                      className={styles.interfaceCards}
+                      className={
+                        styles
+                          .interfaceCards
+                      }
                     >
                       <div />
                       <div />
@@ -301,11 +482,21 @@ const projectStyle =
               </div>
             </div>
 
-            <div className={styles.visualCaption}>
-              <span>01 / Visual System</span>
+            <div
+              className={
+                styles.visualCaption
+              }
+              data-motion-scroll="project-visual-caption"
+            >
+              <span>
+                01 / Visual System
+              </span>
 
               <p>
-                {project.visualLabels.first}
+                {
+                  project.visualLabels
+                    .first
+                }
               </p>
             </div>
           </div>
@@ -315,22 +506,44 @@ const projectStyle =
             STATEMENT
         ========================= */}
 
-        <section className={styles.statement}>
+        <section
+          className={styles.statement}
+        >
           <div className="site-container">
-            <div className={styles.statementGrid}>
+            <div
+              className={
+                styles.statementGrid
+              }
+              data-motion-scroll="project-statement"
+            >
               <div
-                className={styles.statementLabel}
+                className={
+                  styles.statementLabel
+                }
+                data-motion-piece="label"
               >
-                <span className={styles.lightDot} />
-                <span>Direction</span>
+                <span
+                  className={
+                    styles.lightDot
+                  }
+                />
+
+                <span>
+                  Direction
+                </span>
               </div>
 
-              <p>
+              <p
+                data-motion-piece="title"
+              >
                 The goal is not only
                 <br />
                 to make it look good
                 <br />
-                <em>—but make it feel right.</em>
+                <em>
+                  —but make it feel
+                  right.
+                </em>
               </p>
             </div>
           </div>
@@ -340,16 +553,37 @@ const projectStyle =
             VISUAL PAIR
         ========================= */}
 
-        <section className={styles.visualPairSection}>
+        <section
+          className={
+            styles.visualPairSection
+          }
+        >
           <div className="site-container">
-            <div className={styles.visualPair}>
-              <div className={styles.visualPairLeft}>
-                <div className={styles.mobileVisual}>
+            <div
+              className={
+                styles.visualPair
+              }
+            >
+              <div
+                className={
+                  styles.visualPairLeft
+                }
+                data-motion-scroll="project-pair-left"
+              >
+                <div
+                  className={
+                    styles.mobileVisual
+                  }
+                >
                   <div
-                    className={styles.mobileDevice}
+                    className={
+                      styles.mobileDevice
+                    }
                   >
                     <div
-                      className={styles.mobileHeader}
+                      className={
+                        styles.mobileHeader
+                      }
                     />
 
                     <span>
@@ -357,11 +591,15 @@ const projectStyle =
                     </span>
 
                     <div
-                      className={styles.mobileHero}
+                      className={
+                        styles.mobileHero
+                      }
                     />
 
                     <div
-                      className={styles.mobileRows}
+                      className={
+                        styles.mobileRows
+                      }
                     >
                       <div />
                       <div />
@@ -371,44 +609,72 @@ const projectStyle =
                 </div>
 
                 <div
-                  className={styles.pairCaption}
+                  className={
+                    styles.pairCaption
+                  }
                 >
                   <span>02</span>
 
                   <p>
-                    {project.visualLabels.second}
+                    {
+                      project.visualLabels
+                        .second
+                    }
                   </p>
                 </div>
               </div>
 
-              <div className={styles.visualPairRight}>
-                <div className={styles.detailVisual}>
+              <div
+                className={
+                  styles.visualPairRight
+                }
+                data-motion-scroll="project-pair-right"
+              >
+                <div
+                  className={
+                    styles.detailVisual
+                  }
+                >
                   <div
-                    className={styles.detailCircle}
+                    className={
+                      styles.detailCircle
+                    }
                   />
 
                   <div
-                    className={styles.detailBlock}
+                    className={
+                      styles.detailBlock
+                    }
                   />
 
                   <span>
-                    {project.visualLabels.third}
+                    {
+                      project.visualLabels
+                        .third
+                    }
                   </span>
 
                   <span
-                    className={styles.detailPlus}
+                    className={
+                      styles.detailPlus
+                    }
                   >
                     +
                   </span>
                 </div>
 
                 <div
-                  className={styles.pairCaption}
+                  className={
+                    styles.pairCaption
+                  }
                 >
                   <span>03</span>
 
                   <p>
-                    {project.visualLabels.third}
+                    {
+                      project.visualLabels
+                        .third
+                    }
                   </p>
                 </div>
               </div>
@@ -420,30 +686,61 @@ const projectStyle =
             FINAL VISUAL
         ========================= */}
 
-        <section className={styles.finalVisualSection}>
+        <section
+          className={
+            styles.finalVisualSection
+          }
+        >
           <div className="site-container">
-            <div className={styles.finalVisual}>
-              <div className={styles.finalVisualTop}>
-                <span>{project.title}</span>
+            <div
+              className={
+                styles.finalVisual
+              }
+              data-motion-scroll="project-final-visual"
+            >
+              <div
+                className={
+                  styles.finalVisualTop
+                }
+              >
+                <span>
+                  {project.title}
+                </span>
 
                 <span>
-                  {project.year} / NATSX
+                  {project.year} /
+                  NATSX
                 </span>
               </div>
 
-              <div className={styles.finalVisualTitle}>
+              <div
+                className={
+                  styles.finalVisualTitle
+                }
+              >
                 <span>IDEA</span>
                 <span>TO</span>
-                <span>EXPERIENCE.</span>
+                <span>
+                  EXPERIENCE.
+                </span>
               </div>
 
-              <div className={styles.finalVisualBottom}>
+              <div
+                className={
+                  styles.finalVisualBottom
+                }
+              >
                 <span>
-                  {project.disciplines[0]}
+                  {
+                    project.disciplines[
+                      0
+                    ]
+                  }
                 </span>
 
                 <span>
-                  Project {project.number}
+                  Project{" "}
+                  {project.number}
                 </span>
               </div>
             </div>
@@ -455,19 +752,39 @@ const projectStyle =
         ========================= */}
 
         {nextProject && (
-          <section className={styles.nextProject}>
+          <section
+            className={
+              styles.nextProject
+            }
+          >
             <div className="site-container">
-              <div className={styles.nextHeader}>
+              <div
+                className={
+                  styles.nextHeader
+                }
+                data-motion-scroll="project-next-header"
+              >
                 <div
-                  className={styles.sectionLabel}
+                  className={
+                    styles.sectionLabel
+                  }
                 >
-                  <span className={styles.dot} />
-                  <span>Next Project</span>
+                  <span
+                    className={
+                      styles.dot
+                    }
+                  />
+
+                  <span>
+                    Next Project
+                  </span>
                 </div>
 
                 <span>
                   {nextProject.number} /{" "}
-                  {String(projects.length).padStart(
+                  {String(
+                    projects.length,
+                  ).padStart(
                     2,
                     "0",
                   )}
@@ -476,23 +793,42 @@ const projectStyle =
 
               <Link
                 href={`/work/${nextProject.slug}`}
-                className={styles.nextLink}
+                className={
+                  styles.nextLink
+                }
+                data-motion-scroll="project-next-link"
               >
-                <h2>{nextProject.title}</h2>
+                <h2>
+                  {nextProject.title}
+                </h2>
 
-                <div className={styles.nextMeta}>
+                <div
+                  className={
+                    styles.nextMeta
+                  }
+                >
                   <div>
                     {nextProject.disciplines.map(
-                      (discipline) => (
-                        <span key={discipline}>
-                          {discipline}
+                      (
+                        discipline,
+                      ) => (
+                        <span
+                          key={
+                            discipline
+                          }
+                        >
+                          {
+                            discipline
+                          }
                         </span>
                       ),
                     )}
                   </div>
 
                   <span
-                    className={styles.nextArrow}
+                    className={
+                      styles.nextArrow
+                    }
                   >
                     ↗
                   </span>

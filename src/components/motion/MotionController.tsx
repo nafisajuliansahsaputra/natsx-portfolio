@@ -7,12 +7,10 @@ export default function MotionController() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname !== "/") {
-      return;
-    }
-
     const main =
-      document.querySelector<HTMLElement>("main");
+      document.querySelector<HTMLElement>(
+        "main",
+      );
 
     if (!main) {
       return;
@@ -23,55 +21,78 @@ export default function MotionController() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-    if (prefersReducedMotion) {
-      return;
-    }
-
     /*
-     * Generic homepage sections.
+     * Homepage masih memakai auto-generated
+     * motion hooks untuk section generik.
      *
-     * Hero punya entrance choreography sendiri.
-     * Selected Work juga punya choreography sendiri.
+     * Inner pages memakai explicit
+     * data-motion-scroll hooks.
      */
-    const directSections = Array.from(
-      main.querySelectorAll<HTMLElement>(
-        ":scope > section, :scope > footer",
-      ),
-    );
+    const generatedSections: HTMLElement[] =
+      [];
 
-    const generatedSections: HTMLElement[] = [];
+    if (pathname === "/") {
+      const directSections = Array.from(
+        main.querySelectorAll<HTMLElement>(
+          ":scope > section, :scope > footer",
+        ),
+      );
 
-    directSections.forEach(
-      (section, index) => {
-        const isHero = index === 0;
-        const isSelectedWork =
-          section.id === "work";
+      directSections.forEach(
+        (section, index) => {
+          const isHero = index === 0;
 
-        if (
-          isHero ||
-          isSelectedWork ||
-          section.hasAttribute(
-            "data-motion-scroll",
-          )
-        ) {
-          return;
-        }
+          const isSelectedWork =
+            section.id === "work";
 
-        section.dataset.motionScroll =
-          "section";
+          if (
+            isHero ||
+            isSelectedWork ||
+            section.hasAttribute(
+              "data-motion-scroll",
+            )
+          ) {
+            return;
+          }
 
-        section.dataset.motionGenerated =
-          "true";
+          section.dataset.motionScroll =
+            "section";
 
-        generatedSections.push(section);
-      },
-    );
+          section.dataset.motionGenerated =
+            "true";
+
+          generatedSections.push(section);
+        },
+      );
+    }
 
     const targets = Array.from(
       document.querySelectorAll<HTMLElement>(
         "[data-motion-scroll]",
       ),
     );
+
+    if (prefersReducedMotion) {
+      targets.forEach((target) => {
+        target.dataset.motionVisible =
+          "true";
+      });
+
+      return () => {
+        generatedSections.forEach(
+          (section) => {
+            delete section.dataset
+              .motionScroll;
+
+            delete section.dataset
+              .motionGenerated;
+
+            delete section.dataset
+              .motionVisible;
+          },
+        );
+      };
+    }
 
     targets.forEach((target) => {
       target.removeAttribute(
@@ -124,9 +145,14 @@ export default function MotionController() {
 
       generatedSections.forEach(
         (section) => {
-          delete section.dataset.motionScroll;
-          delete section.dataset.motionGenerated;
-          delete section.dataset.motionVisible;
+          delete section.dataset
+            .motionScroll;
+
+          delete section.dataset
+            .motionGenerated;
+
+          delete section.dataset
+            .motionVisible;
         },
       );
     };

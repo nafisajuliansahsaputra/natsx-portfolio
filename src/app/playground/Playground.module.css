@@ -986,3 +986,252 @@
   line-height: 1.55;
 }
 }
+
+  /* =========================
+     PLAYGROUND HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      680ms
+      var(--motion-ease-out)
+      60ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      980ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="intro"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      260ms
+      both;
+  }
+
+  /* =========================
+     PLAYGROUND GALLERY HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-gallery-header"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        12px,
+        0
+      );
+
+    transition:
+      opacity
+        560ms
+        var(--motion-ease-soft),
+      transform
+        760ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-gallery-header"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     PLAYGROUND EXPERIMENTS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-experiment"]
+    [data-motion-piece="visual"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        22px,
+        0
+      )
+      scale(0.985);
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        900ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-experiment"]
+    [data-motion-piece="info"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        12px,
+        0
+      );
+
+    transition:
+      opacity
+        560ms
+        var(--motion-ease-soft),
+      transform
+        760ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    [data-motion-piece="visual"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(1);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    [data-motion-piece="info"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+
+    transition-delay: 100ms;
+  }
+
+  /* =========================
+     PLAYGROUND MANIFESTO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-manifesto"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="label"] {
+    transition-delay: 0ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="title"] {
+    transition-delay: 70ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="copy"] {
+    transition-delay: 150ms;
+  }
+
+  /* =========================
+     PLAYGROUND CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-closing"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="main"] {
+    transition-delay: 80ms;
+  }

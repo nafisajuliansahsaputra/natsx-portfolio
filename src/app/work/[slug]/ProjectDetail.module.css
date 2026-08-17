@@ -1271,3 +1271,501 @@ color: var(--project-on-accent);
     transform: none;
   }
 }
+
+  /* =========================
+     PROJECT DETAIL HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      660ms
+      var(--motion-ease-out)
+      50ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      1000ms
+      var(--motion-ease-out)
+      120ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="disciplines"] {
+    animation:
+      natsx-rise-in
+      760ms
+      var(--motion-ease-out)
+      240ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="summary"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      300ms
+      both;
+  }
+
+  /* =========================
+     PROJECT COVER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-cover"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        20px,
+        0
+      )
+      scale(0.988);
+
+    transition:
+      opacity
+        680ms
+        var(--motion-ease-soft),
+      transform
+        1000ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-cover"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(1);
+  }
+
+  /* =========================
+     PROJECT OVERVIEW
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-overview"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        860ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-overview"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-overview"]
+    [data-motion-piece="label"] {
+    transition-delay: 0ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-overview"]
+    [data-motion-piece="title"] {
+    transition-delay: 70ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-overview"]
+    [data-motion-piece="copy"] {
+    transition-delay: 150ms;
+  }
+
+  /* =========================
+     PROJECT DETAILS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-details"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        780ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-details"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-website"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        10px,
+        0
+      );
+
+    transition:
+      opacity
+        540ms
+        var(--motion-ease-soft),
+      transform
+        720ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-website"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     PROJECT WIDE VISUAL
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-wide-visual"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        22px,
+        0
+      )
+      scale(0.99);
+
+    transition:
+      opacity
+        660ms
+        var(--motion-ease-soft),
+      transform
+        960ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-wide-visual"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(1);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-visual-caption"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        10px,
+        0
+      );
+
+    transition:
+      opacity
+        520ms
+        var(--motion-ease-soft),
+      transform
+        700ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-visual-caption"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     PROJECT STATEMENT
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-statement"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-statement"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-statement"]
+    [data-motion-piece="title"] {
+    transition-delay: 80ms;
+  }
+
+  /* =========================
+     PROJECT VISUAL PAIR
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-pair-left"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        -12px,
+        20px,
+        0
+      );
+
+    transition:
+      opacity
+        640ms
+        var(--motion-ease-soft),
+      transform
+        900ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-pair-left"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-pair-right"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        12px,
+        20px,
+        0
+      );
+
+    transition:
+      opacity
+        640ms
+        var(--motion-ease-soft),
+      transform
+        900ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-pair-right"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     PROJECT FINAL VISUAL
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-final-visual"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        22px,
+        0
+      )
+      scale(0.99);
+
+    transition:
+      opacity
+        680ms
+        var(--motion-ease-soft),
+      transform
+        980ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-final-visual"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(1);
+  }
+
+  /* =========================
+     NEXT PROJECT
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-next-header"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        10px,
+        0
+      );
+
+    transition:
+      opacity
+        540ms
+        var(--motion-ease-soft),
+      transform
+        720ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-next-header"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-next-link"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project-next-link"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }

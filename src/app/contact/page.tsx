@@ -21,10 +21,20 @@ export default function ContactPage() {
     <>
       <SiteHeader />
 
-      <main className={styles.page}>
+      <main
+        className={styles.page}
+        data-motion-page="contact"
+      >
+        {/* =========================
+            HERO
+        ========================= */}
+
         <section className={styles.hero}>
           <div className="site-container">
-            <div className={styles.heroTop}>
+            <div
+              className={styles.heroTop}
+              data-motion-contact-hero-piece="top"
+            >
               <div className={styles.label}>
                 <span className={styles.dot} />
 
@@ -42,7 +52,10 @@ export default function ContactPage() {
             </div>
 
             <div className={styles.heroMain}>
-              <h1 className={styles.heading}>
+              <h1
+                className={styles.heading}
+                data-motion-contact-hero-piece="title"
+              >
                 Have an idea
                 <br />
                 worth exploring
@@ -51,6 +64,7 @@ export default function ContactPage() {
 
               <div
                 className={styles.heroIntro}
+                data-motion-contact-hero-piece="intro"
               >
                 <p>
                   I&apos;m open to selected
@@ -71,14 +85,17 @@ export default function ContactPage() {
           </div>
         </section>
 
+        {/* =========================
+            PRIMARY CONTACT
+        ========================= */}
+
         <section
           className={styles.primaryContact}
         >
           <div className="site-container">
             <div
-              className={
-                styles.primaryHeader
-              }
+              className={styles.primaryHeader}
+              data-motion-scroll="contact-primary-header"
             >
               <div className={styles.label}>
                 <span className={styles.dot} />
@@ -89,9 +106,7 @@ export default function ContactPage() {
               </div>
 
               <span
-                className={
-                  styles.primaryHint
-                }
+                className={styles.primaryHint}
               >
                 Best way to reach me
               </span>
@@ -100,17 +115,18 @@ export default function ContactPage() {
             <a
               href={`mailto:${site.email}`}
               className={styles.emailLink}
+              data-motion-scroll="contact-email"
             >
               <span
                 className={styles.emailLabel}
+                data-motion-piece="label"
               >
                 Email
               </span>
 
               <span
-                className={
-                  styles.emailAddress
-                }
+                className={styles.emailAddress}
+                data-motion-piece="address"
               >
                 {emailLocal}
 
@@ -124,12 +140,17 @@ export default function ContactPage() {
               <span
                 className={styles.emailArrow}
                 aria-hidden="true"
+                data-motion-piece="arrow"
               >
                 ↗
               </span>
             </a>
           </div>
         </section>
+
+        {/* =========================
+            DETAILS
+        ========================= */}
 
         <section className={styles.details}>
           <div className="site-container">
@@ -140,11 +161,13 @@ export default function ContactPage() {
                 className={
                   styles.availability
                 }
+                data-motion-scroll="contact-availability"
               >
                 <div
                   className={
                     styles.sectionLabel
                   }
+                  data-motion-piece="label"
                 >
                   <span
                     className={styles.dot}
@@ -157,6 +180,7 @@ export default function ContactPage() {
                   className={
                     styles.availabilityMain
                   }
+                  data-motion-piece="content"
                 >
                   <div
                     className={styles.status}
@@ -197,11 +221,13 @@ export default function ContactPage() {
                 className={
                   styles.collaboration
                 }
+                data-motion-scroll="contact-collaboration"
               >
                 <div
                   className={
                     styles.sectionLabel
                   }
+                  data-motion-piece="label"
                 >
                   <span
                     className={styles.dot}
@@ -224,6 +250,7 @@ export default function ContactPage() {
                           styles.collaborationItem
                         }
                         key={item}
+                        data-motion-piece="item"
                       >
                         <span>
                           {String(
@@ -241,14 +268,22 @@ export default function ContactPage() {
           </div>
         </section>
 
+        {/* =========================
+            SOCIAL
+        ========================= */}
+
         <section
           className={styles.socialSection}
         >
           <div className="site-container">
             <div
               className={styles.socialHeader}
+              data-motion-scroll="contact-social-header"
             >
-              <div className={styles.label}>
+              <div
+                className={styles.label}
+                data-motion-piece="label"
+              >
                 <span
                   className={styles.darkDot}
                 />
@@ -256,7 +291,7 @@ export default function ContactPage() {
                 <span>Elsewhere</span>
               </div>
 
-              <p>
+              <p data-motion-piece="title">
                 A few other places
                 <br />
                 you can find me
@@ -289,6 +324,7 @@ export default function ContactPage() {
                         ? "noreferrer"
                         : undefined
                     }
+                    data-motion-scroll="contact-social-item"
                   >
                     <span
                       className={
@@ -331,15 +367,21 @@ export default function ContactPage() {
           </div>
         </section>
 
+        {/* =========================
+            CLOSING
+        ========================= */}
+
         <section className={styles.closing}>
           <div className="site-container">
             <div
               className={styles.closingGrid}
+              data-motion-scroll="contact-closing"
             >
               <div
                 className={
                   styles.closingLabel
                 }
+                data-motion-piece="label"
               >
                 <span className={styles.dot} />
 
@@ -352,6 +394,7 @@ export default function ContactPage() {
                 className={
                   styles.closingMain
                 }
+                data-motion-piece="main"
               >
                 <p>
                   Take a look at

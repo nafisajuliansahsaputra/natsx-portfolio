@@ -874,3 +874,362 @@
     line-height: 1.55;
   }
 }
+
+  /* =========================
+     CONTACT HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      680ms
+      var(--motion-ease-out)
+      60ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      980ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="intro"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      260ms
+      both;
+  }
+
+  /* =========================
+     CONTACT PRIMARY HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-primary-header"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        12px,
+        0
+      );
+
+    transition:
+      opacity
+        560ms
+        var(--motion-ease-soft),
+      transform
+        760ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-primary-header"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     CONTACT EMAIL
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-email"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="label"] {
+    transition-delay: 0ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    transition-delay: 70ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="arrow"] {
+    transition-delay: 140ms;
+  }
+
+  /* =========================
+     CONTACT AVAILABILITY
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-availability"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        780ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-availability"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-availability"]
+    [data-motion-piece="content"] {
+    transition-delay: 80ms;
+  }
+
+  /* =========================
+     CONTACT COLLABORATION
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        780ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(1) {
+    transition-delay: 60ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(2) {
+    transition-delay: 100ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(3) {
+    transition-delay: 140ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(4) {
+    transition-delay: 180ms;
+  }
+
+  /* =========================
+     CONTACT SOCIAL HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece="title"] {
+    transition-delay: 80ms;
+  }
+
+  /* =========================
+     CONTACT SOCIAL ITEMS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-social-item"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        780ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-social-item"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     CONTACT CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-closing"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="main"] {
+    transition-delay: 80ms;
+  }

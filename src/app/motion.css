@@ -16,12 +16,19 @@
 }
 
 /* =========================
-   INITIAL PAGE ENTRANCE
+   MOTION
 ========================= */
 
-@media (prefers-reduced-motion: no-preference) {
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     GLOBAL HEADER
+  ========================= */
+
   html[data-motion="enabled"]
-    .site-header {
+    .site-header__inner {
     animation:
       natsx-header-in
       720ms
@@ -30,17 +37,18 @@
   }
 
   /* =========================
-     HERO TEXT
+     HOMEPAGE HERO
   ========================= */
 
-html[data-motion="enabled"]
-  .site-header__inner {
-  animation:
-    natsx-header-in
-    720ms
-    var(--motion-ease-out)
-    both;
-}
+  html[data-motion="enabled"]
+    [data-motion-hero-piece="eyebrow"] {
+    animation:
+      natsx-rise-in
+      720ms
+      var(--motion-ease-out)
+      70ms
+      both;
+  }
 
   html[data-motion="enabled"]
     [data-motion-hero-piece="title"] {
@@ -62,10 +70,6 @@ html[data-motion="enabled"]
       both;
   }
 
-  /* =========================
-     HERO VISUAL
-  ========================= */
-
   html[data-motion="enabled"]
     [data-motion-hero-piece="visual"] {
     animation:
@@ -76,13 +80,9 @@ html[data-motion="enabled"]
       both;
   }
 
-  /*
-   * Portrait tidak dipaksa tampil
-   * sebelum file image selesai load.
-   *
-   * Jadi nggak ada efek:
-   * container masuk → gambar tiba-tiba pop.
-   */
+  /* =========================
+     HOMEPAGE PORTRAIT
+  ========================= */
 
   html[data-motion="enabled"]
     [data-motion-portrait="loading"] {
@@ -119,7 +119,7 @@ html[data-motion="enabled"]
   }
 
   /* =========================
-     GENERIC SECTIONS
+     HOMEPAGE GENERIC SECTIONS
   ========================= */
 
   html[data-motion="enabled"]
@@ -138,7 +138,7 @@ html[data-motion="enabled"]
   }
 
   /* =========================
-     SELECTED WORK HEADER
+     HOMEPAGE SELECTED HEADER
   ========================= */
 
   html[data-motion="enabled"]
@@ -194,7 +194,7 @@ html[data-motion="enabled"]
   }
 
   /* =========================
-     SELECTED PROJECTS
+     HOMEPAGE PROJECTS
   ========================= */
 
   html[data-motion="enabled"]
@@ -227,6 +227,501 @@ html[data-motion="enabled"]
         0,
         0
       );
+  }
+
+  /* =========================
+     WORK HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      680ms
+      var(--motion-ease-out)
+      60ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      940ms
+      var(--motion-ease-out)
+      120ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="intro"] {
+    animation:
+      natsx-rise-in
+      800ms
+      var(--motion-ease-out)
+      220ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="meta"] {
+    animation:
+      natsx-rise-in
+      760ms
+      var(--motion-ease-out)
+      300ms
+      both;
+  }
+
+  /* =========================
+     WORK ARCHIVE HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="work-archive-header"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        12px,
+        0
+      );
+
+    transition:
+      opacity
+        560ms
+        var(--motion-ease-out),
+      transform
+        760ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="work-archive-header"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     WORK PROJECT ROW
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="work-project"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-out),
+      transform
+        800ms
+        var(--motion-ease-out),
+      background
+        220ms
+        ease,
+      padding-inline
+        300ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     WORK CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="work-closing"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-out),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="work-closing"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     ABOUT HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="about"]
+    [data-motion-about-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      680ms
+      var(--motion-ease-out)
+      60ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="about"]
+    [data-motion-about-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      980ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="about"]
+    [data-motion-about-hero-piece="statement"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      260ms
+      both;
+  }
+
+  /* =========================
+     ABOUT PORTRAIT
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-portrait"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        22px,
+        0
+      );
+
+    transition:
+      opacity
+        680ms
+        var(--motion-ease-soft),
+      transform
+        920ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-portrait"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     ABOUT STORY
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-story"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-story"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-story"]
+    [data-motion-piece="label"] {
+    transition-delay: 0ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-story"]
+    [data-motion-piece="title"] {
+    transition-delay: 70ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-story"]
+    [data-motion-piece="copy"] {
+    transition-delay: 150ms;
+  }
+
+  /* =========================
+     ABOUT APPROACH HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-approach-header"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-approach-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-approach-header"]
+    [data-motion-piece="title"] {
+    transition-delay: 80ms;
+  }
+
+  /* =========================
+     ABOUT PRINCIPLES
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-principle"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        760ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-principle"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     ABOUT DISCIPLINES HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-disciplines-header"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-disciplines-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-disciplines-header"]
+    [data-motion-piece="title"] {
+    transition-delay: 80ms;
+  }
+
+  /* =========================
+     ABOUT DISCIPLINE ROW
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-discipline"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-soft),
+      transform
+        800ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-discipline"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     ABOUT CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-closing"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-closing"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="about-closing"]
+    [data-motion-piece="main"] {
+    transition-delay: 80ms;
   }
 }
 
@@ -282,6 +777,30 @@ html[data-motion="enabled"]
   }
 }
 
+@keyframes natsx-404-number-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        -16px,
+        0,
+        0
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
 @keyframes natsx-visual-in {
   from {
     opacity: 0;
@@ -310,11 +829,15 @@ html[data-motion="enabled"]
    REDUCED MOTION
 ========================= */
 
-@media (prefers-reduced-motion: reduce) {
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
+    scroll-behavior:
+      auto !important;
 
     animation-duration:
       0.001ms !important;
@@ -329,3 +852,84 @@ html[data-motion="enabled"]
       0ms !important;
   }
 }
+
+  /* =========================
+     404 PAGE
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="top"] {
+    animation:
+      natsx-rise-in
+      620ms
+      var(--motion-ease-out)
+      50ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="number"] {
+    animation:
+      natsx-404-number-in
+      900ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="eyebrow"] {
+    animation:
+      natsx-rise-in
+      620ms
+      var(--motion-ease-out)
+      150ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="title"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      200ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="description"] {
+    animation:
+      natsx-rise-in
+      720ms
+      var(--motion-ease-out)
+      280ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="actions"] {
+    animation:
+      natsx-rise-in
+      700ms
+      var(--motion-ease-out)
+      340ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="not-found"]
+    [data-motion-not-found-piece="bottom"] {
+    animation:
+      natsx-rise-in
+      660ms
+      var(--motion-ease-out)
+      380ms
+      both;
+  }
