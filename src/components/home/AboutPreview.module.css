@@ -28,6 +28,7 @@
 .sectionLabel {
   display: flex;
   align-items: center;
+
   gap: 10px;
 
   font-size: 11px;
@@ -64,9 +65,9 @@
 .heading {
   grid-column: 1 / span 8;
 
-  margin: 0;
-
   max-width: 1020px;
+
+  margin: 0;
 
   font-size: clamp(60px, 7.2vw, 116px);
   font-weight: 500;
@@ -112,7 +113,6 @@
   color: #a7a7a1;
 
   font-size: 13px;
-
   line-height: 1.75;
 
   letter-spacing: -0.018em;
@@ -127,6 +127,7 @@
 
   display: inline-flex;
   align-items: center;
+
   gap: 9px;
 
   margin-top: 34px;
@@ -290,48 +291,100 @@
 @media (max-width: 700px) {
   .section {
     padding-block:
-      90px
-      60px;
+      92px
+      88px;
   }
+
+  /* =========================
+     TOP
+  ========================= */
 
   .top {
-    margin-bottom: 70px;
+    margin-bottom: 54px;
   }
 
-  .identity {
-    display: none;
+  .sectionLabel {
+    gap: 9px;
+
+    font-size: 10px;
   }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* =========================
+     MAIN
+  ========================= */
 
   .main {
     display: block;
   }
 
   .heading {
-    font-size: clamp(54px, 15vw, 78px);
+    max-width: 340px;
 
-    line-height: 0.93;
+    font-size: clamp(
+      46px,
+      13.4vw,
+      56px
+    );
+
+    line-height: 0.91;
+
+    letter-spacing: -0.07em;
   }
 
   .content {
-    margin-top: 50px;
+    max-width: 340px;
+
+    margin-top: 44px;
+
     padding: 0;
   }
 
   .lead {
-    max-width: 430px;
+    max-width: 325px;
+
+    font-size: 14.5px;
+    line-height: 1.58;
   }
 
   .body {
-    max-width: 430px;
+    max-width: 325px;
+
+    margin-top: 24px;
+
+    font-size: 13.25px;
+    line-height: 1.7;
   }
 
+  .link {
+    margin-top: 30px;
+
+    gap: 8px;
+
+    font-size: 12.5px;
+  }
+
+  /* =========================
+     META
+  ========================= */
+
   .footer {
-    margin-top: 90px;
+    margin-top: 72px;
+
+    padding-top: 24px;
+    padding-right: 44px;
 
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
 
-    row-gap: 28px;
+    gap:
+      26px
+      24px;
   }
 
   .meta:nth-child(1),
@@ -341,22 +394,83 @@
   }
 
   .meta:nth-child(3) {
-    grid-column: 1;
+    grid-column: 1 / -1;
+  }
+
+  .meta {
+    gap: 6px;
+
+    font-size: 10.5px;
+    line-height: 1.45;
+  }
+
+  .metaLabel {
+    font-size: 8px;
   }
 
   .mark {
     right: 0;
     bottom: 0;
 
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 
   .mark span:first-child {
-    width: 28px;
+    width: 24px;
+    height: 1.25px;
   }
 
   .mark span:last-child {
-    height: 28px;
+    width: 1.25px;
+    height: 24px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 370px) {
+  .section {
+    padding-block:
+      84px
+      82px;
+  }
+
+  .top {
+    margin-bottom: 48px;
+  }
+
+  .heading {
+    font-size: clamp(
+      43px,
+      13vw,
+      49px
+    );
+  }
+
+  .content {
+    margin-top: 40px;
+  }
+
+  .lead {
+    font-size: 14px;
+  }
+
+  .body {
+    font-size: 13px;
+  }
+
+  .footer {
+    margin-top: 64px;
+
+    gap:
+      24px
+      18px;
+  }
+
+  .meta {
+    font-size: 10px;
   }
 }
