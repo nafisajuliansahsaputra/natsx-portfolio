@@ -166,14 +166,30 @@ select {
 }
 
 .site-menu-label {
+  position: relative;
+  z-index: 120;
+
   display: none;
-  border: 0;
+
+  min-width: 48px;
+  min-height: 48px;
+
   padding: 0;
+
+  border: 0;
   background: transparent;
   color: var(--foreground);
+
+  align-items: center;
+  justify-content: flex-end;
+
   cursor: pointer;
+
   font-size: 14px;
   font-weight: 600;
+
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* =========================
@@ -539,7 +555,7 @@ select {
   }
 
   .site-menu-label {
-    display: block;
+    display: inline-flex;
   }
 
   .hero {

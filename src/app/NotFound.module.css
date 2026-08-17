@@ -285,37 +285,41 @@
     display: none;
   }
 
-  .main {
-    margin-top: 70px;
+.main {
+  margin-top: 54px;
 
-    display: block;
-  }
+  display: block;
+}
 
-  .number {
-    font-size: clamp(140px, 47vw, 210px);
+.number {
+  font-size: clamp(140px, 47vw, 210px);
 
-    line-height: 0.72;
-  }
+  line-height: 0.72;
+}
 
-  .message {
-    max-width: 520px;
+.message {
+  max-width: 520px;
 
-    margin-top: 80px;
+  margin-top: 56px;
 
-    padding-bottom: 0;
-  }
+  padding-bottom: 0;
+}
 
-  .message h1 {
-    font-size: clamp(42px, 12vw, 58px);
-  }
+.eyebrow {
+  margin-bottom: 24px;
+}
 
-  .description {
-    margin-top: 44px;
-  }
+.message h1 {
+  font-size: clamp(42px, 12vw, 58px);
+}
 
-  .actions {
-    margin-top: 46px;
-  }
+.description {
+  margin-top: 32px;
+}
+
+.actions {
+  margin-top: 34px;
+}
 
   .bottom {
     margin-top: 90px;

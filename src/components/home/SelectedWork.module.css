@@ -642,6 +642,25 @@
 }
 
 /* =========================
+   COMPACT DESKTOP
+   961px — 1200px
+========================= */
+
+@media (min-width: 961px) and (max-width: 1200px) {
+  .project,
+  .projectHeader,
+  .visual,
+  .projectFooter {
+    min-width: 0;
+  }
+
+  .visual {
+    width: 100%;
+    min-height: 0;
+  }
+}
+
+/* =========================
    TABLET
 ========================= */
 
