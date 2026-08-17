@@ -658,8 +658,20 @@
     grid-column: 10 / -1;
   }
 
+  /*
+   * Tablet visual harus mengikuti lebar grid,
+   * bukan dipaksa oleh min-height desktop.
+   */
+  .project,
+  .projectHeader,
+  .visual,
+  .projectFooter {
+    min-width: 0;
+  }
+
   .visual {
-    min-height: 520px;
+    width: 100%;
+    min-height: 0;
   }
 
   .layout_wide .visual {

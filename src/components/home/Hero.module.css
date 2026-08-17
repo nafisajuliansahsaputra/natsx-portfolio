@@ -397,7 +397,7 @@
   .contentInner {
     padding-block:
       64px
-      66px;
+      58px;
 
     transform: none;
   }
@@ -420,9 +420,9 @@
     min-height: 0;
 
     height: clamp(
-      520px,
-      72vw,
-      700px
+      360px,
+      52vw,
+      420px
     );
 
     border-top: 1px solid var(--border);
@@ -431,30 +431,30 @@
 
   .portrait {
     inset:
-      3%
-      2%
+      -3%
+      6%
       0
-      -2%;
+      18%;
   }
 
   .shapeCircle {
-    left: 7%;
-    bottom: -20%;
+    left: 8%;
+    bottom: -34%;
 
-    width: 59%;
+    width: 48%;
   }
 
   .shapeArch {
-    right: 6%;
-    bottom: -7%;
+    right: 8%;
+    bottom: -12%;
 
-    width: 36%;
-    height: 46%;
+    width: 30%;
+    height: 54%;
   }
 
   .accentPlus {
-    top: 9%;
-    right: 8%;
+    top: 10%;
+    right: 9%;
   }
 }
 
