@@ -791,8 +791,8 @@
 @media (max-width: 700px) {
   .hero {
     padding-block:
-      80px
-      95px;
+      72px
+      84px;
   }
 
   .heroMeta {
@@ -800,15 +800,41 @@
   }
 
   .heroMain {
-    margin-top: 80px;
+    margin-top: 64px;
   }
 
   .heading {
-    font-size: clamp(66px, 20vw, 96px);
+    width: 100%;
+    max-width: 100%;
+
+    font-size: clamp(
+      50px,
+      13.5vw,
+      56px
+    );
+
+    line-height: 0.86;
+    letter-spacing: -0.075em;
   }
 
-  .heroIntro {
-    margin-top: 60px;
+.heroIntro {
+  width: 100%;
+  max-width: 330px;
+
+  margin-top: 46px;
+  margin-left: 0;
+
+  gap: 28px;
+}
+
+  .heroIntro p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .heroIntro > span {
+    font-size: 8px;
+    line-height: 1.55;
   }
 
   .gallery {
@@ -892,4 +918,71 @@
   .closingMain p {
     font-size: clamp(44px, 12vw, 60px);
   }
+}
+
+/* =========================
+   TABLET HERO ART DIRECTION
+   701px — 960px
+========================= */
+
+@media (min-width: 701px) and (max-width: 960px) {
+  .hero {
+    padding-block:
+      72px
+      92px;
+  }
+
+  .heroMain {
+    margin-top: 82px;
+
+    display: grid;
+    grid-template-columns:
+      repeat(12, minmax(0, 1fr));
+
+    column-gap:
+      clamp(16px, 2.2vw, 24px);
+
+    align-items: end;
+  }
+
+.heading {
+  grid-column: 1 / span 8;
+
+  max-width: none;
+
+  font-size: clamp(
+    64px,
+    8.8vw,
+    72px
+  );
+
+  line-height: 0.84;
+
+  letter-spacing: -0.075em;
+}
+
+
+.heroIntro {
+  grid-column: 9 / -1;
+
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  padding-bottom: 4px;
+
+  gap: 28px;
+}
+
+.heroIntro p {
+  max-width: 280px;
+
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+
+.heroIntro > span {
+  font-size: 8px;
+  line-height: 1.55;
+}
 }
