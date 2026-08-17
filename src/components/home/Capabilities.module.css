@@ -1,0 +1,326 @@
+.section {
+  position: relative;
+
+  padding-block:
+    clamp(130px, 14vw, 210px)
+    clamp(130px, 14vw, 210px);
+
+  border-top: 1px solid var(--border);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(18px, 2.2vw, 36px);
+}
+
+/* =========================
+   LEFT / INTRO
+========================= */
+
+.introColumn {
+  grid-column: 1 / span 5;
+  position: relative;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: clamp(54px, 6vw, 86px);
+
+  color: var(--foreground);
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+}
+
+.heading {
+  margin: 0;
+
+  font-size: clamp(52px, 5.8vw, 92px);
+  font-weight: 600;
+
+  line-height: 0.94;
+
+  letter-spacing: -0.068em;
+}
+
+.heading span {
+  color: var(--accent);
+}
+
+.introText {
+  max-width: 420px;
+
+  margin:
+    clamp(42px, 5vw, 68px)
+    0
+    0;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.75;
+
+  letter-spacing: -0.02em;
+}
+
+/* =========================
+   RIGHT / CAPABILITY LIST
+========================= */
+
+.list {
+  grid-column: 7 / -1;
+
+  border-top: 1px solid var(--border);
+}
+
+.item {
+  position: relative;
+
+  padding-block:
+    clamp(30px, 3vw, 42px)
+    clamp(34px, 3.4vw, 48px);
+
+  border-bottom: 1px solid var(--border);
+}
+
+.itemTop {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: baseline;
+
+  gap: 16px;
+}
+
+.number {
+  color: var(--accent);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.035em;
+}
+
+.title {
+  margin: 0;
+
+  font-size: clamp(29px, 2.55vw, 42px);
+  font-weight: 500;
+
+  line-height: 1;
+
+  letter-spacing: -0.052em;
+}
+
+/* =========================
+   DESCRIPTION + SKILLS
+========================= */
+
+.itemContent {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.25fr)
+    minmax(190px, 0.75fr);
+
+  gap: clamp(34px, 4vw, 64px);
+
+  padding:
+    clamp(24px, 2.5vw, 34px)
+    0
+    0
+    60px;
+}
+
+.description {
+  max-width: 430px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.72;
+
+  letter-spacing: -0.018em;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
+  gap: 7px 0;
+
+  color: var(--foreground);
+}
+
+.skills span {
+  display: inline-flex;
+  align-items: center;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: -0.012em;
+}
+
+.skills span:not(:last-child)::after {
+  content: "/";
+
+  margin-inline: 8px;
+
+  color: #aaa9a4;
+
+  font-weight: 400;
+}
+
+/* =========================
+   SUBTLE DESKTOP INTERACTION
+========================= */
+
+@media (hover: hover) and (pointer: fine) {
+  .title {
+    transition:
+      transform 220ms ease,
+      color 180ms ease;
+  }
+
+  .item:hover .title {
+    transform: translateX(5px);
+  }
+
+  .item:hover .number {
+    color: var(--accent);
+  }
+}
+
+/* =========================
+   STICKY DESKTOP INTRO
+========================= */
+
+@media (min-width: 961px) {
+  .intro {
+    position: sticky;
+    top: 128px;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 960px) {
+  .introColumn {
+    grid-column: 1 / span 5;
+  }
+
+  .list {
+    grid-column: 6 / -1;
+  }
+
+  .itemContent {
+    grid-template-columns: 1fr;
+
+    padding-left: 60px;
+
+    gap: 26px;
+  }
+
+  .skills {
+    max-width: 420px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .section {
+    padding-block:
+      100px
+      110px;
+  }
+
+  .layout {
+    display: block;
+  }
+
+  .sectionLabel {
+    margin-bottom: 34px;
+  }
+
+  .heading {
+    font-size: clamp(52px, 15vw, 76px);
+  }
+
+  .introText {
+    max-width: 390px;
+
+    margin-top: 32px;
+  }
+
+  .list {
+    margin-top: 70px;
+  }
+
+  .item {
+    padding-block:
+      25px
+      30px;
+  }
+
+  .itemTop {
+    grid-template-columns: 32px minmax(0, 1fr);
+
+    gap: 10px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .itemContent {
+    padding:
+      22px
+      0
+      0
+      42px;
+
+    gap: 20px;
+  }
+
+  .description {
+    font-size: 12px;
+  }
+
+  .skills span {
+    font-size: 10px;
+  }
+
+  .skills span:not(:last-child)::after {
+    margin-inline: 6px;
+  }
+}
