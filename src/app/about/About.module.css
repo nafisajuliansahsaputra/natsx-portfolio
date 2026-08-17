@@ -687,7 +687,17 @@
   }
 
   .heading {
-    font-size: clamp(72px, 22vw, 104px);
+    width: 100%;
+    max-width: 100%;
+
+    font-size: clamp(
+      52px,
+      14vw,
+      58px
+    );
+
+    line-height: 0.86;
+    letter-spacing: -0.075em;
   }
 
   .heroStatement {
@@ -824,5 +834,200 @@
 
   .closingMain p {
     font-size: clamp(44px, 12vw, 60px);
+  }
+}
+
+/* =========================
+   TABLET PROFILE ART DIRECTION
+   701px — 960px
+========================= */
+
+@media (min-width: 701px) and (max-width: 960px) {
+  .profile {
+    padding-block:
+      104px
+      124px;
+  }
+
+  .profileGrid {
+    display: grid;
+    grid-template-columns:
+      repeat(12, minmax(0, 1fr));
+
+    column-gap:
+      clamp(16px, 2.2vw, 24px);
+
+    align-items: start;
+  }
+
+  /* =========================
+     PORTRAIT
+  ========================= */
+
+  .portraitColumn {
+    grid-column: 1 / span 5;
+
+    width: 100%;
+    max-width: none;
+  }
+
+  .portraitFrame {
+    width: 100%;
+
+    aspect-ratio: 0.82;
+  }
+
+  .profileMeta {
+    padding-top: 16px;
+
+    gap: 12px;
+  }
+
+  .profileMeta > div {
+    gap: 5px;
+
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  .metaLabel {
+    font-size: 7px;
+  }
+
+  /* =========================
+     STORY
+  ========================= */
+
+  .story {
+    grid-column: 7 / -1;
+
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+  }
+
+  .storyLabel {
+    gap: 8px;
+
+    font-size: 9px;
+  }
+
+  .story h2 {
+    max-width: 420px;
+
+    margin:
+      44px
+      0
+      0;
+
+    font-size: clamp(
+      38px,
+      5.4vw,
+      52px
+    );
+
+    line-height: 0.96;
+
+    letter-spacing: -0.064em;
+  }
+
+  .storyCopy {
+    max-width: 430px;
+
+    margin:
+      48px
+      0
+      0;
+
+    gap: 20px;
+  }
+
+  .storyCopy p {
+    font-size: 12.5px;
+    line-height: 1.72;
+  }
+}
+
+/* =========================
+   TABLET HERO ART DIRECTION
+   701px — 960px
+========================= */
+
+@media (min-width: 701px) and (max-width: 960px) {
+  .hero {
+    padding-block:
+      72px
+      92px;
+  }
+
+  .heroMain {
+    margin-top: 82px;
+
+    display: grid;
+    grid-template-columns:
+      repeat(12, minmax(0, 1fr));
+
+    column-gap:
+      clamp(16px, 2.2vw, 24px);
+
+    align-items: end;
+  }
+
+  .heading {
+    grid-column: 1 / span 7;
+
+    max-width: none;
+
+    font-size: clamp(
+      70px,
+      10.2vw,
+      82px
+    );
+
+    line-height: 0.84;
+
+    letter-spacing: -0.075em;
+  }
+
+  .heroStatement {
+    grid-column: 8 / -1;
+
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+    padding-bottom: 5px;
+
+    gap: 20px;
+  }
+
+  .heroStatement p {
+    max-width: 280px;
+
+    font-size: clamp(
+      22px,
+      3vw,
+      27px
+    );
+
+    line-height: 1;
+
+    letter-spacing: -0.045em;
+  }
+
+  .heroStatement > span {
+    font-size: 8px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 370px) {
+  .heading {
+    font-size: clamp(
+      48px,
+      13.5vw,
+      52px
+    );
   }
 }
