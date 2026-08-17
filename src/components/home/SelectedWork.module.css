@@ -1047,3 +1047,212 @@
     font-size: 8px;
   }
 }
+
+/* =========================
+   MOTION / MICROINTERACTION
+========================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .visual {
+    transition:
+      transform
+        700ms
+        cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow
+        700ms
+        cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project:hover .visual {
+    transform:
+      translate3d(
+        0,
+        -6px,
+        0
+      );
+
+    box-shadow:
+      0 28px 70px
+      rgba(
+        17,
+        17,
+        17,
+        0.08
+      );
+  }
+
+  /* =========================
+     SPALL SPILL
+  ========================= */
+
+  .spallBrowser {
+    transition:
+      transform
+        900ms
+        cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .spallCard {
+    transition:
+      transform
+        950ms
+        cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project:hover
+    .spallBrowser {
+    transform:
+      translate3d(
+        -5px,
+        -5px,
+        0
+      );
+  }
+
+  .project:hover
+    .spallCard {
+    transform:
+      translate3d(
+        8px,
+        -8px,
+        0
+      )
+      rotate(1deg);
+  }
+
+  /* =========================
+     5AM VISION
+  ========================= */
+
+  .visionOrb {
+    transition:
+      transform
+        1100ms
+        cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .visionType {
+    transition:
+      transform
+        900ms
+        cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project:hover
+    .visionOrb {
+    transform:
+      translate(
+        -50%,
+        -50%
+      )
+      scale(1.045);
+  }
+
+  .project:hover
+    .visionType {
+    transform:
+      translate3d(
+        5px,
+        -4px,
+        0
+      );
+  }
+
+  /* =========================
+   INDONESIA STAY
+========================= */
+
+.stayWindow,
+.stayArch,
+.stayWindowContent p,
+.stayWindowContent > span {
+  will-change: transform;
+
+  transition:
+    transform
+      900ms
+      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project:hover
+  .stayWindow {
+  transform:
+    translate3d(
+      -8px,
+      -10px,
+      0
+    );
+}
+
+.project:hover
+  .stayArch {
+  transform:
+    translate3d(
+      14px,
+      8px,
+      0
+    )
+    scale(1.045);
+}
+
+.project:hover
+  .stayWindowContent p {
+  transform:
+    translate3d(
+      5px,
+      -4px,
+      0
+    );
+}
+
+.project:hover
+  .stayWindowContent > span {
+  transform:
+    translate3d(
+      5px,
+      0,
+      0
+    );
+}
+
+  /* =========================
+     HEADER / META
+  ========================= */
+
+  .projectTitle,
+  .projectNumber,
+  .projectYear,
+  .categories {
+    transition:
+      transform
+        650ms
+        cubic-bezier(0.16, 1, 0.3, 1),
+      color
+        300ms
+        ease;
+  }
+
+  .project:hover
+    .projectTitle {
+    transform:
+      translate3d(
+        5px,
+        0,
+        0
+      );
+  }
+
+  .project:hover
+    .projectNumber {
+    transform:
+      translate3d(
+        0,
+        -2px,
+        0
+      );
+  }
+}

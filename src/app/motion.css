@@ -1,0 +1,331 @@
+/*
+ * =========================
+ * NATSX MOTION SYSTEM
+ * =========================
+ *
+ * Motion should support the composition,
+ * not compete with it.
+ */
+
+:root {
+  --motion-ease-out:
+    cubic-bezier(0.16, 1, 0.3, 1);
+
+  --motion-ease-soft:
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =========================
+   INITIAL PAGE ENTRANCE
+========================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion="enabled"]
+    .site-header {
+    animation:
+      natsx-header-in
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  /* =========================
+     HERO TEXT
+  ========================= */
+
+html[data-motion="enabled"]
+  .site-header__inner {
+  animation:
+    natsx-header-in
+    720ms
+    var(--motion-ease-out)
+    both;
+}
+
+  html[data-motion="enabled"]
+    [data-motion-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      920ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-hero-piece="intro"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      250ms
+      both;
+  }
+
+  /* =========================
+     HERO VISUAL
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-hero-piece="visual"] {
+    animation:
+      natsx-visual-in
+      1050ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  /*
+   * Portrait tidak dipaksa tampil
+   * sebelum file image selesai load.
+   *
+   * Jadi nggak ada efek:
+   * container masuk → gambar tiba-tiba pop.
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-portrait="loading"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      )
+      scale(0.99);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-portrait="loaded"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(1);
+
+    transition:
+      opacity
+        850ms
+        var(--motion-ease-soft),
+      transform
+        1100ms
+        var(--motion-ease-out);
+  }
+
+  /* =========================
+     GENERIC SECTIONS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="section"] {
+    opacity: 0;
+
+    transition:
+      opacity
+        720ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="section"][data-motion-visible="true"] {
+    opacity: 1;
+  }
+
+  /* =========================
+     SELECTED WORK HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="selected-header"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-out),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="selected-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="selected-header"]
+    [data-motion-piece="meta"] {
+    transition-delay: 0ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="selected-header"]
+    [data-motion-piece="title"] {
+    transition-delay: 65ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="selected-header"]
+    [data-motion-piece="description"] {
+    transition-delay: 125ms;
+  }
+
+  /* =========================
+     SELECTED PROJECTS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        20px,
+        0
+      );
+
+    transition:
+      opacity
+        640ms
+        var(--motion-ease-out),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="project"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes natsx-header-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        -10px,
+        0
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+@keyframes natsx-rise-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+@keyframes natsx-visual-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        14px,
+        0,
+        0
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+
+    animation-duration:
+      0.001ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    transition-duration:
+      0.001ms !important;
+
+    transition-delay:
+      0ms !important;
+  }
+}

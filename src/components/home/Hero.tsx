@@ -1,10 +1,18 @@
+"use client";
+
+import { useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
+
 import { site } from "@/data/site";
 
 import styles from "./Hero.module.css";
 
 export default function Hero() {
+  const [portraitLoaded, setPortraitLoaded] =
+    useState(false);
+
   return (
     <section className={styles.hero}>
       <div
@@ -16,16 +24,23 @@ export default function Hero() {
               styles.contentInner
             }
           >
-            <p className={styles.eyebrow}>
+            <p
+              className={styles.eyebrow}
+              data-motion-hero-piece="eyebrow"
+            >
               <span
                 className={
                   styles.eyebrowDot
                 }
               />
-{site.person} | {site.role}
+
+              {site.person} | {site.role}
             </p>
 
-            <h1 className={styles.title}>
+            <h1
+              className={styles.title}
+              data-motion-hero-piece="title"
+            >
               <span
                 className={
                   styles.titleLine
@@ -66,7 +81,10 @@ export default function Hero() {
               </span>
             </h1>
 
-            <div className={styles.intro}>
+            <div
+              className={styles.intro}
+              data-motion-hero-piece="intro"
+            >
               <p
                 className={
                   styles.description
@@ -121,7 +139,10 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className={styles.visual}>
+        <div
+          className={styles.visual}
+          data-motion-hero-piece="visual"
+        >
           <div
             className={styles.accentPlus}
             aria-hidden="true"
@@ -140,7 +161,14 @@ export default function Hero() {
             aria-hidden="true"
           />
 
-          <div className={styles.portrait}>
+          <div
+            className={styles.portrait}
+            data-motion-portrait={
+              portraitLoaded
+                ? "loaded"
+                : "loading"
+            }
+          >
             <Image
               src="/images/natsx-portrait-hero.png"
               alt="Portrait of Nafisa Juliansah Saputra"
@@ -149,6 +177,9 @@ export default function Hero() {
               sizes="(max-width: 960px) 100vw, 42vw"
               className={
                 styles.portraitImage
+              }
+              onLoad={() =>
+                setPortraitLoaded(true)
               }
             />
           </div>

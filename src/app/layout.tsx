@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 
 import InnerFooter from "@/components/layout/InnerFooter";
+import MotionController from "@/components/motion/MotionController";
 
 import "./globals.css";
+import "./motion.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
-  subsets: ["latin"],
-  display: "swap",
-});
+const plusJakartaSans =
+  Plus_Jakarta_Sans({
+    variable: "--font-plus-jakarta",
+    subsets: ["latin"],
+    display: "swap",
+  });
 
 export const metadata: Metadata = {
   title: {
@@ -28,10 +31,27 @@ export default function RootLayout({
 }>) {
   return (
     <html
-  lang="en"
-  data-scroll-behavior="smooth"
->
-      <body className={plusJakartaSans.variable}>
+      lang="en"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.documentElement.dataset.motion = "enabled";
+            `,
+          }}
+        />
+      </head>
+
+      <body
+        className={
+          plusJakartaSans.variable
+        }
+      >
+        <MotionController />
+
         {children}
 
         <InnerFooter />

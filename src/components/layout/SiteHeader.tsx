@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,6 +44,12 @@ export default function SiteHeader() {
   const [menuOpen, setMenuOpen] =
     useState(false);
 
+  const [menuClosing, setMenuClosing] =
+    useState(false);
+
+  const closingTimerRef =
+    useRef<number | null>(null);
+
   function isActive(href: string) {
     if (href === "/work") {
       return (
@@ -49,8 +61,60 @@ export default function SiteHeader() {
     return pathname === href;
   }
 
-  function closeMenu() {
-    setMenuOpen(false);
+  const closeMenu = useCallback(() => {
+    if (!menuOpen || menuClosing) {
+      return;
+    }
+
+    setMenuClosing(true);
+
+    if (closingTimerRef.current) {
+      window.clearTimeout(
+        closingTimerRef.current,
+      );
+    }
+
+    const prefersReducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+    const closeDuration =
+      prefersReducedMotion ? 0 : 430;
+
+    closingTimerRef.current =
+      window.setTimeout(() => {
+        setMenuOpen(false);
+        setMenuClosing(false);
+
+        closingTimerRef.current = null;
+      }, closeDuration);
+  }, [menuOpen, menuClosing]);
+
+  function openMenu() {
+    if (menuOpen) {
+      return;
+    }
+
+    if (closingTimerRef.current) {
+      window.clearTimeout(
+        closingTimerRef.current,
+      );
+
+      closingTimerRef.current = null;
+    }
+
+    setMenuClosing(false);
+    setMenuOpen(true);
+  }
+
+  function toggleMenu() {
+    if (menuOpen) {
+      closeMenu();
+      return;
+    }
+
+    openMenu();
   }
 
   useEffect(() => {
@@ -75,7 +139,7 @@ export default function SiteHeader() {
       event: KeyboardEvent,
     ) {
       if (event.key === "Escape") {
-        setMenuOpen(false);
+        closeMenu();
       }
     }
 
@@ -90,91 +154,113 @@ export default function SiteHeader() {
         handleKeyDown,
       );
     };
+  }, [closeMenu]);
+
+  useEffect(() => {
+    return () => {
+      if (closingTimerRef.current) {
+        window.clearTimeout(
+          closingTimerRef.current,
+        );
+      }
+    };
   }, []);
 
+  const mobilePanelClassName = [
+    styles.mobilePanel,
+    menuClosing
+      ? styles.mobilePanelClosing
+      : menuOpen
+        ? styles.mobilePanelOpen
+        : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <header className="site-header">
-      <div className="site-container site-header__inner">
-        <Link
-          href="/"
-          className="site-logo"
-          aria-label="NATSX home"
-          onClick={closeMenu}
-        >
-          <Image
-            src="/images/branding/natsx-logo-black.png"
-            alt="NATSX"
-            width={1110}
-            height={380}
-            priority
-            className="site-logo__image"
-          />
-        </Link>
+    <>
+      <header className="site-header">
+        <div className="site-container site-header__inner">
+          <Link
+            href="/"
+            className="site-logo"
+            aria-label="NATSX home"
+            onClick={closeMenu}
+          >
+            <Image
+              src="/images/branding/natsx-logo-black.png"
+              alt="NATSX"
+              width={1110}
+              height={380}
+              priority
+              className="site-logo__image"
+            />
+          </Link>
 
-        <nav
-          className="site-nav"
-          aria-label="Main navigation"
-        >
-          {navigation.map((item) => {
-            const active = isActive(
-              item.href,
-            );
+          <nav
+            className="site-nav"
+            aria-label="Main navigation"
+          >
+            {navigation.map((item) => {
+              const active = isActive(
+                item.href,
+              );
 
-            return (
-              <Link
-                href={item.href}
-                key={item.href}
-                onClick={closeMenu}
-                className={
-                  active
-                    ? "site-nav__link is-active"
-                    : "site-nav__link"
-                }
-                aria-current={
-                  active
-                    ? "page"
-                    : undefined
-                }
-              >
-                <span>{item.label}</span>
+              return (
+                <Link
+                  href={item.href}
+                  key={item.href}
+                  onClick={closeMenu}
+                  className={
+                    active
+                      ? "site-nav__link is-active"
+                      : "site-nav__link"
+                  }
+                  aria-current={
+                    active
+                      ? "page"
+                      : undefined
+                  }
+                >
+                  <span>
+                    {item.label}
+                  </span>
 
-                <span
-                  className="site-nav__dot"
-                  aria-hidden="true"
-                />
-              </Link>
-            );
-          })}
-        </nav>
+                  <span
+                    className="site-nav__dot"
+                    aria-hidden="true"
+                  />
+                </Link>
+              );
+            })}
+          </nav>
 
-        <button
-          className="site-menu-label"
-          type="button"
-          aria-label={
-            menuOpen
-              ? "Close navigation menu"
-              : "Open navigation menu"
-          }
-          aria-expanded={menuOpen}
-          aria-controls="mobile-navigation"
-          onClick={() =>
-            setMenuOpen(
-              (current) => !current,
-            )
-          }
-        >
-          {menuOpen ? "Close" : "Menu"}
-        </button>
-      </div>
+          <button
+            className="site-menu-label"
+            type="button"
+            aria-label={
+              menuOpen
+                ? "Close navigation menu"
+                : "Open navigation menu"
+            }
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            onClick={toggleMenu}
+          >
+            {menuOpen
+              ? "Close"
+              : "Menu"}
+          </button>
+        </div>
+      </header>
 
-<div
-  id="mobile-navigation"
-  className={`${styles.mobilePanel} ${
-    menuOpen
-      ? styles.mobilePanelOpen
-      : ""
-  }`}
->
+      <div
+        id="mobile-navigation"
+        className={
+          mobilePanelClassName
+        }
+        aria-hidden={!menuOpen}
+      >
         <div
           className={`site-container ${styles.mobileInner}`}
         >
@@ -201,7 +287,10 @@ export default function SiteHeader() {
                       : undefined
                   }
                   tabIndex={
-                    menuOpen ? 0 : -1
+                    menuOpen &&
+                    !menuClosing
+                      ? 0
+                      : -1
                   }
                 >
                   <span
@@ -234,7 +323,9 @@ export default function SiteHeader() {
           </nav>
 
           <div
-            className={styles.mobileFooter}
+            className={
+              styles.mobileFooter
+            }
           >
             <div>
               <span
@@ -245,7 +336,9 @@ export default function SiteHeader() {
                 Digital Creator
               </span>
 
-              <span>{site.person}</span>
+              <span>
+                {site.person}
+              </span>
             </div>
 
             <div
@@ -253,15 +346,18 @@ export default function SiteHeader() {
                 styles.mobileFooterRight
               }
             >
-              <span>{site.location}</span>
+              <span>
+                {site.location}
+              </span>
 
               <span>
-                © {site.year} {site.name}
+                © {site.year}{" "}
+                {site.name}
               </span>
             </div>
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }

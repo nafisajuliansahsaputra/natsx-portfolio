@@ -18,13 +18,22 @@ export default function SelectedWork() {
       id="work"
     >
       <div className="site-container">
-        <header className={styles.header}>
-          <div className={styles.headerMeta}>
+        <header
+          className={styles.header}
+          data-motion-scroll="selected-header"
+        >
+          <div
+            className={styles.headerMeta}
+            data-motion-piece="meta"
+          >
             <span className={styles.dot} />
             <span>02 / Selected Work</span>
           </div>
 
-          <h2 className={styles.heading}>
+          <h2
+            className={styles.heading}
+            data-motion-piece="title"
+          >
             Selected
             <br />
             Work<span>.</span>
@@ -34,6 +43,7 @@ export default function SelectedWork() {
             className={
               styles.headerDescription
             }
+            data-motion-piece="description"
           >
             <p>
               A selection of projects across
@@ -67,6 +77,7 @@ export default function SelectedWork() {
                   ]
                 }`}
                 key={project.slug}
+                data-motion-scroll="project"
               >
                 <div
                   className={
@@ -268,6 +279,7 @@ function ProjectArtwork({
 
       <div className={styles.spallCard}>
         <span>01</span>
+
         <strong>SPALL</strong>
         <strong>SPILL</strong>
       </div>
