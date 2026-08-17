@@ -1219,14 +1219,35 @@ color: var(--project-on-accent);
   }
 
   .finalVisual {
-    min-height: 590px;
+  min-height: 520px;
 
-    padding: 24px;
-  }
+  padding: 22px;
+}
 
-  .finalVisualTitle {
-    font-size: clamp(60px, 18vw, 86px);
-  }
+.finalVisualTitle {
+  width: 100%;
+
+  font-size: clamp(
+    44px,
+    12.8vw,
+    52px
+  );
+
+  line-height: 0.72;
+  letter-spacing: -0.075em;
+}
+
+.finalVisualTitle span {
+  white-space: nowrap;
+}
+
+.finalVisualTitle span:nth-child(2) {
+  align-self: center;
+}
+
+.finalVisualTitle span:nth-child(3) {
+  align-self: flex-end;
+}
 
   .nextProject {
     padding-block:
