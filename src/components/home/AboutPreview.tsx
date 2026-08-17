@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { site } from "@/data/site";
 
 import styles from "./AboutPreview.module.css";
 
@@ -22,7 +23,7 @@ export default function AboutPreview() {
 
         <div className={styles.main}>
           <h2 className={styles.heading}>
-            I&apos;m Nafisa—
+            I&apos;m {site.firstName}—
             <br />
             the person
             <br />
@@ -72,7 +73,7 @@ export default function AboutPreview() {
               Based in
             </span>
 
-            <span>Indonesia</span>
+            <span>{site.location}</span>
           </div>
 
           <div className={styles.meta}>
@@ -84,7 +85,7 @@ export default function AboutPreview() {
               Role
             </span>
 
-            <span>Digital Creator</span>
+            <span>{site.role}</span>
           </div>
 
           <div className={styles.meta}>
@@ -96,7 +97,7 @@ export default function AboutPreview() {
               Creative Identity
             </span>
 
-            <span>NATSX</span>
+            <span>{site.name}</span>
           </div>
 
           <div

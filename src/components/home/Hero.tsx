@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { site } from "@/data/site";
 
 import styles from "./Hero.module.css";
 
@@ -21,9 +22,7 @@ export default function Hero() {
                   styles.eyebrowDot
                 }
               />
-
-              Nafisa Juliansah Saputra |
-              Digital Creator
+{site.person} | {site.role}
             </p>
 
             <h1 className={styles.title}>

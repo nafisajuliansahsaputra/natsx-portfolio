@@ -9,6 +9,8 @@ export const site = {
 
   person: "Nafisa Juliansah Saputra",
 
+  firstName: "Nafisa",
+
   role: "Digital Creator",
 
   email: "your-email@example.com",
