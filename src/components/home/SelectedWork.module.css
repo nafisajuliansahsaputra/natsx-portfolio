@@ -694,32 +694,68 @@
 @media (max-width: 700px) {
   .section {
     padding-block:
-      100px
-      130px;
+      88px
+      115px;
   }
+
+  /* =========================
+     HEADER
+  ========================= */
 
   .header {
     display: block;
 
-    margin-bottom: 80px;
+    margin-bottom: 68px;
   }
 
   .headerMeta {
-    margin-bottom: 32px;
+    margin-bottom: 30px;
+
+    font-size: 10px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
   }
 
   .heading {
-    font-size: clamp(56px, 17vw, 82px);
+    font-size: clamp(
+      48px,
+      15vw,
+      62px
+    );
+
+    line-height: 0.9;
   }
 
   .headerDescription {
-    max-width: 420px;
+    max-width: 340px;
 
-    margin-top: 34px;
+    margin-top: 30px;
+
+    gap: 18px;
   }
 
+  .headerDescription p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .yearRange {
+    font-size: 10px;
+  }
+
+  .headerDescription .projectLink {
+    margin-top: 2px;
+  }
+
+  /* =========================
+     PROJECT LIST
+  ========================= */
+
   .projects {
-    gap: 120px;
+    gap: 100px;
   }
 
   .project {
@@ -728,11 +764,16 @@
 
   .projectHeader {
     display: grid;
-    grid-template-columns: 34px minmax(0, 1fr) auto;
+    grid-template-columns:
+      26px
+      minmax(0, 1fr)
+      auto;
 
-    gap: 12px;
+    gap: 10px;
 
-    margin-bottom: 18px;
+    margin-bottom: 16px;
+
+    align-items: end;
   }
 
   .projectNumber,
@@ -741,61 +782,199 @@
     grid-column: auto;
   }
 
-  .projectTitle {
-    font-size: 34px;
-  }
-
-  .visual {
-    min-height: 420px;
-    aspect-ratio: 4 / 5 !important;
-  }
-
-  .projectFooter {
-    margin-top: 18px;
-
-    gap: 22px;
-  }
-
-  .categories {
-    gap: 6px 12px;
-  }
-
-  .categories span {
+  .projectNumber {
     font-size: 10px;
   }
 
-  .projectLink {
-    font-size: 11px;
+  .projectTitle {
+    font-size: clamp(
+      28px,
+      8.8vw,
+      34px
+    );
   }
+
+  .projectYear {
+    font-size: 9px;
+  }
+
+  /* =========================
+     KEEP EDITORIAL ASYMMETRY
+  ========================= */
+
+  .visual {
+    min-height: 0;
+  }
+
+  .layout_wide .visual {
+    width: 100%;
+
+    aspect-ratio: 0.92;
+  }
+
+  .layout_right .visual {
+    width: 88%;
+
+    margin-left: auto;
+
+    aspect-ratio: 0.84;
+  }
+
+  .layout_left .visual {
+    width: 92%;
+
+    margin-right: auto;
+
+    aspect-ratio: 0.9;
+  }
+
+  /* =========================
+     PROJECT FOOTER
+  ========================= */
+
+  .projectFooter {
+    margin-top: 16px;
+
+    gap: 18px;
+  }
+
+  .layout_wide .projectFooter {
+    width: 100%;
+  }
+
+  .layout_right .projectFooter {
+    width: 88%;
+
+    margin-left: auto;
+  }
+
+  .layout_left .projectFooter {
+    width: 92%;
+
+    margin-right: auto;
+  }
+
+  .categories {
+    gap: 5px 10px;
+  }
+
+  .categories span {
+    font-size: 9px;
+    line-height: 1.45;
+  }
+
+  .projectLink {
+    gap: 6px;
+
+    font-size: 10px;
+  }
+
+  /* =========================
+     VISUAL LABEL
+  ========================= */
+
+  .visualLabel {
+    right: 14px;
+    bottom: 13px;
+
+    font-size: 7px;
+  }
+
+  /* =========================
+     SPALL SPILL
+  ========================= */
 
   .spallBrowser {
     left: 7%;
     top: 8%;
 
     width: 78%;
-    height: 62%;
+    height: 64%;
+  }
+
+  .spallBrowserTop {
+    height: 28px;
+
+    padding-inline: 10px;
+
+    gap: 4px;
+  }
+
+  .spallBrowserTop span {
+    width: 4px;
+    height: 4px;
+  }
+
+  .spallBrowserBody {
+    height: calc(100% - 28px);
+
+    padding: 20px;
+  }
+
+  .spallMiniLabel {
+    font-size: 7px;
+  }
+
+  .spallBrowserBody strong {
+    font-size: clamp(
+      24px,
+      7vw,
+      30px
+    );
+
+    line-height: 0.93;
   }
 
   .spallCard {
     right: 7%;
     bottom: 7%;
 
-    width: 42%;
+    width: 38%;
+
+    padding: 16px;
   }
 
+  .spallCard span {
+    font-size: 7px;
+  }
+
+  .spallCard strong {
+    font-size: clamp(
+      17px,
+      5vw,
+      21px
+    );
+  }
+
+  /* =========================
+     5AM VISION
+  ========================= */
+
   .visionOrb {
-    width: 72%;
+    width: 70%;
 
     left: 61%;
   }
 
   .visionType {
-    top: 10%;
+    top: 9%;
     left: 8%;
   }
 
+  .visionType span {
+    font-size: clamp(
+      38px,
+      12vw,
+      48px
+    );
+  }
+
+  /* =========================
+     INDONESIA STAY
+  ========================= */
+
   .stayArch {
-    width: 64%;
+    width: 67%;
   }
 
   .stayWindow {
@@ -804,5 +983,36 @@
 
     width: 80%;
     height: 68%;
+  }
+
+  .stayWindowTop {
+    height: 28px;
+
+    padding-inline: 10px;
+
+    gap: 4px;
+  }
+
+  .stayWindowTop span {
+    width: 4px;
+    height: 4px;
+  }
+
+  .stayWindowContent {
+    height: calc(100% - 28px);
+
+    padding: 20px;
+  }
+
+  .stayWindowContent p {
+    font-size: clamp(
+      24px,
+      7.5vw,
+      30px
+    );
+  }
+
+  .stayWindowContent span {
+    font-size: 8px;
   }
 }
