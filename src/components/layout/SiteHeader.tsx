@@ -1,11 +1,47 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const navigation = [
+  {
+    label: "Work",
+    href: "/work",
+  },
+  {
+    label: "About",
+    href: "/about",
+  },
+  {
+    label: "Playground",
+    href: "/playground",
+  },
+  {
+    label: "Contact",
+    href: "/contact",
+  },
+];
 
 export default function SiteHeader() {
+  const pathname = usePathname();
+
+  function isActive(href: string) {
+    if (href === "/work") {
+      return pathname === "/work" || pathname.startsWith("/work/");
+    }
+
+    return pathname === href;
+  }
+
   return (
     <header className="site-header">
       <div className="site-container site-header__inner">
-        <Link href="/" className="site-logo" aria-label="NATSX home">
+        <Link
+          href="/"
+          className="site-logo"
+          aria-label="NATSX home"
+        >
           <Image
             src="/images/branding/natsx-logo-black.png"
             alt="NATSX"
@@ -16,11 +52,29 @@ export default function SiteHeader() {
           />
         </Link>
 
-        <nav className="site-nav" aria-label="Main navigation">
-          <a href="#work">Work</a>
-          <a href="#about">About</a>
-          <a href="#playground">Playground</a>
-          <a href="#contact">Contact</a>
+        <nav
+          className="site-nav"
+          aria-label="Main navigation"
+        >
+          {navigation.map((item) => {
+            const active = isActive(item.href);
+
+            return (
+              <Link
+                href={item.href}
+                key={item.href}
+                className={active ? "site-nav__link is-active" : "site-nav__link"}
+                aria-current={active ? "page" : undefined}
+              >
+                <span>{item.label}</span>
+
+                <span
+                  className="site-nav__dot"
+                  aria-hidden="true"
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <button
