@@ -20,6 +20,7 @@
 
 .introColumn {
   grid-column: 1 / span 5;
+
   position: relative;
 }
 
@@ -32,6 +33,7 @@
 .sectionLabel {
   display: flex;
   align-items: center;
+
   gap: 10px;
 
   margin-bottom: clamp(54px, 6vw, 86px);
@@ -40,6 +42,7 @@
 
   font-size: 11px;
   font-weight: 700;
+
   letter-spacing: 0.035em;
   text-transform: uppercase;
 }
@@ -109,6 +112,7 @@
 .itemTop {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
+
   align-items: baseline;
 
   gap: 16px;
@@ -223,6 +227,7 @@
 @media (min-width: 961px) {
   .intro {
     position: sticky;
+
     top: 128px;
   }
 }
@@ -260,67 +265,176 @@
 @media (max-width: 700px) {
   .section {
     padding-block:
-      100px
-      110px;
+      92px
+      112px;
   }
 
   .layout {
     display: block;
   }
 
+  /* =========================
+     INTRO
+  ========================= */
+
   .sectionLabel {
-    margin-bottom: 34px;
+    margin-bottom: 30px;
+
+    gap: 9px;
+
+    font-size: 10px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
   }
 
   .heading {
-    font-size: clamp(52px, 15vw, 76px);
+    max-width: 340px;
+
+    font-size: clamp(
+      46px,
+      14vw,
+      58px
+    );
+
+    line-height: 0.92;
   }
 
   .introText {
-    max-width: 390px;
+    max-width: 340px;
 
-    margin-top: 32px;
+    margin-top: 28px;
+
+    font-size: 13.5px;
+    line-height: 1.68;
   }
 
+  /* =========================
+     LIST
+  ========================= */
+
   .list {
-    margin-top: 70px;
+    margin-top: 62px;
   }
 
   .item {
     padding-block:
-      25px
-      30px;
+      28px
+      34px;
   }
 
   .itemTop {
-    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-columns:
+      34px
+      minmax(0, 1fr);
 
     gap: 10px;
+
+    align-items: baseline;
+  }
+
+  .number {
+    font-size: 10px;
   }
 
   .title {
-    font-size: 30px;
+    font-size: clamp(
+      28px,
+      8.5vw,
+      34px
+    );
+
+    line-height: 0.98;
   }
 
+  /* =========================
+     DESCRIPTION + SKILLS
+  ========================= */
+
   .itemContent {
+    display: block;
+
     padding:
       22px
       0
       0
-      42px;
-
-    gap: 20px;
+      44px;
   }
 
   .description {
-    font-size: 12px;
+    max-width: 310px;
+
+    font-size: 13.25px;
+    line-height: 1.68;
+  }
+
+  .skills {
+    max-width: 310px;
+
+    margin-top: 22px;
+
+    gap: 8px 0;
   }
 
   .skills span {
-    font-size: 10px;
+    font-size: 11px;
+    line-height: 1.55;
   }
 
   .skills span:not(:last-child)::after {
-    margin-inline: 6px;
+    margin-inline: 7px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 370px) {
+  .section {
+    padding-block:
+      84px
+      102px;
+  }
+
+  .heading {
+    font-size: clamp(
+      43px,
+      13.5vw,
+      50px
+    );
+  }
+
+  .introText {
+    font-size: 13px;
+  }
+
+  .list {
+    margin-top: 56px;
+  }
+
+  .itemTop {
+    grid-template-columns:
+      30px
+      minmax(0, 1fr);
+  }
+
+  .itemContent {
+    padding-left: 40px;
+  }
+
+  .description,
+  .skills {
+    max-width: 285px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .skills span {
+    font-size: 10.5px;
   }
 }
