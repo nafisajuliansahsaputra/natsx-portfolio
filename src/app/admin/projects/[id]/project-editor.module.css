@@ -1,0 +1,564 @@
+.page {
+  --background: #f7f6f2;
+  --surface: #ffffff;
+  --text: #0b0b0b;
+  --muted: #6f6d68;
+  --line: #d8d6d0;
+  --accent: #5961ed;
+  --danger: #b42318;
+  --success: #18794e;
+
+  min-height: 100svh;
+  background: var(--background);
+  color: var(--text);
+}
+
+.shell {
+  padding: 0 48px 96px;
+}
+
+.header {
+  min-height: 96px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.backLink {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--accent);
+}
+
+.hero {
+  padding: 72px 0 96px;
+}
+
+.heroHeader {
+  margin-bottom: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.heroHeader p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.statusBadge {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.statusBadge[data-status="published"] {
+  border-color: var(--text);
+  background: var(--text);
+  color: #ffffff;
+}
+
+.statusBadge[data-status="draft"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.5fr);
+  gap: 72px;
+  align-items: end;
+}
+
+.hero h1 {
+  max-width: 1100px;
+  margin: 0;
+  font-size: clamp(68px, 10vw, 150px);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.075em;
+  overflow-wrap: anywhere;
+}
+
+.hero h1 span {
+  color: var(--accent);
+}
+
+.projectSummary > p {
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.projectSummary dl {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.projectSummary dl > div {
+  min-height: 54px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.projectSummary dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.projectSummary dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.editorSection {
+  padding-top: 32px;
+  border-top: 1px solid var(--text);
+  display: grid;
+  grid-template-columns: minmax(150px, 0.35fr) minmax(0, 1.65fr);
+  gap: 64px;
+}
+
+.sectionLabel {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.editor,
+.form {
+  width: 100%;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 24px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.field > span,
+.settingIntroduction > span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.input {
+  min-height: 54px;
+  padding: 0 16px;
+}
+
+.textarea {
+  min-height: 160px;
+  padding: 16px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--accent);
+  outline: 2px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  outline-offset: 2px;
+}
+
+.helper {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.errorText {
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.settingsPanel,
+.palettePanel {
+  margin-top: 16px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.settingIntroduction {
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: minmax(160px, 0.5fr) minmax(240px, 1fr);
+  gap: 32px;
+}
+
+.settingIntroduction p {
+  max-width: 500px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.checkboxCard {
+  min-height: 92px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.checkboxCard input {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.customCheckbox {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  position: relative;
+}
+
+.checkboxCard input:checked + .customCheckbox {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.checkboxCard input:checked + .customCheckbox::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: rotate(45deg);
+}
+
+.checkboxCard > span:last-child {
+  display: grid;
+  gap: 7px;
+}
+
+.checkboxCard strong {
+  font-size: 12px;
+}
+
+.checkboxCard small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.paletteGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.colorControl {
+  min-height: 54px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.colorControl > span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.colorInput {
+  width: 42px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.formNotice {
+  margin-top: 32px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.formNotice[data-type="error"] {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.formNotice[data-type="success"] {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.formNotice > span {
+  width: 7px;
+  height: 7px;
+  margin-top: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.formNotice p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.actions {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.actions p {
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.saveButton {
+  min-width: 220px;
+  min-height: 56px;
+  padding: 0 24px;
+  border: 0;
+  background: var(--text);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: var(--accent);
+}
+
+.saveButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.dangerZone {
+  margin-top: 120px;
+  padding: 40px;
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--line));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.dangerZone > div > span {
+  color: var(--danger);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.dangerZone h2 {
+  margin: 18px 0 10px;
+  font-size: clamp(32px, 4vw, 54px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+
+.dangerZone p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.deleteButton {
+  min-width: 190px;
+  min-height: 52px;
+  padding: 0 20px;
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.deleteButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+@media (max-width: 1000px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .editorSection {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .settingsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .checkboxCard {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .shell {
+    padding-inline: 18px;
+    padding-bottom: 64px;
+  }
+
+  .header {
+    min-height: 78px;
+  }
+
+  .brand,
+  .backLink {
+    font-size: 11px;
+  }
+
+  .hero {
+    padding: 64px 0 72px;
+  }
+
+  .heroHeader {
+    margin-bottom: 48px;
+  }
+
+  .hero h1 {
+    font-size: clamp(60px, 20vw, 92px);
+  }
+
+  .fieldGrid,
+  .settingsGrid,
+  .paletteGrid,
+  .settingIntroduction {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth,
+  .checkboxCard {
+    grid-column: auto;
+  }
+
+  .settingsPanel,
+  .palettePanel {
+    padding: 24px 18px;
+  }
+
+  .actions,
+  .dangerZone {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .saveButton,
+  .deleteButton {
+    width: 100%;
+  }
+
+  .dangerZone {
+    margin-top: 80px;
+    padding: 28px 20px;
+  }
+}
