@@ -19,88 +19,89 @@ const PUBLIC_PROJECT_FIELDS = [
   "secondary_color",
 ].join(",");
 
+const PUBLIC_SECTION_FIELDS = [
+  "id",
+  "project_id",
+  "section_type",
+  "eyebrow",
+  "heading",
+  "body",
+  "content",
+  "theme",
+  "sort_order",
+  "is_visible",
+  "created_at",
+].join(",");
+
 type PublicProjectRow = {
   id: string;
-
   slug: string;
-
   title: string;
-
   project_number: string;
-
   year: number;
-
-  period:
-    | string
-    | null;
-
-  summary:
-    | string
-    | null;
-
-  categories:
-    | unknown[]
-    | null;
-
-  roles:
-    | unknown[]
-    | null;
-
+  period: string | null;
+  summary: string | null;
+  categories: unknown[] | null;
+  roles: unknown[] | null;
   featured: boolean;
-
   sort_order: number;
+  live_url: string | null;
+  accent_color: string | null;
+  secondary_color: string | null;
+};
 
-  live_url:
-    | string
-    | null;
-
-  accent_color:
-    | string
-    | null;
-
-  secondary_color:
-    | string
-    | null;
+type PublicProjectSectionRow = {
+  id: string;
+  project_id: string;
+  section_type: string;
+  eyebrow: string | null;
+  heading: string | null;
+  body: string | null;
+  content: unknown;
+  theme: string;
+  sort_order: number;
+  is_visible: boolean;
+  created_at: string;
 };
 
 export type PublicProject = {
   id: string;
-
   slug: string;
-
   number: string;
-
   title: string;
-
   year: string;
-
   period: string;
-
   summary: string;
-
   disciplines: string[];
-
   roles: string[];
-
   featured: boolean;
-
   sortOrder: number;
-
-  website:
-    | string
-    | null;
-
+  website: string | null;
   accentColor: string;
+  secondaryColor: string | null;
+};
 
-  secondaryColor:
-    | string
-    | null;
+export type PublicProjectSection = {
+  id: string;
+  projectId: string;
+  sectionType: string;
+  eyebrow: string;
+  heading: string;
+  body: string;
+  content: Record<string, unknown>;
+  theme: string;
+  sortOrder: number;
+};
+
+export type PublicProjectPageData = {
+  project: PublicProject;
+  sections: PublicProjectSection[];
+  nextProject: PublicProject | null;
+  totalProjects: number;
 };
 
 function normalizeStringList(
-  value:
-    | unknown[]
-    | null,
+  value: unknown[] | null,
 ) {
   if (!Array.isArray(value)) {
     return [];
@@ -111,8 +112,7 @@ function normalizeStringList(
       (
         item,
       ): item is string =>
-        typeof item ===
-        "string",
+        typeof item === "string",
     )
     .map((item) =>
       item.trim(),
@@ -120,36 +120,43 @@ function normalizeStringList(
     .filter(Boolean);
 }
 
+function normalizeContent(
+  value: unknown,
+): Record<string, unknown> {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    Array.isArray(value)
+  ) {
+    return {};
+  }
+
+  return value as Record<
+    string,
+    unknown
+  >;
+}
+
 function normalizeProject(
   project: PublicProjectRow,
 ): PublicProject {
   return {
-    id:
-      project.id,
-
-    slug:
-      project.slug,
-
+    id: project.id,
+    slug: project.slug,
     number:
       project.project_number,
+    title: project.title,
 
-    title:
-      project.title,
-
-    year:
-      String(
-        project.year,
-      ),
+    year: String(
+      project.year,
+    ),
 
     period:
       project.period ??
-      String(
-        project.year,
-      ),
+      String(project.year),
 
     summary:
-      project.summary ??
-      "",
+      project.summary ?? "",
 
     disciplines:
       normalizeStringList(
@@ -179,17 +186,50 @@ function normalizeProject(
   };
 }
 
+function normalizeSection(
+  section: PublicProjectSectionRow,
+): PublicProjectSection {
+  return {
+    id: section.id,
+
+    projectId:
+      section.project_id,
+
+    sectionType:
+      section.section_type,
+
+    eyebrow:
+      section.eyebrow?.trim() ??
+      "",
+
+    heading:
+      section.heading?.trim() ??
+      "",
+
+    body:
+      section.body?.trim() ??
+      "",
+
+    content:
+      normalizeContent(
+        section.content,
+      ),
+
+    theme:
+      section.theme,
+
+    sortOrder:
+      section.sort_order,
+  };
+}
+
 function normalizeProjects(
   data: unknown,
 ) {
   return (
-    (
-      data ??
-      []
-    ) as PublicProjectRow[]
-  ).map(
-    normalizeProject,
-  );
+    (data ??
+      []) as PublicProjectRow[]
+  ).map(normalizeProject);
 }
 
 export async function getPublishedProjects(): Promise<
@@ -277,6 +317,187 @@ export async function getFeaturedProjects(
   );
 }
 
+export async function getPublishedProjectBySlug(
+  slug: string,
+): Promise<PublicProject | null> {
+  const supabase =
+    createPublicClient();
+
+  const {
+    data,
+    error,
+  } = await supabase
+    .from("projects")
+    .select(
+      PUBLIC_PROJECT_FIELDS,
+    )
+    .eq(
+      "slug",
+      slug,
+    )
+    .eq(
+      "status",
+      "published",
+    )
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `Gagal memuat project: ${error.message}`,
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
+return normalizeProject(
+  data as unknown as PublicProjectRow,
+);
+}
+
+export async function getPublishedProjectPage(
+  slug: string,
+): Promise<PublicProjectPageData | null> {
+  const supabase =
+    createPublicClient();
+
+  const {
+    data: projectData,
+    error: projectError,
+  } = await supabase
+    .from("projects")
+    .select(
+      PUBLIC_PROJECT_FIELDS,
+    )
+    .eq(
+      "slug",
+      slug,
+    )
+    .eq(
+      "status",
+      "published",
+    )
+    .maybeSingle();
+
+  if (projectError) {
+    throw new Error(
+      `Gagal memuat project: ${projectError.message}`,
+    );
+  }
+
+  if (!projectData) {
+    return null;
+  }
+
+const project =
+  normalizeProject(
+    projectData as unknown as PublicProjectRow,
+  );
+
+  const [
+    sectionResult,
+    projectListResult,
+  ] = await Promise.all([
+    supabase
+      .from(
+        "project_sections",
+      )
+      .select(
+        PUBLIC_SECTION_FIELDS,
+      )
+      .eq(
+        "project_id",
+        project.id,
+      )
+      .eq(
+        "is_visible",
+        true,
+      )
+      .order(
+        "sort_order",
+        {
+          ascending: true,
+        },
+      )
+      .order(
+        "created_at",
+        {
+          ascending: true,
+        },
+      ),
+
+    supabase
+      .from("projects")
+      .select(
+        PUBLIC_PROJECT_FIELDS,
+      )
+      .eq(
+        "status",
+        "published",
+      )
+      .order(
+        "sort_order",
+        {
+          ascending: true,
+        },
+      ),
+  ]);
+
+  if (sectionResult.error) {
+    throw new Error(
+      `Gagal memuat project sections: ${sectionResult.error.message}`,
+    );
+  }
+
+  if (
+    projectListResult.error
+  ) {
+    throw new Error(
+      `Gagal memuat project archive: ${projectListResult.error.message}`,
+    );
+  }
+
+const sections = (
+  (sectionResult.data ??
+    []) as unknown as PublicProjectSectionRow[]
+).map(normalizeSection);
+
+  const projects =
+    normalizeProjects(
+      projectListResult.data,
+    );
+
+  const currentIndex =
+    projects.findIndex(
+      (item) =>
+        item.id === project.id,
+    );
+
+  let nextProject:
+    | PublicProject
+    | null = null;
+
+  if (
+    projects.length > 1 &&
+    currentIndex !== -1
+  ) {
+    nextProject =
+      projects[
+        (currentIndex + 1) %
+          projects.length
+      ];
+  }
+
+  return {
+    project,
+    sections,
+    nextProject,
+    totalProjects:
+      projects.length,
+  };
+}
+
 export function getPublicProjectYearRange(
   source: PublicProject[],
 ) {
@@ -299,21 +520,15 @@ export function getPublicProjectYearRange(
   }
 
   const earliest =
-    Math.min(
-      ...years,
-    );
+    Math.min(...years);
 
   const latest =
-    Math.max(
-      ...years,
-    );
+    Math.max(...years);
 
   if (
     earliest === latest
   ) {
-    return String(
-      latest,
-    );
+    return String(latest);
   }
 
   return `${earliest}—${latest}`;
