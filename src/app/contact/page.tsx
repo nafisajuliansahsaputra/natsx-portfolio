@@ -1,144 +1,301 @@
-import type { Metadata } from "next";
+import type {
+  Metadata,
+} from "next";
+
 import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
-import { site } from "@/data/site";
+import {
+  site,
+} from "@/data/site";
 
 import styles from "./Contact.module.css";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title:
+    "Contact",
 
-  description: `Get in touch with ${site.person} / ${site.name} for selected freelance work, collaborations, and creative projects.`,
+  description:
+    `Get in touch with ${site.person} / ${site.name} for selected freelance work, collaborations, and creative projects.`,
 };
 
 export default function ContactPage() {
-  const [emailLocal, emailDomain] =
-    site.email.split("@");
+  const emailParts =
+    site.email
+      ? site.email.split(
+          "@",
+        )
+      : [];
+
+  const emailLocal =
+    emailParts[0] ??
+    "";
+
+  const emailDomain =
+    emailParts[1] ??
+    "";
+
+  const fallbackSocial =
+    site.socials.find(
+      (social) =>
+        social.label ===
+        "LinkedIn",
+    ) ??
+    site.socials[0];
+
+  const primaryContact =
+    site.email
+      ? {
+          label:
+            "Email",
+
+          lineOne:
+            emailLocal,
+
+          lineTwo:
+            emailDomain
+              ? `@${emailDomain}`
+              : "",
+
+          href:
+            `mailto:${site.email}`,
+        }
+      : fallbackSocial
+        ? {
+            label:
+              fallbackSocial.label,
+
+            lineOne:
+              fallbackSocial.username,
+
+            lineTwo:
+              "Let\u2019s connect ↗",
+
+            href:
+              fallbackSocial.href,
+          }
+        : {
+            label:
+              "Portfolio",
+
+            lineOne:
+              "Explore",
+
+            lineTwo:
+              "the work ↗",
+
+            href:
+              "/work",
+          };
+
+  const primaryIsExternal =
+    primaryContact.href.startsWith(
+      "http",
+    );
 
   return (
     <>
       <SiteHeader />
 
       <main
-        className={styles.page}
+        className={
+          styles.page
+        }
         data-motion-page="contact"
       >
-        {/* =========================
-            HERO
-        ========================= */}
-
-        <section className={styles.hero}>
+        <section
+          className={
+            styles.hero
+          }
+        >
           <div className="site-container">
             <div
-              className={styles.heroTop}
+              className={
+                styles.heroTop
+              }
               data-motion-contact-hero-piece="top"
             >
-              <div className={styles.label}>
-                <span className={styles.dot} />
+              <div
+                className={
+                  styles.label
+                }
+              >
+                <span
+                  className={
+                    styles.dot
+                  }
+                />
 
                 <span>
-                  Contact / {site.name}
+                  Contact /{" "}
+                  {
+                    site.name
+                  }
                 </span>
               </div>
 
               <span
-                className={styles.heroMeta}
+                className={
+                  styles.heroMeta
+                }
               >
-                {site.location} /{" "}
-                {site.availability.scope}
+                {
+                  site.location
+                }{" "}
+                /{" "}
+                {
+                  site.availability.scope
+                }
               </span>
             </div>
 
-            <div className={styles.heroMain}>
+            <div
+              className={
+                styles.heroMain
+              }
+            >
               <h1
-                className={styles.heading}
+                className={
+                  styles.heading
+                }
                 data-motion-contact-hero-piece="title"
               >
                 Have an idea
                 <br />
                 worth exploring
-                <span>?</span>
+
+                <span>
+                  ?
+                </span>
               </h1>
 
               <div
-                className={styles.heroIntro}
+                className={
+                  styles.heroIntro
+                }
                 data-motion-contact-hero-piece="intro"
               >
                 <p>
-                  I&apos;m open to selected
-                  freelance work, creative
-                  collaborations, and digital
-                  projects where different
-                  disciplines can come
-                  together.
+                  I&apos;m open
+                  to selected
+                  freelance work,
+                  creative
+                  collaborations,
+                  and digital
+                  projects where
+                  different
+                  disciplines can
+                  come together.
                 </p>
 
                 <span>
-                  Design / Development
+                  Design /
+                  Development
                   <br />
-                  Motion / Creative Direction
+                  Motion /
+                  Creative
+                  Direction
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* =========================
-            PRIMARY CONTACT
-        ========================= */}
-
         <section
-          className={styles.primaryContact}
+          className={
+            styles.primaryContact
+          }
         >
           <div className="site-container">
             <div
-              className={styles.primaryHeader}
+              className={
+                styles.primaryHeader
+              }
               data-motion-scroll="contact-primary-header"
             >
-              <div className={styles.label}>
-                <span className={styles.dot} />
+              <div
+                className={
+                  styles.label
+                }
+              >
+                <span
+                  className={
+                    styles.dot
+                  }
+                />
 
                 <span>
-                  Start a conversation
+                  Start a
+                  conversation
                 </span>
               </div>
 
               <span
-                className={styles.primaryHint}
+                className={
+                  styles.primaryHint
+                }
               >
-                Best way to reach me
+                Best way to
+                reach me
               </span>
             </div>
 
             <a
-              href={`mailto:${site.email}`}
-              className={styles.emailLink}
+              href={
+                primaryContact.href
+              }
+              className={
+                styles.emailLink
+              }
               data-motion-scroll="contact-email"
+              target={
+                primaryIsExternal
+                  ? "_blank"
+                  : undefined
+              }
+              rel={
+                primaryIsExternal
+                  ? "noreferrer"
+                  : undefined
+              }
             >
               <span
-                className={styles.emailLabel}
+                className={
+                  styles.emailLabel
+                }
                 data-motion-piece="label"
               >
-                Email
+                {
+                  primaryContact.label
+                }
               </span>
 
               <span
-                className={styles.emailAddress}
+                className={
+                  styles.emailAddress
+                }
                 data-motion-piece="address"
               >
-                {emailLocal}
+                {
+                  primaryContact.lineOne
+                }
 
-                {emailDomain && (
+                {primaryContact.lineTwo ? (
                   <>
-                    <br />@{emailDomain}
+                    <br />
+
+                    {
+                      primaryContact.lineTwo
+                    }
                   </>
-                )}
+                ) : null}
               </span>
 
               <span
-                className={styles.emailArrow}
+                className={
+                  styles.emailArrow
+                }
                 aria-hidden="true"
                 data-motion-piece="arrow"
               >
@@ -148,14 +305,16 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* =========================
-            DETAILS
-        ========================= */}
-
-        <section className={styles.details}>
+        <section
+          className={
+            styles.details
+          }
+        >
           <div className="site-container">
             <div
-              className={styles.detailsGrid}
+              className={
+                styles.detailsGrid
+              }
             >
               <div
                 className={
@@ -170,10 +329,14 @@ export default function ContactPage() {
                   data-motion-piece="label"
                 >
                   <span
-                    className={styles.dot}
+                    className={
+                      styles.dot
+                    }
                   />
 
-                  <span>Availability</span>
+                  <span>
+                    Availability
+                  </span>
                 </div>
 
                 <div
@@ -183,7 +346,9 @@ export default function ContactPage() {
                   data-motion-piece="content"
                 >
                   <div
-                    className={styles.status}
+                    className={
+                      styles.status
+                    }
                   >
                     <span
                       className={
@@ -193,15 +358,27 @@ export default function ContactPage() {
 
                     <span>
                       {site.availability.statusLines.map(
-                        (line, index) => (
-                          <span key={line}>
-                            {line}
+                        (
+                          line,
+                          index,
+                        ) => (
+                          <span
+                            key={
+                              line
+                            }
+                          >
+                            {
+                              line
+                            }
 
                             {index <
-                              site.availability
+                              site
+                                .availability
                                 .statusLines
                                 .length -
-                                1 && <br />}
+                                1 && (
+                              <br />
+                            )}
                           </span>
                         ),
                       )}
@@ -210,8 +387,7 @@ export default function ContactPage() {
 
                   <p>
                     {
-                      site.availability
-                        .description
+                      site.availability.description
                     }
                   </p>
                 </div>
@@ -230,11 +406,14 @@ export default function ContactPage() {
                   data-motion-piece="label"
                 >
                   <span
-                    className={styles.dot}
+                    className={
+                      styles.dot
+                    }
                   />
 
                   <span>
-                    What we could make
+                    What we
+                    could make
                   </span>
                 </div>
 
@@ -244,21 +423,34 @@ export default function ContactPage() {
                   }
                 >
                   {site.collaborationTypes.map(
-                    (item, index) => (
+                    (
+                      item,
+                      index,
+                    ) => (
                       <div
                         className={
                           styles.collaborationItem
                         }
-                        key={item}
+                        key={
+                          item
+                        }
                         data-motion-piece="item"
                       >
                         <span>
                           {String(
-                            index + 1,
-                          ).padStart(2, "0")}
+                            index +
+                              1,
+                          ).padStart(
+                            2,
+                            "0",
+                          )}
                         </span>
 
-                        <p>{item}</p>
+                        <p>
+                          {
+                            item
+                          }
+                        </p>
                       </div>
                     ),
                   )}
@@ -268,62 +460,71 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* =========================
-            SOCIAL
-        ========================= */}
-
         <section
-          className={styles.socialSection}
+          className={
+            styles.socialSection
+          }
         >
           <div className="site-container">
             <div
-              className={styles.socialHeader}
+              className={
+                styles.socialHeader
+              }
               data-motion-scroll="contact-social-header"
             >
               <div
-                className={styles.label}
+                className={
+                  styles.label
+                }
                 data-motion-piece="label"
               >
                 <span
-                  className={styles.darkDot}
+                  className={
+                    styles.darkDot
+                  }
                 />
 
-                <span>Elsewhere</span>
+                <span>
+                  Elsewhere
+                </span>
               </div>
 
-              <p data-motion-piece="title">
-                A few other places
+              <p
+                data-motion-piece="title"
+              >
+                A few other
+                places
                 <br />
                 you can find me
-                <span>.</span>
+
+                <span>
+                  .
+                </span>
               </p>
             </div>
 
             <div
-              className={styles.socialList}
+              className={
+                styles.socialList
+              }
             >
               {site.socials.map(
-                (social, index) => (
+                (
+                  social,
+                  index,
+                ) => (
                   <a
-                    href={social.href}
+                    href={
+                      social.href
+                    }
                     className={
                       styles.socialItem
                     }
-                    key={social.label}
-                    target={
-                      social.href.startsWith(
-                        "http",
-                      )
-                        ? "_blank"
-                        : undefined
+                    key={
+                      social.label
                     }
-                    rel={
-                      social.href.startsWith(
-                        "http",
-                      )
-                        ? "noreferrer"
-                        : undefined
-                    }
+                    target="_blank"
+                    rel="noreferrer"
                     data-motion-scroll="contact-social-item"
                   >
                     <span
@@ -332,8 +533,12 @@ export default function ContactPage() {
                       }
                     >
                       {String(
-                        index + 1,
-                      ).padStart(2, "0")}
+                        index +
+                          1,
+                      ).padStart(
+                        2,
+                        "0",
+                      )}
                     </span>
 
                     <span
@@ -341,7 +546,9 @@ export default function ContactPage() {
                         styles.socialName
                       }
                     >
-                      {social.label}
+                      {
+                        social.label
+                      }
                     </span>
 
                     <span
@@ -349,7 +556,9 @@ export default function ContactPage() {
                         styles.socialUsername
                       }
                     >
-                      {social.username}
+                      {
+                        social.username
+                      }
                     </span>
 
                     <span
@@ -367,14 +576,16 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* =========================
-            CLOSING
-        ========================= */}
-
-        <section className={styles.closing}>
+        <section
+          className={
+            styles.closing
+          }
+        >
           <div className="site-container">
             <div
-              className={styles.closingGrid}
+              className={
+                styles.closingGrid
+              }
               data-motion-scroll="contact-closing"
             >
               <div
@@ -383,10 +594,15 @@ export default function ContactPage() {
                 }
                 data-motion-piece="label"
               >
-                <span className={styles.dot} />
+                <span
+                  className={
+                    styles.dot
+                  }
+                />
 
                 <span>
-                  Still exploring?
+                  Still
+                  exploring?
                 </span>
               </div>
 
@@ -399,8 +615,12 @@ export default function ContactPage() {
                 <p>
                   Take a look at
                   <br />
-                  what I&apos;ve been making
-                  <span>.</span>
+                  what I&apos;ve
+                  been making
+
+                  <span>
+                    .
+                  </span>
                 </p>
 
                 <Link
@@ -410,7 +630,10 @@ export default function ContactPage() {
                   }
                 >
                   Explore the work
-                  <span>↗</span>
+
+                  <span>
+                    ↗
+                  </span>
                 </Link>
               </div>
             </div>

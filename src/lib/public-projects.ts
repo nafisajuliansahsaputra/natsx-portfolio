@@ -1,37 +1,16 @@
 import {
+  cache,
+} from "react";
+
+import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
-const PUBLIC_PROJECT_FIELDS = [
-  "id",
-  "slug",
-  "title",
-  "project_number",
-  "year",
-  "period",
-  "summary",
-  "categories",
-  "roles",
-  "featured",
-  "sort_order",
-  "live_url",
-  "accent_color",
-  "secondary_color",
-].join(",");
+const PUBLIC_PROJECT_FIELDS =
+  "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,updated_at,published_at";
 
-const PUBLIC_SECTION_FIELDS = [
-  "id",
-  "project_id",
-  "section_type",
-  "eyebrow",
-  "heading",
-  "body",
-  "content",
-  "theme",
-  "sort_order",
-  "is_visible",
-  "created_at",
-].join(",");
+const PUBLIC_SECTION_FIELDS =
+  "id,project_id,section_type,eyebrow,heading,body,content,theme,sort_order,is_visible,created_at";
 
 type PublicProjectRow = {
   id: string;
@@ -39,24 +18,62 @@ type PublicProjectRow = {
   title: string;
   project_number: string;
   year: number;
-  period: string | null;
-  summary: string | null;
-  categories: unknown[] | null;
-  roles: unknown[] | null;
+
+  period:
+    | string
+    | null;
+
+  summary:
+    | string
+    | null;
+
+  categories:
+    | unknown[]
+    | null;
+
+  roles:
+    | unknown[]
+    | null;
+
   featured: boolean;
   sort_order: number;
-  live_url: string | null;
-  accent_color: string | null;
-  secondary_color: string | null;
+
+  live_url:
+    | string
+    | null;
+
+  accent_color:
+    | string
+    | null;
+
+  secondary_color:
+    | string
+    | null;
+
+  updated_at: string;
+
+  published_at:
+    | string
+    | null;
 };
 
 type PublicProjectSectionRow = {
   id: string;
   project_id: string;
   section_type: string;
-  eyebrow: string | null;
-  heading: string | null;
-  body: string | null;
+
+  eyebrow:
+    | string
+    | null;
+
+  heading:
+    | string
+    | null;
+
+  body:
+    | string
+    | null;
+
   content: unknown;
   theme: string;
   sort_order: number;
@@ -76,9 +93,22 @@ export type PublicProject = {
   roles: string[];
   featured: boolean;
   sortOrder: number;
-  website: string | null;
+
+  website:
+    | string
+    | null;
+
   accentColor: string;
-  secondaryColor: string | null;
+
+  secondaryColor:
+    | string
+    | null;
+
+  updatedAt: string;
+
+  publishedAt:
+    | string
+    | null;
 };
 
 export type PublicProjectSection = {
@@ -88,20 +118,33 @@ export type PublicProjectSection = {
   eyebrow: string;
   heading: string;
   body: string;
-  content: Record<string, unknown>;
+
+  content: Record<
+    string,
+    unknown
+  >;
+
   theme: string;
   sortOrder: number;
 };
 
 export type PublicProjectPageData = {
   project: PublicProject;
-  sections: PublicProjectSection[];
-  nextProject: PublicProject | null;
+
+  sections:
+    PublicProjectSection[];
+
+  nextProject:
+    | PublicProject
+    | null;
+
   totalProjects: number;
 };
 
 function normalizeStringList(
-  value: unknown[] | null,
+  value:
+    | unknown[]
+    | null,
 ) {
   if (!Array.isArray(value)) {
     return [];
@@ -112,7 +155,8 @@ function normalizeStringList(
       (
         item,
       ): item is string =>
-        typeof item === "string",
+        typeof item ===
+        "string",
     )
     .map((item) =>
       item.trim(),
@@ -122,9 +166,13 @@ function normalizeStringList(
 
 function normalizeContent(
   value: unknown,
-): Record<string, unknown> {
+): Record<
+  string,
+  unknown
+> {
   if (
-    typeof value !== "object" ||
+    typeof value !==
+      "object" ||
     value === null ||
     Array.isArray(value)
   ) {
@@ -141,22 +189,32 @@ function normalizeProject(
   project: PublicProjectRow,
 ): PublicProject {
   return {
-    id: project.id,
-    slug: project.slug,
+    id:
+      project.id,
+
+    slug:
+      project.slug,
+
     number:
       project.project_number,
-    title: project.title,
 
-    year: String(
-      project.year,
-    ),
+    title:
+      project.title,
+
+    year:
+      String(
+        project.year,
+      ),
 
     period:
       project.period ??
-      String(project.year),
+      String(
+        project.year,
+      ),
 
     summary:
-      project.summary ?? "",
+      project.summary ??
+      "",
 
     disciplines:
       normalizeStringList(
@@ -183,6 +241,12 @@ function normalizeProject(
 
     secondaryColor:
       project.secondary_color,
+
+    updatedAt:
+      project.updated_at,
+
+    publishedAt:
+      project.published_at,
   };
 }
 
@@ -190,7 +254,8 @@ function normalizeSection(
   section: PublicProjectSectionRow,
 ): PublicProjectSection {
   return {
-    id: section.id,
+    id:
+      section.id,
 
     projectId:
       section.project_id,
@@ -228,8 +293,11 @@ function normalizeProjects(
 ) {
   return (
     (data ??
-      []) as PublicProjectRow[]
-  ).map(normalizeProject);
+      []) as unknown as
+      PublicProjectRow[]
+  ).map(
+    normalizeProject,
+  );
 }
 
 export async function getPublishedProjects(): Promise<
@@ -253,7 +321,8 @@ export async function getPublishedProjects(): Promise<
     .order(
       "sort_order",
       {
-        ascending: true,
+        ascending:
+          true,
       },
     );
 
@@ -270,7 +339,9 @@ export async function getPublishedProjects(): Promise<
 
 export async function getFeaturedProjects(
   limit = 3,
-): Promise<PublicProject[]> {
+): Promise<
+  PublicProject[]
+> {
   const supabase =
     createPublicClient();
 
@@ -299,7 +370,8 @@ export async function getFeaturedProjects(
     .order(
       "sort_order",
       {
-        ascending: true,
+        ascending:
+          true,
       },
     )
     .limit(
@@ -317,54 +389,20 @@ export async function getFeaturedProjects(
   );
 }
 
-export async function getPublishedProjectBySlug(
+async function loadPublishedProjectPage(
   slug: string,
-): Promise<PublicProject | null> {
+): Promise<
+  PublicProjectPageData | null
+> {
   const supabase =
     createPublicClient();
 
   const {
-    data,
-    error,
-  } = await supabase
-    .from("projects")
-    .select(
-      PUBLIC_PROJECT_FIELDS,
-    )
-    .eq(
-      "slug",
-      slug,
-    )
-    .eq(
-      "status",
-      "published",
-    )
-    .maybeSingle();
+    data:
+      projectData,
 
-  if (error) {
-    throw new Error(
-      `Gagal memuat project: ${error.message}`,
-    );
-  }
-
-  if (!data) {
-    return null;
-  }
-
-return normalizeProject(
-  data as unknown as PublicProjectRow,
-);
-}
-
-export async function getPublishedProjectPage(
-  slug: string,
-): Promise<PublicProjectPageData | null> {
-  const supabase =
-    createPublicClient();
-
-  const {
-    data: projectData,
-    error: projectError,
+    error:
+      projectError,
   } = await supabase
     .from("projects")
     .select(
@@ -390,61 +428,69 @@ export async function getPublishedProjectPage(
     return null;
   }
 
-const project =
-  normalizeProject(
-    projectData as unknown as PublicProjectRow,
-  );
+  const project =
+    normalizeProject(
+      projectData as unknown as PublicProjectRow,
+    );
 
   const [
     sectionResult,
     projectListResult,
-  ] = await Promise.all([
-    supabase
-      .from(
-        "project_sections",
-      )
-      .select(
-        PUBLIC_SECTION_FIELDS,
-      )
-      .eq(
-        "project_id",
-        project.id,
-      )
-      .eq(
-        "is_visible",
-        true,
-      )
-      .order(
-        "sort_order",
-        {
-          ascending: true,
-        },
-      )
-      .order(
-        "created_at",
-        {
-          ascending: true,
-        },
-      ),
+  ] =
+    await Promise.all([
+      supabase
+        .from(
+          "project_sections",
+        )
+        .select(
+          PUBLIC_SECTION_FIELDS,
+        )
+        .eq(
+          "project_id",
+          project.id,
+        )
+        .eq(
+          "is_visible",
+          true,
+        )
+        .order(
+          "sort_order",
+          {
+            ascending:
+              true,
+          },
+        )
+        .order(
+          "created_at",
+          {
+            ascending:
+              true,
+          },
+        ),
 
-    supabase
-      .from("projects")
-      .select(
-        PUBLIC_PROJECT_FIELDS,
-      )
-      .eq(
-        "status",
-        "published",
-      )
-      .order(
-        "sort_order",
-        {
-          ascending: true,
-        },
-      ),
-  ]);
+      supabase
+        .from(
+          "projects",
+        )
+        .select(
+          PUBLIC_PROJECT_FIELDS,
+        )
+        .eq(
+          "status",
+          "published",
+        )
+        .order(
+          "sort_order",
+          {
+            ascending:
+              true,
+          },
+        ),
+    ]);
 
-  if (sectionResult.error) {
+  if (
+    sectionResult.error
+  ) {
     throw new Error(
       `Gagal memuat project sections: ${sectionResult.error.message}`,
     );
@@ -458,10 +504,13 @@ const project =
     );
   }
 
-const sections = (
-  (sectionResult.data ??
-    []) as unknown as PublicProjectSectionRow[]
-).map(normalizeSection);
+  const sections = (
+    (sectionResult.data ??
+      []) as unknown as
+      PublicProjectSectionRow[]
+  ).map(
+    normalizeSection,
+  );
 
   const projects =
     normalizeProjects(
@@ -471,7 +520,8 @@ const sections = (
   const currentIndex =
     projects.findIndex(
       (item) =>
-        item.id === project.id,
+        item.id ===
+        project.id,
     );
 
   let nextProject:
@@ -493,13 +543,20 @@ const sections = (
     project,
     sections,
     nextProject,
+
     totalProjects:
       projects.length,
   };
 }
 
+export const getPublishedProjectPage =
+  cache(
+    loadPublishedProjectPage,
+  );
+
 export function getPublicProjectYearRange(
-  source: PublicProject[],
+  source:
+    PublicProject[],
 ) {
   const years =
     source
@@ -520,15 +577,21 @@ export function getPublicProjectYearRange(
   }
 
   const earliest =
-    Math.min(...years);
+    Math.min(
+      ...years,
+    );
 
   const latest =
-    Math.max(...years);
+    Math.max(
+      ...years,
+    );
 
   if (
     earliest === latest
   ) {
-    return String(latest);
+    return String(
+      latest,
+    );
   }
 
   return `${earliest}—${latest}`;

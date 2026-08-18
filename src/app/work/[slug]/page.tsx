@@ -15,9 +15,16 @@ import {
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
-  getPublishedProjectBySlug,
+  getProjectPreviewImage,
+} from "@/lib/public-media";
+
+import {
   getPublishedProjectPage,
 } from "@/lib/public-projects";
+
+import {
+  getAbsoluteUrl,
+} from "@/lib/site-url";
 
 import ProjectSectionRenderer from "./ProjectSectionRenderer";
 
@@ -38,24 +45,104 @@ export async function generateMetadata({
   const { slug } =
     await params;
 
-  const project =
-    await getPublishedProjectBySlug(
+  const data =
+    await getPublishedProjectPage(
       slug,
     );
 
-  if (!project) {
+  if (!data) {
     return {
       title:
         "Project Not Found",
+
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
+
+  const {
+    project,
+    sections,
+  } = data;
+
+  const description =
+    project.summary ||
+    `${project.title} — a project case study by NATSX.`;
+
+  const canonical =
+    getAbsoluteUrl(
+      `/work/${project.slug}`,
+    );
+
+  const previewImage =
+    getProjectPreviewImage(
+      sections,
+    );
 
   return {
     title:
       project.title,
 
-    description:
-      project.summary,
+    description,
+
+    alternates: {
+      canonical,
+    },
+
+    openGraph: {
+      type:
+        "article",
+
+      title:
+        `${project.title} — NATSX`,
+
+      description,
+
+      url:
+        canonical,
+
+      siteName:
+        "NATSX",
+
+      publishedTime:
+        project.publishedAt ??
+        undefined,
+
+      modifiedTime:
+        project.updatedAt,
+
+      images:
+        previewImage
+          ? [
+              {
+                url:
+                  previewImage,
+
+                alt:
+                  `${project.title} — NATSX`,
+              },
+            ]
+          : undefined,
+    },
+
+    twitter: {
+      card:
+        "summary_large_image",
+
+      title:
+        `${project.title} — NATSX`,
+
+      description,
+
+      images:
+        previewImage
+          ? [
+              previewImage,
+            ]
+          : undefined,
+    },
   };
 }
 
@@ -181,7 +268,10 @@ export default async function ProjectPage({
                   styles.backLink
                 }
               >
-                <span>←</span>
+                <span>
+                  ←
+                </span>
+
                 All Work
               </Link>
 
@@ -191,8 +281,13 @@ export default async function ProjectPage({
                 }
               >
                 Project{" "}
-                {project.number} /{" "}
-                {project.year}
+                {
+                  project.number
+                }{" "}
+                /{" "}
+                {
+                  project.year
+                }
               </span>
             </div>
 
@@ -211,7 +306,10 @@ export default async function ProjectPage({
                   {
                     project.title
                   }
-                  <span>.</span>
+
+                  <span>
+                    .
+                  </span>
                 </h1>
               </div>
 
@@ -274,7 +372,9 @@ export default async function ProjectPage({
                 </span>
 
                 <strong>
-                  {project.year}
+                  {
+                    project.year
+                  }
                 </strong>
               </div>
 
@@ -288,7 +388,9 @@ export default async function ProjectPage({
                 </span>
 
                 <strong>
-                  {project.period}
+                  {
+                    project.period
+                  }
                 </strong>
               </div>
 
@@ -307,11 +409,17 @@ export default async function ProjectPage({
                   }
                 >
                   {project.roles.map(
-                    (role) => (
+                    (
+                      role,
+                    ) => (
                       <span
-                        key={role}
+                        key={
+                          role
+                        }
                       >
-                        {role}
+                        {
+                          role
+                        }
                       </span>
                     ),
                   )}
@@ -339,7 +447,10 @@ export default async function ProjectPage({
                     }
                   >
                     Visit Live
-                    <span>↗</span>
+
+                    <span>
+                      ↗
+                    </span>
                   </a>
                 ) : (
                   <strong>
@@ -359,7 +470,9 @@ export default async function ProjectPage({
           {sections.length >
           0 ? (
             sections.map(
-              (section) => (
+              (
+                section,
+              ) => (
                 <ProjectSectionRenderer
                   section={
                     section
@@ -384,13 +497,17 @@ export default async function ProjectPage({
 
                 <h2>
                   Story in
-                  progress<span>.</span>
+                  progress
+
+                  <span>
+                    .
+                  </span>
                 </h2>
 
                 <p>
                   This project is
-                  published, but its
-                  detailed case
+                  published, but
+                  its detailed case
                   study is still
                   being prepared.
                 </p>

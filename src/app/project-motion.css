@@ -1,0 +1,232 @@
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     PROJECT HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      680ms
+      var(--motion-ease-out)
+      50ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      980ms
+      var(--motion-ease-out)
+      110ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="disciplines"] {
+    animation:
+      natsx-rise-in
+      720ms
+      var(--motion-ease-out)
+      220ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="summary"] {
+    animation:
+      natsx-rise-in
+      780ms
+      var(--motion-ease-out)
+      290ms
+      both;
+  }
+
+  /* =========================
+     PROJECT DETAILS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-details"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-details"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     DYNAMIC SECTIONS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll^="project-"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        20px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        860ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll^="project-"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="content"] {
+    transition-delay:
+      70ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="media"] {
+    transition-delay:
+      110ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="quote"] {
+    transition-delay:
+      80ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="source"] {
+    transition-delay:
+      150ms;
+  }
+
+  /* Gallery / Metrics stagger */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="item"]:nth-child(2) {
+    transition-delay:
+      60ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="item"]:nth-child(3) {
+    transition-delay:
+      110ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="item"]:nth-child(4) {
+    transition-delay:
+      160ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-piece="item"]:nth-child(n + 5) {
+    transition-delay:
+      200ms;
+  }
+
+  /* =========================
+     NEXT PROJECT
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-next-header"],
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-next-link"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-next-header"][data-motion-visible="true"],
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-next-link"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}

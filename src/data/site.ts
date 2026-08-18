@@ -4,23 +4,86 @@ export type SiteSocial = {
   href: string;
 };
 
+const contactEmail =
+  process.env
+    .NEXT_PUBLIC_CONTACT_EMAIL
+    ?.trim() ?? "";
+
+const linkedInUrl =
+  process.env
+    .NEXT_PUBLIC_LINKEDIN_URL
+    ?.trim() ?? "";
+
+const instagramUrl =
+  process.env
+    .NEXT_PUBLIC_INSTAGRAM_URL
+    ?.trim() ?? "";
+
+const socials:
+  SiteSocial[] = [];
+
+if (linkedInUrl) {
+  socials.push({
+    label:
+      "LinkedIn",
+
+    username:
+      "Nafisa Juliansah Saputra",
+
+    href:
+      linkedInUrl,
+  });
+}
+
+if (instagramUrl) {
+  socials.push({
+    label:
+      "Instagram",
+
+    username:
+      "@natsx",
+
+    href:
+      instagramUrl,
+  });
+}
+
+socials.push({
+  label:
+    "GitHub",
+
+  username:
+    "@nafisajuliansahsaputra",
+
+  href:
+    "https://github.com/nafisajuliansahsaputra",
+});
+
 export const site = {
-  name: "NATSX",
+  name:
+    "NATSX",
 
-  person: "Nafisa Juliansah Saputra",
+  person:
+    "Nafisa Juliansah Saputra",
 
-  firstName: "Julian",
+  firstName:
+    "Julian",
 
-  role: "Digital Creator",
+  role:
+    "Digital Creator",
 
-  email: "your-email@example.com",
+  email:
+    contactEmail,
 
-  location: "Indonesia",
+  location:
+    "Indonesia",
 
-  year: 2026,
+  year:
+    2026,
 
   availability: {
-    scope: "Available Worldwide",
+    scope:
+      "Available Worldwide",
 
     statusLines: [
       "Open to selected",
@@ -40,18 +103,5 @@ export const site = {
     "Motion & Visuals",
   ],
 
-  socials: [
-    {
-      label: "LinkedIn",
-      username:
-        "Nafisa Juliansah Saputra",
-      href: "#",
-    },
-
-    {
-      label: "Instagram",
-      username: "@natsx",
-      href: "#",
-    },
-  ] satisfies SiteSocial[],
+  socials,
 };

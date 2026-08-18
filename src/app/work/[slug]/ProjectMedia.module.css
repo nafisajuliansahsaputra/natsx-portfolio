@@ -1,0 +1,48 @@
+.imageFrame {
+  position: relative;
+
+  width: 100%;
+  height:
+    clamp(
+      360px,
+      65vw,
+      900px
+    );
+
+  overflow: hidden;
+
+  background:
+    var(
+      --project-secondary
+    );
+}
+
+.imageMedia {
+  width: 100% !important;
+  height: 100% !important;
+
+  max-height: none !important;
+
+  object-fit:
+    contain !important;
+}
+
+.positionedFrame {
+  position: relative;
+}
+
+.galleryMedia {
+  min-height:
+    0 !important;
+
+  object-fit:
+    cover !important;
+}
+
+.finaleImage {
+  min-height:
+    0 !important;
+
+  object-fit:
+    cover !important;
+}

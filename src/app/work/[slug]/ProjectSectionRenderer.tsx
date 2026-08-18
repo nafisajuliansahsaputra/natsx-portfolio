@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -12,14 +13,15 @@ import {
   getQuoteSectionContent,
 } from "@/lib/project-section-content";
 
+import {
+  getPortfolioMediaPublicUrl,
+} from "@/lib/public-media";
+
 import type {
   PublicProjectSection,
 } from "@/lib/public-projects";
 
-import {
-  createPublicClient,
-} from "@/lib/supabase/public";
-
+import mediaStyles from "./ProjectMedia.module.css";
 import styles from "./ProjectDetail.module.css";
 
 function getTheme(
@@ -35,17 +37,13 @@ function getTheme(
   return "light";
 }
 
-function getMediaUrl(
-  bucket: string,
-  path: string,
+function isAnimatedImage(
+  mimeType: string,
 ) {
-  const supabase =
-    createPublicClient();
-
-  return supabase.storage
-    .from(bucket)
-    .getPublicUrl(path)
-    .data.publicUrl;
+  return (
+    mimeType ===
+    "image/gif"
+  );
 }
 
 function BodyCopy({
@@ -63,7 +61,8 @@ function BodyCopy({
       .filter(Boolean);
 
   if (
-    paragraphs.length === 0
+    paragraphs.length ===
+    0
   ) {
     return null;
   }
@@ -96,7 +95,8 @@ function BodyCopy({
 function SectionIntroduction({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   if (
     !section.eyebrow &&
@@ -116,6 +116,7 @@ function SectionIntroduction({
         className={
           styles.sectionEyebrow
         }
+        data-motion-piece="label"
       >
         <span
           className={
@@ -133,15 +134,20 @@ function SectionIntroduction({
         className={
           styles.sectionIntroductionMain
         }
+        data-motion-piece="content"
       >
         {section.heading ? (
           <h2>
-            {section.heading}
+            {
+              section.heading
+            }
           </h2>
         ) : null}
 
         <BodyCopy
-          body={section.body}
+          body={
+            section.body
+          }
         />
       </div>
     </div>
@@ -151,7 +157,8 @@ function SectionIntroduction({
 function OverviewSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   return (
     <section
@@ -173,6 +180,7 @@ function OverviewSection({
             className={
               styles.sectionEyebrow
             }
+            data-motion-piece="label"
           >
             <span
               className={
@@ -190,16 +198,21 @@ function OverviewSection({
             className={
               styles.overviewContent
             }
+            data-motion-piece="content"
           >
             {section.heading ? (
               <h2>
-                {section.heading}
+                {
+                  section.heading
+                }
                 <span>.</span>
               </h2>
             ) : null}
 
             <BodyCopy
-              body={section.body}
+              body={
+                section.body
+              }
             />
           </div>
         </div>
@@ -211,7 +224,8 @@ function OverviewSection({
 function NarrativeSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   return (
     <section
@@ -225,7 +239,9 @@ function NarrativeSection({
     >
       <div className="site-container">
         <SectionIntroduction
-          section={section}
+          section={
+            section
+          }
         />
       </div>
     </section>
@@ -235,7 +251,8 @@ function NarrativeSection({
 function StatementSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   const statement =
     section.heading ||
@@ -263,12 +280,15 @@ function StatementSection({
             className={
               styles.statementEyebrow
             }
+            data-motion-piece="label"
           >
             {section.eyebrow ||
               "Statement"}
           </span>
 
-          <p>
+          <p
+            data-motion-piece="content"
+          >
             {statement}
           </p>
         </div>
@@ -280,7 +300,8 @@ function StatementSection({
 function ImageSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   const media =
     getImageSectionMedia(
@@ -297,9 +318,12 @@ function ImageSection({
 
   const imageUrl =
     media
-      ? getMediaUrl(
-          media.asset.bucket,
-          media.asset.path,
+      ? getPortfolioMediaPublicUrl(
+          media.asset
+            .bucket,
+
+          media.asset
+            .path,
         )
       : null;
 
@@ -315,7 +339,9 @@ function ImageSection({
     >
       <div className="site-container">
         <SectionIntroduction
-          section={section}
+          section={
+            section
+          }
         />
 
         {imageUrl &&
@@ -324,23 +350,39 @@ function ImageSection({
             className={
               styles.imageFigure
             }
+            data-motion-piece="media"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageUrl}
-              alt={
-                media.alt ||
-                section.heading ||
-                "Project image"
+            <div
+              className={
+                mediaStyles.imageFrame
               }
-            />
+            >
+              <Image
+                src={
+                  imageUrl
+                }
+                alt={
+                  media.alt ||
+                  section.heading ||
+                  "Project image"
+                }
+                fill
+                sizes="100vw"
+                unoptimized={isAnimatedImage(
+                  media.asset
+                    .mimeType,
+                )}
+                className={
+                  mediaStyles.imageMedia
+                }
+              />
+            </div>
 
             {media.caption ? (
               <figcaption>
                 <span>
                   {
-                    media
-                      .asset
+                    media.asset
                       .originalName
                   }
                 </span>
@@ -362,7 +404,8 @@ function ImageSection({
 function GallerySection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   const gallery =
     getGallerySectionMedia(
@@ -371,7 +414,8 @@ function GallerySection({
 
   if (
     (!gallery ||
-      gallery.items.length ===
+      gallery.items
+        .length ===
         0) &&
     !section.heading &&
     !section.body
@@ -391,11 +435,14 @@ function GallerySection({
     >
       <div className="site-container">
         <SectionIntroduction
-          section={section}
+          section={
+            section
+          }
         />
 
         {gallery &&
-        gallery.items.length >
+        gallery.items
+          .length >
           0 ? (
           <div
             className={
@@ -408,9 +455,10 @@ function GallerySection({
                 index,
               ) => {
                 const imageUrl =
-                  getMediaUrl(
+                  getPortfolioMediaPublicUrl(
                     item.asset
                       .bucket,
+
                     item.asset
                       .path,
                   );
@@ -423,14 +471,12 @@ function GallerySection({
                     key={
                       item.id
                     }
+                    data-motion-piece="item"
                   >
                     <div
-                      className={
-                        styles.galleryImage
-                      }
+                      className={`${styles.galleryImage} ${mediaStyles.positionedFrame}`}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={
                           imageUrl
                         }
@@ -440,6 +486,15 @@ function GallerySection({
                             index +
                             1
                           }`
+                        }
+                        fill
+                        sizes="(max-width: 700px) 100vw, 50vw"
+                        unoptimized={isAnimatedImage(
+                          item.asset
+                            .mimeType,
+                        )}
+                        className={
+                          mediaStyles.galleryMedia
                         }
                       />
                     </div>
@@ -477,7 +532,8 @@ function GallerySection({
 function MetricsSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   const metrics =
     getMetricsSectionContent(
@@ -505,10 +561,13 @@ function MetricsSection({
     >
       <div className="site-container">
         <SectionIntroduction
-          section={section}
+          section={
+            section
+          }
         />
 
-        {metrics.items.length >
+        {metrics.items
+          .length >
         0 ? (
           <div
             className={
@@ -530,6 +589,7 @@ function MetricsSection({
                   key={
                     item.id
                   }
+                  data-motion-piece="item"
                 >
                   <span
                     className={
@@ -537,7 +597,8 @@ function MetricsSection({
                     }
                   >
                     {String(
-                      index + 1,
+                      index +
+                        1,
                     ).padStart(
                       2,
                       "0",
@@ -576,7 +637,8 @@ function MetricsSection({
 function QuoteSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   const quote =
     getQuoteSectionContent(
@@ -608,11 +670,14 @@ function QuoteSection({
             className={
               styles.quoteMark
             }
+            data-motion-piece="label"
           >
             “
           </span>
 
-          <blockquote>
+          <blockquote
+            data-motion-piece="quote"
+          >
             {quote.text}
           </blockquote>
 
@@ -622,6 +687,7 @@ function QuoteSection({
               className={
                 styles.quoteSource
               }
+              data-motion-piece="source"
             >
               {quote.source ? (
                 <strong>
@@ -649,7 +715,8 @@ function QuoteSection({
 function FinaleSection({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   const finale =
     getFinaleSectionContent(
@@ -667,15 +734,20 @@ function FinaleSection({
 
   const mediaUrl =
     media
-      ? getMediaUrl(
-          media.asset.bucket,
-          media.asset.path,
+      ? getPortfolioMediaPublicUrl(
+          media.asset
+            .bucket,
+
+          media.asset
+            .path,
         )
       : null;
 
-  const cta =
-    finale.ctaLabel &&
-    finale.ctaUrl;
+  const hasCta =
+    Boolean(
+      finale.ctaLabel &&
+        finale.ctaUrl,
+    );
 
   return (
     <section
@@ -695,6 +767,7 @@ function FinaleSection({
             className={
               styles.finaleCopy
             }
+            data-motion-piece="content"
           >
             <span
               className={
@@ -706,16 +779,20 @@ function FinaleSection({
             </span>
 
             <h2>
-              {finale.title}
+              {
+                finale.title
+              }
             </h2>
 
             {finale.body ? (
               <p>
-                {finale.body}
+                {
+                  finale.body
+                }
               </p>
             ) : null}
 
-            {cta ? (
+            {hasCta ? (
               finale.ctaUrl.startsWith(
                 "/",
               ) ? (
@@ -730,7 +807,10 @@ function FinaleSection({
                   {
                     finale.ctaLabel
                   }
-                  <span>↗</span>
+
+                  <span>
+                    ↗
+                  </span>
                 </Link>
               ) : (
                 <a
@@ -746,7 +826,10 @@ function FinaleSection({
                   {
                     finale.ctaLabel
                   }
-                  <span>↗</span>
+
+                  <span>
+                    ↗
+                  </span>
                 </a>
               )
             ) : null}
@@ -755,33 +838,41 @@ function FinaleSection({
           {mediaUrl &&
           media ? (
             <div
-              className={
-                styles.finaleMedia
-              }
+              className={`${styles.finaleMedia} ${mediaStyles.positionedFrame}`}
+              data-motion-piece="media"
             >
               {media.kind ===
               "video" ? (
                 <video
-                  src={mediaUrl}
+                  src={
+                    mediaUrl
+                  }
                   autoPlay
                   muted
                   loop
                   playsInline
                   controls
+                  preload="metadata"
                 />
               ) : (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={
-                      mediaUrl
-                    }
-                    alt={
-                      media.alt ||
-                      finale.title
-                    }
-                  />
-                </>
+                <Image
+                  src={
+                    mediaUrl
+                  }
+                  alt={
+                    media.alt ||
+                    finale.title
+                  }
+                  fill
+                  sizes="(max-width: 960px) 100vw, 55vw"
+                  unoptimized={isAnimatedImage(
+                    media.asset
+                      .mimeType,
+                  )}
+                  className={
+                    mediaStyles.finaleImage
+                  }
+                />
               )}
             </div>
           ) : null}
@@ -794,7 +885,8 @@ function FinaleSection({
 export default function ProjectSectionRenderer({
   section,
 }: {
-  section: PublicProjectSection;
+  section:
+    PublicProjectSection;
 }) {
   switch (
     section.sectionType
@@ -802,56 +894,72 @@ export default function ProjectSectionRenderer({
     case "overview":
       return (
         <OverviewSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "narrative":
       return (
         <NarrativeSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "statement":
       return (
         <StatementSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "image":
       return (
         <ImageSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "gallery":
       return (
         <GallerySection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "metrics":
       return (
         <MetricsSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "quote":
       return (
         <QuoteSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
     case "finale":
       return (
         <FinaleSection
-          section={section}
+          section={
+            section
+          }
         />
       );
 
