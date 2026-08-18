@@ -970,3 +970,307 @@
     width: 100%;
   }
 }
+
+.galleryEditor {
+  margin-top: 28px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  background: var(--background);
+}
+
+.galleryEditorHeader {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 0.35fr)
+    minmax(0, 1fr);
+  gap: 28px;
+}
+
+.galleryEditorHeader > div {
+  display: grid;
+  gap: 8px;
+}
+
+.galleryEditorHeader > div > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.galleryEditorHeader strong {
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.galleryEditorHeader p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.galleryUploadControl {
+  min-height: 92px;
+  margin-top: 26px;
+  padding: 18px 20px;
+  border: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.galleryUploadControl:hover,
+.galleryUploadControl:focus-within {
+  border-color: var(--accent);
+}
+
+.galleryUploadControl input,
+.galleryReplaceButton input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.galleryUploadControl > span {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.galleryUploadControl small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.galleryEmpty {
+  min-height: 220px;
+  margin-top: 26px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.galleryEmpty span {
+  margin-bottom: 9px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.galleryEmpty p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.galleryGrid {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  gap: 18px;
+}
+
+.galleryCard {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.galleryCardHeader {
+  min-height: 48px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.galleryCardHeader > span {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.galleryCardHeader > div {
+  display: flex;
+  gap: 5px;
+}
+
+.galleryOrderButton {
+  width: 32px;
+  height: 30px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.galleryOrderButton:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.galleryOrderButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.galleryPreviewImage,
+.galleryPreviewEmpty {
+  min-height: 260px;
+  aspect-ratio: 4 / 3;
+}
+
+.galleryPreviewImage {
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.galleryPreviewImage > span {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 8px;
+  background: #0b0b0b;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.galleryPreviewEmpty {
+  padding: 20px;
+  display: grid;
+  place-items: center;
+  background: var(--background);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.galleryFileMeta {
+  min-height: 45px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.galleryFileMeta span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.galleryItemFields {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.galleryItemFields .textarea {
+  min-height: 90px;
+}
+
+.galleryCardActions {
+  min-height: 62px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.galleryReplaceButton {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.galleryReplaceButton:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.galleryFooter {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.galleryFooter p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .galleryEditorHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .galleryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .galleryEditor {
+    padding: 20px;
+  }
+
+  .galleryPreviewImage,
+  .galleryPreviewEmpty {
+    min-height: 220px;
+  }
+
+  .galleryCardActions,
+  .galleryFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .galleryReplaceButton,
+  .galleryCardActions
+    .mediaDangerButton,
+  .galleryFooter
+    .mediaPrimaryButton {
+    width: 100%;
+  }
+}

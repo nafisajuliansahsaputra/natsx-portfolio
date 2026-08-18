@@ -16,6 +16,7 @@ import {
 } from "./actions";
 import styles from "./sections.module.css";
 import ImageSectionEditor from "./ImageSectionEditor";
+import GallerySectionEditor from "./GallerySectionEditor";
 
 export type SectionRow = {
   id: string;
@@ -298,7 +299,6 @@ function SectionCard({
   }, [router, state.status]);
 
 const needsVisualEditor =
-  section.section_type === "gallery" ||
   section.section_type === "metrics";
 
   return (
@@ -423,13 +423,17 @@ const needsVisualEditor =
     projectId={projectId}
     section={section}
   />
+) : section.section_type === "gallery" ? (
+  <GallerySectionEditor
+    projectId={projectId}
+    section={section}
+  />
 ) : needsVisualEditor ? (
   <div className={styles.visualNotice}>
     <span>VISUAL CONTENT</span>
 
     <p>
-      Upload gambar dan pengaturan konten khusus section ini akan
-      dipasang pada checkpoint berikutnya.
+      Pengaturan konten khusus section ini akan dipasang pada checkpoint berikutnya.
     </p>
   </div>
 ) : null}

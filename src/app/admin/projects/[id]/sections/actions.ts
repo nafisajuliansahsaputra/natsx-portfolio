@@ -8,8 +8,10 @@ import {
   PORTFOLIO_MEDIA_BUCKET,
   collectPortfolioMediaPaths,
   getContentRecord,
+  getGallerySectionMedia,
   getImageSectionMedia,
   isAllowedImageMimeType,
+  type GallerySectionMedia,
   type ImageSectionMedia,
 } from "@/lib/portfolio-media";
 
@@ -191,6 +193,69 @@ function validateImageMedia(
       .length > 1000
   ) {
     return "Caption maksimal 1.000 karakter.";
+  }
+
+  return null;
+}
+
+function validateGalleryMedia(
+  projectId: string,
+  sectionId: string,
+  gallery: GallerySectionMedia,
+) {
+  const itemIds =
+    new Set<string>();
+
+  const assetPaths =
+    new Set<string>();
+
+  for (const item of gallery.items) {
+    if (
+      !item.id ||
+      item.id.length > 100
+    ) {
+      return "Gallery item ID tidak valid.";
+    }
+
+    if (
+      itemIds.has(item.id)
+    ) {
+      return "Gallery memiliki item ID duplikat.";
+    }
+
+    itemIds.add(item.id);
+
+    const mediaError =
+      validateImageMedia(
+        projectId,
+        sectionId,
+        {
+          asset:
+            item.asset,
+
+          alt:
+            item.alt,
+
+          caption:
+            item.caption,
+        },
+      );
+
+    if (mediaError) {
+      return mediaError;
+    }
+
+    if (
+      assetPaths.has(
+        item.asset.path,
+      )
+    ) {
+      return "Gallery memiliki file duplikat.";
+    }
+
+    assetPaths.add(
+      item.asset.path,
+    );
   }
 
   return null;
@@ -637,6 +702,228 @@ export async function removeImageSectionMedia(
   };
 }
 
+export async function saveGallerySectionMedia(
+  projectId: string,
+  sectionId: string,
+  gallery: GallerySectionMedia,
+): Promise<SectionActionState> {
+  const validationError =
+    validateGalleryMedia(
+      projectId,
+      sectionId,
+      gallery,
+    );
+
+  if (validationError) {
+    return {
+      status: "error",
+      message:
+        validationError,
+    };
+  }
+
+  const supabase =
+    await getAdminClient();
+
+  const {
+    data: section,
+    error: sectionError,
+  } = await supabase
+    .from(
+      "project_sections",
+    )
+    .select(
+      "id, section_type, content",
+    )
+    .eq(
+      "id",
+      sectionId,
+    )
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
+
+  if (sectionError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal membaca gallery section: ${sectionError.message}`,
+    };
+  }
+
+  if (!section) {
+    return {
+      status: "error",
+
+      message:
+        "Gallery section tidak ditemukan.",
+    };
+  }
+
+  if (
+    section.section_type !==
+    "gallery"
+  ) {
+    return {
+      status: "error",
+
+      message:
+        "Media gallery hanya dapat disimpan pada section bertipe Gallery.",
+    };
+  }
+
+  const previousGallery =
+    getGallerySectionMedia(
+      section.content,
+    );
+
+  const normalizedGallery: GallerySectionMedia =
+    {
+      items:
+        gallery.items.map(
+          (item) => ({
+            id: item.id,
+
+            asset:
+              item.asset,
+
+            alt:
+              item.alt.trim(),
+
+            caption:
+              item.caption.trim(),
+          }),
+        ),
+    };
+
+  const previousPaths =
+    new Set(
+      previousGallery?.items.map(
+        (item) =>
+          item.asset.path,
+      ) ?? [],
+    );
+
+  const nextPaths =
+    new Set(
+      normalizedGallery.items.map(
+        (item) =>
+          item.asset.path,
+      ),
+    );
+
+  const newlyUploadedPaths =
+    Array.from(
+      nextPaths,
+    ).filter(
+      (path) =>
+        !previousPaths.has(
+          path,
+        ),
+    );
+
+  const removedPaths =
+    Array.from(
+      previousPaths,
+    ).filter(
+      (path) =>
+        !nextPaths.has(path),
+    );
+
+  const nextContent = {
+    ...getContentRecord(
+      section.content,
+    ),
+
+    gallery:
+      normalizedGallery,
+  };
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from(
+      "project_sections",
+    )
+    .update({
+      content:
+        nextContent,
+
+      updated_at:
+        new Date().toISOString(),
+    })
+    .eq(
+      "id",
+      sectionId,
+    )
+    .eq(
+      "project_id",
+      projectId,
+    );
+
+  if (updateError) {
+    if (
+      newlyUploadedPaths.length >
+      0
+    ) {
+      await supabase.storage
+        .from(
+          PORTFOLIO_MEDIA_BUCKET,
+        )
+        .remove(
+          newlyUploadedPaths,
+        );
+    }
+
+    return {
+      status: "error",
+
+      message:
+        `Gagal menyimpan gallery: ${updateError.message}`,
+    };
+  }
+
+  let cleanupWarning = "";
+
+  if (
+    removedPaths.length > 0
+  ) {
+    const {
+      error:
+        cleanupError,
+    } =
+      await supabase.storage
+        .from(
+          PORTFOLIO_MEDIA_BUCKET,
+        )
+        .remove(
+          removedPaths,
+        );
+
+    if (cleanupError) {
+      cleanupWarning =
+        " Gallery tersimpan, tetapi beberapa file lama gagal dibersihkan dari Storage.";
+    }
+  }
+
+  revalidateSectionPages(
+    projectId,
+  );
+
+  return {
+    status: "success",
+
+    message:
+      normalizedGallery.items
+        .length === 0
+        ? `Gallery dikosongkan.${cleanupWarning}`
+        : `Gallery dengan ${normalizedGallery.items.length} gambar berhasil disimpan.${cleanupWarning}`,
+  };
+}
+
 export async function moveSection(
   projectId: string,
   sectionId: string,
@@ -737,7 +1024,6 @@ export async function moveSection(
 export async function deleteSection(
   projectId: string,
   sectionId: string,
-  _formData: FormData,
 ) {
   const supabase =
     await getAdminClient();

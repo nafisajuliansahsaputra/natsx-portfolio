@@ -270,7 +270,6 @@ export async function updateProject(
 
 export async function deleteProject(
   projectId: string,
-  _formData: FormData,
 ) {
   const supabase = await getAdminClient();
 
