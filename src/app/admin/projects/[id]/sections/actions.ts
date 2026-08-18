@@ -3,6 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import {
+  MAX_PORTFOLIO_MEDIA_FILE_SIZE,
+  PORTFOLIO_MEDIA_BUCKET,
+  collectPortfolioMediaPaths,
+  getContentRecord,
+  getImageSectionMedia,
+  isAllowedImageMimeType,
+  type ImageSectionMedia,
+} from "@/lib/portfolio-media";
 
 const SECTION_TYPES = [
   "overview",
@@ -117,6 +126,89 @@ function revalidateSectionPages(projectId: string) {
   revalidatePath("/admin");
   revalidatePath(`/admin/projects/${projectId}`);
   revalidatePath(`/admin/projects/${projectId}/sections`);
+}
+
+function validateImageMedia(
+  projectId: string,
+  sectionId: string,
+  media: ImageSectionMedia,
+) {
+  if (
+    media.asset.bucket !==
+    PORTFOLIO_MEDIA_BUCKET
+  ) {
+    return "Bucket media tidak valid.";
+  }
+
+  const expectedPrefix =
+    `projects/${projectId}` +
+    `/sections/${sectionId}/`;
+
+  if (
+    !media.asset.path.startsWith(
+      expectedPrefix,
+    )
+  ) {
+    return "Path media tidak valid untuk section ini.";
+  }
+
+  if (
+    !isAllowedImageMimeType(
+      media.asset.mimeType,
+    )
+  ) {
+    return "Format gambar tidak didukung.";
+  }
+
+  if (
+    !Number.isFinite(
+      media.asset.size,
+    ) ||
+    media.asset.size <= 0 ||
+    media.asset.size >
+      MAX_PORTFOLIO_MEDIA_FILE_SIZE
+  ) {
+    return "Ukuran gambar tidak valid atau melebihi 50 MB.";
+  }
+
+  if (
+    !media.asset.originalName ||
+    media.asset.originalName.length >
+      255
+  ) {
+    return "Nama file gambar tidak valid.";
+  }
+
+  if (
+    media.alt.trim().length >
+    500
+  ) {
+    return "Alt text maksimal 500 karakter.";
+  }
+
+  if (
+    media.caption.trim()
+      .length > 1000
+  ) {
+    return "Caption maksimal 1.000 karakter.";
+  }
+
+  return null;
+}
+
+async function removeStoragePath(
+  supabase: Awaited<
+    ReturnType<
+      typeof getAdminClient
+    >
+  >,
+  path: string,
+) {
+  return supabase.storage
+    .from(
+      PORTFOLIO_MEDIA_BUCKET,
+    )
+    .remove([path]);
 }
 
 export async function createSection(
@@ -271,6 +363,280 @@ export async function updateSection(
   };
 }
 
+export async function saveImageSectionMedia(
+  projectId: string,
+  sectionId: string,
+  media: ImageSectionMedia,
+): Promise<SectionActionState> {
+  const validationError =
+    validateImageMedia(
+      projectId,
+      sectionId,
+      media,
+    );
+
+  if (validationError) {
+    return {
+      status: "error",
+      message: validationError,
+    };
+  }
+
+  const supabase =
+    await getAdminClient();
+
+  const {
+    data: section,
+    error: sectionError,
+  } = await supabase
+    .from("project_sections")
+    .select(
+      "id, section_type, content",
+    )
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
+
+  if (sectionError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal membaca image section: ${sectionError.message}`,
+    };
+  }
+
+  if (!section) {
+    return {
+      status: "error",
+      message:
+        "Image section tidak ditemukan.",
+    };
+  }
+
+  if (
+    section.section_type !==
+    "image"
+  ) {
+    return {
+      status: "error",
+
+      message:
+        "Media gambar hanya dapat disimpan pada section bertipe Image.",
+    };
+  }
+
+  const previousMedia =
+    getImageSectionMedia(
+      section.content,
+    );
+
+  const normalizedMedia: ImageSectionMedia =
+    {
+      asset: media.asset,
+      alt: media.alt.trim(),
+      caption:
+        media.caption.trim(),
+    };
+
+  const nextContent = {
+    ...getContentRecord(
+      section.content,
+    ),
+
+    image: normalizedMedia,
+  };
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from("project_sections")
+    .update({
+      content: nextContent,
+      updated_at:
+        new Date().toISOString(),
+    })
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    );
+
+  if (updateError) {
+    if (
+      previousMedia?.asset
+        .path !==
+      normalizedMedia.asset.path
+    ) {
+      await removeStoragePath(
+        supabase,
+        normalizedMedia.asset
+          .path,
+      );
+    }
+
+    return {
+      status: "error",
+
+      message:
+        `Gagal menyimpan media gambar: ${updateError.message}`,
+    };
+  }
+
+  let cleanupWarning = "";
+
+  if (
+    previousMedia &&
+    previousMedia.asset.path !==
+      normalizedMedia.asset.path
+  ) {
+    const {
+      error: cleanupError,
+    } =
+      await removeStoragePath(
+        supabase,
+        previousMedia.asset.path,
+      );
+
+    if (cleanupError) {
+      cleanupWarning =
+        " Media baru tersimpan, tetapi file lama gagal dibersihkan dari Storage.";
+    }
+  }
+
+  revalidateSectionPages(
+    projectId,
+  );
+
+  return {
+    status: "success",
+
+    message:
+      `Media gambar berhasil disimpan.${cleanupWarning}`,
+  };
+}
+
+export async function removeImageSectionMedia(
+  projectId: string,
+  sectionId: string,
+): Promise<SectionActionState> {
+  const supabase =
+    await getAdminClient();
+
+  const {
+    data: section,
+    error: sectionError,
+  } = await supabase
+    .from("project_sections")
+    .select(
+      "id, section_type, content",
+    )
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
+
+  if (sectionError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal membaca image section: ${sectionError.message}`,
+    };
+  }
+
+  if (!section) {
+    return {
+      status: "error",
+      message:
+        "Image section tidak ditemukan.",
+    };
+  }
+
+  if (
+    section.section_type !==
+    "image"
+  ) {
+    return {
+      status: "error",
+
+      message:
+        "Section ini bukan image section.",
+    };
+  }
+
+  const currentMedia =
+    getImageSectionMedia(
+      section.content,
+    );
+
+  if (!currentMedia) {
+    return {
+      status: "success",
+
+      message:
+        "Tidak ada media gambar yang perlu dihapus.",
+    };
+  }
+
+  const nextContent = {
+    ...getContentRecord(
+      section.content,
+    ),
+  };
+
+  delete nextContent.image;
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from("project_sections")
+    .update({
+      content: nextContent,
+      updated_at:
+        new Date().toISOString(),
+    })
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    );
+
+  if (updateError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal menghapus media dari section: ${updateError.message}`,
+    };
+  }
+
+  const {
+    error: storageError,
+  } =
+    await removeStoragePath(
+      supabase,
+      currentMedia.asset.path,
+    );
+
+  revalidateSectionPages(
+    projectId,
+  );
+
+  return {
+    status: "success",
+
+    message: storageError
+      ? "Media dilepas dari section, tetapi file gagal dibersihkan dari Storage."
+      : "Media gambar berhasil dihapus.",
+  };
+}
+
 export async function moveSection(
   projectId: string,
   sectionId: string,
@@ -373,17 +739,74 @@ export async function deleteSection(
   sectionId: string,
   _formData: FormData,
 ) {
-  const supabase = await getAdminClient();
+  const supabase =
+    await getAdminClient();
 
-  const { error } = await supabase
+  const {
+    data: section,
+    error: sectionLookupError,
+  } = await supabase
     .from("project_sections")
-    .delete()
+    .select("content")
     .eq("id", sectionId)
-    .eq("project_id", projectId);
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
 
-  if (error) {
-    throw new Error(`Gagal menghapus section: ${error.message}`);
+  if (sectionLookupError) {
+    throw new Error(
+      `Gagal membaca media section: ${sectionLookupError.message}`,
+    );
   }
 
-  revalidateSectionPages(projectId);
+  const storagePaths =
+    collectPortfolioMediaPaths(
+      section?.content,
+    );
+
+  const { error } =
+    await supabase
+      .from(
+        "project_sections",
+      )
+      .delete()
+      .eq("id", sectionId)
+      .eq(
+        "project_id",
+        projectId,
+      );
+
+  if (error) {
+    throw new Error(
+      `Gagal menghapus section: ${error.message}`,
+    );
+  }
+
+  if (
+    storagePaths.length > 0
+  ) {
+    const {
+      error: storageError,
+    } =
+      await supabase.storage
+        .from(
+          PORTFOLIO_MEDIA_BUCKET,
+        )
+        .remove(
+          storagePaths,
+        );
+
+    if (storageError) {
+      console.error(
+        "Section deleted, but media cleanup failed:",
+        storageError,
+      );
+    }
+  }
+
+  revalidateSectionPages(
+    projectId,
+  );
 }

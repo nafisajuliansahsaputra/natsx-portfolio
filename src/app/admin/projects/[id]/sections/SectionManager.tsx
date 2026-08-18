@@ -15,6 +15,7 @@ import {
   type SectionActionState,
 } from "./actions";
 import styles from "./sections.module.css";
+import ImageSectionEditor from "./ImageSectionEditor";
 
 export type SectionRow = {
   id: string;
@@ -296,10 +297,9 @@ function SectionCard({
     }
   }, [router, state.status]);
 
-  const needsVisualEditor =
-    section.section_type === "image" ||
-    section.section_type === "gallery" ||
-    section.section_type === "metrics";
+const needsVisualEditor =
+  section.section_type === "gallery" ||
+  section.section_type === "metrics";
 
   return (
     <article
@@ -418,16 +418,21 @@ function SectionCard({
           </label>
         </div>
 
-        {needsVisualEditor ? (
-          <div className={styles.visualNotice}>
-            <span>VISUAL CONTENT</span>
+{section.section_type === "image" ? (
+  <ImageSectionEditor
+    projectId={projectId}
+    section={section}
+  />
+) : needsVisualEditor ? (
+  <div className={styles.visualNotice}>
+    <span>VISUAL CONTENT</span>
 
-            <p>
-              Upload gambar dan pengaturan konten khusus section ini akan
-              dipasang pada checkpoint berikutnya.
-            </p>
-          </div>
-        ) : null}
+    <p>
+      Upload gambar dan pengaturan konten khusus section ini akan
+      dipasang pada checkpoint berikutnya.
+    </p>
+  </div>
+) : null}
 
         <div className={styles.cardSettings}>
           <label className={styles.visibilityToggle}>

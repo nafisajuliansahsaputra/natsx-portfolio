@@ -688,3 +688,285 @@
     width: 100%;
   }
 }
+
+.imageEditor {
+  margin-top: 28px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  background: var(--background);
+}
+
+.imageEditorHeader {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 28px;
+}
+
+.imageEditorHeader > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.imageEditorHeader p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mediaWorkspace {
+  padding-top: 26px;
+  display: grid;
+  grid-template-columns:
+    minmax(280px, 0.9fr)
+    minmax(320px, 1.1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.mediaPreviewImage,
+.mediaPreviewEmpty {
+  min-height: 320px;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.mediaPreviewImage {
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.mediaPreviewImage > span {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  padding: 7px 9px;
+  background: #0b0b0b;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.mediaPreviewEmpty {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mediaPreviewEmpty span {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mediaPreviewEmpty p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.mediaFileMeta {
+  min-height: 48px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mediaFileMeta span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mediaControls {
+  display: grid;
+  gap: 24px;
+}
+
+.uploadControl {
+  min-height: 92px;
+  padding: 18px 20px;
+  border: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.uploadControl:hover,
+.uploadControl:focus-within {
+  border-color: var(--accent);
+}
+
+.uploadControl input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uploadControl > span {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.uploadControl small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.mediaFields {
+  display: grid;
+  gap: 18px;
+}
+
+.mediaFields .textarea {
+  min-height: 110px;
+}
+
+.mediaStatus {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  display: flex;
+  gap: 12px;
+}
+
+.mediaStatus[data-type="success"] {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.mediaStatus[data-type="error"] {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.mediaStatus > span {
+  width: 7px;
+  height: 7px;
+  margin-top: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.mediaStatus p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.mediaActions {
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mediaActions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mediaPrimaryButton,
+.mediaSecondaryButton,
+.mediaDangerButton {
+  min-height: 44px;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.mediaPrimaryButton {
+  border: 1px solid var(--text);
+  background: var(--text);
+  color: #ffffff;
+}
+
+.mediaPrimaryButton:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.mediaSecondaryButton {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.mediaDangerButton {
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.mediaDangerButton:hover:not(:disabled) {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.mediaPrimaryButton:disabled,
+.mediaSecondaryButton:disabled,
+.mediaDangerButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 960px) {
+  .imageEditorHeader,
+  .mediaWorkspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .imageEditor {
+    padding: 20px;
+  }
+
+  .mediaPreviewImage,
+  .mediaPreviewEmpty {
+    min-height: 240px;
+  }
+
+  .mediaActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mediaActions > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mediaPrimaryButton,
+  .mediaSecondaryButton,
+  .mediaDangerButton {
+    width: 100%;
+  }
+}
