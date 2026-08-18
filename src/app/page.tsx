@@ -6,6 +6,9 @@ import PlaygroundPreview from "@/components/home/PlaygroundPreview";
 import SelectedWork from "@/components/home/SelectedWork";
 import SiteHeader from "@/components/layout/SiteHeader";
 
+export const dynamic =
+  "force-dynamic";
+
 export default function Home() {
   return (
     <>
@@ -13,10 +16,15 @@ export default function Home() {
 
       <main>
         <Hero />
+
         <SelectedWork />
+
         <Capabilities />
+
         <AboutPreview />
+
         <PlaygroundPreview />
+
         <ContactFooter />
       </main>
     </>

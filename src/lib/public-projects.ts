@@ -2,6 +2,23 @@ import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
+const PUBLIC_PROJECT_FIELDS = [
+  "id",
+  "slug",
+  "title",
+  "project_number",
+  "year",
+  "period",
+  "summary",
+  "categories",
+  "roles",
+  "featured",
+  "sort_order",
+  "live_url",
+  "accent_color",
+  "secondary_color",
+].join(",");
+
 type PublicProjectRow = {
   id: string;
 
@@ -162,6 +179,19 @@ function normalizeProject(
   };
 }
 
+function normalizeProjects(
+  data: unknown,
+) {
+  return (
+    (
+      data ??
+      []
+    ) as PublicProjectRow[]
+  ).map(
+    normalizeProject,
+  );
+}
+
 export async function getPublishedProjects(): Promise<
   PublicProject[]
 > {
@@ -174,22 +204,7 @@ export async function getPublishedProjects(): Promise<
   } = await supabase
     .from("projects")
     .select(
-      [
-        "id",
-        "slug",
-        "title",
-        "project_number",
-        "year",
-        "period",
-        "summary",
-        "categories",
-        "roles",
-        "featured",
-        "sort_order",
-        "live_url",
-        "accent_color",
-        "secondary_color",
-      ].join(","),
+      PUBLIC_PROJECT_FIELDS,
     )
     .eq(
       "status",
@@ -208,13 +223,57 @@ export async function getPublishedProjects(): Promise<
     );
   }
 
-  return (
-    (
-      data ??
-      []
-    ) as unknown as PublicProjectRow[]
-  ).map(
-    normalizeProject,
+  return normalizeProjects(
+    data,
+  );
+}
+
+export async function getFeaturedProjects(
+  limit = 3,
+): Promise<PublicProject[]> {
+  const supabase =
+    createPublicClient();
+
+  const safeLimit =
+    Math.max(
+      1,
+      Math.floor(limit),
+    );
+
+  const {
+    data,
+    error,
+  } = await supabase
+    .from("projects")
+    .select(
+      PUBLIC_PROJECT_FIELDS,
+    )
+    .eq(
+      "status",
+      "published",
+    )
+    .eq(
+      "featured",
+      true,
+    )
+    .order(
+      "sort_order",
+      {
+        ascending: true,
+      },
+    )
+    .limit(
+      safeLimit,
+    );
+
+  if (error) {
+    throw new Error(
+      `Gagal memuat featured projects: ${error.message}`,
+    );
+  }
+
+  return normalizeProjects(
+    data,
   );
 }
 
