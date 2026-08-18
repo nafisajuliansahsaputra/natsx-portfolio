@@ -17,6 +17,7 @@ import {
 import styles from "./sections.module.css";
 import ImageSectionEditor from "./ImageSectionEditor";
 import GallerySectionEditor from "./GallerySectionEditor";
+import MetricsSectionEditor from "./MetricsSectionEditor";
 
 export type SectionRow = {
   id: string;
@@ -298,8 +299,6 @@ function SectionCard({
     }
   }, [router, state.status]);
 
-const needsVisualEditor =
-  section.section_type === "metrics";
 
   return (
     <article
@@ -428,14 +427,11 @@ const needsVisualEditor =
     projectId={projectId}
     section={section}
   />
-) : needsVisualEditor ? (
-  <div className={styles.visualNotice}>
-    <span>VISUAL CONTENT</span>
-
-    <p>
-      Pengaturan konten khusus section ini akan dipasang pada checkpoint berikutnya.
-    </p>
-  </div>
+) : section.section_type === "metrics" ? (
+  <MetricsSectionEditor
+    projectId={projectId}
+    section={section}
+  />
 ) : null}
 
         <div className={styles.cardSettings}>

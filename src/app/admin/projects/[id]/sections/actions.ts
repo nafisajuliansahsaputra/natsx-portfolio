@@ -14,6 +14,10 @@ import {
   type GallerySectionMedia,
   type ImageSectionMedia,
 } from "@/lib/portfolio-media";
+import {
+  isMetricsColumnCount,
+  type MetricsSectionContent,
+} from "@/lib/project-section-content";
 
 const SECTION_TYPES = [
   "overview",
@@ -256,6 +260,82 @@ function validateGalleryMedia(
     assetPaths.add(
       item.asset.path,
     );
+  }
+
+  return null;
+}
+
+function validateMetricsContent(
+  metrics: MetricsSectionContent,
+) {
+  if (
+    !isMetricsColumnCount(
+      metrics.columns,
+    )
+  ) {
+    return "Jumlah kolom metrics tidak valid.";
+  }
+
+  if (
+    !Array.isArray(
+      metrics.items,
+    ) ||
+    metrics.items.length > 12
+  ) {
+    return "Metrics maksimal berisi 12 item.";
+  }
+
+  const ids =
+    new Set<string>();
+
+  for (const item of metrics.items) {
+    if (
+      !item.id ||
+      item.id.length > 100
+    ) {
+      return "Metric item ID tidak valid.";
+    }
+
+    if (ids.has(item.id)) {
+      return "Metric memiliki ID duplikat.";
+    }
+
+    ids.add(item.id);
+
+    const value =
+      item.value.trim();
+
+    const label =
+      item.label.trim();
+
+    const detail =
+      item.detail.trim();
+
+    if (!value) {
+      return "Setiap metric wajib memiliki Value.";
+    }
+
+    if (
+      value.length > 40
+    ) {
+      return "Value metric maksimal 40 karakter.";
+    }
+
+    if (!label) {
+      return "Setiap metric wajib memiliki Label.";
+    }
+
+    if (
+      label.length > 120
+    ) {
+      return "Label metric maksimal 120 karakter.";
+    }
+
+    if (
+      detail.length > 300
+    ) {
+      return "Detail metric maksimal 300 karakter.";
+    }
   }
 
   return null;
@@ -921,6 +1001,144 @@ export async function saveGallerySectionMedia(
         .length === 0
         ? `Gallery dikosongkan.${cleanupWarning}`
         : `Gallery dengan ${normalizedGallery.items.length} gambar berhasil disimpan.${cleanupWarning}`,
+  };
+}
+
+export async function saveMetricsSectionContent(
+  projectId: string,
+  sectionId: string,
+  metrics: MetricsSectionContent,
+): Promise<SectionActionState> {
+  const validationError =
+    validateMetricsContent(
+      metrics,
+    );
+
+  if (validationError) {
+    return {
+      status: "error",
+      message:
+        validationError,
+    };
+  }
+
+  const supabase =
+    await getAdminClient();
+
+  const {
+    data: section,
+    error: sectionError,
+  } = await supabase
+    .from("project_sections")
+    .select(
+      "id, section_type, content",
+    )
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
+
+  if (sectionError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal membaca metrics section: ${sectionError.message}`,
+    };
+  }
+
+  if (!section) {
+    return {
+      status: "error",
+      message:
+        "Metrics section tidak ditemukan.",
+    };
+  }
+
+  if (
+    section.section_type !==
+    "metrics"
+  ) {
+    return {
+      status: "error",
+
+      message:
+        "Metrics hanya dapat disimpan pada section bertipe Results / Metrics.",
+    };
+  }
+
+  const normalizedMetrics: MetricsSectionContent =
+    {
+      columns:
+        metrics.columns,
+
+      items:
+        metrics.items.map(
+          (item) => ({
+            id:
+              item.id,
+
+            value:
+              item.value.trim(),
+
+            label:
+              item.label.trim(),
+
+            detail:
+              item.detail.trim(),
+          }),
+        ),
+    };
+
+  const nextContent = {
+    ...getContentRecord(
+      section.content,
+    ),
+
+    metrics:
+      normalizedMetrics,
+  };
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from("project_sections")
+    .update({
+      content:
+        nextContent,
+
+      updated_at:
+        new Date().toISOString(),
+    })
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    );
+
+  if (updateError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal menyimpan metrics: ${updateError.message}`,
+    };
+  }
+
+  revalidateSectionPages(
+    projectId,
+  );
+
+  return {
+    status: "success",
+
+    message:
+      normalizedMetrics.items
+        .length === 0
+        ? "Metrics dikosongkan."
+        : `${normalizedMetrics.items.length} metrics berhasil disimpan.`,
   };
 }
 
