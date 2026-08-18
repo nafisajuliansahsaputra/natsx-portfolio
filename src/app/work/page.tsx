@@ -1,14 +1,20 @@
-import type { Metadata } from "next";
+import type {
+  Metadata,
+} from "next";
+
 import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
-  getProjectYearRange,
-  projects,
-} from "@/data/projects";
+  getPublishedProjects,
+  getPublicProjectYearRange,
+} from "@/lib/public-projects";
 
 import styles from "./Work.module.css";
+
+export const dynamic =
+  "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -17,13 +23,22 @@ export const metadata: Metadata = {
     "Selected projects by NATSX across product design, development, identity, and creative direction.",
 };
 
-export default function WorkPage() {
-  const projectCount = String(
-    projects.length,
-  ).padStart(2, "0");
+export default async function WorkPage() {
+  const projects =
+    await getPublishedProjects();
+
+  const projectCount =
+    String(
+      projects.length,
+    ).padStart(
+      2,
+      "0",
+    );
 
   const projectPeriod =
-    getProjectYearRange(projects);
+    getPublicProjectYearRange(
+      projects,
+    );
 
   return (
     <>
@@ -33,15 +48,27 @@ export default function WorkPage() {
         className={styles.page}
         data-motion-page="work"
       >
-        <section className={styles.hero}>
+        <section
+          className={
+            styles.hero
+          }
+        >
           <div className="site-container">
             <div
-              className={styles.heroTop}
+              className={
+                styles.heroTop
+              }
               data-motion-work-hero-piece="top"
             >
-              <div className={styles.label}>
+              <div
+                className={
+                  styles.label
+                }
+              >
                 <span
-                  className={styles.dot}
+                  className={
+                    styles.dot
+                  }
                 />
 
                 <span>
@@ -54,7 +81,8 @@ export default function WorkPage() {
                   styles.heroIndex
                 }
               >
-                Selected projects / NATSX
+                Selected projects
+                / NATSX
               </span>
             </div>
 
@@ -69,19 +97,25 @@ export default function WorkPage() {
                 }
                 data-motion-work-hero-piece="title"
               >
-                Work<span>.</span>
+                Work
+                <span>.</span>
               </h1>
 
               <div
-                className={styles.intro}
+                className={
+                  styles.intro
+                }
               >
                 <p
                   data-motion-work-hero-piece="intro"
                 >
-                  A growing archive of
-                  projects across design,
-                  development, identity,
-                  and digital experiences.
+                  A growing archive
+                  of projects across
+                  design,
+                  development,
+                  identity, and
+                  digital
+                  experiences.
                 </p>
 
                 <div
@@ -100,7 +134,9 @@ export default function WorkPage() {
                     </span>
 
                     <span>
-                      {projectCount}
+                      {
+                        projectCount
+                      }
                     </span>
                   </div>
 
@@ -114,7 +150,8 @@ export default function WorkPage() {
                     </span>
 
                     <span>
-                      {projectPeriod}
+                      {projectPeriod ||
+                        "—"}
                     </span>
                   </div>
                 </div>
@@ -124,7 +161,9 @@ export default function WorkPage() {
         </section>
 
         <section
-          className={styles.archive}
+          className={
+            styles.archive
+          }
         >
           <div className="site-container">
             <div
@@ -142,8 +181,8 @@ export default function WorkPage() {
                   styles.archiveCount
                 }
               >
-                {projectCount} / Current
-                Archive
+                {projectCount} /
+                Current Archive
               </span>
             </div>
 
@@ -153,13 +192,17 @@ export default function WorkPage() {
               }
             >
               {projects.map(
-                (project) => (
+                (
+                  project,
+                ) => (
                   <Link
                     href={`/work/${project.slug}`}
                     className={
                       styles.project
                     }
-                    key={project.slug}
+                    key={
+                      project.id
+                    }
                     data-motion-scroll="work-project"
                   >
                     <span
@@ -167,7 +210,9 @@ export default function WorkPage() {
                         styles.projectNumber
                       }
                     >
-                      {project.number}
+                      {
+                        project.number
+                      }
                     </span>
 
                     <div
@@ -176,7 +221,9 @@ export default function WorkPage() {
                       }
                     >
                       <h2>
-                        {project.title}
+                        {
+                          project.title
+                        }
                       </h2>
 
                       <div
@@ -212,7 +259,9 @@ export default function WorkPage() {
                           styles.projectYear
                         }
                       >
-                        {project.year}
+                        {
+                          project.year
+                        }
                       </span>
                     </div>
 
@@ -229,48 +278,106 @@ export default function WorkPage() {
               )}
             </div>
 
-            <div
-              className={
-                styles.closing
-              }
-              data-motion-scroll="work-closing"
-            >
+            {projects.length ===
+            0 ? (
               <div
                 className={
-                  styles.closingLabel
+                  styles.closing
                 }
+                data-motion-scroll="work-closing"
               >
-                <span
-                  className={styles.dot}
-                />
-
-                <span>
-                  ONGOING ARCHIVE
-                </span>
-              </div>
-
-              <div
-                className={
-                  styles.closingMain
-                }
-              >
-                <p>
-                  The archive keeps
-                  growing as new ideas
-                  become real projects.
-                </p>
-
-                <Link
-                  href="/contact"
+                <div
                   className={
-                    styles.contactLink
+                    styles.closingLabel
                   }
                 >
-                  Start a conversation
-                  <span>↗</span>
-                </Link>
+                  <span
+                    className={
+                      styles.dot
+                    }
+                  />
+
+                  <span>
+                    ARCHIVE
+                  </span>
+                </div>
+
+                <div
+                  className={
+                    styles.closingMain
+                  }
+                >
+                  <p>
+                    Published
+                    projects will
+                    appear here.
+                  </p>
+
+                  <Link
+                    href="/contact"
+                    className={
+                      styles.contactLink
+                    }
+                  >
+                    Start a
+                    conversation
+                    <span>
+                      ↗
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className={
+                  styles.closing
+                }
+                data-motion-scroll="work-closing"
+              >
+                <div
+                  className={
+                    styles.closingLabel
+                  }
+                >
+                  <span
+                    className={
+                      styles.dot
+                    }
+                  />
+
+                  <span>
+                    ONGOING ARCHIVE
+                  </span>
+                </div>
+
+                <div
+                  className={
+                    styles.closingMain
+                  }
+                >
+                  <p>
+                    The archive keeps
+                    growing as new
+                    ideas become real
+                    projects.
+                  </p>
+
+                  <Link
+                    href="/contact"
+                    className={
+                      styles.contactLink
+                    }
+                  >
+                    Start a
+                    conversation
+
+                    <span>
+                      ↗
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       </main>
