@@ -1,4 +1,12 @@
-export type MetricsColumnCount = 2 | 3 | 4;
+import {
+  getFinaleSectionMedia,
+  type FinaleSectionMedia,
+} from "@/lib/portfolio-media";
+
+export type MetricsColumnCount =
+  | 2
+  | 3
+  | 4;
 
 export type MetricsSectionItem = {
   id: string;
@@ -23,14 +31,13 @@ export type QuoteSectionContent = {
   alignment: QuoteAlignment;
 };
 
-export function isQuoteAlignment(
-  value: unknown,
-): value is QuoteAlignment {
-  return (
-    value === "left" ||
-    value === "center"
-  );
-}
+export type FinaleSectionContent = {
+  title: string;
+  body: string;
+  ctaLabel: string;
+  ctaUrl: string;
+  media: FinaleSectionMedia | null;
+};
 
 function isRecord(
   value: unknown,
@@ -52,6 +59,15 @@ export function isMetricsColumnCount(
   );
 }
 
+export function isQuoteAlignment(
+  value: unknown,
+): value is QuoteAlignment {
+  return (
+    value === "left" ||
+    value === "center"
+  );
+}
+
 export function getMetricsSectionContent(
   content: unknown,
 ): MetricsSectionContent {
@@ -65,7 +81,8 @@ export function getMetricsSectionContent(
     };
   }
 
-  const metrics = content.metrics;
+  const metrics =
+    content.metrics;
 
   const columns =
     isMetricsColumnCount(
@@ -74,7 +91,11 @@ export function getMetricsSectionContent(
       ? metrics.columns
       : 3;
 
-  if (!Array.isArray(metrics.items)) {
+  if (
+    !Array.isArray(
+      metrics.items,
+    )
+  ) {
     return {
       columns,
       items: [],
@@ -84,30 +105,38 @@ export function getMetricsSectionContent(
   const items: MetricsSectionItem[] =
     [];
 
-  for (const value of metrics.items) {
+  for (
+    const value of
+    metrics.items
+  ) {
     if (
       !isRecord(value) ||
-      typeof value.id !== "string" ||
+      typeof value.id !==
+        "string" ||
       !value.id
     ) {
       continue;
     }
 
     items.push({
-      id: value.id,
+      id:
+        value.id,
 
       value:
-        typeof value.value === "string"
+        typeof value.value ===
+        "string"
           ? value.value
           : "",
 
       label:
-        typeof value.label === "string"
+        typeof value.label ===
+        "string"
           ? value.label
           : "",
 
       detail:
-        typeof value.detail === "string"
+        typeof value.detail ===
+        "string"
           ? value.detail
           : "",
     });
@@ -134,21 +163,25 @@ export function getQuoteSectionContent(
     };
   }
 
-  const quote = content.quote;
+  const quote =
+    content.quote;
 
   return {
     text:
-      typeof quote.text === "string"
+      typeof quote.text ===
+      "string"
         ? quote.text
         : "",
 
     source:
-      typeof quote.source === "string"
+      typeof quote.source ===
+      "string"
         ? quote.source
         : "",
 
     context:
-      typeof quote.context === "string"
+      typeof quote.context ===
+      "string"
         ? quote.context
         : "",
 
@@ -158,5 +191,58 @@ export function getQuoteSectionContent(
       )
         ? quote.alignment
         : "left",
+  };
+}
+
+export function getFinaleSectionContent(
+  content: unknown,
+): FinaleSectionContent {
+  const media =
+    getFinaleSectionMedia(
+      content,
+    );
+
+  if (
+    !isRecord(content) ||
+    !isRecord(content.finale)
+  ) {
+    return {
+      title: "",
+      body: "",
+      ctaLabel: "",
+      ctaUrl: "",
+      media,
+    };
+  }
+
+  const finale =
+    content.finale;
+
+  return {
+    title:
+      typeof finale.title ===
+      "string"
+        ? finale.title
+        : "",
+
+    body:
+      typeof finale.body ===
+      "string"
+        ? finale.body
+        : "",
+
+    ctaLabel:
+      typeof finale.ctaLabel ===
+      "string"
+        ? finale.ctaLabel
+        : "",
+
+    ctaUrl:
+      typeof finale.ctaUrl ===
+      "string"
+        ? finale.ctaUrl
+        : "",
+
+    media,
   };
 }

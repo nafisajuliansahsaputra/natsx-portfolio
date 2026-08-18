@@ -12,8 +12,20 @@ export const IMAGE_MEDIA_MIME_TYPES = [
   "image/gif",
 ] as const;
 
+export const VIDEO_MEDIA_MIME_TYPES = [
+  "video/mp4",
+  "video/webm",
+] as const;
+
 export type PortfolioImageMimeType =
   (typeof IMAGE_MEDIA_MIME_TYPES)[number];
+
+export type PortfolioVideoMimeType =
+  (typeof VIDEO_MEDIA_MIME_TYPES)[number];
+
+export type PortfolioFinaleMimeType =
+  | PortfolioImageMimeType
+  | PortfolioVideoMimeType;
 
 export type PortfolioMediaAsset = {
   bucket: typeof PORTFOLIO_MEDIA_BUCKET;
@@ -22,6 +34,18 @@ export type PortfolioMediaAsset = {
   size: number;
   originalName: string;
 };
+
+export type PortfolioVideoAsset = {
+  bucket: typeof PORTFOLIO_MEDIA_BUCKET;
+  path: string;
+  mimeType: PortfolioVideoMimeType;
+  size: number;
+  originalName: string;
+};
+
+export type PortfolioFinaleMediaAsset =
+  | PortfolioMediaAsset
+  | PortfolioVideoAsset;
 
 export type ImageSectionMedia = {
   asset: PortfolioMediaAsset;
@@ -38,6 +62,16 @@ export type GallerySectionItem = {
 
 export type GallerySectionMedia = {
   items: GallerySectionItem[];
+};
+
+export type FinaleMediaKind =
+  | "image"
+  | "video";
+
+export type FinaleSectionMedia = {
+  kind: FinaleMediaKind;
+  asset: PortfolioFinaleMediaAsset;
+  alt: string;
 };
 
 function isRecord(
@@ -58,7 +92,46 @@ export function isAllowedImageMimeType(
   );
 }
 
-function getPortfolioMediaAsset(
+export function isAllowedVideoMimeType(
+  value: string,
+): value is PortfolioVideoMimeType {
+  return VIDEO_MEDIA_MIME_TYPES.includes(
+    value as PortfolioVideoMimeType,
+  );
+}
+
+export function isAllowedFinaleMediaMimeType(
+  value: string,
+): value is PortfolioFinaleMimeType {
+  return (
+    isAllowedImageMimeType(value) ||
+    isAllowedVideoMimeType(value)
+  );
+}
+
+export function getFinaleMediaKind(
+  mimeType: string,
+): FinaleMediaKind | null {
+  if (
+    isAllowedImageMimeType(
+      mimeType,
+    )
+  ) {
+    return "image";
+  }
+
+  if (
+    isAllowedVideoMimeType(
+      mimeType,
+    )
+  ) {
+    return "video";
+  }
+
+  return null;
+}
+
+function getPortfolioImageAsset(
   value: unknown,
 ): PortfolioMediaAsset | null {
   if (!isRecord(value)) {
@@ -83,12 +156,94 @@ function getPortfolioMediaAsset(
   }
 
   return {
-    bucket: PORTFOLIO_MEDIA_BUCKET,
-    path: value.path,
-    mimeType: value.mimeType,
-    size: value.size,
-    originalName: value.originalName,
+    bucket:
+      PORTFOLIO_MEDIA_BUCKET,
+
+    path:
+      value.path,
+
+    mimeType:
+      value.mimeType,
+
+    size:
+      value.size,
+
+    originalName:
+      value.originalName,
   };
+}
+
+function getPortfolioFinaleMediaAsset(
+  value: unknown,
+): PortfolioFinaleMediaAsset | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  if (
+    value.bucket !==
+      PORTFOLIO_MEDIA_BUCKET ||
+    typeof value.path !== "string" ||
+    !value.path ||
+    typeof value.mimeType !== "string" ||
+    !isAllowedFinaleMediaMimeType(
+      value.mimeType,
+    ) ||
+    typeof value.size !== "number" ||
+    !Number.isFinite(value.size) ||
+    typeof value.originalName !==
+      "string"
+  ) {
+    return null;
+  }
+
+  if (
+    isAllowedImageMimeType(
+      value.mimeType,
+    )
+  ) {
+    return {
+      bucket:
+        PORTFOLIO_MEDIA_BUCKET,
+
+      path:
+        value.path,
+
+      mimeType:
+        value.mimeType,
+
+      size:
+        value.size,
+
+      originalName:
+        value.originalName,
+    };
+  }
+
+  if (
+    isAllowedVideoMimeType(
+      value.mimeType,
+    )
+  ) {
+    return {
+      bucket:
+        PORTFOLIO_MEDIA_BUCKET,
+
+      path:
+        value.path,
+
+      mimeType:
+        value.mimeType,
+
+      size:
+        value.size,
+
+      originalName:
+        value.originalName,
+    };
+  }
+
+  return null;
 }
 
 export function getImageSectionMedia(
@@ -104,7 +259,7 @@ export function getImageSectionMedia(
   const image = content.image;
 
   const asset =
-    getPortfolioMediaAsset(
+    getPortfolioImageAsset(
       image.asset,
     );
 
@@ -144,8 +299,10 @@ export function getGallerySectionMedia(
   const items: GallerySectionItem[] =
     [];
 
-  for (const value of content.gallery
-    .items) {
+  for (
+    const value of
+    content.gallery.items
+  ) {
     if (!isRecord(value)) {
       continue;
     }
@@ -158,7 +315,7 @@ export function getGallerySectionMedia(
     }
 
     const asset =
-      getPortfolioMediaAsset(
+      getPortfolioImageAsset(
         value.asset,
       );
 
@@ -167,12 +324,14 @@ export function getGallerySectionMedia(
     }
 
     items.push({
-      id: value.id,
+      id:
+        value.id,
 
       asset,
 
       alt:
-        typeof value.alt === "string"
+        typeof value.alt ===
+        "string"
           ? value.alt
           : "",
 
@@ -189,6 +348,53 @@ export function getGallerySectionMedia(
   };
 }
 
+export function getFinaleSectionMedia(
+  content: unknown,
+): FinaleSectionMedia | null {
+  if (
+    !isRecord(content) ||
+    !isRecord(content.finale) ||
+    !isRecord(
+      content.finale.media,
+    )
+  ) {
+    return null;
+  }
+
+  const media =
+    content.finale.media;
+
+  const asset =
+    getPortfolioFinaleMediaAsset(
+      media.asset,
+    );
+
+  if (!asset) {
+    return null;
+  }
+
+  const kind =
+    getFinaleMediaKind(
+      asset.mimeType,
+    );
+
+  if (!kind) {
+    return null;
+  }
+
+  return {
+    kind,
+
+    asset,
+
+    alt:
+      typeof media.alt ===
+      "string"
+        ? media.alt
+        : "",
+  };
+}
+
 export function getContentRecord(
   value: unknown,
 ): Record<string, unknown> {
@@ -200,9 +406,12 @@ export function getContentRecord(
 export function collectPortfolioMediaPaths(
   content: unknown,
 ) {
-  const paths = new Set<string>();
+  const paths =
+    new Set<string>();
 
-  function visit(value: unknown) {
+  function visit(
+    value: unknown,
+  ) {
     if (Array.isArray(value)) {
       value.forEach(visit);
       return;
@@ -222,9 +431,9 @@ export function collectPortfolioMediaPaths(
       paths.add(value.path);
     }
 
-    Object.values(value).forEach(
-      visit,
-    );
+    Object.values(
+      value,
+    ).forEach(visit);
   }
 
   visit(content);

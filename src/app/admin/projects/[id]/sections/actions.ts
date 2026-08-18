@@ -8,15 +8,21 @@ import {
   PORTFOLIO_MEDIA_BUCKET,
   collectPortfolioMediaPaths,
   getContentRecord,
+  getFinaleMediaKind,
+  getFinaleSectionMedia,
   getGallerySectionMedia,
   getImageSectionMedia,
+  isAllowedFinaleMediaMimeType,
   isAllowedImageMimeType,
+  type FinaleSectionMedia,
   type GallerySectionMedia,
   type ImageSectionMedia,
 } from "@/lib/portfolio-media";
+
 import {
   isMetricsColumnCount,
   isQuoteAlignment,
+  type FinaleSectionContent,
   type MetricsSectionContent,
   type QuoteSectionContent,
 } from "@/lib/project-section-content";
@@ -383,6 +389,180 @@ function validateQuoteContent(
     )
   ) {
     return "Alignment quote tidak valid.";
+  }
+
+  return null;
+}
+
+function isValidFinaleCtaUrl(
+  value: string,
+) {
+  if (
+    value.startsWith("/") &&
+    !value.startsWith("//")
+  ) {
+    return true;
+  }
+
+  try {
+    const url =
+      new URL(value);
+
+    return (
+      url.protocol ===
+        "http:" ||
+      url.protocol ===
+        "https:" ||
+      url.protocol ===
+        "mailto:"
+    );
+  } catch {
+    return false;
+  }
+}
+
+function validateFinaleMedia(
+  projectId: string,
+  sectionId: string,
+  media: FinaleSectionMedia,
+) {
+  if (
+    media.asset.bucket !==
+    PORTFOLIO_MEDIA_BUCKET
+  ) {
+    return "Bucket finale media tidak valid.";
+  }
+
+  const expectedPrefix =
+    `projects/${projectId}` +
+    `/sections/${sectionId}` +
+    `/finale/`;
+
+  if (
+    !media.asset.path.startsWith(
+      expectedPrefix,
+    )
+  ) {
+    return "Path finale media tidak valid.";
+  }
+
+  if (
+    !isAllowedFinaleMediaMimeType(
+      media.asset.mimeType,
+    )
+  ) {
+    return "Format finale media tidak didukung.";
+  }
+
+  const expectedKind =
+    getFinaleMediaKind(
+      media.asset.mimeType,
+    );
+
+  if (
+    !expectedKind ||
+    media.kind !==
+      expectedKind
+  ) {
+    return "Jenis finale media tidak valid.";
+  }
+
+  if (
+    !Number.isFinite(
+      media.asset.size,
+    ) ||
+    media.asset.size <= 0 ||
+    media.asset.size >
+      MAX_PORTFOLIO_MEDIA_FILE_SIZE
+  ) {
+    return "Ukuran finale media tidak valid atau melebihi 50 MB.";
+  }
+
+  if (
+    !media.asset.originalName ||
+    media.asset.originalName.length >
+      255
+  ) {
+    return "Nama file finale media tidak valid.";
+  }
+
+  if (
+    media.alt.trim().length >
+    500
+  ) {
+    return "Media description maksimal 500 karakter.";
+  }
+
+  return null;
+}
+
+function validateFinaleContent(
+  projectId: string,
+  sectionId: string,
+  finale: FinaleSectionContent,
+) {
+  const title =
+    finale.title.trim();
+
+  const body =
+    finale.body.trim();
+
+  const ctaLabel =
+    finale.ctaLabel.trim();
+
+  const ctaUrl =
+    finale.ctaUrl.trim();
+
+  if (!title) {
+    return "Finale title wajib diisi.";
+  }
+
+  if (
+    title.length > 300
+  ) {
+    return "Finale title maksimal 300 karakter.";
+  }
+
+  if (
+    body.length > 2000
+  ) {
+    return "Finale description maksimal 2.000 karakter.";
+  }
+
+  if (
+    ctaLabel.length > 120
+  ) {
+    return "CTA label maksimal 120 karakter.";
+  }
+
+  if (
+    ctaUrl.length > 2000
+  ) {
+    return "CTA URL terlalu panjang.";
+  }
+
+  if (
+    Boolean(ctaLabel) !==
+    Boolean(ctaUrl)
+  ) {
+    return "CTA label dan CTA URL harus diisi bersamaan.";
+  }
+
+  if (
+    ctaUrl &&
+    !isValidFinaleCtaUrl(
+      ctaUrl,
+    )
+  ) {
+    return "CTA URL tidak valid.";
+  }
+
+  if (finale.media) {
+    return validateFinaleMedia(
+      projectId,
+      sectionId,
+      finale.media,
+    );
   }
 
   return null;
@@ -1313,6 +1493,209 @@ export async function saveQuoteSectionContent(
     status: "success",
     message:
       "Quote berhasil disimpan.",
+  };
+}
+
+export async function saveFinaleSectionContent(
+  projectId: string,
+  sectionId: string,
+  finale: FinaleSectionContent,
+): Promise<SectionActionState> {
+  const validationError =
+    validateFinaleContent(
+      projectId,
+      sectionId,
+      finale,
+    );
+
+  if (validationError) {
+    return {
+      status: "error",
+      message:
+        validationError,
+    };
+  }
+
+  const supabase =
+    await getAdminClient();
+
+  const {
+    data: section,
+    error: sectionError,
+  } = await supabase
+    .from(
+      "project_sections",
+    )
+    .select(
+      "id, section_type, content",
+    )
+    .eq(
+      "id",
+      sectionId,
+    )
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
+
+  if (sectionError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal membaca finale section: ${sectionError.message}`,
+    };
+  }
+
+  if (!section) {
+    return {
+      status: "error",
+
+      message:
+        "Finale section tidak ditemukan.",
+    };
+  }
+
+  if (
+    section.section_type !==
+    "finale"
+  ) {
+    return {
+      status: "error",
+
+      message:
+        "Finale hanya dapat disimpan pada section bertipe Final Showcase.",
+    };
+  }
+
+  const previousMedia =
+    getFinaleSectionMedia(
+      section.content,
+    );
+
+  const normalizedMedia =
+    finale.media
+      ? {
+          kind:
+            finale.media.kind,
+
+          asset:
+            finale.media.asset,
+
+          alt:
+            finale.media.alt.trim(),
+        }
+      : null;
+
+  const normalizedFinale: FinaleSectionContent =
+    {
+      title:
+        finale.title.trim(),
+
+      body:
+        finale.body.trim(),
+
+      ctaLabel:
+        finale.ctaLabel.trim(),
+
+      ctaUrl:
+        finale.ctaUrl.trim(),
+
+      media:
+        normalizedMedia,
+    };
+
+  const previousPath =
+    previousMedia?.asset.path ??
+    null;
+
+  const nextPath =
+    normalizedMedia?.asset.path ??
+    null;
+
+  const nextContent = {
+    ...getContentRecord(
+      section.content,
+    ),
+
+    finale:
+      normalizedFinale,
+  };
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from(
+      "project_sections",
+    )
+    .update({
+      content:
+        nextContent,
+
+      updated_at:
+        new Date().toISOString(),
+    })
+    .eq(
+      "id",
+      sectionId,
+    )
+    .eq(
+      "project_id",
+      projectId,
+    );
+
+  if (updateError) {
+    if (
+      nextPath &&
+      nextPath !==
+        previousPath
+    ) {
+      await removeStoragePath(
+        supabase,
+        nextPath,
+      );
+    }
+
+    return {
+      status: "error",
+
+      message:
+        `Gagal menyimpan finale: ${updateError.message}`,
+    };
+  }
+
+  let cleanupWarning = "";
+
+  if (
+    previousPath &&
+    previousPath !==
+      nextPath
+  ) {
+    const {
+      error:
+        cleanupError,
+    } =
+      await removeStoragePath(
+        supabase,
+        previousPath,
+      );
+
+    if (cleanupError) {
+      cleanupWarning =
+        " Finale tersimpan, tetapi file media lama gagal dibersihkan dari Storage.";
+    }
+  }
+
+  revalidateSectionPages(
+    projectId,
+  );
+
+  return {
+    status: "success",
+
+    message:
+      `Finale berhasil disimpan.${cleanupWarning}`,
   };
 }
 

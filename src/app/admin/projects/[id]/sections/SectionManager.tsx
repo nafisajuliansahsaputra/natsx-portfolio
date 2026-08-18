@@ -19,6 +19,7 @@ import ImageSectionEditor from "./ImageSectionEditor";
 import GallerySectionEditor from "./GallerySectionEditor";
 import MetricsSectionEditor from "./MetricsSectionEditor";
 import QuoteSectionEditor from "./QuoteSectionEditor";
+import FinaleSectionEditor from "./FinaleSectionEditor";
 
 export type SectionRow = {
   id: string;
@@ -435,6 +436,11 @@ function SectionCard({
   />
 ) : section.section_type === "quote" ? (
   <QuoteSectionEditor
+    projectId={projectId}
+    section={section}
+  />
+) : section.section_type === "finale" ? (
+  <FinaleSectionEditor
     projectId={projectId}
     section={section}
   />
