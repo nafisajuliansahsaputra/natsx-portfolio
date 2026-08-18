@@ -16,7 +16,9 @@ import {
 } from "@/lib/portfolio-media";
 import {
   isMetricsColumnCount,
+  isQuoteAlignment,
   type MetricsSectionContent,
+  type QuoteSectionContent,
 } from "@/lib/project-section-content";
 
 const SECTION_TYPES = [
@@ -336,6 +338,51 @@ function validateMetricsContent(
     ) {
       return "Detail metric maksimal 300 karakter.";
     }
+  }
+
+  return null;
+}
+
+function validateQuoteContent(
+  quote: QuoteSectionContent,
+) {
+  const text =
+    quote.text.trim();
+
+  const source =
+    quote.source.trim();
+
+  const context =
+    quote.context.trim();
+
+  if (!text) {
+    return "Quote text wajib diisi.";
+  }
+
+  if (
+    text.length > 2000
+  ) {
+    return "Quote maksimal 2.000 karakter.";
+  }
+
+  if (
+    source.length > 160
+  ) {
+    return "Source maksimal 160 karakter.";
+  }
+
+  if (
+    context.length > 200
+  ) {
+    return "Context maksimal 200 karakter.";
+  }
+
+  if (
+    !isQuoteAlignment(
+      quote.alignment,
+    )
+  ) {
+    return "Alignment quote tidak valid.";
   }
 
   return null;
@@ -1139,6 +1186,133 @@ export async function saveMetricsSectionContent(
         .length === 0
         ? "Metrics dikosongkan."
         : `${normalizedMetrics.items.length} metrics berhasil disimpan.`,
+  };
+}
+
+export async function saveQuoteSectionContent(
+  projectId: string,
+  sectionId: string,
+  quote: QuoteSectionContent,
+): Promise<SectionActionState> {
+  const validationError =
+    validateQuoteContent(
+      quote,
+    );
+
+  if (validationError) {
+    return {
+      status: "error",
+      message:
+        validationError,
+    };
+  }
+
+  const supabase =
+    await getAdminClient();
+
+  const {
+    data: section,
+    error: sectionError,
+  } = await supabase
+    .from("project_sections")
+    .select(
+      "id, section_type, content",
+    )
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    )
+    .maybeSingle();
+
+  if (sectionError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal membaca quote section: ${sectionError.message}`,
+    };
+  }
+
+  if (!section) {
+    return {
+      status: "error",
+
+      message:
+        "Quote section tidak ditemukan.",
+    };
+  }
+
+  if (
+    section.section_type !==
+    "quote"
+  ) {
+    return {
+      status: "error",
+
+      message:
+        "Quote hanya dapat disimpan pada section bertipe Quote.",
+    };
+  }
+
+  const normalizedQuote: QuoteSectionContent =
+    {
+      text:
+        quote.text.trim(),
+
+      source:
+        quote.source.trim(),
+
+      context:
+        quote.context.trim(),
+
+      alignment:
+        quote.alignment,
+    };
+
+  const nextContent = {
+    ...getContentRecord(
+      section.content,
+    ),
+
+    quote:
+      normalizedQuote,
+  };
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from("project_sections")
+    .update({
+      content:
+        nextContent,
+
+      updated_at:
+        new Date().toISOString(),
+    })
+    .eq("id", sectionId)
+    .eq(
+      "project_id",
+      projectId,
+    );
+
+  if (updateError) {
+    return {
+      status: "error",
+
+      message:
+        `Gagal menyimpan quote: ${updateError.message}`,
+    };
+  }
+
+  revalidateSectionPages(
+    projectId,
+  );
+
+  return {
+    status: "success",
+    message:
+      "Quote berhasil disimpan.",
   };
 }
 

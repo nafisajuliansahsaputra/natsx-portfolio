@@ -1564,3 +1564,168 @@
     min-height: 150px;
   }
 }
+
+.quoteEditor {
+  margin-top: 28px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  background: var(--background);
+}
+
+.quoteEditorHeader {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns:
+    160px minmax(0, 1fr);
+  gap: 28px;
+}
+
+.quoteEditorHeader > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.quoteEditorHeader p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.quoteWorkspace {
+  padding-top: 26px;
+  display: grid;
+  grid-template-columns:
+    minmax(300px, 1fr)
+    minmax(320px, 0.8fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.quotePreview {
+  min-height: 440px;
+  padding: 40px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.quotePreview[data-alignment="center"] {
+  align-items: center;
+  text-align: center;
+}
+
+.quoteMark {
+  margin-bottom: 24px;
+  color: var(--accent);
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 0.5;
+}
+
+.quotePreview blockquote {
+  max-width: 800px;
+  margin: 0;
+  font-size: clamp(
+    30px,
+    4vw,
+    54px
+  );
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.quoteAttribution {
+  margin-top: 36px;
+  display: grid;
+  gap: 6px;
+}
+
+.quoteAttribution strong {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quoteAttribution span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.quoteControls {
+  display: grid;
+  gap: 20px;
+}
+
+.quoteControls .textarea {
+  min-height: 180px;
+}
+
+.quoteFieldGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  gap: 18px;
+}
+
+.quoteFooter {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.quoteFooter p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .quoteEditorHeader,
+  .quoteWorkspace {
+    grid-template-columns: 1fr;
+  }
+
+  .quotePreview {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 680px) {
+  .quoteEditor {
+    padding: 20px;
+  }
+
+  .quoteFieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .quotePreview {
+    min-height: 300px;
+    padding: 26px;
+  }
+
+  .quoteFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .quoteFooter
+    .mediaPrimaryButton {
+    width: 100%;
+  }
+}

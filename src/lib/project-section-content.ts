@@ -12,6 +12,26 @@ export type MetricsSectionContent = {
   items: MetricsSectionItem[];
 };
 
+export type QuoteAlignment =
+  | "left"
+  | "center";
+
+export type QuoteSectionContent = {
+  text: string;
+  source: string;
+  context: string;
+  alignment: QuoteAlignment;
+};
+
+export function isQuoteAlignment(
+  value: unknown,
+): value is QuoteAlignment {
+  return (
+    value === "left" ||
+    value === "center"
+  );
+}
+
 function isRecord(
   value: unknown,
 ): value is Record<string, unknown> {
@@ -96,5 +116,47 @@ export function getMetricsSectionContent(
   return {
     columns,
     items,
+  };
+}
+
+export function getQuoteSectionContent(
+  content: unknown,
+): QuoteSectionContent {
+  if (
+    !isRecord(content) ||
+    !isRecord(content.quote)
+  ) {
+    return {
+      text: "",
+      source: "",
+      context: "",
+      alignment: "left",
+    };
+  }
+
+  const quote = content.quote;
+
+  return {
+    text:
+      typeof quote.text === "string"
+        ? quote.text
+        : "",
+
+    source:
+      typeof quote.source === "string"
+        ? quote.source
+        : "",
+
+    context:
+      typeof quote.context === "string"
+        ? quote.context
+        : "",
+
+    alignment:
+      isQuoteAlignment(
+        quote.alignment,
+      )
+        ? quote.alignment
+        : "left",
   };
 }
