@@ -248,7 +248,7 @@ export default function PortfolioIntro() {
             }
           >
             <span>
-              {site.location} / +07
+              {site.location} / +62
             </span>
 
             <span>

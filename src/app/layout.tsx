@@ -86,7 +86,7 @@ export const metadata: Metadata = {
 
   title: {
     default:
-      "NATSX — Digital Creator",
+      "Portfolio Nafisa Juliansah Saputra",
 
     template:
       "%s — NATSX",
