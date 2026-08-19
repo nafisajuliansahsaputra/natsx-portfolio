@@ -48,18 +48,49 @@ export default function AboutPreview() {
               them as separate parts.
             </p>
 
-            <Link
-              href="/about"
-              className={styles.link}
-            >
-              <span>More About Me</span>
+<div
+  className={
+    styles.actions
+  }
+>
+  <Link
+    href="/about"
+    className={
+      styles.link
+    }
+  >
+    <span>
+      More About Me
+    </span>
 
-              <span
-                className={styles.arrow}
-              >
-                ↗
-              </span>
-            </Link>
+    <span
+      className={
+        styles.arrow
+      }
+      aria-hidden="true"
+    >
+      ↗
+    </span>
+  </Link>
+
+  <Link
+    href="/cv"
+    className={`${styles.link} ${styles.cvLink}`}
+  >
+    <span>
+      View CV
+    </span>
+
+    <span
+      className={
+        styles.cvArrow
+      }
+      aria-hidden="true"
+    >
+      ↗
+    </span>
+  </Link>
+</div>
           </div>
         </div>
 

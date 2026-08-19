@@ -25,6 +25,272 @@
 ) {
 
     /* =========================
+     CV HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="top"] {
+    animation:
+      natsx-rise-in
+      680ms
+      var(--motion-ease-out)
+      60ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="title"] {
+    animation:
+      natsx-rise-in
+      980ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="intro"] {
+    animation:
+      natsx-rise-in
+      820ms
+      var(--motion-ease-out)
+      260ms
+      both;
+  }
+
+  /* =========================
+     CV LANGUAGE HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-header"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        780ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-header"]
+    [data-motion-piece="meta"] {
+    transition-delay:
+      70ms;
+  }
+
+  /* =========================
+     CV LANGUAGE ITEMS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        800ms
+        var(--motion-ease-out),
+      background
+        260ms
+        ease,
+      padding-inline
+        420ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]:nth-child(2) {
+    transition-delay:
+      70ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]:nth-child(3) {
+    transition-delay:
+      140ms;
+  }
+
+  /* =========================
+     CV VIEWER HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-viewer-header"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        600ms
+        var(--motion-ease-soft),
+      transform
+        820ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-viewer-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-viewer-header"]
+    [data-motion-piece="actions"] {
+    transition-delay:
+      100ms;
+  }
+
+  /* =========================
+     CV VIEWER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-viewer"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        20px,
+        0
+      );
+
+    transition:
+      opacity
+        680ms
+        var(--motion-ease-soft),
+      transform
+        920ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-viewer"][data-motion-visible="true"] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     CV CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        16px,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        840ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-closing"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="main"] {
+    transition-delay:
+      90ms;
+  }
+
+    /* =========================
      PLAYGROUND HERO
   ========================= */
 
@@ -98,7 +364,7 @@
       both;
   }
 
-  
+
   /* =========================
      GLOBAL HEADER
   ========================= */

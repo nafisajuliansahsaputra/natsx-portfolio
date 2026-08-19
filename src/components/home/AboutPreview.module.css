@@ -122,6 +122,16 @@
    LINK
 ========================= */
 
+.actions {
+  margin-top: 34px;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 26px;
+}
+
 .link {
   position: relative;
 
@@ -130,7 +140,6 @@
 
   gap: 9px;
 
-  margin-top: 34px;
   padding-bottom: 5px;
 
   color: #f7f6f2;
@@ -139,6 +148,34 @@
   font-weight: 600;
 
   letter-spacing: -0.02em;
+}
+
+.cvLink {
+  color: #a7a7a1;
+}
+
+.cvLink:hover {
+  color: #f7f6f2;
+}
+
+.cvArrow {
+  display: inline-block;
+
+  color: var(--accent);
+
+  transition:
+    transform
+      220ms
+      ease;
+}
+
+.cvLink:hover
+  .cvArrow {
+  transform:
+    translate(
+      3px,
+      -3px
+    );
 }
 
 .link::after {
@@ -360,13 +397,19 @@
     line-height: 1.7;
   }
 
-  .link {
-    margin-top: 30px;
+.actions {
+  margin-top: 30px;
 
-    gap: 8px;
+  gap:
+    18px
+    24px;
+}
 
-    font-size: 12.5px;
-  }
+.link {
+  gap: 8px;
+
+  font-size: 12.5px;
+}
 
   /* =========================
      META
@@ -702,9 +745,10 @@
     display: none;
   }
 
-  .heading > span,
-  .arrow,
-  .mark {
-    animation: none;
-  }
+.heading > span,
+.arrow,
+.cvArrow,
+.mark {
+  animation: none;
+}
 }

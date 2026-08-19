@@ -68,10 +68,11 @@ export default function CvViewer({
             data-motion-scroll="cv-language-header"
           >
             <div
-              className={
-                styles.label
-              }
-            >
+  className={
+    styles.label
+  }
+  data-motion-piece="label"
+>
               <span
                 className={
                   styles.dot
@@ -83,11 +84,12 @@ export default function CvViewer({
               </span>
             </div>
 
-            <span
-              className={
-                styles.sectionMeta
-              }
-            >
+<span
+  className={
+    styles.sectionMeta
+  }
+  data-motion-piece="meta"
+>
               03 / Versions
             </span>
           </div>
@@ -107,6 +109,7 @@ export default function CvViewer({
                 return (
                   <button
                     type="button"
+                    data-motion-piece="item"
                     className={[
                       styles.languageItem,
                       isActive
@@ -194,12 +197,14 @@ export default function CvViewer({
             }
             data-motion-scroll="cv-viewer-header"
           >
-            <div>
-              <span
-                className={
-                  styles.viewerEyebrow
-                }
-              >
+<div
+  data-motion-piece="title"
+>
+  <span
+    className={
+      styles.viewerEyebrow
+    }
+  >
                 Currently viewing
               </span>
 
@@ -211,11 +216,12 @@ export default function CvViewer({
               </h2>
             </div>
 
-            <div
-              className={
-                styles.viewerActions
-              }
-            >
+<div
+  className={
+    styles.viewerActions
+  }
+  data-motion-piece="actions"
+>
               <a
                 href={
                   activeVersion.file
@@ -344,11 +350,12 @@ export default function CvViewer({
             }
             data-motion-scroll="cv-closing"
           >
-            <div
-              className={
-                styles.closingLabel
-              }
-            >
+<div
+  className={
+    styles.closingLabel
+  }
+  data-motion-piece="label"
+>
               <span
                 className={
                   styles.dot
@@ -360,11 +367,12 @@ export default function CvViewer({
               </span>
             </div>
 
-            <div
-              className={
-                styles.closingMain
-              }
-            >
+<div
+  className={
+    styles.closingMain
+  }
+  data-motion-piece="main"
+>
               <p>
                 A CV tells part
                 of the story

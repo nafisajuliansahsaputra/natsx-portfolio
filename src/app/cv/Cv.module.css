@@ -898,62 +898,6 @@
 }
 
 /* =========================
-   MOTION
-========================= */
-
-:global(
-  html[data-motion="enabled"]
-)
-  [data-motion-scroll="cv-language-header"],
-:global(
-  html[data-motion="enabled"]
-)
-  [data-motion-scroll="cv-language-list"],
-:global(
-  html[data-motion="enabled"]
-)
-  [data-motion-scroll="cv-viewer-header"],
-:global(
-  html[data-motion="enabled"]
-)
-  [data-motion-scroll="cv-viewer"],
-:global(
-  html[data-motion="enabled"]
-)
-  [data-motion-scroll="cv-closing"] {
-  opacity: 0;
-
-  transform:
-    translate3d(
-      0,
-      16px,
-      0
-    );
-
-  transition:
-    opacity
-      620ms
-      var(--motion-ease-soft),
-    transform
-      820ms
-      var(--motion-ease-out);
-}
-
-:global(
-  html[data-motion="enabled"]
-)
-  [data-motion-scroll][data-motion-visible="true"] {
-  opacity: 1;
-
-  transform:
-    translate3d(
-      0,
-      0,
-      0
-    );
-}
-
-/* =========================
    TABLET
 ========================= */
 

@@ -67,10 +67,11 @@ export default async function CvPage({
         >
           <div className="site-container">
             <div
-              className={
-                styles.heroTop
-              }
-            >
+  className={
+    styles.heroTop
+  }
+  data-motion-cv-hero-piece="top"
+>
               <div
                 className={
                   styles.label
@@ -103,22 +104,24 @@ export default async function CvPage({
                 styles.heroMain
               }
             >
-              <h1
-                className={
-                  styles.heading
-                }
-              >
+<h1
+  className={
+    styles.heading
+  }
+  data-motion-cv-hero-piece="title"
+>
                 Curriculum
                 <br />
                 Vitae
                 <span>.</span>
               </h1>
 
-              <div
-                className={
-                  styles.heroIntro
-                }
-              >
+<div
+  className={
+    styles.heroIntro
+  }
+  data-motion-cv-hero-piece="intro"
+>
                 <p>
                   A closer look at
                   my experience,
