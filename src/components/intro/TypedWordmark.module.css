@@ -21,6 +21,10 @@
   pointer-events: none;
 }
 
+/* =========================
+   LETTERS
+========================= */
+
 .letter {
   object-fit: contain;
 
@@ -28,6 +32,10 @@
 
   pointer-events: none;
 }
+
+/* =========================
+   CURSOR
+========================= */
 
 .wordmark::after {
   content: "";
@@ -58,10 +66,25 @@
 
 /* =========================
    LETTER TYPING
+   ALL VIEWPORTS — LOCKED
 ========================= */
 
+/*
+ * Semua device sekarang memakai
+ * clock + timing yang sama.
+ *
+ * Symbol split:
+ * 1820ms
+ *
+ * N:
+ * 1910ms
+ *
+ * Intentional gap:
+ * 90ms
+ */
+
 :global(
-  html[data-intro="running"]
+  [data-portfolio-intro][data-phase="running"]
 )
 .letterN {
   animation:
@@ -73,7 +96,7 @@
 }
 
 :global(
-  html[data-intro="running"]
+  [data-portfolio-intro][data-phase="running"]
 )
 .letterA {
   animation:
@@ -85,7 +108,7 @@
 }
 
 :global(
-  html[data-intro="running"]
+  [data-portfolio-intro][data-phase="running"]
 )
 .letterT {
   animation:
@@ -97,7 +120,7 @@
 }
 
 :global(
-  html[data-intro="running"]
+  [data-portfolio-intro][data-phase="running"]
 )
 .letterS {
   animation:
@@ -109,7 +132,7 @@
 }
 
 :global(
-  html[data-intro="running"]
+  [data-portfolio-intro][data-phase="running"]
 )
 .letterX {
   animation:
@@ -122,10 +145,11 @@
 
 /* =========================
    CURSOR
+   ALL VIEWPORTS — LOCKED
 ========================= */
 
 :global(
-  html[data-intro="running"]
+  [data-portfolio-intro][data-phase="running"]
 )
 .wordmark::after {
   animation:
@@ -150,7 +174,7 @@
 ========================= */
 
 :global(
-  html[data-intro="exit"]
+  [data-portfolio-intro][data-phase="exit"]
 )
 .letter {
   opacity: 1;
@@ -159,7 +183,7 @@
 }
 
 :global(
-  html[data-intro="exit"]
+  [data-portfolio-intro][data-phase="exit"]
 )
 .wordmark::after {
   left:
