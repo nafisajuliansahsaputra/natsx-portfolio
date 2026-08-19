@@ -6,6 +6,10 @@ import {
   Plus_Jakarta_Sans,
 } from "next/font/google";
 
+import {
+  Analytics,
+} from "@vercel/analytics/next";
+
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import InnerFooter from "@/components/layout/InnerFooter";
 import MotionController from "@/components/motion/MotionController";
@@ -203,6 +207,8 @@ export default function RootLayout({
         {children}
 
         <InnerFooter />
+
+        <Analytics />
       </body>
     </html>
   );
