@@ -6,6 +6,7 @@ import {
   Plus_Jakarta_Sans,
 } from "next/font/google";
 
+import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import InnerFooter from "@/components/layout/InnerFooter";
 import MotionController from "@/components/motion/MotionController";
 
@@ -20,6 +21,7 @@ import {
 import "./globals.css";
 import "./motion.css";
 import "./project-motion.css";
+import "./intro-motion.css";
 
 const plusJakartaSans =
   Plus_Jakarta_Sans({
@@ -36,6 +38,42 @@ const plusJakartaSans =
 
 const description =
   "Portfolio of NATSX, a multidisciplinary digital creator working across design, development, motion, and visual experiences.";
+
+const introBootstrapScript = `
+  (() => {
+    const root =
+      document.documentElement;
+
+    try {
+      const isHome =
+        window.location.pathname === "/";
+
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      const forceIntro =
+        params.get("intro") === "1";
+
+      const seen =
+        sessionStorage.getItem(
+          "natsx:portfolio-intro:v5"
+        ) === "1";
+
+      root.dataset.intro =
+        isHome &&
+        (forceIntro || !seen)
+          ? "pending"
+          : "done";
+    } catch {
+      root.dataset.intro =
+        window.location.pathname === "/"
+          ? "pending"
+          : "done";
+    }
+  })();
+`;
 
 export const metadata: Metadata = {
   metadataBase:
@@ -144,6 +182,13 @@ export default function RootLayout({
             `,
           }}
         />
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              introBootstrapScript,
+          }}
+        />
       </head>
 
       <body
@@ -151,6 +196,8 @@ export default function RootLayout({
           plusJakartaSans.variable
         }
       >
+        <PortfolioIntro />
+
         <MotionController />
 
         {children}

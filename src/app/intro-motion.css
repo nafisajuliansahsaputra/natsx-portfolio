@@ -1,0 +1,112 @@
+/*
+ * =========================
+ * NATSX INTRO → SITE BRIDGE
+ * =========================
+ *
+ * Intro hanya menahan homepage
+ * selama phase:
+ *
+ * pending
+ * running
+ *
+ * Begitu phase berubah menjadi:
+ *
+ * exit
+ *
+ * homepage langsung mulai
+ * entrance motion di belakang
+ * split panels.
+ *
+ * Jadi intro dan homepage
+ * overlap secara visual.
+ */
+
+/* =========================
+   INTRO VISIBILITY
+========================= */
+
+html[data-intro="done"]
+[data-portfolio-intro] {
+  display: none;
+}
+
+/* =========================
+   PAGE LOCK
+========================= */
+
+html[data-intro="pending"],
+html[data-intro="running"],
+html[data-intro="exit"] {
+  overflow: hidden;
+}
+
+/* =========================
+   MOTION BRIDGE
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /*
+   * =========================
+   * HOLD HOMEPAGE
+   * =========================
+   *
+   * Homepage motion ditahan
+   * HANYA ketika intro belum
+   * mulai membuka panel.
+   *
+   * IMPORTANT:
+   *
+   * data-intro="exit"
+   * sengaja TIDAK ada di sini.
+   */
+
+  html[data-intro="pending"]
+    .site-header__inner,
+  html[data-intro="running"]
+    .site-header__inner,
+  html[data-intro="pending"]
+    [data-motion-hero-piece],
+  html[data-intro="running"]
+    [data-motion-hero-piece] {
+    animation-play-state:
+      paused !important;
+  }
+
+  /*
+   * =========================
+   * HOLD PORTRAIT
+   * =========================
+   *
+   * Portrait tetap tersembunyi
+   * selama intro masih full-screen.
+   *
+   * Begitu phase = exit,
+   * rule ini otomatis lepas dan
+   * transition portrait asli
+   * homepage langsung berjalan.
+   */
+
+  html[data-intro="pending"]
+    [data-motion-portrait],
+  html[data-intro="running"]
+    [data-motion-portrait] {
+    opacity:
+      0 !important;
+
+    transform:
+      translate3d(
+        0,
+        18px,
+        0
+      )
+      scale(
+        0.99
+      ) !important;
+
+    transition:
+      none !important;
+  }
+}

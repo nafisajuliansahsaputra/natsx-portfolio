@@ -722,3 +722,38 @@ select {
 .site-logo__image {
   height: 42px;
 }
+
+/* =========================
+   PUBLIC SCROLLBAR
+========================= */
+
+/*
+ * Hide scrollbar on every
+ * public portfolio page.
+ *
+ * Scrolling still works normally:
+ * - mouse wheel
+ * - trackpad
+ * - touch
+ * - keyboard
+ *
+ * Admin/dashboard is untouched
+ * because admin routes do not
+ * render .site-header.
+ */
+
+html:has(.site-header),
+html:has(.site-header) body,
+html:has(.site-header) body * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html:has(.site-header)::-webkit-scrollbar,
+html:has(.site-header) body::-webkit-scrollbar,
+html:has(.site-header) body *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+
+  display: none;
+}
