@@ -48,10 +48,16 @@ const introBootstrapScript = `
     const root =
       document.documentElement;
 
-    try {
-      const isHome =
-        window.location.pathname === "/";
+    const pathname =
+      window.location.pathname;
 
+    const isAdmin =
+      pathname === "/admin" ||
+      pathname.startsWith(
+        "/admin/"
+      );
+
+    try {
       const params =
         new URLSearchParams(
           window.location.search
@@ -65,16 +71,46 @@ const introBootstrapScript = `
           "natsx:portfolio-intro:v5"
         ) === "1";
 
+      const shouldShow =
+        !isAdmin &&
+        (
+          forceIntro ||
+          !seen
+        );
+
       root.dataset.intro =
-        isHome &&
-        (forceIntro || !seen)
+        shouldShow
           ? "pending"
           : "done";
+
+      /*
+       * Tandai session sebagai
+       * sudah melihat intro sejak
+       * first entry dimulai.
+       *
+       * Jadi kalau user refresh
+       * saat intro sedang berjalan,
+       * intro tidak diputar ulang.
+       */
+      if (shouldShow) {
+        sessionStorage.setItem(
+          "natsx:portfolio-intro:v5",
+          "1"
+        );
+      }
     } catch {
+      /*
+       * Kalau sessionStorage tidak
+       * tersedia, public route tetap
+       * mendapat intro.
+       *
+       * Admin tidak pernah mendapat
+       * portfolio intro.
+       */
       root.dataset.intro =
-        window.location.pathname === "/"
-          ? "pending"
-          : "done";
+        isAdmin
+          ? "done"
+          : "pending";
     }
   })();
 `;

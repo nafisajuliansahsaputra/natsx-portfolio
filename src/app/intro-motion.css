@@ -3,21 +3,26 @@
  * NATSX INTRO → SITE BRIDGE
  * =========================
  *
- * Intro hanya menahan homepage
- * selama phase:
+ * Intro dapat muncul pada first
+ * entry ke PUBLIC route mana pun.
+ *
+ * Selama phase:
  *
  * pending
  * running
+ *
+ * entrance animation halaman tujuan
+ * ditahan.
  *
  * Begitu phase berubah menjadi:
  *
  * exit
  *
- * homepage langsung mulai
- * entrance motion di belakang
- * split panels.
+ * halaman tujuan mulai menjalankan
+ * entrance motion di belakang split
+ * panels.
  *
- * Jadi intro dan homepage
+ * Jadi intro dan destination page
  * overlap secara visual.
  */
 
@@ -26,7 +31,7 @@
 ========================= */
 
 html[data-intro="done"]
-[data-portfolio-intro] {
+  [data-portfolio-intro] {
   display: none;
 }
 
@@ -50,43 +55,96 @@ html[data-intro="exit"] {
 ) {
   /*
    * =========================
-   * HOLD HOMEPAGE
+   * HOLD PAGE ENTRANCE
    * =========================
    *
-   * Homepage motion ditahan
-   * HANYA ketika intro belum
-   * mulai membuka panel.
+   * Semua entrance animation
+   * public page ditahan selama
+   * intro masih full-screen.
    *
    * IMPORTANT:
    *
    * data-intro="exit"
-   * sengaja TIDAK ada di sini.
+   * sengaja TIDAK dimasukkan.
+   *
+   * Saat phase menjadi exit,
+   * page entrance mulai berjalan
+   * di belakang split panels.
    */
 
   html[data-intro="pending"]
     .site-header__inner,
   html[data-intro="running"]
     .site-header__inner,
+
+  /* Homepage */
+
   html[data-intro="pending"]
     [data-motion-hero-piece],
   html[data-intro="running"]
-    [data-motion-hero-piece] {
+    [data-motion-hero-piece],
+
+  /* Work */
+
+  html[data-intro="pending"]
+    [data-motion-work-hero-piece],
+  html[data-intro="running"]
+    [data-motion-work-hero-piece],
+
+  /* Project detail */
+
+  html[data-intro="pending"]
+    [data-motion-project-hero-piece],
+  html[data-intro="running"]
+    [data-motion-project-hero-piece],
+
+  /* About */
+
+  html[data-intro="pending"]
+    [data-motion-about-hero-piece],
+  html[data-intro="running"]
+    [data-motion-about-hero-piece],
+
+  /* Playground */
+
+  html[data-intro="pending"]
+    [data-motion-playground-hero-piece],
+  html[data-intro="running"]
+    [data-motion-playground-hero-piece],
+
+  /* Contact */
+
+  html[data-intro="pending"]
+    [data-motion-contact-hero-piece],
+  html[data-intro="running"]
+    [data-motion-contact-hero-piece],
+
+  /* CV */
+
+  html[data-intro="pending"]
+    [data-motion-cv-hero-piece],
+  html[data-intro="running"]
+    [data-motion-cv-hero-piece] {
     animation-play-state:
       paused !important;
   }
 
   /*
    * =========================
-   * HOLD PORTRAIT
+   * HOLD HOMEPAGE PORTRAIT
    * =========================
    *
-   * Portrait tetap tersembunyi
-   * selama intro masih full-screen.
+   * Homepage portrait punya
+   * transition sendiri, bukan
+   * hero keyframe biasa.
+   *
+   * Karena itu portrait perlu
+   * ditahan secara terpisah.
    *
    * Begitu phase = exit,
-   * rule ini otomatis lepas dan
-   * transition portrait asli
-   * homepage langsung berjalan.
+   * rule otomatis lepas dan
+   * portrait menjalankan
+   * transition aslinya.
    */
 
   html[data-intro="pending"]

@@ -1,17 +1,28 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type {
+  CSSProperties,
+} from "react";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
-import { site } from "@/data/site";
+import {
+  usePathname,
+} from "next/navigation";
+
+import {
+  site,
+} from "@/data/site";
 
 import TypedWordmark from "./TypedWordmark";
-import styles from "./PortfolioIntro.module.css";
 
-const INTRO_SESSION_KEY = "natsx:portfolio-intro:v5";
+import styles from "./PortfolioIntro.module.css";
 
 const FULL_LOGO_SOURCE =
   "/images/branding/natsx-logo-black.png";
@@ -25,19 +36,40 @@ type IntroPhase =
   | "done";
 
 export default function PortfolioIntro() {
-  const pathname = usePathname();
+  const pathname =
+    usePathname();
 
-  const [phase, setPhase] =
-    useState<IntroPhase>("running");
+  const isAdminRoute =
+    pathname === "/admin" ||
+    pathname.startsWith(
+      "/admin/",
+    );
 
-  const [progress, setProgress] =
+  const [
+    phase,
+    setPhase,
+  ] =
+    useState<IntroPhase>(
+      "running",
+    );
+
+  const [
+    progress,
+    setProgress,
+  ] =
     useState(0);
 
   const animationFrame =
-    useRef<number | null>(null);
+    useRef<number | null>(
+      null,
+    );
 
   useEffect(() => {
-    if (pathname !== "/") {
+    /*
+     * Portfolio intro tidak pernah
+     * dijalankan di area admin.
+     */
+    if (isAdminRoute) {
       document.documentElement.dataset.intro =
         "done";
 
@@ -50,25 +82,29 @@ export default function PortfolioIntro() {
       );
 
     const forceIntro =
-      params.get("intro") === "1";
+      params.get("intro") ===
+      "1";
 
-    let shouldShow =
+    const introState =
+      document.documentElement
+        .dataset.intro;
+
+    /*
+     * Bootstrap script menjadi
+     * source of truth untuk first
+     * website entry.
+     *
+     * "running" ikut diterima agar
+     * aman saat React Strict Mode
+     * menjalankan effect dua kali
+     * pada development.
+     */
+    const shouldShow =
       forceIntro ||
-      document.documentElement.dataset
-        .intro === "pending";
-
-    try {
-      if (
-        !forceIntro &&
-        sessionStorage.getItem(
-          INTRO_SESSION_KEY,
-        ) === "1"
-      ) {
-        shouldShow = false;
-      }
-    } catch {
-      // Session storage may be unavailable.
-    }
+      introState ===
+        "pending" ||
+      introState ===
+        "running";
 
     if (!shouldShow) {
       document.documentElement.dataset.intro =
@@ -113,12 +149,15 @@ export default function PortfolioIntro() {
       currentTime: number,
     ) {
       const elapsed =
-        currentTime - startedAt;
+        currentTime -
+        startedAt;
 
-      const normalized = Math.min(
-        elapsed / progressDuration,
-        1,
-      );
+      const normalized =
+        Math.min(
+          elapsed /
+            progressDuration,
+          1,
+        );
 
       setProgress(
         Math.round(
@@ -126,7 +165,10 @@ export default function PortfolioIntro() {
         ),
       );
 
-      if (normalized < 1) {
+      if (
+        normalized <
+        1
+      ) {
         animationFrame.current =
           requestAnimationFrame(
             updateProgress,
@@ -140,31 +182,40 @@ export default function PortfolioIntro() {
       );
 
     const exitTimer =
-      window.setTimeout(() => {
-        setProgress(100);
+      window.setTimeout(
+        () => {
+          setProgress(
+            100,
+          );
 
-        setPhase("exit");
+          setPhase(
+            "exit",
+          );
 
-        document.documentElement.dataset.intro =
-          "exit";
-      }, progressDuration);
+          /*
+           * Begitu masuk phase exit,
+           * page entrance di belakang
+           * intro boleh mulai.
+           */
+          document.documentElement.dataset.intro =
+            "exit";
+        },
+        progressDuration,
+      );
 
     const finishTimer =
-      window.setTimeout(() => {
-        try {
-          sessionStorage.setItem(
-            INTRO_SESSION_KEY,
-            "1",
+      window.setTimeout(
+        () => {
+          document.documentElement.dataset.intro =
+            "done";
+
+          setPhase(
+            "done",
           );
-        } catch {
-          // Session storage may be unavailable.
-        }
-
-        document.documentElement.dataset.intro =
-          "done";
-
-        setPhase("done");
-      }, progressDuration + exitDuration);
+        },
+        progressDuration +
+          exitDuration,
+      );
 
     return () => {
       if (
@@ -174,6 +225,9 @@ export default function PortfolioIntro() {
         cancelAnimationFrame(
           animationFrame.current,
         );
+
+        animationFrame.current =
+          null;
       }
 
       window.clearTimeout(
@@ -184,17 +238,22 @@ export default function PortfolioIntro() {
         finishTimer,
       );
     };
-  }, [pathname]);
+  }, [
+    pathname,
+    isAdminRoute,
+  ]);
 
   if (
-    pathname !== "/" ||
+    isAdminRoute ||
     phase === "done"
   ) {
     return null;
   }
 
   const progressLabel =
-    String(progress).padStart(
+    String(
+      progress,
+    ).padStart(
       2,
       "0",
     );
@@ -206,10 +265,16 @@ export default function PortfolioIntro() {
 
   return (
     <div
-      className={styles.intro}
+      className={
+        styles.intro
+      }
       data-portfolio-intro
-      data-phase={phase}
-      style={progressStyle}
+      data-phase={
+        phase
+      }
+      style={
+        progressStyle
+      }
       aria-hidden="true"
     >
       <div
@@ -221,10 +286,14 @@ export default function PortfolioIntro() {
       />
 
       <div
-        className={styles.content}
+        className={
+          styles.content
+        }
       >
         <header
-          className={styles.header}
+          className={
+            styles.header
+          }
         >
           <div
             className={
@@ -238,7 +307,8 @@ export default function PortfolioIntro() {
             />
 
             <span>
-              NATSX / PORTFOLIO
+              NATSX /
+              PORTFOLIO
             </span>
           </div>
 
@@ -248,7 +318,8 @@ export default function PortfolioIntro() {
             }
           >
             <span>
-              {site.location} / +62
+              {site.location} /
+              +62
             </span>
 
             <span>
@@ -258,7 +329,9 @@ export default function PortfolioIntro() {
         </header>
 
         <div
-          className={styles.stage}
+          className={
+            styles.stage
+          }
         >
           <div
             className={
@@ -272,7 +345,8 @@ export default function PortfolioIntro() {
             />
 
             <span>
-              ENTRY SEQUENCE / 01
+              ENTRY SEQUENCE /
+              01
             </span>
           </div>
 
@@ -382,8 +456,8 @@ export default function PortfolioIntro() {
                 styles.statement
               }
             >
-              Designing ideas into
-              experience
+              Designing ideas
+              into experience
               <span>.</span>
             </p>
           </div>
@@ -393,21 +467,32 @@ export default function PortfolioIntro() {
               styles.index
             }
           >
-            <span>N</span>
-            <span>/</span>
-            <span>26</span>
+            <span>
+              N
+            </span>
+
+            <span>
+              /
+            </span>
+
+            <span>
+              26
+            </span>
           </div>
         </div>
 
         <footer
-          className={styles.footer}
+          className={
+            styles.footer
+          }
         >
           <span
             className={
               styles.disciplines
             }
           >
-            DESIGN / DEVELOPMENT /
+            DESIGN /
+            DEVELOPMENT /
             MOTION
           </span>
 
@@ -421,7 +506,9 @@ export default function PortfolioIntro() {
                 styles.progressNumber
               }
             >
-              {progressLabel}
+              {
+                progressLabel
+              }
             </span>
 
             <div
