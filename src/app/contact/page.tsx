@@ -391,6 +391,30 @@ export default function ContactPage() {
                     }
                   </p>
                 </div>
+                <div
+  className={
+    styles.contactCv
+  }
+>
+  <span>
+    Professional profile
+  </span>
+
+  <Link
+    href="/cv"
+    className={
+      styles.contactCvLink
+    }
+  >
+    View CV
+
+    <span
+      aria-hidden="true"
+    >
+      ↗
+    </span>
+  </Link>
+</div>
               </div>
 
               <div

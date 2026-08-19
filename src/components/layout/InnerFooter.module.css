@@ -131,10 +131,37 @@
   grid-column: 7 / span 2;
 }
 
+.profileMeta {
+  grid-column: 9 / span 2;
+}
+
 .right {
-  grid-column: 10 / -1;
+  grid-column: 11 / -1;
 
   align-items: flex-end;
+}
+
+.metaArrow {
+  display: inline-block;
+
+  margin-left: 6px;
+
+  color:
+    var(--accent);
+
+  transition:
+    transform
+      220ms
+      ease;
+}
+
+.metaLink:hover
+  .metaArrow {
+  transform:
+    translate(
+      3px,
+      -3px
+    );
 }
 
 .metaLabel {
@@ -187,6 +214,61 @@
   gap: 7px;
 }
 
+.footerUtilities {
+  margin-top: 18px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+}
+
+.footerCvLink {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color:
+    var(--foreground);
+
+  transition:
+    color
+      180ms
+      ease;
+}
+
+.footerCvLink > span {
+  display: inline-block;
+
+  color:
+    var(--accent);
+
+  transition:
+    transform
+      220ms
+      ease;
+}
+
+.footerCvLink:hover {
+  color:
+    var(--accent);
+}
+
+.footerCvLink:hover
+  > span {
+  transform:
+    translate(
+      3px,
+      -3px
+    );
+}
+
 .backToTop {
   margin-top: 18px;
 
@@ -206,7 +288,10 @@
 
   cursor: pointer;
 
-  transition: color 180ms ease;
+  transition:
+    color
+      180ms
+      ease;
 }
 
 .backToTop span {
@@ -236,12 +321,13 @@
     row-gap: 34px;
   }
 
-  .meta:nth-child(1),
-  .meta:nth-child(2),
-  .meta:nth-child(3),
-  .right {
-    grid-column: auto;
-  }
+.meta:nth-child(1),
+.meta:nth-child(2),
+.meta:nth-child(3),
+.profileMeta,
+.right {
+  grid-column: auto;
+}
 
   .right {
     align-items: flex-start;
@@ -300,10 +386,11 @@
 
   .meta:nth-child(1),
   .meta:nth-child(2),
-  .meta:nth-child(3),
-  .right {
-    grid-column: auto;
-  }
+.meta:nth-child(3),
+.profileMeta,
+.right {
+  margin-top: 8px;
+}
 
   .meta:nth-child(3),
   .right {
@@ -317,10 +404,6 @@
   .copyright {
     align-items: flex-start;
   }
-
-  .backToTop {
-    margin-top: 16px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -328,12 +411,13 @@
     grid-template-columns: 1fr;
   }
 
-  .meta:nth-child(1),
-  .meta:nth-child(2),
-  .meta:nth-child(3),
-  .right {
-    grid-column: 1;
-  }
+.meta:nth-child(1),
+.meta:nth-child(2),
+.meta:nth-child(3),
+.profileMeta,
+.right {
+  grid-column: 1;
+}
 
   .right {
     padding-top: 24px;

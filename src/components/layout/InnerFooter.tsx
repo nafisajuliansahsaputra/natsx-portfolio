@@ -51,18 +51,20 @@ export default function InnerFooter() {
   const pathname =
     usePathname();
 
-  const shouldRender =
-    pathname ===
-      "/work" ||
-    pathname.startsWith(
-      "/work/",
-    ) ||
-    pathname ===
-      "/about" ||
-    pathname ===
-      "/playground" ||
-    pathname ===
-      "/contact";
+const shouldRender =
+  pathname ===
+    "/work" ||
+  pathname.startsWith(
+    "/work/",
+  ) ||
+  pathname ===
+    "/about" ||
+  pathname ===
+    "/playground" ||
+  pathname ===
+    "/contact" ||
+  pathname ===
+    "/cv";
 
   if (!shouldRender) {
     return null;
@@ -280,48 +282,84 @@ export default function InnerFooter() {
           </div>
 
           <div
-            className={`${styles.meta} ${styles.right}`}
-          >
-            <div
-              className={
-                styles.copyright
-              }
-            >
-              <span>
-                ©{" "}
-                {
-                  site.year
-                }{" "}
-                {
-                  site.name
-                }
-              </span>
+  className={`${styles.meta} ${styles.profileMeta}`}
+>
+  <span
+    className={
+      styles.metaLabel
+    }
+  >
+    Profile
+  </span>
 
-              <span>
-                {
-                  site.location
-                }
-              </span>
-            </div>
+  {pathname !== "/cv" ? (
+    <Link
+      href="/cv"
+      className={
+        styles.metaLink
+      }
+    >
+      View CV
 
-            <button
-              type="button"
-              className={
-                styles.backToTop
-              }
-              onClick={
-                scrollToTop
-              }
-            >
-              Back to top
+      <span
+        className={
+          styles.metaArrow
+        }
+        aria-hidden="true"
+      >
+        ↗
+      </span>
+    </Link>
+  ) : (
+    <span>
+      CV / Resume
+    </span>
+  )}
+</div>
 
-              <span
-                aria-hidden="true"
-              >
-                ↑
-              </span>
-            </button>
-          </div>
+          <div
+  className={`${styles.meta} ${styles.right}`}
+>
+  <div
+    className={
+      styles.copyright
+    }
+  >
+    <span>
+      ©{" "}
+      {
+        site.year
+      }{" "}
+      {
+        site.name
+      }
+    </span>
+
+    <span>
+      {
+        site.location
+      }
+    </span>
+  </div>
+
+<button
+  type="button"
+  className={
+    styles.backToTop
+  }
+  onClick={
+    scrollToTop
+  }
+>
+  Back to top
+
+  <span
+    aria-hidden="true"
+  >
+    ↑
+  </span>
+</button>
+</div>
         </div>
       </div>
     </footer>

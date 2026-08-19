@@ -355,6 +355,30 @@ export default function AboutPage() {
                     attention.
                   </p>
                 </div>
+                <div
+  className={
+    styles.cvAccess
+  }
+>
+  <span>
+    Professional profile
+  </span>
+
+  <Link
+    href="/cv"
+    className={
+      styles.cvLink
+    }
+  >
+    View CV
+
+    <span
+      aria-hidden="true"
+    >
+      ↗
+    </span>
+  </Link>
+</div>
               </div>
             </div>
           </div>
