@@ -12,11 +12,21 @@
 
 @media (max-width: 960px) {
   :global(.site-header__inner) {
-    position: relative;
-    z-index: 100;
+  position: relative;
 
-    background: var(--background);
-  }
+  z-index: 100;
+
+  background:
+    transparent;
+}
+
+:global(
+  .site-header.is-menu-open
+    .site-header__inner
+) {
+  background:
+    #f7f6f2;
+}
 
   /* =========================
      PANEL
