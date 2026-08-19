@@ -996,3 +996,556 @@
     );
   }
 }
+
+/* =========================
+   AMBIENT / PLAYGROUND
+========================= */
+
+.dot {
+  position: relative;
+}
+
+.dot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border:
+    1px solid
+    var(--accent);
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  scale: 0.7;
+
+  pointer-events: none;
+}
+
+.heading > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HEADER
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      playground-dot-pulse
+      4.8s
+      ease-out
+      0.7s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .heading
+    > span {
+    animation:
+      playground-heading-dot
+      5.2s
+      ease-in-out
+      1.4s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .allLink
+    > span {
+    animation:
+      playground-arrow-idle
+      3.1s
+      ease-in-out
+      0.5s
+      infinite;
+  }
+
+  .allLink:hover
+    > span {
+    animation: none;
+  }
+
+  /* =========================
+     GENERATIVE
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .generativeGrid {
+    animation:
+      playground-grid-drift
+      18s
+      linear
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .generativeCircle {
+    animation:
+      playground-orb-float
+      7.8s
+      ease-in-out
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .artLabel {
+    animation:
+      playground-label-breathe
+      5.5s
+      ease-in-out
+      1s
+      infinite;
+  }
+
+  /* =========================
+     KINETIC TYPE
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .typeArtwork
+    span:nth-child(1) {
+    animation:
+      playground-type-a
+      6.8s
+      ease-in-out
+      0s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .typeArtwork
+    span:nth-child(2) {
+    animation:
+      playground-type-b
+      7.1s
+      ease-in-out
+      0.18s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .typeArtwork
+    span:nth-child(3) {
+    animation:
+      playground-type-a
+      6.6s
+      ease-in-out
+      0.36s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .typeArtwork
+    span:nth-child(4) {
+    animation:
+      playground-type-b
+      7.3s
+      ease-in-out
+      0.54s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .typeArtwork
+    span:nth-child(5) {
+    animation:
+      playground-type-a
+      7s
+      ease-in-out
+      0.72s
+      infinite;
+  }
+
+  /* =========================
+     FORM
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .formShape {
+    animation:
+      playground-form-float
+      8.4s
+      ease-in-out
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .formArtwork
+    > span {
+    animation:
+      playground-label-breathe
+      5.8s
+      ease-in-out
+      1.8s
+      infinite;
+  }
+
+  /* =========================
+     POSTER
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .posterSmall {
+    animation:
+      playground-poster-small
+      5.4s
+      ease-in-out
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .posterArtwork
+    strong {
+    animation:
+      playground-poster-type
+      7.6s
+      ease-in-out
+      0.8s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .posterIndex {
+    animation:
+      playground-label-breathe
+      6s
+      ease-in-out
+      2s
+      infinite;
+  }
+}
+
+/* =========================
+   HEADER KEYFRAMES
+========================= */
+
+@keyframes
+  playground-dot-pulse {
+  0%,
+  70%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  80% {
+    opacity: 0.25;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  playground-heading-dot {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  78% {
+    opacity: 0.58;
+
+    scale: 0.82;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.16;
+  }
+}
+
+@keyframes
+  playground-arrow-idle {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  45% {
+    translate:
+      2.5px
+      -2.5px;
+  }
+
+  62% {
+    translate:
+      0.8px
+      -0.8px;
+  }
+}
+
+/* =========================
+   GENERATIVE
+========================= */
+
+@keyframes
+  playground-grid-drift {
+  from {
+    background-position:
+      0
+      0;
+  }
+
+  to {
+    background-position:
+      54px
+      54px;
+  }
+}
+
+@keyframes
+  playground-orb-float {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    scale: 1;
+
+    filter:
+      brightness(1);
+  }
+
+  35% {
+    translate:
+      5px
+      -7px;
+
+    scale: 1.012;
+
+    filter:
+      brightness(1.035);
+  }
+
+  68% {
+    translate:
+      -4px
+      4px;
+
+    scale: 0.995;
+
+    filter:
+      brightness(0.99);
+  }
+}
+
+@keyframes
+  playground-label-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* =========================
+   TYPE
+========================= */
+
+@keyframes
+  playground-type-a {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  38% {
+    translate:
+      5px
+      0;
+  }
+
+  68% {
+    translate:
+      -2px
+      0;
+  }
+}
+
+@keyframes
+  playground-type-b {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  38% {
+    translate:
+      -4px
+      0;
+  }
+
+  68% {
+    translate:
+      2px
+      0;
+  }
+}
+
+/* =========================
+   FORM
+========================= */
+
+@keyframes
+  playground-form-float {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    scale: 1;
+  }
+
+  34% {
+    translate:
+      5px
+      -7px;
+
+    scale: 1.012;
+  }
+
+  67% {
+    translate:
+      -4px
+      3px;
+
+    scale: 0.995;
+  }
+}
+
+/* =========================
+   POSTER
+========================= */
+
+@keyframes
+  playground-poster-small {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    opacity: 1;
+  }
+
+  50% {
+    translate:
+      3px
+      0;
+
+    opacity: 0.72;
+  }
+}
+
+@keyframes
+  playground-poster-type {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  44% {
+    translate:
+      3px
+      -2px;
+  }
+
+  64% {
+    translate:
+      -1px
+      1px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dot::after {
+    display: none;
+  }
+
+  .heading > span,
+  .allLink > span,
+  .generativeGrid,
+  .generativeCircle,
+  .artLabel,
+  .typeArtwork span,
+  .formShape,
+  .formArtwork > span,
+  .posterSmall,
+  .posterArtwork strong,
+  .posterIndex {
+    animation: none;
+  }
+}

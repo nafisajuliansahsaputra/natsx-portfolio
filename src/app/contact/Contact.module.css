@@ -1233,3 +1233,721 @@
     [data-motion-piece="main"] {
     transition-delay: 80ms;
   }
+
+  /* =========================
+   AMBIENT / CONTACT PAGE
+========================= */
+
+.dot,
+.darkDot,
+.statusDot {
+  position: relative;
+}
+
+.dot::after,
+.darkDot::after,
+.statusDot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  scale: 0.7;
+
+  pointer-events: none;
+}
+
+.dot::after,
+.statusDot::after {
+  border:
+    1px solid
+    var(--accent);
+}
+
+.darkDot::after {
+  border:
+    1px solid
+    #111111;
+}
+
+/* accent punctuation */
+
+.heading > span,
+.socialHeader
+  > p
+  > span,
+.closingMain
+  p
+  > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+/* moving elements */
+
+.emailArrow,
+.socialArrow,
+.closingLink > span,
+.collaborationItem
+  > span {
+  will-change:
+    translate;
+}
+
+/* =========================
+   AMBIENT MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO
+  ========================= */
+
+  [data-motion-page="contact"]
+    .hero
+    .dot::after {
+    animation:
+      contact-page-dot-pulse
+      4.8s
+      ease-out
+      0.7s
+      infinite;
+  }
+
+  [data-motion-page="contact"]
+    .heading
+    > span {
+    animation:
+      contact-page-question
+      5.4s
+      ease-in-out
+      1.2s
+      infinite;
+  }
+
+  /* =========================
+     PRIMARY CONTACT
+  ========================= */
+
+  [data-motion-scroll="contact-primary-header"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      contact-page-dot-pulse
+      5.2s
+      ease-out
+      0.6s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-email"][
+    data-motion-visible="true"
+  ]
+    .emailArrow {
+    animation:
+      contact-page-main-arrow
+      3.8s
+      ease-in-out
+      0.6s
+      infinite;
+  }
+
+  .emailLink:hover
+    .emailArrow {
+    animation: none;
+
+    translate:
+      0
+      0;
+
+    scale: 1;
+  }
+
+  /* =========================
+     AVAILABILITY
+  ========================= */
+
+  [data-motion-scroll="contact-availability"][
+    data-motion-visible="true"
+  ]
+    .sectionLabel
+    .dot::after {
+    animation:
+      contact-page-dot-pulse
+      5s
+      ease-out
+      0.8s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-availability"][
+    data-motion-visible="true"
+  ]
+    .statusDot::after {
+    animation:
+      contact-page-status-pulse
+      3.2s
+      ease-out
+      infinite;
+  }
+
+  /* =========================
+     COLLABORATION
+  ========================= */
+
+  [data-motion-scroll="contact-collaboration"][
+    data-motion-visible="true"
+  ]
+    .sectionLabel
+    .dot::after {
+    animation:
+      contact-page-dot-pulse
+      5.3s
+      ease-out
+      1s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-collaboration"][
+    data-motion-visible="true"
+  ]
+    .collaborationItem:nth-child(1)
+    > span {
+    animation:
+      contact-page-index-tick
+      6.6s
+      ease-in-out
+      0s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-collaboration"][
+    data-motion-visible="true"
+  ]
+    .collaborationItem:nth-child(2)
+    > span {
+    animation:
+      contact-page-index-tick
+      6.9s
+      ease-in-out
+      0.7s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-collaboration"][
+    data-motion-visible="true"
+  ]
+    .collaborationItem:nth-child(3)
+    > span {
+    animation:
+      contact-page-index-tick
+      7.2s
+      ease-in-out
+      1.4s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-collaboration"][
+    data-motion-visible="true"
+  ]
+    .collaborationItem:nth-child(4)
+    > span {
+    animation:
+      contact-page-index-tick
+      7.5s
+      ease-in-out
+      2.1s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-collaboration"][
+    data-motion-visible="true"
+  ]
+    .collaborationItem:nth-child(5)
+    > span {
+    animation:
+      contact-page-index-tick
+      7.8s
+      ease-in-out
+      2.8s
+      infinite;
+  }
+
+  /* =========================
+     SOCIAL
+  ========================= */
+
+  [data-motion-scroll="contact-social-header"][
+    data-motion-visible="true"
+  ]
+    .darkDot::after {
+    animation:
+      contact-page-dark-pulse
+      5s
+      ease-out
+      0.6s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-social-header"][
+    data-motion-visible="true"
+  ]
+    .socialHeader
+    > p
+    > span {
+    animation:
+      contact-page-light-accent
+      5.8s
+      ease-in-out
+      1.1s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-social-item"][
+    data-motion-visible="true"
+  ]
+    .socialArrow {
+    animation:
+      contact-page-social-arrow
+      4.4s
+      ease-in-out
+      0.5s
+      infinite;
+  }
+
+  .socialList
+    > :nth-child(2)
+    .socialArrow {
+    animation-delay:
+      1.1s;
+  }
+
+  .socialList
+    > :nth-child(3)
+    .socialArrow {
+    animation-delay:
+      1.7s;
+  }
+
+  .socialList
+    > :nth-child(4)
+    .socialArrow {
+    animation-delay:
+      2.3s;
+  }
+
+  .socialItem:hover
+    .socialArrow {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  [data-motion-scroll="contact-closing"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      contact-page-dot-pulse
+      4.9s
+      ease-out
+      0.5s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-closing"][
+    data-motion-visible="true"
+  ]
+    .closingMain
+    p
+    > span {
+    animation:
+      contact-page-accent
+      5.5s
+      ease-in-out
+      1.1s
+      infinite;
+  }
+
+  [data-motion-scroll="contact-closing"][
+    data-motion-visible="true"
+  ]
+    .closingLink
+    > span {
+    animation:
+      contact-page-closing-arrow
+      3.2s
+      ease-in-out
+      0.6s
+      infinite;
+  }
+
+  .closingLink:hover
+    > span {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   OPTIONAL DESKTOP RESPONSE
+========================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .collaborationItem p {
+    transition:
+      translate
+        450ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ),
+      color
+        200ms
+        ease;
+  }
+
+  .collaborationItem:hover
+    p {
+    translate:
+      5px
+      0;
+
+    color:
+      var(--accent);
+  }
+
+  .collaborationItem:hover
+    > span {
+    animation: none;
+
+    translate:
+      0
+      -2px;
+  }
+}
+
+/* =========================
+   SHARED KEYFRAMES
+========================= */
+
+@keyframes
+  contact-page-dot-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  81% {
+    opacity: 0.26;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  contact-page-dark-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  81% {
+    opacity: 0.3;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  contact-page-accent {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  78% {
+    opacity: 0.58;
+
+    scale: 0.83;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.17;
+  }
+}
+
+/* =========================
+   HERO
+========================= */
+
+@keyframes
+  contact-page-question {
+  0%,
+  66%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+
+    translate:
+      0
+      0;
+  }
+
+  77% {
+    opacity: 0.62;
+
+    scale: 0.9;
+
+    translate:
+      0
+      1px;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.12;
+
+    translate:
+      0
+      -1px;
+  }
+}
+
+/* =========================
+   PRIMARY CTA
+========================= */
+
+@keyframes
+  contact-page-main-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    scale: 1;
+  }
+
+  42% {
+    translate:
+      3px
+      -3px;
+
+    scale: 1.025;
+  }
+
+  60% {
+    translate:
+      1px
+      -1px;
+
+    scale: 1.008;
+  }
+}
+
+/* =========================
+   AVAILABILITY
+========================= */
+
+@keyframes
+  contact-page-status-pulse {
+  0%,
+  52%,
+  100% {
+    opacity: 0;
+
+    scale: 1;
+  }
+
+  64% {
+    opacity: 0.36;
+  }
+
+  88% {
+    opacity: 0;
+
+    scale: 2.5;
+  }
+}
+
+/* =========================
+   COLLABORATION
+========================= */
+
+@keyframes
+  contact-page-index-tick {
+  0%,
+  76%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  84% {
+    translate:
+      0
+      -2px;
+  }
+
+  92% {
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   SOCIAL
+========================= */
+
+@keyframes
+  contact-page-light-accent {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  78% {
+    opacity: 0.62;
+
+    scale: 0.84;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.16;
+  }
+}
+
+@keyframes
+  contact-page-social-arrow {
+  0%,
+  72%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  82% {
+    translate:
+      2.5px
+      -2.5px;
+  }
+
+  91% {
+    translate:
+      0.6px
+      -0.6px;
+  }
+}
+
+/* =========================
+   CLOSING
+========================= */
+
+@keyframes
+  contact-page-closing-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  44% {
+    translate:
+      3px
+      -3px;
+  }
+
+  62% {
+    translate:
+      0.8px
+      -0.8px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dot::after,
+  .darkDot::after,
+  .statusDot::after {
+    display: none;
+  }
+
+  .heading > span,
+  .emailArrow,
+  .collaborationItem
+    > span,
+  .socialHeader
+    > p
+    > span,
+  .socialArrow,
+  .closingMain
+    p
+    > span,
+  .closingLink
+    > span {
+    animation: none;
+  }
+}

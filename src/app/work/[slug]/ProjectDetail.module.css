@@ -1505,3 +1505,541 @@
       flex-start;
   }
 }
+
+/* =========================
+   AMBIENT / PROJECT DETAIL
+========================= */
+
+.dot {
+  position: relative;
+}
+
+.dot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border:
+    1px solid
+    currentColor;
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  scale: 0.7;
+
+  pointer-events: none;
+}
+
+.storySection:not(
+    [data-theme="accent"]
+  )
+  .dot::after,
+.nextProject
+  .dot::after {
+  border-color:
+    var(--project-accent);
+}
+
+/* Hero accent period */
+
+.heroTitle h1 > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+/* Overview accent period */
+
+.overviewContent
+  h2
+  > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+/* Hero / link arrows */
+
+.backLink > span,
+.liveLink > span,
+.finaleCta > span,
+.nextArrow {
+  display: inline-block;
+
+  will-change:
+    translate;
+}
+
+/* Quote */
+
+.quoteMark {
+  will-change:
+    translate,
+    opacity;
+}
+
+/* Metrics */
+
+.metric > strong {
+  will-change:
+    translate;
+}
+
+/* =========================
+   AMBIENT MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO
+  ========================= */
+
+  [data-motion-page="project-detail"]
+    .heroTitle
+    h1
+    > span {
+    animation:
+      project-detail-accent
+      5.6s
+      ease-in-out
+      1.2s
+      infinite;
+  }
+
+  [data-motion-page="project-detail"]
+    .backLink
+    > span {
+    animation:
+      project-detail-back-arrow
+      4.4s
+      ease-in-out
+      0.8s
+      infinite;
+  }
+
+  .backLink:hover
+    > span {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+
+  [data-motion-scroll="project-details"][
+    data-motion-visible="true"
+  ]
+    .liveLink
+    > span {
+    animation:
+      project-detail-live-arrow
+      3.4s
+      ease-in-out
+      0.5s
+      infinite;
+  }
+
+  .liveLink:hover
+    > span {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+
+  /* =========================
+     STORY SECTION DOTS
+  ========================= */
+
+  [data-motion-scroll="project-section"][
+    data-motion-visible="true"
+  ]
+    .dot::after,
+  [data-motion-scroll="project-image"][
+    data-motion-visible="true"
+  ]
+    .dot::after,
+  [data-motion-scroll="project-gallery"][
+    data-motion-visible="true"
+  ]
+    .dot::after,
+  [data-motion-scroll="project-metrics"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      project-detail-dot-pulse
+      5.4s
+      ease-out
+      0.8s
+      infinite;
+  }
+
+  /* =========================
+     OVERVIEW
+  ========================= */
+
+  [data-motion-scroll="project-section"][
+    data-motion-visible="true"
+  ]
+    .overviewContent
+    h2
+    > span {
+    animation:
+      project-detail-accent
+      5.8s
+      ease-in-out
+      1.6s
+      infinite;
+  }
+
+  /* =========================
+     METRICS
+  ========================= */
+
+  [data-motion-scroll="project-metrics"][
+    data-motion-visible="true"
+  ]
+    .metric:nth-child(1)
+    > strong {
+    animation:
+      project-detail-metric-tick
+      6.6s
+      ease-in-out
+      0.4s
+      infinite;
+  }
+
+  [data-motion-scroll="project-metrics"][
+    data-motion-visible="true"
+  ]
+    .metric:nth-child(2)
+    > strong {
+    animation:
+      project-detail-metric-tick
+      7s
+      ease-in-out
+      1.1s
+      infinite;
+  }
+
+  [data-motion-scroll="project-metrics"][
+    data-motion-visible="true"
+  ]
+    .metric:nth-child(3)
+    > strong {
+    animation:
+      project-detail-metric-tick
+      7.4s
+      ease-in-out
+      1.8s
+      infinite;
+  }
+
+  [data-motion-scroll="project-metrics"][
+    data-motion-visible="true"
+  ]
+    .metric:nth-child(4)
+    > strong {
+    animation:
+      project-detail-metric-tick
+      7.8s
+      ease-in-out
+      2.5s
+      infinite;
+  }
+
+  /* =========================
+     QUOTE
+  ========================= */
+
+  [data-motion-scroll="project-quote"][
+    data-motion-visible="true"
+  ]
+    .quoteMark {
+    animation:
+      project-detail-quote-mark
+      6.8s
+      ease-in-out
+      infinite;
+  }
+
+  /* =========================
+     FINALE
+  ========================= */
+
+  [data-motion-scroll="project-finale"][
+    data-motion-visible="true"
+  ]
+    .finaleCta
+    > span {
+    animation:
+      project-detail-live-arrow
+      3.3s
+      ease-in-out
+      0.6s
+      infinite;
+  }
+
+  .finaleCta:hover
+    > span {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+
+  /* =========================
+     NEXT PROJECT
+  ========================= */
+
+  [data-motion-scroll="project-next-header"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      project-detail-dot-pulse
+      4.8s
+      ease-out
+      0.5s
+      infinite;
+  }
+
+  [data-motion-scroll="project-next-link"][
+    data-motion-visible="true"
+  ]
+    .nextArrow {
+    animation:
+      project-detail-next-arrow
+      3.8s
+      ease-in-out
+      0.7s
+      infinite;
+  }
+
+  .nextLink:hover
+    .nextArrow {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes
+  project-detail-dot-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  81% {
+    opacity: 0.26;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  project-detail-accent {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  78% {
+    opacity: 0.58;
+
+    scale: 0.82;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.17;
+  }
+}
+
+/* =========================
+   HERO LINKS
+========================= */
+
+@keyframes
+  project-detail-back-arrow {
+  0%,
+  72%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  82% {
+    translate:
+      -2.5px
+      0;
+  }
+
+  91% {
+    translate:
+      -0.6px
+      0;
+  }
+}
+
+@keyframes
+  project-detail-live-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  45% {
+    translate:
+      2.5px
+      -2.5px;
+  }
+
+  62% {
+    translate:
+      0.8px
+      -0.8px;
+  }
+}
+
+/* =========================
+   METRICS
+========================= */
+
+@keyframes
+  project-detail-metric-tick {
+  0%,
+  74%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  82% {
+    translate:
+      0
+      -3px;
+  }
+
+  91% {
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   QUOTE
+========================= */
+
+@keyframes
+  project-detail-quote-mark {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    opacity: 1;
+  }
+
+  38% {
+    translate:
+      3px
+      -4px;
+
+    opacity: 0.82;
+  }
+
+  68% {
+    translate:
+      -1px
+      2px;
+
+    opacity: 1;
+  }
+}
+
+/* =========================
+   NEXT PROJECT
+========================= */
+
+@keyframes
+  project-detail-next-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  43% {
+    translate:
+      5px
+      -5px;
+  }
+
+  61% {
+    translate:
+      1.5px
+      -1.5px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dot::after {
+    display: none;
+  }
+
+  .heroTitle h1 > span,
+  .overviewContent h2 > span,
+  .backLink > span,
+  .liveLink > span,
+  .metric > strong,
+  .quoteMark,
+  .finaleCta > span,
+  .nextArrow {
+    animation: none;
+  }
+}

@@ -589,3 +589,346 @@
     margin-top: 4px;
   }
 }
+
+/* =========================
+   AMBIENT / CONTACT FOOTER
+========================= */
+
+/* Availability indicator */
+
+.availability {
+  position: relative;
+
+  padding-left: 15px;
+}
+
+.availability::before {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #111111;
+
+  transform:
+    translateY(-50%);
+}
+
+.availability::after {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+
+  width: 5px;
+  height: 5px;
+
+  border:
+    1px solid
+    rgba(
+      17,
+      17,
+      17,
+      0.72
+    );
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  transform:
+    translateY(-50%)
+    scale(1);
+}
+
+/* Main heading period */
+
+.headingAccent {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+/* Large CTA */
+
+.mainArrow {
+  will-change:
+    translate,
+    scale;
+}
+
+/* Social arrows */
+
+.socialArrow {
+  will-change:
+    translate;
+}
+
+/* =========================
+   AMBIENT MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     AVAILABILITY
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .availability::after {
+    animation:
+      contact-status-pulse
+      3.4s
+      ease-out
+      infinite;
+  }
+
+  /* =========================
+     HEADING ACCENT
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .headingAccent {
+    animation:
+      contact-accent-breathe
+      5.2s
+      ease-in-out
+      1.1s
+      infinite;
+  }
+
+  /* =========================
+     MAIN CTA ARROW
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .mainArrow {
+    animation:
+      contact-main-arrow-idle
+      4.2s
+      ease-in-out
+      0.7s
+      infinite;
+  }
+
+  .mainLink:hover
+    .mainArrow {
+    animation: none;
+
+    translate:
+      0
+      0;
+
+    scale: 1;
+  }
+
+  /* =========================
+     SOCIAL ARROWS
+  ========================= */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .socials
+    a:nth-child(1)
+    .socialArrow {
+    animation:
+      contact-social-arrow
+      4.6s
+      ease-in-out
+      0.4s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .socials
+    a:nth-child(2)
+    .socialArrow {
+    animation:
+      contact-social-arrow
+      4.9s
+      ease-in-out
+      1.1s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .socials
+    a:nth-child(3)
+    .socialArrow {
+    animation:
+      contact-social-arrow
+      5.2s
+      ease-in-out
+      1.8s
+      infinite;
+  }
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .socials
+    a:nth-child(4)
+    .socialArrow {
+    animation:
+      contact-social-arrow
+      5.5s
+      ease-in-out
+      2.5s
+      infinite;
+  }
+
+  .socials
+    a:hover
+    .socialArrow {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes
+  contact-status-pulse {
+  0%,
+  56%,
+  100% {
+    opacity: 0;
+
+    transform:
+      translateY(-50%)
+      scale(1);
+  }
+
+  66% {
+    opacity: 0.38;
+  }
+
+  88% {
+    opacity: 0;
+
+    transform:
+      translateY(-50%)
+      scale(2.4);
+  }
+}
+
+@keyframes
+  contact-accent-breathe {
+  0%,
+  66%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  77% {
+    opacity: 0.55;
+
+    scale: 0.82;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.18;
+  }
+}
+
+@keyframes
+  contact-main-arrow-idle {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    scale: 1;
+  }
+
+  42% {
+    translate:
+      3px
+      -3px;
+
+    scale: 1.025;
+  }
+
+  58% {
+    translate:
+      1px
+      -1px;
+
+    scale: 1.008;
+  }
+}
+
+@keyframes
+  contact-social-arrow {
+  0%,
+  72%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  82% {
+    translate:
+      2px
+      -2px;
+  }
+
+  91% {
+    translate:
+      0.5px
+      -0.5px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .availability::after {
+    display: none;
+  }
+
+  .headingAccent,
+  .mainArrow,
+  .socialArrow {
+    animation: none;
+  }
+}

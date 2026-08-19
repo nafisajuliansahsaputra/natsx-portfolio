@@ -474,3 +474,237 @@
     font-size: 10px;
   }
 }
+
+/* =========================
+   AMBIENT / ABOUT PREVIEW
+========================= */
+
+.dot {
+  position: relative;
+}
+
+.dot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border:
+    1px solid
+    var(--accent);
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  scale: 0.7;
+
+  pointer-events: none;
+}
+
+.heading > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+
+  will-change:
+    translate,
+    opacity;
+}
+
+.mark {
+  transform-origin:
+    center;
+
+  will-change:
+    transform;
+}
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* section marker */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      about-preview-dot-pulse
+      5.2s
+      ease-out
+      0.8s
+      infinite;
+  }
+
+  /* NATSX accent */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .heading
+    > span {
+    animation:
+      about-preview-accent
+      6.8s
+      ease-in-out
+      1.2s
+      infinite;
+  }
+
+  /* CTA */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .arrow {
+    animation:
+      about-preview-arrow
+      3.2s
+      ease-in-out
+      0.4s
+      infinite;
+  }
+
+  .link:hover
+    .arrow {
+    animation: none;
+  }
+
+  /* signature mark */
+
+  .section[
+    data-motion-visible="true"
+  ]
+    .mark {
+    animation:
+      about-preview-mark
+      7.8s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      )
+      1.5s
+      infinite;
+  }
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes
+  about-preview-dot-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  81% {
+    opacity: 0.26;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  about-preview-accent {
+  0%,
+  68%,
+  100% {
+    translate:
+      0
+      0;
+
+    opacity: 1;
+  }
+
+  78% {
+    translate:
+      2px
+      -1px;
+
+    opacity: 0.72;
+  }
+
+  89% {
+    translate:
+      -1px
+      0;
+
+    opacity: 1;
+  }
+}
+
+@keyframes
+  about-preview-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  44% {
+    translate:
+      2.5px
+      -2.5px;
+  }
+
+  62% {
+    translate:
+      0.8px
+      -0.8px;
+  }
+}
+
+@keyframes
+  about-preview-mark {
+  0%,
+  68%,
+  100% {
+    transform:
+      rotate(0deg);
+  }
+
+  78% {
+    transform:
+      rotate(45deg);
+  }
+
+  90% {
+    transform:
+      rotate(45deg);
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dot::after {
+    display: none;
+  }
+
+  .heading > span,
+  .arrow,
+  .mark {
+    animation: none;
+  }
+}

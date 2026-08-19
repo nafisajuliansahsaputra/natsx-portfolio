@@ -938,3 +938,405 @@
     );
   }
 }
+
+/* =========================
+   AMBIENT / WORK PAGE
+========================= */
+
+.dot {
+  position: relative;
+}
+
+.dot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border:
+    1px solid
+    var(--accent);
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  scale: 0.7;
+
+  pointer-events: none;
+}
+
+.heading > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+.projectNumber,
+.projectArrow,
+.contactLink span {
+  will-change:
+    translate;
+}
+
+/* =========================
+   AMBIENT MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO
+  ========================= */
+
+  [data-motion-page="work"]
+    .hero
+    .dot::after {
+    animation:
+      work-dot-pulse
+      5s
+      ease-out
+      0.8s
+      infinite;
+  }
+
+  [data-motion-page="work"]
+    .heading
+    > span {
+    animation:
+      work-heading-accent
+      5.6s
+      ease-in-out
+      1.4s
+      infinite;
+  }
+
+  [data-motion-page="work"]
+    .introMeta
+    > div:first-child
+    > span:last-child {
+    animation:
+      work-meta-tick
+      7.4s
+      ease-in-out
+      1.2s
+      infinite;
+  }
+
+  [data-motion-page="work"]
+    .introMeta
+    > div:last-child
+    > span:last-child {
+    animation:
+      work-meta-tick-alt
+      8.2s
+      ease-in-out
+      2.1s
+      infinite;
+  }
+
+  /* =========================
+     PROJECT ROWS
+  ========================= */
+
+  [data-motion-scroll="work-project"][
+    data-motion-visible="true"
+  ]
+    .projectArrow {
+    animation:
+      work-project-arrow
+      4.8s
+      ease-in-out
+      infinite;
+  }
+
+  .projects
+    > :nth-child(4n + 2)
+    .projectArrow {
+    animation-delay:
+      0.7s;
+  }
+
+  .projects
+    > :nth-child(4n + 3)
+    .projectArrow {
+    animation-delay:
+      1.4s;
+  }
+
+  .projects
+    > :nth-child(4n + 4)
+    .projectArrow {
+    animation-delay:
+      2.1s;
+  }
+
+  [data-motion-scroll="work-project"][
+    data-motion-visible="true"
+  ]
+    .projectNumber {
+    animation:
+      work-project-number
+      6.4s
+      ease-in-out
+      infinite;
+  }
+
+  .projects
+    > :nth-child(even)
+    .projectNumber {
+    animation-delay:
+      1.1s;
+  }
+
+  /*
+   * Hover harus tetap jadi motion terkuat.
+   * Ambient dimatikan saat row sedang di-hover.
+   */
+
+  .project:hover
+    .projectArrow,
+  .project:hover
+    .projectNumber {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  [data-motion-scroll="work-closing"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      work-dot-pulse
+      4.8s
+      ease-out
+      0.6s
+      infinite;
+  }
+
+  [data-motion-scroll="work-closing"][
+    data-motion-visible="true"
+  ]
+    .contactLink
+    span {
+    animation:
+      work-contact-arrow
+      3.2s
+      ease-in-out
+      0.7s
+      infinite;
+  }
+
+  .contactLink:hover
+    span {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes
+  work-dot-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  81% {
+    opacity: 0.27;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  work-heading-accent {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  78% {
+    opacity: 0.58;
+
+    scale: 0.82;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.17;
+  }
+}
+
+@keyframes
+  work-meta-tick {
+  0%,
+  74%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  82% {
+    translate:
+      0
+      -2px;
+  }
+
+  90% {
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-meta-tick-alt {
+  0%,
+  72%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  81% {
+    translate:
+      1.5px
+      0;
+  }
+
+  90% {
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   PROJECT ROWS
+========================= */
+
+@keyframes
+  work-project-arrow {
+  0%,
+  72%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  81% {
+    translate:
+      2.5px
+      -2.5px;
+  }
+
+  90% {
+    translate:
+      0.7px
+      -0.7px;
+  }
+}
+
+@keyframes
+  work-project-number {
+  0%,
+  76%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  84% {
+    translate:
+      0
+      -2px;
+  }
+
+  91% {
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   CLOSING
+========================= */
+
+@keyframes
+  work-contact-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  44% {
+    translate:
+      2.5px
+      -2.5px;
+  }
+
+  62% {
+    translate:
+      0.8px
+      -0.8px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dot::after {
+    display: none;
+  }
+
+  .heading > span,
+  .projectNumber,
+  .projectArrow,
+  .contactLink span,
+  .introMeta
+    > div
+    > span:last-child {
+    animation: none;
+  }
+}

@@ -1031,3 +1031,652 @@
     );
   }
 }
+
+/* =========================
+   AMBIENT / ABOUT PAGE
+========================= */
+
+.dot,
+.darkDot {
+  position: relative;
+}
+
+.dot::after,
+.darkDot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border:
+    1px solid
+    var(--accent);
+
+  border-radius: 50%;
+
+  opacity: 0;
+
+  scale: 0.7;
+
+  pointer-events: none;
+}
+
+.heading > span,
+.approachHeader
+  h2
+  > span,
+.closingMain
+  p
+  > span {
+  display: inline-block;
+
+  transform-origin:
+    center bottom;
+}
+
+/* portrait layers */
+
+.portraitCircle,
+.portrait,
+.signaturePlus {
+  will-change:
+    translate,
+    rotate,
+    scale;
+}
+
+/* closing arrow */
+
+.closingLink > span {
+  will-change:
+    translate;
+}
+
+/* =========================
+   AMBIENT MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO
+  ========================= */
+
+  [data-motion-page="about"]
+    .hero
+    .dot::after {
+    animation:
+      about-page-dot-pulse
+      5s
+      ease-out
+      0.8s
+      infinite;
+  }
+
+  [data-motion-page="about"]
+    .heading
+    > span {
+    animation:
+      about-page-accent
+      5.6s
+      ease-in-out
+      1.3s
+      infinite;
+  }
+
+  /* =========================
+     PROFILE PORTRAIT
+  ========================= */
+
+  [data-motion-scroll="about-portrait"][
+    data-motion-visible="true"
+  ]
+    .portraitCircle {
+    animation:
+      about-page-circle-float
+      9.5s
+      ease-in-out
+      infinite;
+  }
+
+  [data-motion-scroll="about-portrait"][
+    data-motion-visible="true"
+  ]
+    .portrait {
+    animation:
+      about-page-portrait-float
+      10.8s
+      ease-in-out
+      0.7s
+      infinite;
+  }
+
+  [data-motion-scroll="about-portrait"][
+    data-motion-visible="true"
+  ]
+    .signaturePlus {
+    animation:
+      about-page-signature-plus
+      8.2s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      )
+      1.2s
+      infinite;
+  }
+
+  /* =========================
+     STORY
+  ========================= */
+
+  [data-motion-scroll="about-story"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      about-page-dot-pulse
+      5.3s
+      ease-out
+      1s
+      infinite;
+  }
+
+  [data-motion-scroll="about-story"][
+    data-motion-visible="true"
+  ]
+    .story
+    h2
+    em {
+    animation:
+      about-page-story-accent
+      7.2s
+      ease-in-out
+      1.6s
+      infinite;
+  }
+
+  /* =========================
+     APPROACH
+  ========================= */
+
+  [data-motion-scroll="about-approach-header"][
+    data-motion-visible="true"
+  ]
+    .darkDot::after {
+    animation:
+      about-page-dot-pulse
+      5.4s
+      ease-out
+      0.7s
+      infinite;
+  }
+
+  [data-motion-scroll="about-approach-header"][
+    data-motion-visible="true"
+  ]
+    .approachHeader
+    h2
+    > span {
+    animation:
+      about-page-accent
+      6s
+      ease-in-out
+      1.4s
+      infinite;
+  }
+
+  /* =========================
+     DISCIPLINES
+  ========================= */
+
+  [data-motion-scroll="about-disciplines-header"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      about-page-dot-pulse
+      5.2s
+      ease-out
+      0.8s
+      infinite;
+  }
+
+  [data-motion-scroll="about-discipline"][
+    data-motion-visible="true"
+  ]
+    .disciplineNumber {
+    animation:
+      about-page-index-tick
+      7s
+      ease-in-out
+      infinite;
+  }
+
+  .disciplineList
+    > :nth-child(2)
+    .disciplineNumber {
+    animation-delay:
+      0.8s;
+  }
+
+  .disciplineList
+    > :nth-child(3)
+    .disciplineNumber {
+    animation-delay:
+      1.6s;
+  }
+
+  .disciplineList
+    > :nth-child(4)
+    .disciplineNumber {
+    animation-delay:
+      2.4s;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  [data-motion-scroll="about-closing"][
+    data-motion-visible="true"
+  ]
+    .dot::after {
+    animation:
+      about-page-dot-pulse
+      4.9s
+      ease-out
+      0.5s
+      infinite;
+  }
+
+  [data-motion-scroll="about-closing"][
+    data-motion-visible="true"
+  ]
+    .closingMain
+    p
+    > span {
+    animation:
+      about-page-accent
+      5.6s
+      ease-in-out
+      1.2s
+      infinite;
+  }
+
+  [data-motion-scroll="about-closing"][
+    data-motion-visible="true"
+  ]
+    .closingLink
+    > span {
+    animation:
+      about-page-closing-arrow
+      3.3s
+      ease-in-out
+      0.6s
+      infinite;
+  }
+
+  .closingLink:hover
+    > span {
+    animation: none;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   PORTRAIT INTERACTION
+========================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .portraitFrame {
+    transition:
+      transform
+        700ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        );
+  }
+
+  .portraitColumn:hover
+    .portraitFrame {
+    transform:
+      translateY(-4px);
+  }
+
+  .story h2 em {
+    display: inline-block;
+
+    transition:
+      color
+        220ms
+        ease,
+      translate
+        500ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        );
+  }
+
+  .story:hover
+    h2
+    em {
+    translate:
+      3px
+      0;
+  }
+
+  /* disciplines */
+
+  .disciplineMain h2,
+  .disciplineNumber,
+  .disciplineItems {
+    transition:
+      translate
+        550ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ),
+      color
+        220ms
+        ease;
+  }
+
+  .discipline:hover
+    .disciplineMain
+    h2 {
+    translate:
+      6px
+      0;
+
+    color:
+      var(--accent);
+  }
+
+  .discipline:hover
+    .disciplineNumber {
+    animation: none;
+
+    translate:
+      0
+      -2px;
+  }
+
+  .discipline:hover
+    .disciplineItems {
+    translate:
+      3px
+      0;
+  }
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes
+  about-page-dot-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+
+    scale: 0.7;
+  }
+
+  81% {
+    opacity: 0.26;
+  }
+
+  94% {
+    opacity: 0;
+
+    scale: 1.65;
+  }
+}
+
+@keyframes
+  about-page-accent {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+
+    scale: 1;
+  }
+
+  78% {
+    opacity: 0.6;
+
+    scale: 0.84;
+  }
+
+  89% {
+    opacity: 1;
+
+    scale: 1.16;
+  }
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+@keyframes
+  about-page-circle-float {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    scale: 1;
+  }
+
+  38% {
+    translate:
+      -4px
+      5px;
+
+    scale: 1.015;
+  }
+
+  68% {
+    translate:
+      3px
+      -2px;
+
+    scale: 0.998;
+  }
+}
+
+@keyframes
+  about-page-portrait-float {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  40% {
+    translate:
+      3px
+      -3px;
+  }
+
+  70% {
+    translate:
+      -1px
+      1px;
+  }
+}
+
+@keyframes
+  about-page-signature-plus {
+  0%,
+  66%,
+  100% {
+    translate:
+      0
+      0;
+
+    rotate:
+      0deg;
+  }
+
+  76% {
+    translate:
+      0
+      -2px;
+
+    rotate:
+      45deg;
+  }
+
+  89% {
+    translate:
+      0
+      -2px;
+
+    rotate:
+      45deg;
+  }
+}
+
+/* =========================
+   STORY
+========================= */
+
+@keyframes
+  about-page-story-accent {
+  0%,
+  100% {
+    opacity: 1;
+
+    translate:
+      0
+      0;
+  }
+
+  45% {
+    opacity: 0.76;
+
+    translate:
+      2px
+      0;
+  }
+
+  68% {
+    opacity: 1;
+
+    translate:
+      -1px
+      0;
+  }
+}
+
+/* =========================
+   DISCIPLINES
+========================= */
+
+@keyframes
+  about-page-index-tick {
+  0%,
+  76%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  84% {
+    translate:
+      0
+      -2px;
+  }
+
+  92% {
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   CLOSING
+========================= */
+
+@keyframes
+  about-page-closing-arrow {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  44% {
+    translate:
+      3px
+      -3px;
+  }
+
+  62% {
+    translate:
+      0.8px
+      -0.8px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dot::after,
+  .darkDot::after {
+    display: none;
+  }
+
+  .heading > span,
+  .portraitCircle,
+  .portrait,
+  .signaturePlus,
+  .story h2 em,
+  .approachHeader
+    h2
+    > span,
+  .disciplineNumber,
+  .closingMain
+    p
+    > span,
+  .closingLink
+    > span {
+    animation: none;
+  }
+}
