@@ -991,39 +991,6 @@
      PLAYGROUND HERO
   ========================= */
 
-  html[data-motion="enabled"]
-    [data-motion-page="playground"]
-    [data-motion-playground-hero-piece="top"] {
-    animation:
-      natsx-rise-in
-      680ms
-      var(--motion-ease-out)
-      60ms
-      both;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="playground"]
-    [data-motion-playground-hero-piece="title"] {
-    animation:
-      natsx-rise-in
-      980ms
-      var(--motion-ease-out)
-      130ms
-      both;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="playground"]
-    [data-motion-playground-hero-piece="intro"] {
-    animation:
-      natsx-rise-in
-      820ms
-      var(--motion-ease-out)
-      260ms
-      both;
-  }
-
   /* =========================
      PLAYGROUND GALLERY HEADER
   ========================= */

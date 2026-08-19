@@ -961,39 +961,6 @@
      CONTACT HERO
   ========================= */
 
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-contact-hero-piece="top"] {
-    animation:
-      natsx-rise-in
-      680ms
-      var(--motion-ease-out)
-      60ms
-      both;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-contact-hero-piece="title"] {
-    animation:
-      natsx-rise-in
-      980ms
-      var(--motion-ease-out)
-      130ms
-      both;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-contact-hero-piece="intro"] {
-    animation:
-      natsx-rise-in
-      820ms
-      var(--motion-ease-out)
-      260ms
-      both;
-  }
-
   /* =========================
      CONTACT PRIMARY HEADER
   ========================= */
