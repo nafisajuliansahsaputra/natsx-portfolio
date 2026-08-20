@@ -180,11 +180,19 @@ export async function updateProject(
 
   const supabase = await getAdminClient();
 
-  const { data: currentProject, error: currentProjectError } = await supabase
-    .from("projects")
-    .select("id, published_at")
-    .eq("id", projectId)
-    .maybeSingle();
+const {
+  data: currentProject,
+  error: currentProjectError,
+} = await supabase
+  .from("projects")
+  .select(
+    "id, slug, published_at",
+  )
+  .eq(
+    "id",
+    projectId,
+  )
+  .maybeSingle();
 
   if (currentProjectError) {
     return {
@@ -199,6 +207,31 @@ export async function updateProject(
       message: "Project tidak ditemukan.",
     };
   }
+
+  /*
+ * Slug menjadi permanent identifier
+ * setelah project pertama kali
+ * dipublikasikan.
+ *
+ * Ini menjaga URL lama, canonical,
+ * sitemap, dan external links tetap
+ * valid walaupun project kemudian
+ * dikembalikan ke draft.
+ */
+if (
+  currentProject.published_at &&
+  slug !== currentProject.slug
+) {
+  return {
+    status: "error",
+    message:
+      "Slug project yang sudah pernah dipublikasikan tidak dapat diubah.",
+    errors: {
+      slug:
+        "Slug dikunci setelah publish pertama untuk menjaga URL tetap stabil.",
+    },
+  };
+}
 
   const { data: duplicateProject, error: slugLookupError } = await supabase
     .from("projects")
@@ -226,10 +259,13 @@ export async function updateProject(
 
   const currentTime = new Date().toISOString();
 
-  const publishedAt =
+const publishedAt =
+  currentProject.published_at ??
+  (
     status === "published"
-      ? currentProject.published_at || currentTime
-      : null;
+      ? currentTime
+      : null
+  );
 
   const { error: updateError } = await supabase
     .from("projects")

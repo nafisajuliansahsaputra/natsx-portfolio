@@ -60,6 +60,7 @@ export default async function ProjectEditorPage({
         live_url,
         accent_color,
         secondary_color,
+        published_at,
         created_at,
         updated_at
       `,

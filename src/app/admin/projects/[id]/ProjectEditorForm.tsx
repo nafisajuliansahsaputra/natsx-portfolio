@@ -26,6 +26,7 @@ export type EditableProject = {
   live_url: string | null;
   accent_color: string;
   secondary_color: string | null;
+  published_at: string | null;
 };
 
 type ProjectEditorFormProps = {
@@ -104,18 +105,33 @@ export default function ProjectEditorForm({
           <label className={styles.field}>
             <span>Project slug *</span>
 
-            <input
-              className={styles.input}
-              name="slug"
-              type="text"
-              defaultValue={project.slug}
-              maxLength={100}
-              required
-            />
+<input
+  className={
+    styles.input
+  }
+  name="slug"
+  type="text"
+  defaultValue={
+    project.slug
+  }
+  maxLength={100}
+  required
+  readOnly={
+    Boolean(
+      project.published_at,
+    )
+  }
+/>
 
-            <small className={styles.helper}>
-              Mengubah slug akan mengubah URL project.
-            </small>
+<small
+  className={
+    styles.helper
+  }
+>
+  {project.published_at
+    ? "Slug dikunci setelah publish pertama agar URL project tetap stabil."
+    : "Slug masih dapat diubah sebelum project pertama kali dipublikasikan."}
+</small>
 
             <FieldError message={state.errors?.slug} />
           </label>
