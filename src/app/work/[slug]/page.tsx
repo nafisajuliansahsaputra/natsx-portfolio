@@ -146,14 +146,16 @@ export async function generateMetadata({
   };
 }
 
-function getContrastColor(
+function getAccessibleContrastColor(
   hex: string,
 ) {
   const normalized =
-    hex.replace(
-      "#",
-      "",
-    );
+    hex
+      .replace(
+        "#",
+        "",
+      )
+      .trim();
 
   if (
     !/^[0-9a-f]{6}$/i.test(
@@ -190,14 +192,66 @@ function getContrastColor(
       16,
     );
 
-  const luminance =
-    (red * 299 +
-      green * 587 +
-      blue * 114) /
-    1000;
+  function toLinear(
+    channel: number,
+  ) {
+    const value =
+      channel / 255;
 
-  return luminance > 160
-    ? "#111111"
+    return value <=
+      0.04045
+      ? value /
+          12.92
+      : Math.pow(
+          (
+            value +
+            0.055
+          ) /
+            1.055,
+          2.4,
+        );
+  }
+
+  const luminance =
+    0.2126 *
+      toLinear(
+        red,
+      ) +
+    0.7152 *
+      toLinear(
+        green,
+      ) +
+    0.0722 *
+      toLinear(
+        blue,
+      );
+
+  /*
+   * Contrast ratio menurut
+   * WCAG relative luminance.
+   *
+   * Black / white dipilih berdasarkan
+   * contrast ratio terbesar sehingga
+   * project accent arbitrary tetap
+   * mempunyai foreground yang aman.
+   */
+  const contrastWithWhite =
+    1.05 /
+    (
+      luminance +
+      0.05
+    );
+
+  const contrastWithBlack =
+    (
+      luminance +
+      0.05
+    ) /
+    0.05;
+
+  return contrastWithBlack >=
+    contrastWithWhite
+    ? "#000000"
     : "#ffffff";
 }
 
@@ -227,10 +281,10 @@ export default async function ProjectPage({
     "--project-accent":
       project.accentColor,
 
-    "--project-on-accent":
-      getContrastColor(
-        project.accentColor,
-      ),
+"--project-on-accent":
+  getAccessibleContrastColor(
+    project.accentColor,
+  ),
 
     "--project-secondary":
       project.secondaryColor ||

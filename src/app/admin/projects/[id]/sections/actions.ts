@@ -1725,96 +1725,50 @@ export async function moveSection(
   sectionId: string,
   formData: FormData,
 ) {
-  const direction = getText(formData, "direction");
-
-  if (direction !== "up" && direction !== "down") {
-    throw new Error("Arah perpindahan section tidak valid.");
-  }
-
-  const supabase = await getAdminClient();
-
-  const { data, error } = await supabase
-    .from("project_sections")
-    .select("id, sort_order")
-    .eq("project_id", projectId)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
-
-  if (error) {
-    throw new Error(`Gagal membaca urutan section: ${error.message}`);
-  }
-
-  const sections = data ?? [];
-  const currentIndex = sections.findIndex(
-    (section) => section.id === sectionId,
-  );
-
-  if (currentIndex === -1) {
-    throw new Error("Section tidak ditemukan.");
-  }
-
-  const destinationIndex =
-    direction === "up" ? currentIndex - 1 : currentIndex + 1;
+  const direction =
+    getText(
+      formData,
+      "direction",
+    );
 
   if (
-    destinationIndex < 0 ||
-    destinationIndex >= sections.length
+    direction !== "up" &&
+    direction !== "down"
   ) {
-    return;
-  }
-
-  const currentSection = sections[currentIndex];
-  const destinationSection = sections[destinationIndex];
-
-  const temporaryOrder =
-    Math.min(...sections.map((section) => section.sort_order), 0) - 1000;
-
-  const { error: temporaryError } = await supabase
-    .from("project_sections")
-    .update({
-      sort_order: temporaryOrder,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", currentSection.id)
-    .eq("project_id", projectId);
-
-  if (temporaryError) {
     throw new Error(
-      `Gagal memindahkan section: ${temporaryError.message}`,
+      "Arah perpindahan section tidak valid.",
     );
   }
 
-  const { error: destinationError } = await supabase
-    .from("project_sections")
-    .update({
-      sort_order: currentSection.sort_order,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", destinationSection.id)
-    .eq("project_id", projectId);
+  const supabase =
+    await getAdminClient();
 
-  if (destinationError) {
+  const {
+    error,
+  } =
+    await supabase.rpc(
+      "move_project_section",
+      {
+        p_project_id:
+          projectId,
+
+        p_section_id:
+          sectionId,
+
+        p_direction:
+          direction,
+      },
+    );
+
+  if (error) {
     throw new Error(
-      `Gagal memperbarui urutan section: ${destinationError.message}`,
+      `Gagal memindahkan section: ${error.message}`,
     );
   }
 
-  const { error: currentError } = await supabase
-    .from("project_sections")
-    .update({
-      sort_order: destinationSection.sort_order,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", currentSection.id)
-    .eq("project_id", projectId);
-
-  if (currentError) {
-    throw new Error(
-      `Gagal menyelesaikan perpindahan section: ${currentError.message}`,
-    );
-  }
-
-  revalidateSectionPages(projectId);
+  revalidateSectionPages(
+    projectId,
+  );
 }
 
 export async function deleteSection(

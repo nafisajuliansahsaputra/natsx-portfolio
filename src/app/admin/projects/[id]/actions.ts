@@ -10,6 +10,11 @@ import {
   PUBLIC_PORTFOLIO_CACHE_TAG,
 } from "@/lib/portfolio-cache";
 
+import {
+  PORTFOLIO_MEDIA_BUCKET,
+  collectPortfolioMediaPaths,
+} from "@/lib/portfolio-media";
+
 type ProjectField =
   | "title"
   | "slug"
@@ -281,23 +286,74 @@ export async function updateProject(
 export async function deleteProject(
   projectId: string,
 ) {
-  const supabase = await getAdminClient();
+  const supabase =
+    await getAdminClient();
 
-  const { error: sectionDeleteError } = await supabase
-    .from("project_sections")
-    .delete()
-    .eq("project_id", projectId);
+  /*
+   * Ambil semua media path sebelum
+   * project dihapus.
+   *
+   * project_sections akan terhapus
+   * otomatis melalui FK
+   * ON DELETE CASCADE.
+   */
+  const {
+    data: sections,
+    error: sectionLookupError,
+  } = await supabase
+    .from(
+      "project_sections",
+    )
+    .select(
+      "content",
+    )
+    .eq(
+      "project_id",
+      projectId,
+    );
 
-  if (sectionDeleteError) {
+  if (sectionLookupError) {
     throw new Error(
-      `Gagal menghapus section project: ${sectionDeleteError.message}`,
+      `Gagal membaca media project: ${sectionLookupError.message}`,
     );
   }
 
-  const { error: projectDeleteError } = await supabase
-    .from("projects")
+  const storagePaths =
+    Array.from(
+      new Set(
+        (
+          sections ?? []
+        ).flatMap(
+          (section) =>
+            collectPortfolioMediaPaths(
+              section.content,
+            ),
+        ),
+      ),
+    );
+
+  /*
+   * Hapus project saja.
+   *
+   * Semua project_sections ikut
+   * terhapus lewat ON DELETE CASCADE.
+   *
+   * Ini menghindari kondisi:
+   * sections sudah terhapus tetapi
+   * project gagal terhapus.
+   */
+  const {
+    error:
+      projectDeleteError,
+  } = await supabase
+    .from(
+      "projects",
+    )
     .delete()
-    .eq("id", projectId);
+    .eq(
+      "id",
+      projectId,
+    );
 
   if (projectDeleteError) {
     throw new Error(
@@ -305,10 +361,53 @@ export async function deleteProject(
     );
   }
 
-  updateTag(
-  PUBLIC_PORTFOLIO_CACHE_TAG,
-);
+  /*
+   * Database sudah menjadi source
+   * of truth bahwa project terhapus.
+   *
+   * Baru setelah itu bersihkan
+   * file Storage.
+   *
+   * Kalau Storage cleanup gagal,
+   * jangan membatalkan deletion:
+   * orphan file lebih aman daripada
+   * project aktif kehilangan media.
+   */
+  if (
+    storagePaths.length >
+    0
+  ) {
+    const {
+      error:
+        storageCleanupError,
+    } =
+      await supabase.storage
+        .from(
+          PORTFOLIO_MEDIA_BUCKET,
+        )
+        .remove(
+          storagePaths,
+        );
 
-  revalidatePath("/admin");
-  redirect("/admin");
+    if (
+      storageCleanupError
+    ) {
+      console.error(
+        "Project deleted, but media cleanup failed:",
+        storageCleanupError,
+      );
+    }
+  }
+
+  updateTag(
+    PUBLIC_PORTFOLIO_CACHE_TAG,
+  );
+
+  revalidatePath(
+    "/admin",
+  );
+
+  redirect(
+    "/admin",
+  );
 }
