@@ -96,9 +96,9 @@ export async function createProject(
     errors.project_number = "Nomor project maksimal 10 karakter.";
   }
 
-  if (!Number.isInteger(year) || year < 1900 || year > 2100) {
-    errors.year = "Tahun project tidak valid.";
-  }
+if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+  errors.year = "Tahun project harus antara 2000 dan 2100.";
+}
 
   if (summary.length > 2000) {
     errors.summary = "Ringkasan maksimal 2.000 karakter.";

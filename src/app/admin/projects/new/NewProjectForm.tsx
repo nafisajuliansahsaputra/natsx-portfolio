@@ -44,6 +44,12 @@ export default function NewProjectForm({
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
+  const [
+  accentColor,
+  setAccentColor,
+] = useState(
+  "#5961ED",
+);
   const [isSlugManual, setIsSlugManual] = useState(false);
 
   function handleTitleChange(value: string) {
@@ -93,9 +99,9 @@ export default function NewProjectForm({
             required
           />
 
-          <small className={styles.helper}>
-            URL project: /project/{slug || "project-slug"}
-          </small>
+<small className={styles.helper}>
+  URL project: /work/{slug || "project-slug"}
+</small>
 
           <FieldError message={state.errors?.slug} />
         </label>
@@ -124,7 +130,7 @@ export default function NewProjectForm({
             name="year"
             type="number"
             defaultValue={currentYear}
-            min={1900}
+min={2000}
             max={2100}
             required
           />
@@ -216,14 +222,26 @@ export default function NewProjectForm({
               <span>Accent color</span>
 
               <div className={styles.colorControl}>
-                <input
-                  className={styles.colorInput}
-                  name="accent_color"
-                  type="color"
-                  defaultValue="#5961ED"
-                />
+<input
+  className={
+    styles.colorInput
+  }
+  name="accent_color"
+  type="color"
+  value={
+    accentColor
+  }
+  onChange={
+    (event) =>
+      setAccentColor(
+        event.target.value,
+      )
+  }
+/>
 
-                <span>#5961ED</span>
+<span>
+  {accentColor.toUpperCase()}
+</span>
               </div>
 
               <FieldError message={state.errors?.accent_color} />

@@ -142,9 +142,9 @@ export async function updateProject(
     errors.project_number = "Nomor project maksimal 10 karakter.";
   }
 
-  if (!Number.isInteger(year) || year < 1900 || year > 2100) {
-    errors.year = "Tahun project tidak valid.";
-  }
+if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+  errors.year = "Tahun project harus antara 2000 dan 2100.";
+}
 
   if (summary.length > 2000) {
     errors.summary = "Ringkasan maksimal 2.000 karakter.";
@@ -166,9 +166,13 @@ export async function updateProject(
     errors.sort_order = "Urutan harus berupa angka 0 atau lebih besar.";
   }
 
-  if (status !== "draft" && status !== "published") {
-    errors.status = "Status project tidak valid.";
-  }
+if (
+  status !== "draft" &&
+  status !== "published" &&
+  status !== "archived"
+) {
+  errors.status = "Status project tidak valid.";
+}
 
   if (Object.keys(errors).length > 0) {
     return {

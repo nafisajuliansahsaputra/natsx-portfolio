@@ -159,7 +159,7 @@ export default function ProjectEditorForm({
               name="year"
               type="number"
               defaultValue={project.year}
-              min={1900}
+min={2000}
               max={2100}
               required
             />
@@ -261,6 +261,7 @@ export default function ProjectEditorForm({
                 >
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>
+                  <option value="archived">Archived</option>
                 </select>
 
                 <FieldError message={state.errors?.status} />
