@@ -7,7 +7,6 @@ import {
   useState,
 } from "react";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   usePathname,
@@ -687,18 +686,10 @@ export default function SiteHeader() {
               closeMenu
             }
           >
-            <Image
-              src="/images/branding/natsx-logo-black.png"
-              alt="NATSX"
-              width={
-                1110
-              }
-              height={
-                380
-              }
-              priority
-              className="site-logo__image"
-            />
+<span
+  className="site-logo__image"
+  aria-hidden="true"
+/>
           </Link>
 
           <nav

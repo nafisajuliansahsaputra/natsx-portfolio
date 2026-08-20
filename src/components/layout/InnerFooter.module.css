@@ -35,10 +35,35 @@
 .logo {
   display: block;
 
-  width: auto;
+  width: 111px;
   height: 38px;
 
-  object-fit: contain;
+  background:
+    var(--accent);
+
+  -webkit-mask-image:
+    url("/images/branding/natsx-logo-black.png");
+
+  mask-image:
+    url("/images/branding/natsx-logo-black.png");
+
+  -webkit-mask-repeat:
+    no-repeat;
+
+  mask-repeat:
+    no-repeat;
+
+  -webkit-mask-position:
+    center;
+
+  mask-position:
+    center;
+
+  -webkit-mask-size:
+    contain;
+
+  mask-size:
+    contain;
 }
 
 .navigation {
@@ -359,9 +384,10 @@
     padding-bottom: 54px;
   }
 
-  .logo {
-    height: 34px;
-  }
+.logo {
+  width: 99px;
+  height: 34px;
+}
 
   .navigation {
     width: 100%;

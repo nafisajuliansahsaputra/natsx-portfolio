@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -131,19 +130,12 @@ const shouldRender =
             }
             aria-label="NATSX home"
           >
-            <Image
-              src="/images/branding/natsx-logo-black.png"
-              alt="NATSX"
-              width={
-                1110
-              }
-              height={
-                380
-              }
-              className={
-                styles.logo
-              }
-            />
+<span
+  className={
+    styles.logo
+  }
+  aria-hidden="true"
+/>
           </Link>
 
           <nav
