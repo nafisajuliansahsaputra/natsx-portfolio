@@ -9,10 +9,12 @@ export default function NotFound() {
     <>
       <SiteHeader />
 
-      <main
-        className={styles.page}
-        data-motion-page="not-found"
-      >
+<main
+  id="main-content"
+  tabIndex={-1}
+  className={styles.page}
+  data-motion-page="not-found"
+>
         <div className="site-container">
           <div
             className={styles.top}

@@ -36,8 +36,8 @@ type ProjectPageProps = {
   }>;
 };
 
-export const dynamic =
-  "force-dynamic";
+export const revalidate =
+  3600;
 
 export async function generateMetadata({
   params,
@@ -242,14 +242,16 @@ export default async function ProjectPage({
       <SiteHeader />
 
       <main
-        className={
-          styles.page
-        }
-        style={
-          projectStyle
-        }
-        data-motion-page="project-detail"
-      >
+  id="main-content"
+  tabIndex={-1}
+  className={
+    styles.page
+  }
+  style={
+    projectStyle
+  }
+  data-motion-page="project-detail"
+>
         <section
           className={
             styles.hero

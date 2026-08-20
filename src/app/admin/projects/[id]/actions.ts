@@ -1,8 +1,14 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import {
+  revalidatePath,
+  updateTag,
+} from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import {
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+} from "@/lib/portfolio-cache";
 
 type ProjectField =
   | "title"
@@ -259,6 +265,10 @@ export async function updateProject(
     };
   }
 
+  updateTag(
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+);
+
   revalidatePath("/admin");
   revalidatePath(`/admin/projects/${projectId}`);
 
@@ -294,6 +304,10 @@ export async function deleteProject(
       `Gagal menghapus project: ${projectDeleteError.message}`,
     );
   }
+
+  updateTag(
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+);
 
   revalidatePath("/admin");
   redirect("/admin");

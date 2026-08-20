@@ -1,7 +1,3 @@
-import type {
-  Metadata,
-} from "next";
-
 import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -12,13 +8,23 @@ import {
 
 import styles from "./Contact.module.css";
 
-export const metadata: Metadata = {
-  title:
-    "Contact",
+import {
+  createPageMetadata,
+} from "@/lib/page-metadata";
 
-  description:
-    `Get in touch with ${site.person} / ${site.name} for selected freelance work, collaborations, and creative projects.`,
-};
+const description =
+  `Get in touch with ${site.person} / ${site.name} for selected freelance work, collaborations, and creative projects.`;
+
+export const metadata =
+  createPageMetadata({
+    title:
+      "Contact",
+
+    description,
+
+    path:
+      "/contact",
+  });
 
 export default function ContactPage() {
   const emailParts =
@@ -98,12 +104,14 @@ export default function ContactPage() {
     <>
       <SiteHeader />
 
-      <main
-        className={
-          styles.page
-        }
-        data-motion-page="contact"
-      >
+<main
+  id="main-content"
+  tabIndex={-1}
+  className={
+    styles.page
+  }
+  data-motion-page="contact"
+>
         <section
           className={
             styles.hero

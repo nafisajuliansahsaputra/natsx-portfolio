@@ -6,15 +6,18 @@ import PlaygroundPreview from "@/components/home/PlaygroundPreview";
 import SelectedWork from "@/components/home/SelectedWork";
 import SiteHeader from "@/components/layout/SiteHeader";
 
-export const dynamic =
-  "force-dynamic";
+export const revalidate =
+  3600;
 
 export default function Home() {
   return (
     <>
       <SiteHeader />
 
-      <main>
+<main
+  id="main-content"
+  tabIndex={-1}
+>
         <Hero />
 
         <SelectedWork />

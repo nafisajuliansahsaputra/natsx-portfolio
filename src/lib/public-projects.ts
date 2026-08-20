@@ -3,6 +3,15 @@ import {
 } from "react";
 
 import {
+  unstable_cache,
+} from "next/cache";
+
+import {
+  PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+} from "@/lib/portfolio-cache";
+
+import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
@@ -146,7 +155,11 @@ function normalizeStringList(
     | unknown[]
     | null,
 ) {
-  if (!Array.isArray(value)) {
+  if (
+    !Array.isArray(
+      value,
+    )
+  ) {
     return [];
   }
 
@@ -158,10 +171,13 @@ function normalizeStringList(
         typeof item ===
         "string",
     )
-    .map((item) =>
-      item.trim(),
+    .map(
+      (item) =>
+        item.trim(),
     )
-    .filter(Boolean);
+    .filter(
+      Boolean,
+    );
 }
 
 function normalizeContent(
@@ -174,7 +190,9 @@ function normalizeContent(
     typeof value !==
       "object" ||
     value === null ||
-    Array.isArray(value)
+    Array.isArray(
+      value,
+    )
   ) {
     return {};
   }
@@ -186,7 +204,8 @@ function normalizeContent(
 }
 
 function normalizeProject(
-  project: PublicProjectRow,
+  project:
+    PublicProjectRow,
 ): PublicProject {
   return {
     id:
@@ -251,7 +270,8 @@ function normalizeProject(
 }
 
 function normalizeSection(
-  section: PublicProjectSectionRow,
+  section:
+    PublicProjectSectionRow,
 ): PublicProjectSection {
   return {
     id:
@@ -264,15 +284,18 @@ function normalizeSection(
       section.section_type,
 
     eyebrow:
-      section.eyebrow?.trim() ??
+      section.eyebrow
+        ?.trim() ??
       "",
 
     heading:
-      section.heading?.trim() ??
+      section.heading
+        ?.trim() ??
       "",
 
     body:
-      section.body?.trim() ??
+      section.body
+        ?.trim() ??
       "",
 
     content:
@@ -300,7 +323,13 @@ function normalizeProjects(
   );
 }
 
-export async function getPublishedProjects(): Promise<
+/*
+ * =========================
+ * PUBLISHED PROJECTS
+ * =========================
+ */
+
+async function loadPublishedProjects(): Promise<
   PublicProject[]
 > {
   const supabase =
@@ -310,7 +339,9 @@ export async function getPublishedProjects(): Promise<
     data,
     error,
   } = await supabase
-    .from("projects")
+    .from(
+      "projects",
+    )
     .select(
       PUBLIC_PROJECT_FIELDS,
     )
@@ -337,25 +368,49 @@ export async function getPublishedProjects(): Promise<
   );
 }
 
-export async function getFeaturedProjects(
-  limit = 3,
+const getCachedPublishedProjects =
+  unstable_cache(
+    loadPublishedProjects,
+    [
+      "natsx-published-projects",
+    ],
+    {
+      tags: [
+        PUBLIC_PORTFOLIO_CACHE_TAG,
+      ],
+
+      revalidate:
+        PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    },
+  );
+
+export async function getPublishedProjects(): Promise<
+  PublicProject[]
+> {
+  return getCachedPublishedProjects();
+}
+
+/*
+ * =========================
+ * FEATURED PROJECTS
+ * =========================
+ */
+
+async function loadFeaturedProjects(
+  limit: number,
 ): Promise<
   PublicProject[]
 > {
   const supabase =
     createPublicClient();
 
-  const safeLimit =
-    Math.max(
-      1,
-      Math.floor(limit),
-    );
-
   const {
     data,
     error,
   } = await supabase
-    .from("projects")
+    .from(
+      "projects",
+    )
     .select(
       PUBLIC_PROJECT_FIELDS,
     )
@@ -375,7 +430,7 @@ export async function getFeaturedProjects(
       },
     )
     .limit(
-      safeLimit,
+      limit,
     );
 
   if (error) {
@@ -388,6 +443,46 @@ export async function getFeaturedProjects(
     data,
   );
 }
+
+const getCachedFeaturedProjects =
+  unstable_cache(
+    loadFeaturedProjects,
+    [
+      "natsx-featured-projects",
+    ],
+    {
+      tags: [
+        PUBLIC_PORTFOLIO_CACHE_TAG,
+      ],
+
+      revalidate:
+        PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    },
+  );
+
+export async function getFeaturedProjects(
+  limit = 3,
+): Promise<
+  PublicProject[]
+> {
+  const safeLimit =
+    Math.max(
+      1,
+      Math.floor(
+        limit,
+      ),
+    );
+
+  return getCachedFeaturedProjects(
+    safeLimit,
+  );
+}
+
+/*
+ * =========================
+ * PROJECT DETAIL
+ * =========================
+ */
 
 async function loadPublishedProjectPage(
   slug: string,
@@ -404,7 +499,9 @@ async function loadPublishedProjectPage(
     error:
       projectError,
   } = await supabase
-    .from("projects")
+    .from(
+      "projects",
+    )
     .select(
       PUBLIC_PROJECT_FIELDS,
     )
@@ -418,13 +515,17 @@ async function loadPublishedProjectPage(
     )
     .maybeSingle();
 
-  if (projectError) {
+  if (
+    projectError
+  ) {
     throw new Error(
       `Gagal memuat project: ${projectError.message}`,
     );
   }
 
-  if (!projectData) {
+  if (
+    !projectData
+  ) {
     return null;
   }
 
@@ -526,15 +627,19 @@ async function loadPublishedProjectPage(
 
   let nextProject:
     | PublicProject
-    | null = null;
+    | null =
+    null;
 
   if (
-    projects.length > 1 &&
-    currentIndex !== -1
+    projects.length >
+      1 &&
+    currentIndex !==
+      -1
   ) {
     nextProject =
       projects[
-        (currentIndex + 1) %
+        (currentIndex +
+          1) %
           projects.length
       ];
   }
@@ -549,10 +654,38 @@ async function loadPublishedProjectPage(
   };
 }
 
+const getCachedPublishedProjectPage =
+  unstable_cache(
+    loadPublishedProjectPage,
+    [
+      "natsx-published-project-page",
+    ],
+    {
+      tags: [
+        PUBLIC_PORTFOLIO_CACHE_TAG,
+      ],
+
+      revalidate:
+        PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    },
+  );
+
+/*
+ * React cache tetap dipakai supaya
+ * generateMetadata() dan page render
+ * pada request yang sama tidak
+ * melakukan pekerjaan identik dua kali.
+ */
 export const getPublishedProjectPage =
   cache(
-    loadPublishedProjectPage,
+    getCachedPublishedProjectPage,
   );
+
+/*
+ * =========================
+ * PROJECT YEAR RANGE
+ * =========================
+ */
 
 export function getPublicProjectYearRange(
   source:
@@ -571,7 +704,8 @@ export function getPublicProjectYearRange(
       );
 
   if (
-    years.length === 0
+    years.length ===
+    0
   ) {
     return "";
   }
@@ -587,7 +721,8 @@ export function getPublicProjectYearRange(
     );
 
   if (
-    earliest === latest
+    earliest ===
+    latest
   ) {
     return String(
       latest,

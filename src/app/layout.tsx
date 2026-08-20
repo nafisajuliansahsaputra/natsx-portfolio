@@ -134,6 +134,11 @@ export const metadata: Metadata = {
 
   description,
 
+  alternates: {
+  canonical:
+    getSiteUrl(),
+},
+
   creator:
     site.person,
 

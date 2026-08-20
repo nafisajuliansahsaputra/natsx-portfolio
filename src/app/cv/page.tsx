@@ -1,7 +1,3 @@
-import type {
-  Metadata,
-} from "next";
-
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
@@ -16,11 +12,23 @@ import CvViewer from "./CvViewer";
 
 import styles from "./Cv.module.css";
 
-export const metadata: Metadata = {
-  title: "CV",
-  description:
-    `View and download the curriculum vitae of ${site.person} / ${site.name}.`,
-};
+import {
+  createPageMetadata,
+} from "@/lib/page-metadata";
+
+const description =
+  `View and download the curriculum vitae of ${site.person} / ${site.name}.`;
+
+export const metadata =
+  createPageMetadata({
+    title:
+      "CV",
+
+    description,
+
+    path:
+      "/cv",
+  });
 
 type CvPageProps = {
   searchParams: Promise<{
@@ -50,12 +58,14 @@ export default async function CvPage({
     <>
       <SiteHeader />
 
-      <main
-        className={
-          styles.page
-        }
-        data-motion-page="cv"
-      >
+<main
+  id="main-content"
+  tabIndex={-1}
+  className={
+    styles.page
+  }
+  data-motion-page="cv"
+>
         {/* =========================
             HERO
         ========================= */}

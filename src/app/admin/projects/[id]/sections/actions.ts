@@ -1,6 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import {
+  revalidatePath,
+  updateTag,
+} from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -26,6 +29,10 @@ import {
   type MetricsSectionContent,
   type QuoteSectionContent,
 } from "@/lib/project-section-content";
+
+import {
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+} from "@/lib/portfolio-cache";
 
 const SECTION_TYPES = [
   "overview",
@@ -136,10 +143,24 @@ function validateSection(formData: FormData) {
   };
 }
 
-function revalidateSectionPages(projectId: string) {
-  revalidatePath("/admin");
-  revalidatePath(`/admin/projects/${projectId}`);
-  revalidatePath(`/admin/projects/${projectId}/sections`);
+function revalidateSectionPages(
+  projectId: string,
+) {
+  updateTag(
+    PUBLIC_PORTFOLIO_CACHE_TAG,
+  );
+
+  revalidatePath(
+    "/admin",
+  );
+
+  revalidatePath(
+    `/admin/projects/${projectId}`,
+  );
+
+  revalidatePath(
+    `/admin/projects/${projectId}/sections`,
+  );
 }
 
 function validateImageMedia(

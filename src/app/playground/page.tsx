@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -10,12 +9,23 @@ import {
 
 import styles from "./Playground.module.css";
 
-export const metadata: Metadata = {
-  title: "Playground",
+import {
+  createPageMetadata,
+} from "@/lib/page-metadata";
 
-  description:
-    "A collection of experiments, visual studies, motion, typography, and creative explorations by NATSX.",
-};
+const description =
+  "A collection of experiments, visual studies, motion, typography, and creative explorations by NATSX.";
+
+export const metadata =
+  createPageMetadata({
+    title:
+      "Playground",
+
+    description,
+
+    path:
+      "/playground",
+  });
 
 function ExperimentVisual({
   type,
@@ -167,10 +177,12 @@ export default function PlaygroundPage() {
     <>
       <SiteHeader />
 
-      <main
-        className={styles.page}
-        data-motion-page="playground"
-      >
+<main
+  id="main-content"
+  tabIndex={-1}
+  className={styles.page}
+  data-motion-page="playground"
+>
         {/* =========================
             HERO
         ========================= */}

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,11 +5,23 @@ import SiteHeader from "@/components/layout/SiteHeader";
 
 import styles from "./About.module.css";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "About Nafisa Juliansah Saputra — a multidisciplinary digital creator working across design, development, motion, and visual experiences.",
-};
+import {
+  createPageMetadata,
+} from "@/lib/page-metadata";
+
+const description =
+  "About Nafisa Juliansah Saputra — a multidisciplinary digital creator working across design, development, motion, and visual experiences.";
+
+export const metadata =
+  createPageMetadata({
+    title:
+      "About",
+
+    description,
+
+    path:
+      "/about",
+  });
 
 const disciplines = [
   {
@@ -92,10 +103,12 @@ export default function AboutPage() {
     <>
       <SiteHeader />
 
-      <main
-        className={styles.page}
-        data-motion-page="about"
-      >
+<main
+  id="main-content"
+  tabIndex={-1}
+  className={styles.page}
+  data-motion-page="about"
+>
         {/* =========================
             HERO
         ========================= */}

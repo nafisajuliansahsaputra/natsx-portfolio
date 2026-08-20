@@ -1,7 +1,3 @@
-import type {
-  Metadata,
-} from "next";
-
 import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -13,15 +9,26 @@ import {
 
 import styles from "./Work.module.css";
 
-export const dynamic =
-  "force-dynamic";
+import {
+  createPageMetadata,
+} from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Work",
+export const revalidate =
+  3600;
 
-  description:
-    "Selected projects by NATSX across product design, development, identity, and creative direction.",
-};
+const description =
+  "Selected projects by NATSX across product design, development, identity, and creative direction.";
+
+export const metadata =
+  createPageMetadata({
+    title:
+      "Work",
+
+    description,
+
+    path:
+      "/work",
+  });
 
 export default async function WorkPage() {
   const projects =
@@ -45,9 +52,11 @@ export default async function WorkPage() {
       <SiteHeader />
 
       <main
-        className={styles.page}
-        data-motion-page="work"
-      >
+  id="main-content"
+  tabIndex={-1}
+  className={styles.page}
+  data-motion-page="work"
+>
         <section
           className={
             styles.hero
