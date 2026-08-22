@@ -14,6 +14,10 @@ import {
   getHomeMessages,
 } from "@/i18n/home-messages";
 
+import {
+  getMessages,
+} from "@/i18n/messages";
+
 import styles from "./ContactFooter.module.css";
 
 const contactLinks = [
@@ -30,7 +34,9 @@ const contactLinks = [
     : []),
 
   ...site.socials.map(
-    (social) => ({
+    (
+      social,
+    ) => ({
       label:
         social.label,
 
@@ -51,6 +57,11 @@ export default function ContactFooter({
     getHomeMessages(
       locale,
     ).contact;
+
+  const sharedCopy =
+    getMessages(
+      locale,
+    );
 
   return (
     <section
@@ -163,6 +174,7 @@ export default function ContactFooter({
               className={
                 styles.mainArrow
               }
+              aria-hidden="true"
             >
               ↗
             </span>
@@ -225,6 +237,7 @@ export default function ContactFooter({
                     className={
                       styles.socialArrow
                     }
+                    aria-hidden="true"
                   >
                     ↗
                   </span>
@@ -295,7 +308,9 @@ export default function ContactFooter({
                 }{" "}
                 /{" "}
                 {
-                  site.role
+                  sharedCopy
+                    .identity
+                    .digitalCreator
                 }
               </span>
             </div>

@@ -12,18 +12,20 @@ import {
 } from "next/navigation";
 
 import {
+  defaultLocale,
   getLocaleFromPathname,
+  isLocale,
   localeLabels,
   locales,
   localizePath,
   type Locale,
 } from "@/i18n/config";
 
-import styles from "./LanguageSwitcher.module.css";
-
 import {
   getMessages,
 } from "@/i18n/messages";
+
+import styles from "./LanguageSwitcher.module.css";
 
 const STORAGE_KEY =
   "natsx:locale";
@@ -52,10 +54,10 @@ export default function LanguageSwitcher({
       pathname,
     );
 
-    const copy =
-  getMessages(
-    currentLocale,
-  );
+  const copy =
+    getMessages(
+      currentLocale,
+    );
 
   const [
     open,
@@ -67,11 +69,140 @@ export default function LanguageSwitcher({
       null,
     );
 
+  /*
+   * Keep the real document language
+   * synchronized with the active
+   * route locale.
+   */
   useEffect(() => {
     document.documentElement.lang =
       currentLocale;
   }, [
     currentLocale,
+  ]);
+
+  /*
+   * ============================
+   * LANGUAGE PREFERENCE SYNC
+   * ============================
+   *
+   * Explicit localized URL:
+   * /id/... or /de/...
+   * becomes the newest preference.
+   *
+   * Default English URL:
+   * /...
+   * follows a previously saved
+   * ID / DE preference.
+   *
+   * Auto navigation uses replace()
+   * so it does not add an extra
+   * entry to browser history.
+   */
+  useEffect(() => {
+    let storedLocale:
+      | Locale
+      | null =
+      null;
+
+    try {
+      const storedValue =
+        window.localStorage.getItem(
+          STORAGE_KEY,
+        );
+
+      if (
+        isLocale(
+          storedValue,
+        )
+      ) {
+        storedLocale =
+          storedValue;
+      }
+    } catch {
+      /*
+       * localStorage is optional.
+       * Route locale still works
+       * normally when unavailable.
+       */
+      return;
+    }
+
+    /*
+     * No valid preference yet.
+     * Use the current route as
+     * the initial preference.
+     */
+    if (
+      !storedLocale
+    ) {
+      try {
+        window.localStorage.setItem(
+          STORAGE_KEY,
+          currentLocale,
+        );
+      } catch {
+        // Preference storage
+        // is optional.
+      }
+
+      return;
+    }
+
+    /*
+     * A localized route is explicit.
+     * Treat it as the newest user
+     * preference.
+     */
+    if (
+      currentLocale !==
+      defaultLocale
+    ) {
+      if (
+        storedLocale !==
+        currentLocale
+      ) {
+        try {
+          window.localStorage.setItem(
+            STORAGE_KEY,
+            currentLocale,
+          );
+        } catch {
+          // Preference storage
+          // is optional.
+        }
+      }
+
+      return;
+    }
+
+    /*
+     * English is already the saved
+     * preference, so nothing to do.
+     */
+    if (
+      storedLocale ===
+      defaultLocale
+    ) {
+      return;
+    }
+
+    const targetPath =
+      localizePath(
+        pathname,
+        storedLocale,
+      );
+
+    const suffix =
+      `${window.location.search}${window.location.hash}`;
+
+    router.replace(
+      `${targetPath}${suffix}`,
+    );
+  }, [
+    currentLocale,
+    pathname,
+    router,
   ]);
 
   useEffect(() => {
@@ -92,7 +223,9 @@ export default function LanguageSwitcher({
           event.target as Node,
         )
       ) {
-        setOpen(false);
+        setOpen(
+          false,
+        );
       }
     }
 
@@ -103,7 +236,9 @@ export default function LanguageSwitcher({
         event.key ===
         "Escape"
       ) {
-        setOpen(false);
+        setOpen(
+          false,
+        );
       }
     }
 
@@ -140,7 +275,10 @@ export default function LanguageSwitcher({
       locale ===
       currentLocale
     ) {
-      setOpen(false);
+      setOpen(
+        false,
+      );
+
       return;
     }
 
@@ -150,8 +288,11 @@ export default function LanguageSwitcher({
         locale,
       );
     } catch {
-      // Preference storage
-      // is optional.
+      /*
+       * Preference storage is
+       * optional. Navigation must
+       * still work without it.
+       */
     }
 
     const targetPath =
@@ -163,7 +304,9 @@ export default function LanguageSwitcher({
     const suffix =
       `${window.location.search}${window.location.hash}`;
 
-    setOpen(false);
+    setOpen(
+      false,
+    );
 
     onNavigate?.();
 
@@ -182,18 +325,20 @@ export default function LanguageSwitcher({
           styles.mobile
         }
         aria-label={
-  copy.language.label
-}
+          copy.language
+            .label
+        }
       >
-<span
-  className={
-    styles.mobileLabel
-  }
->
-  {
-    copy.language.label
-  }
-</span>
+        <span
+          className={
+            styles.mobileLabel
+          }
+        >
+          {
+            copy.language
+              .label
+          }
+        </span>
 
         <div
           className={
@@ -201,7 +346,9 @@ export default function LanguageSwitcher({
           }
         >
           {locales.map(
-            (locale) => {
+            (
+              locale,
+            ) => {
               const active =
                 locale ===
                 currentLocale;
@@ -209,7 +356,9 @@ export default function LanguageSwitcher({
               return (
                 <button
                   type="button"
-                  key={locale}
+                  key={
+                    locale
+                  }
                   className={
                     active
                       ? `${styles.mobileOption} ${styles.mobileOptionActive}`
@@ -240,7 +389,9 @@ export default function LanguageSwitcher({
 
   return (
     <div
-      ref={rootRef}
+      ref={
+        rootRef
+      }
       className={
         styles.desktop
       }
@@ -256,7 +407,9 @@ export default function LanguageSwitcher({
         }
         onClick={() =>
           setOpen(
-            (value) =>
+            (
+              value,
+            ) =>
               !value,
           )
         }
@@ -293,7 +446,9 @@ export default function LanguageSwitcher({
         }
       >
         {locales.map(
-          (locale) => {
+          (
+            locale,
+          ) => {
             const active =
               locale ===
               currentLocale;
@@ -305,7 +460,9 @@ export default function LanguageSwitcher({
                 aria-checked={
                   active
                 }
-                key={locale}
+                key={
+                  locale
+                }
                 className={
                   active
                     ? `${styles.option} ${styles.optionActive}`

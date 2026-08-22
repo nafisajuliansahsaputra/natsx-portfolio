@@ -1,8 +1,20 @@
 "use client";
 
-import Link from "next/link";
+import {
+  usePathname,
+} from "next/navigation";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
+
+import {
+  getLocaleFromPathname,
+} from "@/i18n/config";
+
+import {
+  getSystemMessages,
+} from "@/i18n/system-messages";
 
 import styles from "./PublicRouteError.module.css";
 
@@ -12,17 +24,30 @@ export default function PublicRouteError({
   reset:
     () => void;
 }) {
+  const pathname =
+    usePathname();
+
+  const locale =
+    getLocaleFromPathname(
+      pathname,
+    );
+
+  const copy =
+    getSystemMessages(
+      locale,
+    ).error;
+
   return (
     <>
       <SiteHeader />
 
-<main
-  id="main-content"
-  tabIndex={-1}
-  className={
-    styles.page
-  }
->
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+      >
         <div className="site-container">
           <div
             className={
@@ -40,8 +65,9 @@ export default function PublicRouteError({
                 }
               />
 
-              SYSTEM /
-              TEMPORARY ERROR
+              {
+                copy.eyebrow
+              }
             </div>
 
             <h1
@@ -49,9 +75,15 @@ export default function PublicRouteError({
                 styles.heading
               }
             >
-              Something
+              {
+                copy.headingLine1
+              }
+
               <br />
-              went wrong
+
+              {
+                copy.headingLine2
+              }
 
               <span>
                 .
@@ -63,12 +95,9 @@ export default function PublicRouteError({
                 styles.description
               }
             >
-              The portfolio
-              couldn&apos;t load
-              this content right
-              now. Try the request
-              again or return to
-              the homepage.
+              {
+                copy.description
+              }
             </p>
 
             <div
@@ -85,17 +114,26 @@ export default function PublicRouteError({
                   reset
                 }
               >
-                Try again ↗
+                {
+                  copy.retry
+                }{" "}
+                <span
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
               </button>
 
-              <Link
+              <LocaleLink
                 href="/"
                 className={
                   styles.secondary
                 }
               >
-                Back home
-              </Link>
+                {
+                  copy.backHome
+                }
+              </LocaleLink>
             </div>
           </div>
         </div>

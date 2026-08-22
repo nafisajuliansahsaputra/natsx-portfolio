@@ -22,17 +22,31 @@ export const messages = {
       skipToMain:
         "Skip to main content",
 
+      home:
+        "NATSX home",
+
+      portrait:
+        "Portrait of Nafisa Juliansah Saputra",
+
       mainNavigation:
         "Main navigation",
 
       mobileNavigation:
         "Main navigation menu",
 
+      footerNavigation:
+        "Footer navigation",
+
       openMenu:
         "Open navigation menu",
 
       closeMenu:
         "Close navigation menu",
+    },
+
+    identity: {
+      digitalCreator:
+        "Digital Creator",
     },
 
     language: {
@@ -69,11 +83,6 @@ export const messages = {
       about:
         "Tentang",
 
-      /*
-       * "Playground" dipertahankan
-       * sebagai istilah kreatif /
-       * bagian identitas situs.
-       */
       playground:
         "Playground",
 
@@ -85,17 +94,31 @@ export const messages = {
       skipToMain:
         "Lewati ke konten utama",
 
+      home:
+        "Beranda NATSX",
+
+      portrait:
+        "Potret Nafisa Juliansah Saputra",
+
       mainNavigation:
         "Navigasi utama",
 
       mobileNavigation:
         "Menu navigasi utama",
 
+      footerNavigation:
+        "Navigasi footer",
+
       openMenu:
         "Buka menu navigasi",
 
       closeMenu:
         "Tutup menu navigasi",
+    },
+
+    identity: {
+      digitalCreator:
+        "Kreator Digital",
     },
 
     language: {
@@ -143,17 +166,31 @@ export const messages = {
       skipToMain:
         "Zum Hauptinhalt",
 
+      home:
+        "NATSX Startseite",
+
+      portrait:
+        "Porträt von Nafisa Juliansah Saputra",
+
       mainNavigation:
         "Hauptnavigation",
 
       mobileNavigation:
         "Mobiles Navigationsmenü",
 
+      footerNavigation:
+        "Footer-Navigation",
+
       openMenu:
         "Navigationsmenü öffnen",
 
       closeMenu:
         "Navigationsmenü schließen",
+    },
+
+    identity: {
+      digitalCreator:
+        "Digital Creator",
     },
 
     language: {

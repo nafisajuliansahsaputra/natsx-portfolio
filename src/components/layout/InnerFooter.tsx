@@ -7,20 +7,20 @@ import {
 import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
+  site,
+} from "@/data/site";
+
+import {
   getLocaleFromPathname,
   localizePath,
   stripLocaleFromPathname,
 } from "@/i18n/config";
 
 import {
-  site,
-} from "@/data/site";
-
-import styles from "./InnerFooter.module.css";
-
-import {
   getMessages,
 } from "@/i18n/messages";
+
+import styles from "./InnerFooter.module.css";
 
 const navigation = [
   {
@@ -65,10 +65,10 @@ export default function InnerFooter() {
       pathname,
     );
 
-    const copy =
-  getMessages(
-    locale,
-  );
+  const copy =
+    getMessages(
+      locale,
+    );
 
   const basePath =
     stripLocaleFromPathname(
@@ -90,13 +90,17 @@ export default function InnerFooter() {
     basePath ===
       "/cv";
 
-  if (!shouldRender) {
+  if (
+    !shouldRender
+  ) {
     return null;
   }
 
   const fallbackSocial =
     site.socials.find(
-      (social) =>
+      (
+        social,
+      ) =>
         social.label ===
         "LinkedIn",
     ) ??
@@ -121,8 +125,8 @@ export default function InnerFooter() {
           }
         : {
             label:
-  copy.navigation
-    .contact,
+              copy.navigation
+                .contact,
 
             href:
               localizePath(
@@ -143,7 +147,8 @@ export default function InnerFooter() {
 
   function scrollToTop() {
     window.scrollTo({
-      top: 0,
+      top:
+        0,
 
       behavior:
         "smooth",
@@ -167,7 +172,10 @@ export default function InnerFooter() {
             className={
               styles.brand
             }
-            aria-label="NATSX home"
+            aria-label={
+              copy.accessibility
+                .home
+            }
           >
             <span
               className={
@@ -181,7 +189,10 @@ export default function InnerFooter() {
             className={
               styles.navigation
             }
-            aria-label="Footer navigation"
+            aria-label={
+              copy.accessibility
+                .footerNavigation
+            }
           >
             {navigation.map(
               (
@@ -196,10 +207,10 @@ export default function InnerFooter() {
                   }
                 >
                   {
-  copy.navigation[
-    item.key
-  ]
-}
+                    copy.navigation[
+                      item.key
+                    ]
+                  }
                 </LocaleLink>
               ),
             )}
@@ -222,9 +233,9 @@ export default function InnerFooter() {
               }
             >
               {
-  copy.footer
-    .designedBy
-}
+                copy.footer
+                  .designedBy
+              }
             </span>
 
             <span>
@@ -245,9 +256,9 @@ export default function InnerFooter() {
               }
             >
               {
-  copy.footer
-    .getInTouch
-}
+                copy.footer
+                  .getInTouch
+              }
             </span>
 
             {primaryContactIsInternal ? (
@@ -298,9 +309,9 @@ export default function InnerFooter() {
               }
             >
               {
-  copy.footer
-    .elsewhere
-}
+                copy.footer
+                  .elsewhere
+              }
             </span>
 
             <div
@@ -340,9 +351,9 @@ export default function InnerFooter() {
               }
             >
               {
-  copy.footer
-    .profile
-}
+                copy.footer
+                  .profile
+              }
             </span>
 
             {basePath !==
@@ -354,9 +365,9 @@ export default function InnerFooter() {
                 }
               >
                 {
-  copy.footer
-    .viewCv
-}
+                  copy.footer
+                    .viewCv
+                }
 
                 <span
                   className={
@@ -409,9 +420,9 @@ export default function InnerFooter() {
               }
             >
               {
-  copy.footer
-    .backToTop
-}
+                copy.footer
+                  .backToTop
+              }
 
               <span
                 aria-hidden="true"

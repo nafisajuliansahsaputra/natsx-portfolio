@@ -2,6 +2,12 @@ import type {
   Locale,
 } from "@/i18n/config";
 
+type PlaygroundExperimentMessages = {
+  title: string;
+  category: string;
+  description: string;
+};
+
 const playgroundMessages = {
   en: {
     hero: {
@@ -205,10 +211,170 @@ const playgroundMessages = {
   },
 } as const;
 
+const playgroundExperimentMessages: Record<
+  Locale,
+  Record<
+    string,
+    PlaygroundExperimentMessages
+  >
+> = {
+  en: {
+    "generative-visual": {
+      title:
+        "Generative Visual",
+
+      category:
+        "AI / Visual Study",
+
+      description:
+        "Exploring composition, image systems, and unexpected visual directions through generative tools.",
+    },
+
+    "type-in-motion": {
+      title:
+        "Type in Motion",
+
+      category:
+        "Motion / Typography",
+
+      description:
+        "A study in rhythm, scale, timing, and how typography changes when it begins to move.",
+    },
+
+    "form-study": {
+      title:
+        "Form Study",
+
+      category:
+        "3D / Experiment",
+
+      description:
+        "Simple forms, proportion, light, and composition explored without the constraints of a final deliverable.",
+    },
+
+    "poster-system": {
+      title:
+        "Poster System",
+
+      category:
+        "Graphic / Typography",
+
+      description:
+        "An evolving graphic system built through type, structure, repetition, and visual tension.",
+    },
+  },
+
+  id: {
+    "generative-visual": {
+      title:
+        "Visual Generatif",
+
+      category:
+        "AI / Studi Visual",
+
+      description:
+        "Eksplorasi komposisi, sistem gambar, dan arah visual tak terduga melalui berbagai alat generatif.",
+    },
+
+    "type-in-motion": {
+      title:
+        "Tipografi dalam Gerak",
+
+      category:
+        "Motion / Tipografi",
+
+      description:
+        "Studi tentang ritme, skala, timing, dan bagaimana tipografi berubah ketika mulai bergerak.",
+    },
+
+    "form-study": {
+      title:
+        "Studi Bentuk",
+
+      category:
+        "3D / Eksperimen",
+
+      description:
+        "Eksplorasi bentuk sederhana, proporsi, cahaya, dan komposisi tanpa batasan dari sebuah hasil akhir.",
+    },
+
+    "poster-system": {
+      title:
+        "Sistem Poster",
+
+      category:
+        "Grafis / Tipografi",
+
+      description:
+        "Sistem grafis yang terus berkembang melalui tipografi, struktur, repetisi, dan ketegangan visual.",
+    },
+  },
+
+  de: {
+    "generative-visual": {
+      title:
+        "Generatives Visual",
+
+      category:
+        "KI / Visuelle Studie",
+
+      description:
+        "Eine Erkundung von Komposition, Bildsystemen und unerwarteten visuellen Richtungen mit generativen Werkzeugen.",
+    },
+
+    "type-in-motion": {
+      title:
+        "Typografie in Bewegung",
+
+      category:
+        "Motion / Typografie",
+
+      description:
+        "Eine Studie über Rhythmus, Maßstab, Timing und darüber, wie sich Typografie verändert, sobald sie sich bewegt.",
+    },
+
+    "form-study": {
+      title:
+        "Formstudie",
+
+      category:
+        "3D / Experiment",
+
+      description:
+        "Einfache Formen, Proportionen, Licht und Komposition werden ohne die Einschränkungen eines festgelegten Endergebnisses erkundet.",
+    },
+
+    "poster-system": {
+      title:
+        "Postersystem",
+
+      category:
+        "Grafik / Typografie",
+
+      description:
+        "Ein sich entwickelndes grafisches System aus Typografie, Struktur, Wiederholung und visueller Spannung.",
+    },
+  },
+};
+
 export function getPlaygroundMessages(
   locale: Locale,
 ) {
   return playgroundMessages[
     locale
   ];
+}
+
+export function getPlaygroundExperimentMessages(
+  locale: Locale,
+  slug: string,
+): PlaygroundExperimentMessages | null {
+  return (
+    playgroundExperimentMessages[
+      locale
+    ][slug] ??
+    playgroundExperimentMessages
+      .en[slug] ??
+    null
+  );
 }

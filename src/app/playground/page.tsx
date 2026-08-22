@@ -12,6 +12,7 @@ import type {
 } from "@/i18n/config";
 
 import {
+  getPlaygroundExperimentMessages,
   getPlaygroundMessages,
 } from "@/i18n/playground-messages";
 
@@ -405,73 +406,93 @@ export function PlaygroundPageContent({
               {playgroundItems.map(
                 (
                   experiment,
-                ) => (
-                  <article
-                    className={
-                      styles.experiment
-                    }
-                    key={
-                      experiment.slug
-                    }
-                    data-motion-scroll="playground-experiment"
-                  >
-                    <div
-                      className={
-                        styles.visualWrap
-                      }
-                      data-motion-piece="visual"
-                    >
-                      <ExperimentVisual
-                        type={
-                          experiment.visual
-                        }
-                      />
-                    </div>
+                ) => {
+                  const localized =
+                    getPlaygroundExperimentMessages(
+                      locale,
+                      experiment.slug,
+                    );
 
-                    <div
+                  const title =
+                    localized?.title ??
+                    experiment.title;
+
+                  const category =
+                    localized?.category ??
+                    experiment.category;
+
+                  const experimentDescription =
+                    localized?.description ??
+                    experiment.description;
+
+                  return (
+                    <article
                       className={
-                        styles.experimentInfo
+                        styles.experiment
                       }
-                      data-motion-piece="info"
+                      key={
+                        experiment.slug
+                      }
+                      data-motion-scroll="playground-experiment"
                     >
                       <div
                         className={
-                          styles.experimentHeading
+                          styles.visualWrap
                         }
+                        data-motion-piece="visual"
                       >
-                        <span>
-                          {
-                            experiment.number
+                        <ExperimentVisual
+                          type={
+                            experiment.visual
                           }
-                        </span>
-
-                        <h2>
-                          {
-                            experiment.title
-                          }
-                        </h2>
+                        />
                       </div>
 
                       <div
                         className={
-                          styles.experimentMeta
+                          styles.experimentInfo
                         }
+                        data-motion-piece="info"
                       >
-                        <span>
-                          {
-                            experiment.category
+                        <div
+                          className={
+                            styles.experimentHeading
                           }
-                        </span>
+                        >
+                          <span>
+                            {
+                              experiment.number
+                            }
+                          </span>
 
-                        <p>
-                          {
-                            experiment.description
+                          <h2>
+                            {
+                              title
+                            }
+                          </h2>
+                        </div>
+
+                        <div
+                          className={
+                            styles.experimentMeta
                           }
-                        </p>
+                        >
+                          <span>
+                            {
+                              category
+                            }
+                          </span>
+
+                          <p>
+                            {
+                              experimentDescription
+                            }
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                ),
+                    </article>
+                  );
+                },
               )}
             </div>
           </div>

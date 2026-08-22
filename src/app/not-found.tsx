@@ -1,66 +1,145 @@
-import Link from "next/link";
+"use client";
+
+import {
+  usePathname,
+} from "next/navigation";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
+
+import {
+  site,
+} from "@/data/site";
+
+import {
+  getLocaleFromPathname,
+} from "@/i18n/config";
+
+import {
+  getSystemMessages,
+} from "@/i18n/system-messages";
 
 import styles from "./NotFound.module.css";
 
 export default function NotFound() {
+  const pathname =
+    usePathname();
+
+  const locale =
+    getLocaleFromPathname(
+      pathname,
+    );
+
+  const copy =
+    getSystemMessages(
+      locale,
+    ).notFound;
+
   return (
     <>
       <SiteHeader />
 
-<main
-  id="main-content"
-  tabIndex={-1}
-  className={styles.page}
-  data-motion-page="not-found"
->
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        data-motion-page="not-found"
+      >
         <div className="site-container">
           <div
-            className={styles.top}
+            className={
+              styles.top
+            }
             data-motion-not-found-piece="top"
           >
-            <div className={styles.label}>
-              <span className={styles.dot} />
+            <div
+              className={
+                styles.label
+              }
+            >
+              <span
+                className={
+                  styles.dot
+                }
+              />
 
               <span>
-                Error / 404
+                {
+                  copy.label
+                }
               </span>
             </div>
 
             <span
-              className={styles.status}
+              className={
+                styles.status
+              }
             >
-              Page not found / NATSX
+              {
+                copy.status
+              }
             </span>
           </div>
 
-          <div className={styles.main}>
+          <div
+            className={
+              styles.main
+            }
+          >
             <div
-              className={styles.number}
+              className={
+                styles.number
+              }
               aria-hidden="true"
               data-motion-not-found-piece="number"
             >
-              404<span>.</span>
+              404
+              <span>
+                .
+              </span>
             </div>
 
-            <div className={styles.message}>
+            <div
+              className={
+                styles.message
+              }
+            >
               <p
-                className={styles.eyebrow}
+                className={
+                  styles.eyebrow
+                }
                 data-motion-not-found-piece="eyebrow"
               >
-                Wrong turn?
+                {
+                  copy.eyebrow
+                }
               </p>
 
               <h1
                 data-motion-not-found-piece="title"
               >
-                Looks like this idea
+                {
+                  copy.headingLine1
+                }
+
                 <br />
-                never made it to
+
+                {
+                  copy.headingLine2
+                }
+
                 <br />
-                production
-                <span>.</span>
+
+                {
+                  copy.headingLine3
+                }
+
+                <span>
+                  .
+                </span>
               </h1>
 
               <p
@@ -69,58 +148,79 @@ export default function NotFound() {
                 }
                 data-motion-not-found-piece="description"
               >
-                The page you&apos;re
-                looking for doesn&apos;t
-                exist, has moved, or is
-                still somewhere between
-                an idea and a finished
-                project.
+                {
+                  copy.description
+                }
               </p>
 
               <div
-                className={styles.actions}
+                className={
+                  styles.actions
+                }
                 data-motion-not-found-piece="actions"
               >
-                <Link
+                <LocaleLink
                   href="/"
                   className={
                     styles.primaryAction
                   }
                 >
-                  Back Home
-                  <span>↗</span>
-                </Link>
+                  {
+                    copy.backHome
+                  }
 
-                <Link
+                  <span
+                    aria-hidden="true"
+                  >
+                    ↗
+                  </span>
+                </LocaleLink>
+
+                <LocaleLink
                   href="/work"
                   className={
                     styles.secondaryAction
                   }
                 >
-                  Explore Work
-                  <span>↗</span>
-                </Link>
+                  {
+                    copy.exploreWork
+                  }
+
+                  <span
+                    aria-hidden="true"
+                  >
+                    ↗
+                  </span>
+                </LocaleLink>
               </div>
             </div>
           </div>
 
           <div
-            className={styles.bottom}
+            className={
+              styles.bottom
+            }
             data-motion-not-found-piece="bottom"
           >
             <span>
-              Nafisa Juliansah Saputra
+              {
+                site.person
+              }
             </span>
 
             <span
-              className={styles.plus}
+              className={
+                styles.plus
+              }
               aria-hidden="true"
             >
               +
             </span>
 
             <span>
-              NATSX / Digital Creator
+              {
+                copy.identity
+              }
             </span>
           </div>
         </div>

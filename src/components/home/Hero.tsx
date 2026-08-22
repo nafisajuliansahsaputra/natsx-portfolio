@@ -14,8 +14,6 @@ import {
   site,
 } from "@/data/site";
 
-import styles from "./Hero.module.css";
-
 import type {
   Locale,
 } from "@/i18n/config";
@@ -23,6 +21,12 @@ import type {
 import {
   getHomeMessages,
 } from "@/i18n/home-messages";
+
+import {
+  getMessages,
+} from "@/i18n/messages";
+
+import styles from "./Hero.module.css";
 
 type HeroProps = {
   locale: Locale;
@@ -35,6 +39,12 @@ export default function Hero({
     getHomeMessages(
       locale,
     );
+
+  const sharedCopy =
+    getMessages(
+      locale,
+    );
+
   const [
     portraitLoaded,
     setPortraitLoaded,
@@ -74,17 +84,25 @@ export default function Hero({
         "(pointer: fine)",
       );
 
-    let isInView = true;
+    let isInView =
+      true;
 
     let frameId:
       | number
-      | null = null;
+      | null =
+      null;
 
-    let targetX = 0;
-    let targetY = 0;
+    let targetX =
+      0;
 
-    let currentX = 0;
-    let currentY = 0;
+    let targetY =
+      0;
+
+    let currentX =
+      0;
+
+    let currentY =
+      0;
 
     const applyParallax = (
       x: number,
@@ -155,13 +173,17 @@ export default function Hero({
           Math.abs(
             targetX -
               currentX,
-          ) > 0.001 ||
+          ) >
+            0.001 ||
           Math.abs(
             targetY -
               currentY,
-          ) > 0.001;
+          ) >
+            0.001;
 
-        if (stillMoving) {
+        if (
+          stillMoving
+        ) {
           frameId =
             window.requestAnimationFrame(
               renderParallax,
@@ -170,13 +192,15 @@ export default function Hero({
           return;
         }
 
-        frameId = null;
+        frameId =
+          null;
       };
 
     const requestFrame =
       () => {
         if (
-          frameId !== null
+          frameId !==
+          null
         ) {
           return;
         }
@@ -201,8 +225,10 @@ export default function Hero({
         visual.getBoundingClientRect();
 
       if (
-        rect.width === 0 ||
-        rect.height === 0
+        rect.width ===
+          0 ||
+        rect.height ===
+          0
       ) {
         return;
       }
@@ -244,8 +270,11 @@ export default function Hero({
 
     const handlePointerLeave =
       () => {
-        targetX = 0;
-        targetY = 0;
+        targetX =
+          0;
+
+        targetY =
+          0;
 
         requestFrame();
       };
@@ -255,11 +284,17 @@ export default function Hero({
         if (
           reducedMotion.matches
         ) {
-          targetX = 0;
-          targetY = 0;
+          targetX =
+            0;
 
-          currentX = 0;
-          currentY = 0;
+          targetY =
+            0;
+
+          currentX =
+            0;
+
+          currentY =
+            0;
 
           applyParallax(
             0,
@@ -272,7 +307,8 @@ export default function Hero({
 
     let observer:
       | IntersectionObserver
-      | null = null;
+      | null =
+      null;
 
     if (
       "IntersectionObserver" in
@@ -280,18 +316,25 @@ export default function Hero({
     ) {
       observer =
         new IntersectionObserver(
-          ([entry]) => {
+          (
+            [
+              entry,
+            ],
+          ) => {
             isInView =
               entry.isIntersecting;
 
             syncAmbientState();
           },
           {
-            threshold: 0.1,
+            threshold:
+              0.1,
           },
         );
 
-      observer.observe(hero);
+      observer.observe(
+        hero,
+      );
     } else {
       syncAmbientState();
     }
@@ -342,7 +385,8 @@ export default function Hero({
       );
 
       if (
-        frameId !== null
+        frameId !==
+        null
       ) {
         window.cancelAnimationFrame(
           frameId,
@@ -353,14 +397,17 @@ export default function Hero({
 
   return (
     <section
-      ref={heroRef}
-      className={styles.hero}
+      ref={
+        heroRef
+      }
+      className={
+        styles.hero
+      }
       data-ambient-active="false"
     >
       <div
         className={`site-container ${styles.inner}`}
       >
-        
         <div
           className={
             styles.content
@@ -383,8 +430,15 @@ export default function Hero({
                 }
               />
 
-              {site.person} |{" "}
-              {site.role}
+              {
+                site.person
+              }{" "}
+              |{" "}
+              {
+                sharedCopy
+                  .identity
+                  .digitalCreator
+              }
             </p>
 
             <h1
@@ -398,20 +452,21 @@ export default function Hero({
                   styles.titleLine
                 }
               >
-<strong>
-  {
-    copy.hero
-      .titlePrimary
-  }
-</strong>{" "}
-<span
-  className={`${styles.titleLight} ${styles.kineticWord}`}
->
-  {
-    copy.hero
-      .titleSecondary
-  }
-</span>
+                <strong>
+                  {
+                    copy.hero
+                      .titlePrimary
+                  }
+                </strong>{" "}
+
+                <span
+                  className={`${styles.titleLight} ${styles.kineticWord}`}
+                >
+                  {
+                    copy.hero
+                      .titleSecondary
+                  }
+                </span>
               </span>
 
               <span
@@ -419,21 +474,23 @@ export default function Hero({
                   styles.titleLine
                 }
               >
-<span
-  className={
-    styles.titleLight
-  }
->
-  {
-    copy.hero
-      .titleTertiary
-  }
-</span>{" "}
+                <span
+                  className={
+                    styles.titleLight
+                  }
+                >
+                  {
+                    copy.hero
+                      .titleTertiary
+                  }
+                </span>{" "}
+
                 <strong>
-  {
-    copy.hero
-      .titleQuaternary
-  }
+                  {
+                    copy.hero
+                      .titleQuaternary
+                  }
+
                   <span
                     className={
                       styles.titleAccent
@@ -451,16 +508,16 @@ export default function Hero({
               }
               data-motion-hero-piece="intro"
             >
-<p
-  className={
-    styles.description
-  }
->
-  {
-    copy.hero
-      .description
-  }
-</p>
+              <p
+                className={
+                  styles.description
+                }
+              >
+                {
+                  copy.hero
+                    .description
+                }
+              </p>
 
               <div
                 className={
@@ -473,46 +530,50 @@ export default function Hero({
                     styles.primaryLink
                   }
                 >
-<span>
-  {
-    copy.hero
-      .selectedWork
-  }
-</span>
+                  <span>
+                    {
+                      copy.hero
+                        .selectedWork
+                    }
+                  </span>
 
                   <span
                     className={`${styles.arrow} ${styles.arrowDown}`}
+                    aria-hidden="true"
                   >
                     ↘
                   </span>
                 </a>
 
-<LocaleLink
-  href="/about"
-  className={
-    styles.secondaryLink
-  }
->
-<span>
-  {
-    copy.hero
-      .aboutMe
-  }
-</span>
+                <LocaleLink
+                  href="/about"
+                  className={
+                    styles.secondaryLink
+                  }
+                >
+                  <span>
+                    {
+                      copy.hero
+                        .aboutMe
+                    }
+                  </span>
 
-  <span
-    className={`${styles.arrow} ${styles.arrowUp}`}
-  >
-    ↗
-  </span>
-</LocaleLink>
+                  <span
+                    className={`${styles.arrow} ${styles.arrowUp}`}
+                    aria-hidden="true"
+                  >
+                    ↗
+                  </span>
+                </LocaleLink>
               </div>
             </div>
           </div>
         </div>
 
         <div
-          ref={visualRef}
+          ref={
+            visualRef
+          }
           className={
             styles.visual
           }
@@ -550,7 +611,11 @@ export default function Hero({
           >
             <Image
               src="/images/natsx-portrait-hero.png"
-              alt="Portrait of Nafisa Juliansah Saputra"
+              alt={
+                sharedCopy
+                  .accessibility
+                  .portrait
+              }
               fill
               priority
               sizes="(max-width: 960px) 100vw, 42vw"

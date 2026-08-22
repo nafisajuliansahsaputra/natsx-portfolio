@@ -8,15 +8,16 @@ import {
 } from "react";
 
 import Link from "next/link";
+
 import {
   usePathname,
 } from "next/navigation";
 
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+
 import {
   site,
 } from "@/data/site";
-
-import styles from "./SiteHeader.module.css";
 
 import {
   getLocaleFromPathname,
@@ -24,11 +25,11 @@ import {
   stripLocaleFromPathname,
 } from "@/i18n/config";
 
-import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
-
 import {
   getMessages,
 } from "@/i18n/messages";
+
+import styles from "./SiteHeader.module.css";
 
 const navigation = [
   {
@@ -80,20 +81,20 @@ export default function SiteHeader() {
   const pathname =
     usePathname();
 
-    const locale =
-  getLocaleFromPathname(
-    pathname,
-  );
+  const locale =
+    getLocaleFromPathname(
+      pathname,
+    );
 
-const basePath =
-  stripLocaleFromPathname(
-    pathname,
-  );
+  const basePath =
+    stripLocaleFromPathname(
+      pathname,
+    );
 
   const copy =
-  getMessages(
-    locale,
-  );
+    getMessages(
+      locale,
+    );
 
   const [
     menuOpen,
@@ -138,27 +139,27 @@ const basePath =
       null,
     );
 
-function isActive(
-  href: string,
-) {
-  if (
-    href ===
-    "/work"
+  function isActive(
+    href: string,
   ) {
+    if (
+      href ===
+      "/work"
+    ) {
+      return (
+        basePath ===
+          "/work" ||
+        basePath.startsWith(
+          "/work/",
+        )
+      );
+    }
+
     return (
       basePath ===
-        "/work" ||
-      basePath.startsWith(
-        "/work/",
-      )
+      href
     );
   }
-
-  return (
-    basePath ===
-    href
-  );
-}
 
   const closeMenu =
     useCallback(() => {
@@ -213,7 +214,9 @@ function isActive(
     ]);
 
   function openMenu() {
-    if (menuOpen) {
+    if (
+      menuOpen
+    ) {
       return;
     }
 
@@ -232,11 +235,6 @@ function isActive(
       false,
     );
 
-    /*
-     * Header harus terlihat
-     * sebelum mobile navigation
-     * dibuka.
-     */
     setHeaderVisible(
       true,
     );
@@ -247,24 +245,17 @@ function isActive(
   }
 
   function toggleMenu() {
-    if (menuOpen) {
+    if (
+      menuOpen
+    ) {
       closeMenu();
+
       return;
     }
 
     openMenu();
   }
 
-  /*
-   * =========================
-   * SMART STICKY HEADER
-   * =========================
-   *
-   * - Top: terlihat normal.
-   * - Scroll down: hide.
-   * - Scroll up: reveal.
-   * - Menu open: selalu terlihat.
-   */
   useEffect(() => {
     lastScrollYRef.current =
       Math.max(
@@ -353,7 +344,8 @@ function isActive(
       "scroll",
       handleScroll,
       {
-        passive: true,
+        passive:
+          true,
       },
     );
 
@@ -381,18 +373,10 @@ function isActive(
     menuOpen,
   ]);
 
-  /*
-   * =========================
-   * BACKGROUND LOCK
-   * =========================
-   *
-   * Ketika mobile menu terbuka,
-   * main dan footer dibuat inert
-   * agar keyboard / screen reader
-   * tidak masuk ke page di belakang.
-   */
   useEffect(() => {
-    if (!menuOpen) {
+    if (
+      !menuOpen
+    ) {
       return;
     }
 
@@ -449,15 +433,6 @@ function isActive(
     menuOpen,
   ]);
 
-  /*
-   * =========================
-   * INITIAL MENU FOCUS
-   * =========================
-   *
-   * Setelah menu terbuka,
-   * fokus langsung masuk
-   * ke link pertama.
-   */
   useEffect(() => {
     if (
       !menuOpen ||
@@ -489,11 +464,6 @@ function isActive(
     menuClosing,
   ]);
 
-  /*
-   * =========================
-   * MOBILE MENU FOCUS TRAP
-   * =========================
-   */
   useEffect(() => {
     if (
       !menuOpen ||
@@ -602,15 +572,6 @@ function isActive(
     menuClosing,
   ]);
 
-  /*
-   * =========================
-   * ESCAPE KEY
-   * =========================
-   *
-   * Escape menutup menu
-   * dan mengembalikan focus
-   * ke hamburger.
-   */
   useEffect(() => {
     function handleKeyDown(
       event: KeyboardEvent,
@@ -645,11 +606,6 @@ function isActive(
     menuOpen,
   ]);
 
-  /*
-   * =========================
-   * CLEANUP
-   * =========================
-   */
   useEffect(() => {
     return () => {
       if (
@@ -714,15 +670,15 @@ function isActive(
 
   return (
     <>
-<a
-  href="#main-content"
-  className="skip-link"
->
-  {
-    copy.accessibility
-      .skipToMain
-  }
-</a>
+      <a
+        href="#main-content"
+        className="skip-link"
+      >
+        {
+          copy.accessibility
+            .skipToMain
+        }
+      </a>
 
       <header
         className={
@@ -731,86 +687,89 @@ function isActive(
       >
         <div className="site-container site-header__inner">
           <Link
-href={
-  localizePath(
-    "/",
-    locale,
-  )
-}
+            href={
+              localizePath(
+                "/",
+                locale,
+              )
+            }
             className="site-logo"
-            aria-label="NATSX home"
+            aria-label={
+              copy.accessibility
+                .home
+            }
             onClick={
               closeMenu
             }
           >
-<span
-  className="site-logo__image"
-  aria-hidden="true"
-/>
+            <span
+              className="site-logo__image"
+              aria-hidden="true"
+            />
           </Link>
 
-<div className="site-header__desktop-actions">
-  <nav
-    className="site-nav"
-    aria-label={
-  copy.accessibility
-    .mainNavigation
-}
-  >
-            {navigation.map(
-              (
-                item,
-              ) => {
-                const active =
-                  isActive(
-                    item.href,
-                  );
+          <div className="site-header__desktop-actions">
+            <nav
+              className="site-nav"
+              aria-label={
+                copy.accessibility
+                  .mainNavigation
+              }
+            >
+              {navigation.map(
+                (
+                  item,
+                ) => {
+                  const active =
+                    isActive(
+                      item.href,
+                    );
 
-                return (
-                  <Link
-href={
-  localizePath(
-    item.href,
-    locale,
-  )
-}
-                    key={
-                      item.href
-                    }
-                    onClick={
-                      closeMenu
-                    }
-                    className={
-                      active
-                        ? "site-nav__link is-active"
-                        : "site-nav__link"
-                    }
-                    aria-current={
-                      active
-                        ? "page"
-                        : undefined
-                    }
-                  >
-                    <span>
-                      {
-                       copy.navigation[
-  item.key
-]
+                  return (
+                    <Link
+                      href={
+                        localizePath(
+                          item.href,
+                          locale,
+                        )
                       }
-                    </span>
+                      key={
+                        item.href
+                      }
+                      onClick={
+                        closeMenu
+                      }
+                      className={
+                        active
+                          ? "site-nav__link is-active"
+                          : "site-nav__link"
+                      }
+                      aria-current={
+                        active
+                          ? "page"
+                          : undefined
+                      }
+                    >
+                      <span>
+                        {
+                          copy.navigation[
+                            item.key
+                          ]
+                        }
+                      </span>
 
-                    <span
-                      className="site-nav__dot"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                );
-              },
-            )}
-  </nav>
+                      <span
+                        className="site-nav__dot"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  );
+                },
+              )}
+            </nav>
 
-  <LanguageSwitcher />
-</div>
+            <LanguageSwitcher />
+          </div>
 
           <button
             ref={
@@ -830,15 +789,15 @@ href={
                 " ",
               )}
             type="button"
-aria-label={
-  menuOpen
-    ? copy
-        .accessibility
-        .closeMenu
-    : copy
-        .accessibility
-        .openMenu
-}
+            aria-label={
+              menuOpen
+                ? copy
+                    .accessibility
+                    .closeMenu
+                : copy
+                    .accessibility
+                    .openMenu
+            }
             aria-expanded={
               menuOpen
             }
@@ -874,9 +833,9 @@ aria-label={
             : undefined
         }
         aria-label={
-  copy.accessibility
-    .mobileNavigation
-}
+          copy.accessibility
+            .mobileNavigation
+        }
         aria-hidden={
           !menuOpen
         }
@@ -889,9 +848,9 @@ aria-label={
               styles.mobileNav
             }
             aria-label={
-  copy.accessibility
-    .mobileNavigation
-}
+              copy.accessibility
+                .mobileNavigation
+            }
           >
             {navigation.map(
               (
@@ -904,12 +863,12 @@ aria-label={
 
                 return (
                   <Link
-href={
-  localizePath(
-    item.href,
-    locale,
-  )
-}
+                    href={
+                      localizePath(
+                        item.href,
+                        locale,
+                      )
+                    }
                     key={
                       item.href
                     }
@@ -948,8 +907,8 @@ href={
                     >
                       {
                         copy.navigation[
-  item.key
-]
+                          item.key
+                        ]
                       }
                     </span>
 
@@ -968,11 +927,11 @@ href={
           </nav>
 
           <LanguageSwitcher
-  variant="mobile"
-  onNavigate={
-    closeMenu
-  }
-/>
+            variant="mobile"
+            onNavigate={
+              closeMenu
+            }
+          />
 
           <div
             className={
@@ -985,8 +944,10 @@ href={
                   styles.mobileMetaLabel
                 }
               >
-                Digital
-                Creator
+                {
+                  copy.identity
+                    .digitalCreator
+                }
               </span>
 
               <span>

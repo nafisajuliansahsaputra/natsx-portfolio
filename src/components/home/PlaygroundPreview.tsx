@@ -10,6 +10,10 @@ import type {
 } from "@/i18n/config";
 
 import {
+  getPlaygroundExperimentMessages,
+} from "@/i18n/playground-messages";
+
+import {
   getHomeMessages,
 } from "@/i18n/home-messages";
 
@@ -120,87 +124,103 @@ export default function PlaygroundPreview({
           {featuredPlaygroundItems.map(
             (
               experiment,
-            ) => (
-              <article
-                className={`${styles.item} ${
-                  styles[
-                    `layout_${experiment.preview.layout}`
-                  ]
-                }`}
-                key={
-                  experiment.slug
-                }
-              >
-                <LocaleLink
-                  href="/playground"
-                  className={
-                    styles.visualLink
-                  }
-                  aria-label={`${copy.experimentAria} ${experiment.title}`}
-                >
-                  <div
-                    className={`${styles.visual} ${
-                      styles[
-                        `visual_${experiment.preview.visual}`
-                      ]
-                    }`}
-                  >
-                    <ExperimentArtwork
-                      variant={
-                        experiment
-                          .preview
-                          .visual
-                      }
-                    />
+            ) => {
+              const localized =
+                getPlaygroundExperimentMessages(
+                  locale,
+                  experiment.slug,
+                );
 
-                    <span
-                      className={
-                        styles.hoverLabel
-                      }
-                    >
-                      {
-                        copy.viewExperiment
-                      }{" "}
-                      ↗
-                    </span>
-                  </div>
-                </LocaleLink>
+              const title =
+                localized?.title ??
+                experiment.title;
 
-                <div
-                  className={
-                    styles.meta
+              const category =
+                localized?.category ??
+                experiment.category;
+
+              return (
+                <article
+                  className={`${styles.item} ${
+                    styles[
+                      `layout_${experiment.preview.layout}`
+                    ]
+                  }`}
+                  key={
+                    experiment.slug
                   }
                 >
-                  <div>
-                    <span
-                      className={
-                        styles.number
-                      }
-                    >
-                      {
-                        experiment.number
-                      }
-                    </span>
-
-                    <h3>
-                      {
-                        experiment.title
-                      }
-                    </h3>
-                  </div>
-
-                  <span
+                  <LocaleLink
+                    href="/playground"
                     className={
-                      styles.category
+                      styles.visualLink
+                    }
+                    aria-label={`${copy.experimentAria} ${title}`}
+                  >
+                    <div
+                      className={`${styles.visual} ${
+                        styles[
+                          `visual_${experiment.preview.visual}`
+                        ]
+                      }`}
+                    >
+                      <ExperimentArtwork
+                        variant={
+                          experiment
+                            .preview
+                            .visual
+                        }
+                      />
+
+                      <span
+                        className={
+                          styles.hoverLabel
+                        }
+                      >
+                        {
+                          copy.viewExperiment
+                        }{" "}
+                        ↗
+                      </span>
+                    </div>
+                  </LocaleLink>
+
+                  <div
+                    className={
+                      styles.meta
                     }
                   >
-                    {
-                      experiment.category
-                    }
-                  </span>
-                </div>
-              </article>
-            ),
+                    <div>
+                      <span
+                        className={
+                          styles.number
+                        }
+                      >
+                        {
+                          experiment.number
+                        }
+                      </span>
+
+                      <h3>
+                        {
+                          title
+                        }
+                      </h3>
+                    </div>
+
+                    <span
+                      className={
+                        styles.category
+                      }
+                    >
+                      {
+                        category
+                      }
+                    </span>
+                  </div>
+                </article>
+              );
+            },
           )}
         </div>
       </div>

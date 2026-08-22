@@ -12,6 +12,10 @@ import {
   getHomeMessages,
 } from "@/i18n/home-messages";
 
+import {
+  getMessages,
+} from "@/i18n/messages";
+
 import styles from "./AboutPreview.module.css";
 
 type AboutPreviewProps = {
@@ -25,6 +29,11 @@ export default function AboutPreview({
     getHomeMessages(
       locale,
     ).about;
+
+  const sharedCopy =
+    getMessages(
+      locale,
+    );
 
   return (
     <section
@@ -71,7 +80,10 @@ export default function AboutPreview({
             {
               copy.headingPrefix
             }{" "}
-            {site.firstName}—
+            {
+              site.firstName
+            }
+            —
             <br />
 
             {
@@ -209,7 +221,9 @@ export default function AboutPreview({
 
             <span>
               {
-                site.role
+                sharedCopy
+                  .identity
+                  .digitalCreator
               }
             </span>
           </div>
