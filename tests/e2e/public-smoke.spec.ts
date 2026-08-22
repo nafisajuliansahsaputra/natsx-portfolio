@@ -524,7 +524,7 @@ test(
       "menuitemradio",
       {
         name:
-          /Bahasa Indonesia/i,
+          /Indonesia/i,
       },
     ).click();
 

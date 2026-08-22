@@ -1,10 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import {
+  useEffect,
+} from "react";
+
+import {
+  usePathname,
+} from "next/navigation";
+
+import {
+  stripLocaleFromPathname,
+} from "@/i18n/config";
 
 export default function MotionController() {
-  const pathname = usePathname();
+  const pathname =
+    usePathname();
 
   useEffect(() => {
     const main =
@@ -21,29 +31,48 @@ export default function MotionController() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
+    const basePath =
+      stripLocaleFromPathname(
+        pathname,
+      );
+
+    const isHomepage =
+      basePath === "/";
+
     /*
-     * Homepage masih memakai auto-generated
-     * motion hooks untuk section generik.
+     * Homepage memakai
+     * auto-generated motion hooks
+     * untuk section generik.
+     *
+     * Locale prefix seperti
+     * /id dan /de dinormalisasi
+     * menjadi homepage yang sama.
      *
      * Inner pages memakai explicit
      * data-motion-scroll hooks.
      */
-    const generatedSections: HTMLElement[] =
-      [];
+    const generatedSections:
+      HTMLElement[] = [];
 
-    if (pathname === "/") {
-      const directSections = Array.from(
-        main.querySelectorAll<HTMLElement>(
-          ":scope > section, :scope > footer",
-        ),
-      );
+    if (isHomepage) {
+      const directSections =
+        Array.from(
+          main.querySelectorAll<HTMLElement>(
+            ":scope > section, :scope > footer",
+          ),
+        );
 
       directSections.forEach(
-        (section, index) => {
-          const isHero = index === 0;
+        (
+          section,
+          index,
+        ) => {
+          const isHero =
+            index === 0;
 
           const isSelectedWork =
-            section.id === "work";
+            section.id ===
+            "work";
 
           if (
             isHero ||
@@ -61,102 +90,151 @@ export default function MotionController() {
           section.dataset.motionGenerated =
             "true";
 
-          generatedSections.push(section);
+          generatedSections.push(
+            section,
+          );
         },
       );
     }
 
-    const targets = Array.from(
-      document.querySelectorAll<HTMLElement>(
-        "[data-motion-scroll]",
-      ),
-    );
+    const targets =
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "[data-motion-scroll]",
+        ),
+      );
 
-    if (prefersReducedMotion) {
-      targets.forEach((target) => {
-        target.dataset.motionVisible =
-          "true";
-      });
+    if (
+      prefersReducedMotion
+    ) {
+      targets.forEach(
+        (
+          target,
+        ) => {
+          target.dataset.motionVisible =
+            "true";
+        },
+      );
 
       return () => {
         generatedSections.forEach(
-          (section) => {
-            delete section.dataset
+          (
+            section,
+          ) => {
+            delete section
+              .dataset
               .motionScroll;
 
-            delete section.dataset
+            delete section
+              .dataset
               .motionGenerated;
 
-            delete section.dataset
+            delete section
+              .dataset
               .motionVisible;
           },
         );
       };
     }
 
-    targets.forEach((target) => {
-      target.removeAttribute(
-        "data-motion-visible",
-      );
-    });
+    targets.forEach(
+      (
+        target,
+      ) => {
+        target.removeAttribute(
+          "data-motion-visible",
+        );
+      },
+    );
 
     if (
-      !("IntersectionObserver" in window)
+      !(
+        "IntersectionObserver" in
+        window
+      )
     ) {
-      targets.forEach((target) => {
-        target.dataset.motionVisible =
-          "true";
-      });
+      targets.forEach(
+        (
+          target,
+        ) => {
+          target.dataset.motionVisible =
+            "true";
+        },
+      );
 
       return;
     }
 
     const observer =
       new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) {
-              return;
-            }
+        (
+          entries,
+        ) => {
+          entries.forEach(
+            (
+              entry,
+            ) => {
+              if (
+                !entry.isIntersecting
+              ) {
+                return;
+              }
 
-            const target =
-              entry.target as HTMLElement;
+              const target =
+                entry.target as HTMLElement;
 
-            target.dataset.motionVisible =
-              "true";
+              target.dataset.motionVisible =
+                "true";
 
-            observer.unobserve(target);
-          });
+              observer.unobserve(
+                target,
+              );
+            },
+          );
         },
         {
-          threshold: 0.08,
+          threshold:
+            0.08,
 
           rootMargin:
             "0px 0px -6% 0px",
         },
       );
 
-    targets.forEach((target) => {
-      observer.observe(target);
-    });
+    targets.forEach(
+      (
+        target,
+      ) => {
+        observer.observe(
+          target,
+        );
+      },
+    );
 
     return () => {
       observer.disconnect();
 
       generatedSections.forEach(
-        (section) => {
-          delete section.dataset
+        (
+          section,
+        ) => {
+          delete section
+            .dataset
             .motionScroll;
 
-          delete section.dataset
+          delete section
+            .dataset
             .motionGenerated;
 
-          delete section.dataset
+          delete section
+            .dataset
             .motionVisible;
         },
       );
     };
-  }, [pathname]);
+  }, [
+    pathname,
+  ]);
 
   return null;
 }
