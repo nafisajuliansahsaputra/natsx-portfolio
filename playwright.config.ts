@@ -25,8 +25,22 @@ export default defineConfig({
       ? 1
       : undefined,
 
-  reporter:
-    "list",
+  reporter: [
+    [
+      "list",
+    ],
+
+    [
+      "html",
+      {
+        outputFolder:
+          "playwright-report",
+
+        open:
+          "never",
+      },
+    ],
+  ],
 
   use: {
     baseURL:
@@ -62,8 +76,8 @@ export default defineConfig({
     url:
       "http://127.0.0.1:3000",
 
-reuseExistingServer:
-  false,
+    reuseExistingServer:
+      false,
 
     timeout:
       120_000,

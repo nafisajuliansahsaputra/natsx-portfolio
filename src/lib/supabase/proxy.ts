@@ -7,6 +7,32 @@ import {
   type NextRequest,
 } from "next/server";
 
+function applyAdminResponseHeaders(
+  response: NextResponse,
+) {
+  response.headers.set(
+    "Cache-Control",
+    "no-store, max-age=0",
+  );
+
+  response.headers.set(
+    "Pragma",
+    "no-cache",
+  );
+
+  response.headers.set(
+    "Expires",
+    "0",
+  );
+
+  response.headers.set(
+    "X-Robots-Tag",
+    "noindex, nofollow, noarchive",
+  );
+
+  return response;
+}
+
 export async function updateSession(
   request: NextRequest,
 ) {
@@ -27,7 +53,9 @@ export async function updateSession(
     !supabaseUrl ||
     !supabaseKey
   ) {
-    return response;
+    return applyAdminResponseHeaders(
+      response,
+    );
   }
 
   const supabase =
@@ -78,7 +106,10 @@ export async function updateSession(
             Object.entries(
               headers,
             ).forEach(
-              ([key, value]) => {
+              ([
+                key,
+                value,
+              ]) => {
                 response.headers.set(
                   key,
                   value,
@@ -91,7 +122,7 @@ export async function updateSession(
     );
 
   /*
-   * Verifies / refreshes the JWT.
+   * Verify / refresh the JWT.
    *
    * Do not replace this with
    * getSession() for server-side
@@ -99,5 +130,7 @@ export async function updateSession(
    */
   await supabase.auth.getClaims();
 
-  return response;
+  return applyAdminResponseHeaders(
+    response,
+  );
 }

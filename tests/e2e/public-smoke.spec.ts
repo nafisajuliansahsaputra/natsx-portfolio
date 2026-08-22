@@ -18,7 +18,7 @@ test.beforeEach(
   },
 );
 
-const publicRoutes = [
+const englishRoutes = [
   {
     path:
       "/",
@@ -27,13 +27,13 @@ const publicRoutes = [
       /Designing Ideas/i,
   },
 
-{
-  path:
-    "/work",
+  {
+    path:
+      "/work",
 
-  heading:
-    /^Work\s*\.?$/i,
-},
+    heading:
+      /^Work\s*\.?$/i,
+  },
 
   {
     path:
@@ -68,14 +68,47 @@ const publicRoutes = [
   },
 ];
 
+const localizedRoutes = [
+  "/",
+  "/work",
+  "/about",
+  "/playground",
+  "/contact",
+  "/cv",
+] as const;
+
+const localizedLocales = [
+  {
+    locale:
+      "id",
+
+    navigationLabel:
+      "Karya",
+
+    notFoundHeading:
+      /Sepertinya ide ini/i,
+  },
+
+  {
+    locale:
+      "de",
+
+    navigationLabel:
+      "Arbeiten",
+
+    notFoundHeading:
+      /Sieht so aus/i,
+  },
+] as const;
+
 test.describe(
-  "public portfolio",
+  "english public portfolio",
   () => {
     for (
       const {
         path,
         heading,
-      } of publicRoutes
+      } of englishRoutes
     ) {
       test(
         `${path} loads`,
@@ -104,13 +137,367 @@ test.describe(
           ).toBeVisible();
 
           await expect(
+            page
+              .getByRole(
+                "heading",
+                {
+                  name:
+                    heading,
+                },
+              )
+              .first(),
+          ).toBeVisible();
+        },
+      );
+    }
+  },
+);
+
+test.describe(
+  "localized public portfolio",
+  () => {
+    for (
+      const {
+        locale,
+        navigationLabel,
+      } of localizedLocales
+    ) {
+      for (
+        const path
+        of localizedRoutes
+      ) {
+        const localizedPath =
+          path === "/"
+            ? `/${locale}`
+            : `/${locale}${path}`;
+
+        test(
+          `${localizedPath} loads with ${locale} locale`,
+          async ({
+            page,
+          }) => {
+            const response =
+              await page.goto(
+                localizedPath,
+              );
+
+            expect(
+              response,
+            ).not.toBeNull();
+
+            expect(
+              response?.status(),
+            ).toBeLessThan(
+              400,
+            );
+
+            await expect(
+              page.locator(
+                "#main-content",
+              ),
+            ).toBeVisible();
+
+            await expect(
+              page.locator(
+                `[data-locale="${locale}"]`,
+              ),
+            ).toBeVisible();
+
+            await expect(
+              page
+                .getByRole(
+                  "navigation",
+                  {
+                    name:
+                      locale ===
+                      "id"
+                        ? "Navigasi utama"
+                        : "Hauptnavigation",
+                  },
+                )
+                .getByRole(
+                  "link",
+                  {
+                    name:
+                      navigationLabel,
+                  },
+                ),
+            ).toBeVisible();
+
+            await expect
+              .poll(
+                async () =>
+                  page.locator(
+                    "html",
+                  ).getAttribute(
+                    "lang",
+                  ),
+              )
+              .toBe(
+                locale,
+              );
+          },
+        );
+      }
+    }
+  },
+);
+
+test.describe(
+  "published project details",
+  () => {
+    test(
+      "english project detail loads",
+      async ({
+        page,
+      }) => {
+        const response =
+          await page.goto(
+            "/work",
+          );
+
+        expect(
+          response,
+        ).not.toBeNull();
+
+        expect(
+          response?.status(),
+        ).toBeLessThan(
+          400,
+        );
+
+        const projectLink =
+          page
+            .locator(
+              'main a[href^="/work/"]',
+            )
+            .first();
+
+        await expect(
+          projectLink,
+        ).toBeVisible();
+
+        const href =
+          await projectLink.getAttribute(
+            "href",
+          );
+
+        expect(
+          href,
+        ).toMatch(
+          /^\/work\/[^/]+$/,
+        );
+
+        const projectResponse =
+          await page.goto(
+            href!,
+          );
+
+        expect(
+          projectResponse,
+        ).not.toBeNull();
+
+        expect(
+          projectResponse?.status(),
+        ).toBeLessThan(
+          400,
+        );
+
+        await expect(
+          page.locator(
+            "#main-content",
+          ),
+        ).toBeVisible();
+
+        await expect(
+          page.getByRole(
+            "heading",
+            {
+              level:
+                1,
+            },
+          ),
+        ).toBeVisible();
+      },
+    );
+
+    for (
+      const {
+        locale,
+      } of localizedLocales
+    ) {
+      test(
+        `${locale} project detail loads`,
+        async ({
+          page,
+        }) => {
+          const archivePath =
+            `/${locale}/work`;
+
+          const archiveResponse =
+            await page.goto(
+              archivePath,
+            );
+
+          expect(
+            archiveResponse,
+          ).not.toBeNull();
+
+          expect(
+            archiveResponse?.status(),
+          ).toBeLessThan(
+            400,
+          );
+
+          const projectLink =
+            page
+              .locator(
+                `main a[href^="/${locale}/work/"]`,
+              )
+              .first();
+
+          await expect(
+            projectLink,
+          ).toBeVisible();
+
+          const href =
+            await projectLink.getAttribute(
+              "href",
+            );
+
+          expect(
+            href,
+          ).toMatch(
+            new RegExp(
+              `^/${locale}/work/[^/]+$`,
+            ),
+          );
+
+          const projectResponse =
+            await page.goto(
+              href!,
+            );
+
+          expect(
+            projectResponse,
+          ).not.toBeNull();
+
+          expect(
+            projectResponse?.status(),
+          ).toBeLessThan(
+            400,
+          );
+
+          await expect(
+            page.locator(
+              "#main-content",
+            ),
+          ).toBeVisible();
+
+          await expect(
+            page.locator(
+              `[data-locale="${locale}"]`,
+            ),
+          ).toBeVisible();
+
+          await expect(
+            page.getByRole(
+              "heading",
+              {
+                level:
+                  1,
+              },
+            ),
+          ).toBeVisible();
+        },
+      );
+    }
+  },
+);
+
+test.describe(
+  "localized error states",
+  () => {
+    test(
+      "english unknown route returns localized 404",
+      async ({
+        page,
+      }) => {
+        const response =
+          await page.goto(
+            "/this-route-should-not-exist",
+          );
+
+        expect(
+          response?.status(),
+        ).toBe(
+          404,
+        );
+
+        await expect(
+          page.getByRole(
+            "heading",
+            {
+              name:
+                /Looks like this idea/i,
+            },
+          ),
+        ).toBeVisible();
+      },
+    );
+
+    for (
+      const {
+        locale,
+        notFoundHeading,
+      } of localizedLocales
+    ) {
+      test(
+        `${locale} unknown route returns localized 404`,
+        async ({
+          page,
+        }) => {
+          const response =
+            await page.goto(
+              `/${locale}/this-route-should-not-exist`,
+            );
+
+          expect(
+            response?.status(),
+          ).toBe(
+            404,
+          );
+
+          await expect(
             page.getByRole(
               "heading",
               {
                 name:
-                  heading,
+                  notFoundHeading,
               },
-            ).first(),
+            ),
+          ).toBeVisible();
+
+          const homeLink =
+            page
+              .locator(
+                `main a[href="/${locale}"]`,
+              )
+              .first();
+
+          await expect(
+            homeLink,
+          ).toBeVisible();
+
+          const workLink =
+            page
+              .locator(
+                `main a[href="/${locale}/work"]`,
+              )
+              .first();
+
+          await expect(
+            workLink,
           ).toBeVisible();
         },
       );
@@ -119,105 +506,88 @@ test.describe(
 );
 
 test(
-  "published project detail loads",
+  "language preference persists across default route visits",
   async ({
     page,
   }) => {
-    const response =
-      await page.goto(
-        "/work",
-      );
-
-    expect(
-      response,
-    ).not.toBeNull();
-
-    expect(
-      response?.status(),
-    ).toBeLessThan(
-      400,
+    await page.goto(
+      "/",
     );
 
-    const projectLink =
-      page
-        .locator(
-          'main a[href^="/work/"]',
-        )
-        .first();
+    await page
+      .locator(
+        'button[aria-haspopup="menu"]',
+      )
+      .click();
+
+    await page.getByRole(
+      "menuitemradio",
+      {
+        name:
+          /Bahasa Indonesia/i,
+      },
+    ).click();
 
     await expect(
-      projectLink,
-    ).toBeVisible();
-
-    const href =
-      await projectLink.getAttribute(
-        "href",
-      );
-
-    expect(
-      href,
-    ).toMatch(
-      /^\/work\/[^/]+$/,
+      page,
+    ).toHaveURL(
+      /\/id$/,
     );
 
-    const projectResponse =
-      await page.goto(
-        href!,
+    await expect
+      .poll(
+        () =>
+          page.evaluate(
+            () =>
+              window.localStorage.getItem(
+                "natsx:locale",
+              ),
+          ),
+      )
+      .toBe(
+        "id",
       );
 
-    expect(
-      projectResponse,
-    ).not.toBeNull();
-
-    expect(
-      projectResponse?.status(),
-    ).toBeLessThan(
-      400,
+    await page.goto(
+      "/",
     );
 
     await expect(
-      page.locator(
-        "#main-content",
-      ),
-    ).toBeVisible();
-
-    await expect(
-      page.getByRole(
-        "heading",
-        {
-          level:
-            1,
-        },
-      ),
-    ).toBeVisible();
+      page,
+    ).toHaveURL(
+      /\/id$/,
+    );
   },
 );
 
 test(
-  "unknown public route returns 404",
+  "language switch preserves query and hash",
   async ({
     page,
   }) => {
-    const response =
-      await page.goto(
-        "/this-route-should-not-exist",
-      );
-
-    expect(
-      response?.status(),
-    ).toBe(
-      404,
+    await page.goto(
+      "/work?source=e2e#archive",
     );
 
+    await page
+      .locator(
+        'button[aria-haspopup="menu"]',
+      )
+      .click();
+
+    await page.getByRole(
+      "menuitemradio",
+      {
+        name:
+          /Deutsch/i,
+      },
+    ).click();
+
     await expect(
-      page.getByRole(
-        "heading",
-        {
-          name:
-            /Looks like this idea/i,
-        },
-      ),
-    ).toBeVisible();
+      page,
+    ).toHaveURL(
+      /\/de\/work\?source=e2e#archive$/,
+    );
   },
 );
 
@@ -259,7 +629,7 @@ test(
 );
 
 test(
-  "robots and sitemap are available",
+  "robots and multilingual sitemap are available",
   async ({
     request,
   }) => {
@@ -290,16 +660,59 @@ test(
     const sitemapBody =
       await sitemap.text();
 
+    const expectedStaticPaths = [
+      "/work",
+      "/about",
+      "/playground",
+      "/contact",
+      "/cv",
+      "/id",
+      "/id/work",
+      "/id/about",
+      "/id/playground",
+      "/id/contact",
+      "/id/cv",
+      "/de",
+      "/de/work",
+      "/de/about",
+      "/de/playground",
+      "/de/contact",
+      "/de/cv",
+    ];
+
+    for (
+      const path
+      of expectedStaticPaths
+    ) {
+      expect(
+        sitemapBody,
+      ).toContain(
+        path,
+      );
+    }
+
     expect(
       sitemapBody,
     ).toContain(
-      "/work",
+      'hreflang="en"',
     );
 
     expect(
       sitemapBody,
     ).toContain(
-      "/cv",
+      'hreflang="id"',
+    );
+
+    expect(
+      sitemapBody,
+    ).toContain(
+      'hreflang="de"',
+    );
+
+    expect(
+      sitemapBody,
+    ).toContain(
+      'hreflang="x-default"',
     );
   },
 );
