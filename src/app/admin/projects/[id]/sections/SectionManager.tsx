@@ -1138,24 +1138,38 @@ function SectionCard({
         />
       ) : section.section_type ===
         "quote" ? (
-        <QuoteSectionEditor
-          projectId={
-            projectId
-          }
-          section={
-            section
-          }
-        />
+<QuoteSectionEditor
+  key={`quote-${section.id}-${contentLocale}`}
+  projectId={
+    projectId
+  }
+  section={
+    section
+  }
+  locale={
+    contentLocale
+  }
+  translationContent={
+    activeTranslationContent
+  }
+/>
       ) : section.section_type ===
         "finale" ? (
-        <FinaleSectionEditor
-          projectId={
-            projectId
-          }
-          section={
-            section
-          }
-        />
+<FinaleSectionEditor
+  key={`finale-${section.id}-${contentLocale}`}
+  projectId={
+    projectId
+  }
+  section={
+    section
+  }
+  locale={
+    contentLocale
+  }
+  translationContent={
+    activeTranslationContent
+  }
+/>
       ) : null}
 
       <form

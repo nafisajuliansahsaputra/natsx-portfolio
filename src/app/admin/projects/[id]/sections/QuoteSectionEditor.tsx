@@ -4,127 +4,354 @@ import {
   useState,
 } from "react";
 
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+} from "next/navigation";
+
+import type {
+  Locale,
+} from "@/i18n/config";
 
 import {
   getQuoteSectionContent,
   type QuoteAlignment,
-  type QuoteSectionContent,
 } from "@/lib/project-section-content";
 
 import {
-  saveQuoteSectionContent,
-  type SectionActionState,
-} from "./actions";
+  saveQuoteSectionLocalizedCopy,
+  saveQuoteSectionSharedAlignment,
+  type QuoteTranslationState,
+} from "./quote-translation-actions";
 
 import styles from "./sections.module.css";
 
-const initialState: SectionActionState = {
-  status: "idle",
-  message: "",
-};
-
-export default function QuoteSectionEditor({
-  projectId,
-  section,
-}: {
+type QuoteSectionEditorProps = {
   projectId: string;
 
   section: {
     id: string;
-    content: Record<string, unknown>;
-  };
-}) {
-  const router = useRouter();
 
-  const initialQuote =
+    content: Record<
+      string,
+      unknown
+    >;
+  };
+
+  locale: Locale;
+
+  translationContent: Record<
+    string,
+    unknown
+  >;
+};
+
+type LocalizedQuoteCopy = {
+  text: string;
+  source: string;
+  context: string;
+};
+
+const initialState:
+  QuoteTranslationState = {
+  status:
+    "idle",
+
+  message:
+    "",
+};
+
+function isRecord(
+  value: unknown,
+): value is Record<
+  string,
+  unknown
+> {
+  return (
+    typeof value ===
+      "object" &&
+    value !== null &&
+    !Array.isArray(
+      value,
+    )
+  );
+}
+
+function getLocalizedQuoteCopy(
+  content: Record<
+    string,
+    unknown
+  >,
+): LocalizedQuoteCopy {
+  if (
+    !isRecord(
+      content.quote,
+    )
+  ) {
+    return {
+      text:
+        "",
+
+      source:
+        "",
+
+      context:
+        "",
+    };
+  }
+
+  const quote =
+    content.quote;
+
+  return {
+    text:
+      typeof quote.text ===
+      "string"
+        ? quote.text
+        : "",
+
+    source:
+      typeof quote.source ===
+      "string"
+        ? quote.source
+        : "",
+
+    context:
+      typeof quote.context ===
+      "string"
+        ? quote.context
+        : "",
+  };
+}
+
+export default function QuoteSectionEditor({
+  projectId,
+  section,
+  locale,
+  translationContent,
+}: QuoteSectionEditorProps) {
+  const router =
+    useRouter();
+
+  const baseQuote =
     getQuoteSectionContent(
       section.content,
     );
 
-  const [text, setText] =
-    useState(
-      initialQuote.text,
+  const localizedCopy =
+    getLocalizedQuoteCopy(
+      translationContent,
     );
 
-  const [source, setSource] =
+  const [
+    text,
+    setText,
+  ] =
     useState(
-      initialQuote.source,
+      locale === "en"
+        ? baseQuote.text
+        : localizedCopy.text,
     );
 
-  const [context, setContext] =
+  const [
+    source,
+    setSource,
+  ] =
     useState(
-      initialQuote.context,
+      locale === "en"
+        ? baseQuote.source
+        : localizedCopy.source,
+    );
+
+  const [
+    context,
+    setContext,
+  ] =
+    useState(
+      locale === "en"
+        ? baseQuote.context
+        : localizedCopy.context,
     );
 
   const [
     alignment,
     setAlignment,
-  ] = useState<QuoteAlignment>(
-    initialQuote.alignment,
-  );
+  ] =
+    useState<QuoteAlignment>(
+      baseQuote.alignment,
+    );
 
   const [
-    isPending,
-    setIsPending,
-  ] = useState(false);
+    savedAlignment,
+    setSavedAlignment,
+  ] =
+    useState<QuoteAlignment>(
+      baseQuote.alignment,
+    );
 
-  const [status, setStatus] =
-    useState<SectionActionState>(
+  const [
+    isAlignmentPending,
+    setIsAlignmentPending,
+  ] =
+    useState(
+      false,
+    );
+
+  const [
+    isCopyPending,
+    setIsCopyPending,
+  ] =
+    useState(
+      false,
+    );
+
+  const [
+    alignmentStatus,
+    setAlignmentStatus,
+  ] =
+    useState<
+      QuoteTranslationState
+    >(
       initialState,
     );
 
-  async function handleSave() {
-    setIsPending(true);
-    setStatus(initialState);
+  const [
+    copyStatus,
+    setCopyStatus,
+  ] =
+    useState<
+      QuoteTranslationState
+    >(
+      initialState,
+    );
 
-    const payload: QuoteSectionContent =
-      {
-        text: text.trim(),
-        source:
-          source.trim(),
-        context:
-          context.trim(),
-        alignment,
-      };
+  const hasAlignmentChange =
+    alignment !==
+    savedAlignment;
+
+  const previewText =
+    text.trim() ||
+    (locale !== "en"
+      ? baseQuote.text
+      : "") ||
+    "A strong statement can become a visual pause in the case study.";
+
+  const previewSource =
+    source.trim() ||
+    (locale !== "en"
+      ? baseQuote.source
+      : "");
+
+  const previewContext =
+    context.trim() ||
+    (locale !== "en"
+      ? baseQuote.context
+      : "");
+
+  async function handleSaveAlignment() {
+    setIsAlignmentPending(
+      true,
+    );
+
+    setAlignmentStatus(
+      initialState,
+    );
 
     try {
       const result =
-        await saveQuoteSectionContent(
+        await saveQuoteSectionSharedAlignment(
           projectId,
           section.id,
-          payload,
+          alignment,
         );
 
-      setStatus(result);
+      setAlignmentStatus(
+        result,
+      );
 
       if (
         result.status ===
         "success"
       ) {
-        setText(
-          payload.text,
-        );
-
-        setSource(
-          payload.source,
-        );
-
-        setContext(
-          payload.context,
+        setSavedAlignment(
+          alignment,
         );
 
         router.refresh();
       }
     } catch {
-      setStatus({
-        status: "error",
+      setAlignmentStatus({
+        status:
+          "error",
 
         message:
-          "Gagal menyimpan quote. Refresh halaman lalu coba lagi.",
+          "Gagal menyimpan shared quote alignment. Refresh halaman lalu coba lagi.",
       });
     } finally {
-      setIsPending(false);
+      setIsAlignmentPending(
+        false,
+      );
+    }
+  }
+
+  async function handleSaveCopy() {
+    setIsCopyPending(
+      true,
+    );
+
+    setCopyStatus(
+      initialState,
+    );
+
+    try {
+      const result =
+        await saveQuoteSectionLocalizedCopy(
+          projectId,
+          section.id,
+          locale,
+          text,
+          source,
+          context,
+        );
+
+      setCopyStatus(
+        result,
+      );
+
+      if (
+        result.status ===
+        "success"
+      ) {
+        if (
+          locale ===
+          "en"
+        ) {
+          setText(
+            text.trim(),
+          );
+
+          setSource(
+            source.trim(),
+          );
+
+          setContext(
+            context.trim(),
+          );
+        }
+
+        router.refresh();
+      }
+    } catch {
+      setCopyStatus({
+        status:
+          "error",
+
+        message:
+          "Gagal menyimpan localized quote copy. Refresh halaman lalu coba lagi.",
+      });
+    } finally {
+      setIsCopyPending(
+        false,
+      );
     }
   }
 
@@ -140,15 +367,15 @@ export default function QuoteSectionEditor({
         }
       >
         <span>
-          QUOTE CONTENT
+          {locale.toUpperCase()}{" "}
+          QUOTE COPY
         </span>
 
         <p>
-          Gunakan quote sebagai
-          statement besar,
-          testimonial, insight,
-          atau kalimat utama yang
-          memperkuat cerita project.
+          Quote text, source, dan
+          context mengikuti bahasa
+          aktif. Alignment berlaku
+          ke semua bahasa.
         </p>
       </div>
 
@@ -175,26 +402,31 @@ export default function QuoteSectionEditor({
           </span>
 
           <blockquote>
-            {text ||
-              "A strong statement can become a visual pause in the case study."}
+            {
+              previewText
+            }
           </blockquote>
 
-          {(source ||
-            context) && (
+          {(previewSource ||
+            previewContext) && (
             <div
               className={
                 styles.quoteAttribution
               }
             >
-              {source ? (
+              {previewSource ? (
                 <strong>
-                  {source}
+                  {
+                    previewSource
+                  }
                 </strong>
               ) : null}
 
-              {context ? (
+              {previewContext ? (
                 <span>
-                  {context}
+                  {
+                    previewContext
+                  }
                 </span>
               ) : null}
             </div>
@@ -206,20 +438,55 @@ export default function QuoteSectionEditor({
             styles.quoteControls
           }
         >
+          {locale !==
+          "en" ? (
+            <p
+              className={
+                styles.sectionLanguageHint
+              }
+            >
+              English reference —
+              Quote:{" "}
+              <strong>
+                {baseQuote.text ||
+                  "—"}
+              </strong>
+              {" · "}
+              Source:{" "}
+              <strong>
+                {baseQuote.source ||
+                  "—"}
+              </strong>
+              {" · "}
+              Context:{" "}
+              <strong>
+                {baseQuote.context ||
+                  "—"}
+              </strong>
+            </p>
+          ) : null}
+
           <label
             className={
               styles.field
             }
           >
             <span>
-              Quote text *
+              {locale.toUpperCase()}{" "}
+              quote text
+              {locale ===
+              "en"
+                ? " *"
+                : ""}
             </span>
 
             <textarea
               className={
                 styles.textarea
               }
-              value={text}
+              value={
+                text
+              }
               onChange={(
                 event,
               ) => {
@@ -228,17 +495,24 @@ export default function QuoteSectionEditor({
                     .value,
                 );
 
-                setStatus(
+                setCopyStatus(
                   initialState,
                 );
               }}
-              placeholder="Write the quote or main statement"
-              rows={7}
+              placeholder={
+                locale ===
+                "en"
+                  ? "Write the quote or main statement"
+                  : "Leave empty to use English"
+              }
+              rows={
+                7
+              }
               maxLength={
                 2000
               }
               disabled={
-                isPending
+                isCopyPending
               }
             />
           </label>
@@ -254,7 +528,8 @@ export default function QuoteSectionEditor({
               }
             >
               <span>
-                Source / name
+                {locale.toUpperCase()}{" "}
+                source / name
               </span>
 
               <input
@@ -273,16 +548,21 @@ export default function QuoteSectionEditor({
                       .value,
                   );
 
-                  setStatus(
+                  setCopyStatus(
                     initialState,
                   );
                 }}
-                placeholder="NATSX"
+                placeholder={
+                  locale ===
+                  "en"
+                    ? "NATSX"
+                    : "Leave empty to use English"
+                }
                 maxLength={
                   160
                 }
                 disabled={
-                  isPending
+                  isCopyPending
                 }
               />
             </label>
@@ -293,7 +573,8 @@ export default function QuoteSectionEditor({
               }
             >
               <span>
-                Role / context
+                {locale.toUpperCase()}{" "}
+                role / context
               </span>
 
               <input
@@ -312,121 +593,202 @@ export default function QuoteSectionEditor({
                       .value,
                   );
 
-                  setStatus(
+                  setCopyStatus(
                     initialState,
                   );
                 }}
-                placeholder="Creative Direction"
+                placeholder={
+                  locale ===
+                  "en"
+                    ? "Creative Direction"
+                    : "Leave empty to use English"
+                }
                 maxLength={
                   200
                 }
                 disabled={
-                  isPending
+                  isCopyPending
                 }
               />
             </label>
           </div>
 
-          <label
+          {copyStatus.message ? (
+            <div
+              className={
+                styles.mediaStatus
+              }
+              data-type={
+                copyStatus.status
+              }
+              role="status"
+              aria-live="polite"
+            >
+              <span />
+
+              <p>
+                {
+                  copyStatus.message
+                }
+              </p>
+            </div>
+          ) : null}
+
+          <div
             className={
-              styles.field
+              styles.quoteFooter
             }
           >
-            <span>
-              Alignment
-            </span>
+            <p>
+              {locale ===
+              "en"
+                ? "English quote text adalah canonical fallback."
+                : "Field kosong akan fallback ke English secara individual."}
+            </p>
 
-            <select
+            <button
               className={
-                styles.input
+                styles.mediaPrimaryButton
               }
-              value={
-                alignment
+              type="button"
+              onClick={
+                handleSaveCopy
               }
-              onChange={(
-                event,
-              ) => {
-                const value =
-                  event.target
-                    .value;
-
-                if (
-                  value ===
-                    "left" ||
-                  value ===
-                    "center"
-                ) {
-                  setAlignment(
-                    value,
-                  );
-
-                  setStatus(
-                    initialState,
-                  );
-                }
-              }}
               disabled={
-                isPending
+                isCopyPending
               }
             >
-              <option value="left">
-                Left
-              </option>
-
-              <option value="center">
-                Center
-              </option>
-            </select>
-          </label>
+              {isCopyPending
+                ? `Saving ${locale.toUpperCase()} quote...`
+                : `Save ${locale.toUpperCase()} quote copy ↗`}
+            </button>
+          </div>
         </div>
       </div>
 
-      {status.message ? (
-        <div
-          className={
-            styles.mediaStatus
-          }
-          data-type={
-            status.status
-          }
-          role="status"
-          aria-live="polite"
-        >
-          <span />
-
-          <p>
-            {status.message}
-          </p>
-        </div>
-      ) : null}
-
       <div
         className={
-          styles.quoteFooter
+          styles.sharedSectionSettings
         }
       >
-        <p>
-          Quote wajib memiliki
-          teks. Source dan context
-          bersifat opsional.
-        </p>
-
-        <button
+        <div
           className={
-            styles.mediaPrimaryButton
-          }
-          type="button"
-          onClick={
-            handleSave
-          }
-          disabled={
-            isPending
+            styles.sharedSectionHeading
           }
         >
-          {isPending
-            ? "Saving quote..."
-            : "Save quote ↗"}
-        </button>
+          <span>
+            SHARED QUOTE LAYOUT
+          </span>
+
+          <p>
+            Alignment digunakan
+            bersama oleh English,
+            Indonesia, dan Deutsch.
+          </p>
+        </div>
+
+        <label
+          className={
+            styles.field
+          }
+        >
+          <span>
+            Alignment
+          </span>
+
+          <select
+            className={
+              styles.input
+            }
+            value={
+              alignment
+            }
+            onChange={(
+              event,
+            ) => {
+              const value =
+                event.target
+                  .value;
+
+              if (
+                value ===
+                  "left" ||
+                value ===
+                  "center"
+              ) {
+                setAlignment(
+                  value,
+                );
+
+                setAlignmentStatus(
+                  initialState,
+                );
+              }
+            }}
+            disabled={
+              isAlignmentPending
+            }
+          >
+            <option value="left">
+              Left
+            </option>
+
+            <option value="center">
+              Center
+            </option>
+          </select>
+        </label>
+
+        {alignmentStatus.message ? (
+          <div
+            className={
+              styles.mediaStatus
+            }
+            data-type={
+              alignmentStatus.status
+            }
+            role="status"
+            aria-live="polite"
+          >
+            <span />
+
+            <p>
+              {
+                alignmentStatus.message
+              }
+            </p>
+          </div>
+        ) : null}
+
+        <div
+          className={
+            styles.quoteFooter
+          }
+        >
+          <p>
+            Perubahan alignment
+            langsung berlaku ke
+            seluruh locale.
+          </p>
+
+          <button
+            className={
+              styles.mediaPrimaryButton
+            }
+            type="button"
+            onClick={
+              handleSaveAlignment
+            }
+            disabled={
+              isAlignmentPending ||
+              !hasAlignmentChange
+            }
+          >
+            {isAlignmentPending
+              ? "Saving alignment..."
+              : "Save shared alignment ↗"}
+          </button>
+        </div>
       </div>
     </section>
   );
