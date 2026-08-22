@@ -21,6 +21,10 @@ import {
 
 import styles from "./LanguageSwitcher.module.css";
 
+import {
+  getMessages,
+} from "@/i18n/messages";
+
 const STORAGE_KEY =
   "natsx:locale";
 
@@ -47,6 +51,11 @@ export default function LanguageSwitcher({
     getLocaleFromPathname(
       pathname,
     );
+
+    const copy =
+  getMessages(
+    currentLocale,
+  );
 
   const [
     open,
@@ -172,15 +181,19 @@ export default function LanguageSwitcher({
         className={
           styles.mobile
         }
-        aria-label="Language"
+        aria-label={
+  copy.language.label
+}
       >
-        <span
-          className={
-            styles.mobileLabel
-          }
-        >
-          Language
-        </span>
+<span
+  className={
+    styles.mobileLabel
+  }
+>
+  {
+    copy.language.label
+  }
+</span>
 
         <div
           className={

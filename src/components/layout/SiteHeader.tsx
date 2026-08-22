@@ -26,28 +26,55 @@ import {
 
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
+import {
+  getMessages,
+} from "@/i18n/messages";
+
 const navigation = [
   {
-    number: "01",
-    label: "Work",
-    href: "/work",
+    number:
+      "01",
+
+    key:
+      "work",
+
+    href:
+      "/work",
   },
+
   {
-    number: "02",
-    label: "About",
-    href: "/about",
+    number:
+      "02",
+
+    key:
+      "about",
+
+    href:
+      "/about",
   },
+
   {
-    number: "03",
-    label: "Playground",
-    href: "/playground",
+    number:
+      "03",
+
+    key:
+      "playground",
+
+    href:
+      "/playground",
   },
+
   {
-    number: "04",
-    label: "Contact",
-    href: "/contact",
+    number:
+      "04",
+
+    key:
+      "contact",
+
+    href:
+      "/contact",
   },
-];
+] as const;
 
 export default function SiteHeader() {
   const pathname =
@@ -61,6 +88,11 @@ export default function SiteHeader() {
 const basePath =
   stripLocaleFromPathname(
     pathname,
+  );
+
+  const copy =
+  getMessages(
+    locale,
   );
 
   const [
@@ -682,13 +714,15 @@ function isActive(
 
   return (
     <>
-      <a
-        href="#main-content"
-        className="skip-link"
-      >
-        Skip to main
-        content
-      </a>
+<a
+  href="#main-content"
+  className="skip-link"
+>
+  {
+    copy.accessibility
+      .skipToMain
+  }
+</a>
 
       <header
         className={
@@ -718,7 +752,10 @@ href={
 <div className="site-header__desktop-actions">
   <nav
     className="site-nav"
-    aria-label="Main navigation"
+    aria-label={
+  copy.accessibility
+    .mainNavigation
+}
   >
             {navigation.map(
               (
@@ -756,7 +793,9 @@ href={
                   >
                     <span>
                       {
-                        item.label
+                       copy.navigation[
+  item.key
+]
                       }
                     </span>
 
@@ -791,11 +830,15 @@ href={
                 " ",
               )}
             type="button"
-            aria-label={
-              menuOpen
-                ? "Close navigation menu"
-                : "Open navigation menu"
-            }
+aria-label={
+  menuOpen
+    ? copy
+        .accessibility
+        .closeMenu
+    : copy
+        .accessibility
+        .openMenu
+}
             aria-expanded={
               menuOpen
             }
@@ -830,7 +873,10 @@ href={
             ? "true"
             : undefined
         }
-        aria-label="Main navigation menu"
+        aria-label={
+  copy.accessibility
+    .mobileNavigation
+}
         aria-hidden={
           !menuOpen
         }
@@ -842,7 +888,10 @@ href={
             className={
               styles.mobileNav
             }
-            aria-label="Mobile navigation"
+            aria-label={
+  copy.accessibility
+    .mobileNavigation
+}
           >
             {navigation.map(
               (
@@ -898,7 +947,9 @@ href={
                       }
                     >
                       {
-                        item.label
+                        copy.navigation[
+  item.key
+]
                       }
                     </span>
 

@@ -18,39 +18,43 @@ import {
 
 import styles from "./InnerFooter.module.css";
 
+import {
+  getMessages,
+} from "@/i18n/messages";
+
 const navigation = [
   {
-    label:
-      "Work",
+    key:
+      "work",
 
     href:
       "/work",
   },
 
   {
-    label:
-      "About",
+    key:
+      "about",
 
     href:
       "/about",
   },
 
   {
-    label:
-      "Playground",
+    key:
+      "playground",
 
     href:
       "/playground",
   },
 
   {
-    label:
-      "Contact",
+    key:
+      "contact",
 
     href:
       "/contact",
   },
-];
+] as const;
 
 export default function InnerFooter() {
   const pathname =
@@ -60,6 +64,11 @@ export default function InnerFooter() {
     getLocaleFromPathname(
       pathname,
     );
+
+    const copy =
+  getMessages(
+    locale,
+  );
 
   const basePath =
     stripLocaleFromPathname(
@@ -112,7 +121,8 @@ export default function InnerFooter() {
           }
         : {
             label:
-              "Contact",
+  copy.navigation
+    .contact,
 
             href:
               localizePath(
@@ -186,8 +196,10 @@ export default function InnerFooter() {
                   }
                 >
                   {
-                    item.label
-                  }
+  copy.navigation[
+    item.key
+  ]
+}
                 </LocaleLink>
               ),
             )}
@@ -209,8 +221,10 @@ export default function InnerFooter() {
                 styles.metaLabel
               }
             >
-              Designed &
-              built by
+              {
+  copy.footer
+    .designedBy
+}
             </span>
 
             <span>
@@ -230,7 +244,10 @@ export default function InnerFooter() {
                 styles.metaLabel
               }
             >
-              Get in touch
+              {
+  copy.footer
+    .getInTouch
+}
             </span>
 
             {primaryContactIsInternal ? (
@@ -280,7 +297,10 @@ export default function InnerFooter() {
                 styles.metaLabel
               }
             >
-              Elsewhere
+              {
+  copy.footer
+    .elsewhere
+}
             </span>
 
             <div
@@ -319,7 +339,10 @@ export default function InnerFooter() {
                 styles.metaLabel
               }
             >
-              Profile
+              {
+  copy.footer
+    .profile
+}
             </span>
 
             {basePath !==
@@ -330,7 +353,10 @@ export default function InnerFooter() {
                   styles.metaLink
                 }
               >
-                View CV
+                {
+  copy.footer
+    .viewCv
+}
 
                 <span
                   className={
@@ -382,7 +408,10 @@ export default function InnerFooter() {
                 scrollToTop
               }
             >
-              Back to top
+              {
+  copy.footer
+    .backToTop
+}
 
               <span
                 aria-hidden="true"
