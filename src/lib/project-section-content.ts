@@ -81,8 +81,10 @@ export function getMetricsSectionContent(
     };
   }
 
-  const metrics =
-    content.metrics;
+  const metrics: Record<
+    string,
+    unknown
+  > = content.metrics;
 
   const columns =
     isMetricsColumnCount(
@@ -91,9 +93,12 @@ export function getMetricsSectionContent(
       ? metrics.columns
       : 3;
 
+  const metricItems =
+    metrics.items;
+
   if (
     !Array.isArray(
-      metrics.items,
+      metricItems,
     )
   ) {
     return {
@@ -102,12 +107,22 @@ export function getMetricsSectionContent(
     };
   }
 
-  const items: MetricsSectionItem[] =
+  const copyById: Record<
+    string,
+    unknown
+  > = isRecord(
+    metrics.copyById,
+  )
+    ? metrics.copyById
+    : {};
+
+  const items:
+    MetricsSectionItem[] =
     [];
 
   for (
     const value of
-    metrics.items
+    metricItems
   ) {
     if (
       !isRecord(value) ||
@@ -118,27 +133,63 @@ export function getMetricsSectionContent(
       continue;
     }
 
+    const baseValue =
+      typeof value.value ===
+      "string"
+        ? value.value
+        : "";
+
+    const baseLabel =
+      typeof value.label ===
+      "string"
+        ? value.label
+        : "";
+
+    const baseDetail =
+      typeof value.detail ===
+      "string"
+        ? value.detail
+        : "";
+
+    const localizedValue =
+      copyById[value.id];
+
+    const localizedCopy:
+      | Record<
+          string,
+          unknown
+        >
+      | null =
+      isRecord(
+        localizedValue,
+      )
+        ? localizedValue
+        : null;
+
     items.push({
       id:
         value.id,
 
       value:
-        typeof value.value ===
-        "string"
-          ? value.value
-          : "",
+        localizedCopy &&
+        typeof localizedCopy.value ===
+          "string"
+          ? localizedCopy.value
+          : baseValue,
 
       label:
-        typeof value.label ===
-        "string"
-          ? value.label
-          : "",
+        localizedCopy &&
+        typeof localizedCopy.label ===
+          "string"
+          ? localizedCopy.label
+          : baseLabel,
 
       detail:
-        typeof value.detail ===
-        "string"
-          ? value.detail
-          : "",
+        localizedCopy &&
+        typeof localizedCopy.detail ===
+          "string"
+          ? localizedCopy.detail
+          : baseDetail,
     });
   }
 

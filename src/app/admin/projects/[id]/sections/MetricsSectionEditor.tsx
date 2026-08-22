@@ -4,13 +4,18 @@ import {
   useState,
 } from "react";
 
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+} from "next/navigation";
+
+import type {
+  Locale,
+} from "@/i18n/config";
 
 import {
   getMetricsSectionContent,
   type MetricsColumnCount,
   type MetricsSectionContent,
-  type MetricsSectionItem,
 } from "@/lib/project-section-content";
 
 import {
@@ -18,53 +23,343 @@ import {
   type SectionActionState,
 } from "./actions";
 
+import {
+  saveMetricsSectionLocalizedCopy,
+  type MetricsLocalizedCopyInput,
+  type SpecializedTranslationState,
+} from "./specialized-translation-actions";
+
 import styles from "./sections.module.css";
 
-const initialState: SectionActionState = {
-  status: "idle",
-  message: "",
+type MetricDraftItem = {
+  id: string;
+
+  baseValue: string;
+  baseLabel: string;
+  baseDetail: string;
+
+  value: string;
+  label: string;
+  detail: string;
+
+  isNew: boolean;
 };
 
-export default function MetricsSectionEditor({
-  projectId,
-  section,
-}: {
+type MetricsSectionEditorProps = {
   projectId: string;
 
   section: {
     id: string;
-    content: Record<string, unknown>;
+
+    content: Record<
+      string,
+      unknown
+    >;
   };
-}) {
-  const router = useRouter();
+
+  locale: Locale;
+
+  translationContent: Record<
+    string,
+    unknown
+  >;
+};
+
+type MetricLocalizedCopy = {
+  value: string;
+  label: string;
+  detail: string;
+};
+
+const initialMediaState:
+  SectionActionState = {
+  status:
+    "idle",
+
+  message:
+    "",
+};
+
+const initialTranslationState:
+  SpecializedTranslationState = {
+  status:
+    "idle",
+
+  message:
+    "",
+};
+
+function isRecord(
+  value: unknown,
+): value is Record<
+  string,
+  unknown
+> {
+  return (
+    typeof value ===
+      "object" &&
+    value !== null &&
+    !Array.isArray(
+      value,
+    )
+  );
+}
+
+function getLocalizedMetricsCopy(
+  content: Record<
+    string,
+    unknown
+  >,
+) {
+  const result =
+    new Map<
+      string,
+      MetricLocalizedCopy
+    >();
+
+  if (
+    !isRecord(
+      content.metrics,
+    ) ||
+    !isRecord(
+      content.metrics
+        .copyById,
+    )
+  ) {
+    return result;
+  }
+
+  for (
+    const [
+      itemId,
+      value,
+    ] of Object.entries(
+      content.metrics
+        .copyById,
+    )
+  ) {
+    if (
+      !isRecord(
+        value,
+      )
+    ) {
+      continue;
+    }
+
+    result.set(
+      itemId,
+      {
+        value:
+          typeof value.value ===
+          "string"
+            ? value.value
+            : "",
+
+        label:
+          typeof value.label ===
+          "string"
+            ? value.label
+            : "",
+
+        detail:
+          typeof value.detail ===
+          "string"
+            ? value.detail
+            : "",
+      },
+    );
+  }
+
+  return result;
+}
+
+function getStructureKey(
+  columns:
+    MetricsColumnCount,
+
+  items: Array<{
+    id: string;
+  }>,
+) {
+  return (
+    `${columns}:` +
+    items
+      .map(
+        (
+          item,
+        ) =>
+          item.id,
+      )
+      .join(
+        "|",
+      )
+  );
+}
+
+export default function MetricsSectionEditor({
+  projectId,
+  section,
+  locale,
+  translationContent,
+}: MetricsSectionEditorProps) {
+  const router =
+    useRouter();
 
   const initialMetrics =
     getMetricsSectionContent(
       section.content,
     );
 
-  const [columns, setColumns] =
-    useState<MetricsColumnCount>(
+  const localizedCopy =
+    getLocalizedMetricsCopy(
+      translationContent,
+    );
+
+  const [
+    columns,
+    setColumns,
+  ] =
+    useState<
+      MetricsColumnCount
+    >(
       initialMetrics.columns,
     );
 
-  const [items, setItems] =
-    useState<MetricsSectionItem[]>(
-      initialMetrics.items,
+  const [
+    items,
+    setItems,
+  ] =
+    useState<
+      MetricDraftItem[]
+    >(
+      () =>
+        initialMetrics.items.map(
+          (
+            item,
+          ) => {
+            const copy =
+              localizedCopy.get(
+                item.id,
+              );
+
+            return {
+              id:
+                item.id,
+
+              baseValue:
+                item.value,
+
+              baseLabel:
+                item.label,
+
+              baseDetail:
+                item.detail,
+
+              value:
+                locale ===
+                "en"
+                  ? item.value
+                  : copy?.value ??
+                    "",
+
+              label:
+                locale ===
+                "en"
+                  ? item.label
+                  : copy?.label ??
+                    "",
+
+              detail:
+                locale ===
+                "en"
+                  ? item.detail
+                  : copy?.detail ??
+                    "",
+
+              isNew:
+                false,
+            };
+          },
+        ),
     );
 
-  const [isPending, setIsPending] =
-    useState(false);
-
-  const [status, setStatus] =
-    useState<SectionActionState>(
-      initialState,
+  const [
+    savedStructureKey,
+    setSavedStructureKey,
+  ] =
+    useState(
+      getStructureKey(
+        initialMetrics.columns,
+        initialMetrics.items,
+      ),
     );
+
+  const [
+    isStructurePending,
+    setIsStructurePending,
+  ] =
+    useState(
+      false,
+    );
+
+  const [
+    isCopyPending,
+    setIsCopyPending,
+  ] =
+    useState(
+      false,
+    );
+
+  const [
+    structureStatus,
+    setStructureStatus,
+  ] =
+    useState<
+      SectionActionState
+    >(
+      initialMediaState,
+    );
+
+  const [
+    copyStatus,
+    setCopyStatus,
+  ] =
+    useState<
+      SpecializedTranslationState
+    >(
+      initialTranslationState,
+    );
+
+  const hasSharedDraftChanges =
+    getStructureKey(
+      columns,
+      items,
+    ) !==
+    savedStructureKey;
 
   function addMetric() {
-    if (items.length >= 12) {
-      setStatus({
-        status: "error",
+    if (
+      locale !== "en"
+    ) {
+      setStructureStatus({
+        status:
+          "error",
+
+        message:
+          "Metric baru harus dibuat dari tab English agar canonical value dan label dapat diisi.",
+      });
+
+      return;
+    }
+
+    if (
+      items.length >=
+      12
+    ) {
+      setStructureStatus({
+        status:
+          "error",
+
         message:
           "Maksimal 12 metrics dalam satu section.",
       });
@@ -72,123 +367,256 @@ export default function MetricsSectionEditor({
       return;
     }
 
-    setItems((current) => [
-      ...current,
+    setItems(
+      (
+        current,
+      ) => [
+        ...current,
 
-      {
-        id:
-          globalThis.crypto.randomUUID(),
+        {
+          id:
+            globalThis.crypto.randomUUID(),
 
-        value: "",
-        label: "",
-        detail: "",
-      },
-    ]);
+          baseValue:
+            "",
 
-    setStatus(initialState);
+          baseLabel:
+            "",
+
+          baseDetail:
+            "",
+
+          value:
+            "",
+
+          label:
+            "",
+
+          detail:
+            "",
+
+          isNew:
+            true,
+        },
+      ],
+    );
+
+    setStructureStatus(
+      initialMediaState,
+    );
+
+    setCopyStatus(
+      initialTranslationState,
+    );
   }
 
   function updateMetric(
     itemId: string,
+
     field:
       | "value"
       | "label"
       | "detail",
+
     value: string,
   ) {
-    setItems((current) =>
-      current.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              [field]: value,
-            }
-          : item,
-      ),
+    setItems(
+      (
+        current,
+      ) =>
+        current.map(
+          (
+            item,
+          ) =>
+            item.id ===
+            itemId
+              ? {
+                  ...item,
+
+                  [field]:
+                    value,
+                }
+              : item,
+        ),
     );
 
-    setStatus(initialState);
+    setCopyStatus(
+      initialTranslationState,
+    );
   }
 
   function removeMetric(
     itemId: string,
   ) {
-    setItems((current) =>
-      current.filter(
-        (item) =>
-          item.id !== itemId,
-      ),
+    setItems(
+      (
+        current,
+      ) =>
+        current.filter(
+          (
+            item,
+          ) =>
+            item.id !==
+            itemId,
+        ),
     );
 
-    setStatus({
-      status: "idle",
+    setStructureStatus({
+      status:
+        "idle",
+
       message:
-        "Metric removed from draft. Save metrics to apply the change.",
+        "Metric removed from shared draft. Save shared metrics structure to apply the change.",
     });
   }
 
   function moveMetric(
     itemId: string,
-    direction: "up" | "down",
+
+    direction:
+      | "up"
+      | "down",
   ) {
-    setItems((current) => {
-      const currentIndex =
-        current.findIndex(
-          (item) =>
-            item.id === itemId,
-        );
+    setItems(
+      (
+        current,
+      ) => {
+        const currentIndex =
+          current.findIndex(
+            (
+              item,
+            ) =>
+              item.id ===
+              itemId,
+          );
 
-      if (currentIndex === -1) {
-        return current;
-      }
+        if (
+          currentIndex ===
+          -1
+        ) {
+          return current;
+        }
 
-      const destinationIndex =
-        direction === "up"
-          ? currentIndex - 1
-          : currentIndex + 1;
+        const destinationIndex =
+          direction ===
+          "up"
+            ? currentIndex -
+              1
+            : currentIndex +
+              1;
 
-      if (
-        destinationIndex < 0 ||
-        destinationIndex >=
-          current.length
-      ) {
-        return current;
-      }
+        if (
+          destinationIndex <
+            0 ||
+          destinationIndex >=
+            current.length
+        ) {
+          return current;
+        }
 
-      const next = [...current];
+        const next = [
+          ...current,
+        ];
 
-      [
-        next[currentIndex],
-        next[destinationIndex],
-      ] = [
-        next[destinationIndex],
-        next[currentIndex],
-      ];
+        [
+          next[
+            currentIndex
+          ],
 
-      return next;
-    });
+          next[
+            destinationIndex
+          ],
+        ] = [
+          next[
+            destinationIndex
+          ],
 
-    setStatus(initialState);
+          next[
+            currentIndex
+          ],
+        ];
+
+        return next;
+      },
+    );
+
+    setStructureStatus(
+      initialMediaState,
+    );
   }
 
-  async function handleSave() {
-    setIsPending(true);
-    setStatus(initialState);
+  async function handleSaveSharedStructure() {
+    setIsStructurePending(
+      true,
+    );
 
-    const payload: MetricsSectionContent =
-      {
-        columns,
+    setStructureStatus(
+      initialMediaState,
+    );
 
-        items: items.map(
-          (item) => ({
-            id: item.id,
-            value: item.value.trim(),
-            label: item.label.trim(),
+    const newItemWithoutEnglishCopy =
+      items.find(
+        (
+          item,
+        ) =>
+          item.isNew &&
+          (!item.value.trim() ||
+            !item.label.trim()),
+      );
+
+    if (
+      newItemWithoutEnglishCopy
+    ) {
+      setStructureStatus({
+        status:
+          "error",
+
+        message:
+          "Metric baru wajib memiliki English value dan label sebelum shared structure disimpan.",
+      });
+
+      setIsStructurePending(
+        false,
+      );
+
+      return;
+    }
+
+    const payload:
+      MetricsSectionContent = {
+      columns,
+
+      items:
+        items.map(
+          (
+            item,
+          ) => ({
+            id:
+              item.id,
+
+            value:
+              (
+                item.isNew
+                  ? item.value
+                  : item.baseValue
+              ).trim(),
+
+            label:
+              (
+                item.isNew
+                  ? item.label
+                  : item.baseLabel
+              ).trim(),
+
             detail:
-              item.detail.trim(),
+              (
+                item.isNew
+                  ? item.detail
+                  : item.baseDetail
+              ).trim(),
           }),
         ),
-      };
+    };
 
     try {
       const result =
@@ -198,24 +626,220 @@ export default function MetricsSectionEditor({
           payload,
         );
 
-      setStatus(result);
+      setStructureStatus(
+        result,
+      );
 
       if (
         result.status ===
         "success"
       ) {
-        setItems(payload.items);
+        const savedById =
+          new Map(
+            payload.items.map(
+              (
+                item,
+              ) =>
+                [
+                  item.id,
+                  item,
+                ] as const,
+            ),
+          );
+
+        setItems(
+          (
+            current,
+          ) =>
+            current.map(
+              (
+                item,
+              ) => {
+                const saved =
+                  savedById.get(
+                    item.id,
+                  );
+
+                if (
+                  !saved
+                ) {
+                  return item;
+                }
+
+                return {
+                  ...item,
+
+                  baseValue:
+                    saved.value,
+
+                  baseLabel:
+                    saved.label,
+
+                  baseDetail:
+                    saved.detail,
+
+                  value:
+                    item.isNew &&
+                    locale ===
+                      "en"
+                      ? saved.value
+                      : item.value,
+
+                  label:
+                    item.isNew &&
+                    locale ===
+                      "en"
+                      ? saved.label
+                      : item.label,
+
+                  detail:
+                    item.isNew &&
+                    locale ===
+                      "en"
+                      ? saved.detail
+                      : item.detail,
+
+                  isNew:
+                    false,
+                };
+              },
+            ),
+        );
+
+        setSavedStructureKey(
+          getStructureKey(
+            payload.columns,
+            payload.items,
+          ),
+        );
 
         router.refresh();
       }
     } catch {
-      setStatus({
-        status: "error",
+      setStructureStatus({
+        status:
+          "error",
+
         message:
-          "Gagal menyimpan metrics. Refresh halaman lalu coba lagi.",
+          "Gagal menyimpan shared metrics structure. Refresh halaman lalu coba lagi.",
       });
     } finally {
-      setIsPending(false);
+      setIsStructurePending(
+        false,
+      );
+    }
+  }
+
+  async function handleSaveLocalizedCopy() {
+    if (
+      hasSharedDraftChanges
+    ) {
+      setCopyStatus({
+        status:
+          "error",
+
+        message:
+          "Simpan shared metrics structure terlebih dahulu sebelum menyimpan translation.",
+      });
+
+      return;
+    }
+
+    const payload:
+      MetricsLocalizedCopyInput[] =
+      items.map(
+        (
+          item,
+        ) => ({
+          id:
+            item.id,
+
+          value:
+            item.value,
+
+          label:
+            item.label,
+
+          detail:
+            item.detail,
+        }),
+      );
+
+    setIsCopyPending(
+      true,
+    );
+
+    setCopyStatus(
+      initialTranslationState,
+    );
+
+    try {
+      const result =
+        await saveMetricsSectionLocalizedCopy(
+          projectId,
+          section.id,
+          locale,
+          payload,
+        );
+
+      setCopyStatus(
+        result,
+      );
+
+      if (
+        result.status ===
+        "success"
+      ) {
+        if (
+          locale ===
+          "en"
+        ) {
+          setItems(
+            (
+              current,
+            ) =>
+              current.map(
+                (
+                  item,
+                ) => ({
+                  ...item,
+
+                  baseValue:
+                    item.value.trim(),
+
+                  baseLabel:
+                    item.label.trim(),
+
+                  baseDetail:
+                    item.detail.trim(),
+
+                  value:
+                    item.value.trim(),
+
+                  label:
+                    item.label.trim(),
+
+                  detail:
+                    item.detail.trim(),
+                }),
+              ),
+          );
+        }
+
+        router.refresh();
+      }
+    } catch {
+      setCopyStatus({
+        status:
+          "error",
+
+        message:
+          "Gagal menyimpan localized metrics copy. Refresh halaman lalu coba lagi.",
+      });
+    } finally {
+      setIsCopyPending(
+        false,
+      );
     }
   }
 
@@ -232,23 +856,27 @@ export default function MetricsSectionEditor({
       >
         <div>
           <span>
-            METRICS CONTENT
+            SHARED METRICS STRUCTURE
           </span>
 
           <strong>
             {String(
               items.length,
-            ).padStart(2, "0")}{" "}
+            ).padStart(
+              2,
+              "0",
+            )}{" "}
             METRICS
           </strong>
         </div>
 
         <p>
-          Tampilkan hasil,
-          pencapaian, angka, atau
-          highlight penting dari
-          project dalam format
-          statistik.
+          Columns, jumlah metric,
+          urutan, add, dan remove
+          adalah shared untuk semua
+          bahasa. Value, label, dan
+          detail mengikuti bahasa
+          aktif.
         </p>
       </div>
 
@@ -270,9 +898,11 @@ export default function MetricsSectionEditor({
             className={
               styles.input
             }
-            value={columns}
+            value={
+              columns
+            }
             disabled={
-              isPending
+              isStructurePending
             }
             onChange={(
               event,
@@ -292,21 +922,27 @@ export default function MetricsSectionEditor({
                   value,
                 );
 
-                setStatus(
-                  initialState,
+                setStructureStatus(
+                  initialMediaState,
                 );
               }
             }}
           >
-            <option value={2}>
+            <option
+              value={2}
+            >
               2 columns
             </option>
 
-            <option value={3}>
+            <option
+              value={3}
+            >
               3 columns
             </option>
 
-            <option value={4}>
+            <option
+              value={4}
+            >
               4 columns
             </option>
           </select>
@@ -317,17 +953,48 @@ export default function MetricsSectionEditor({
             styles.metricsAddButton
           }
           type="button"
-          onClick={addMetric}
+          onClick={
+            addMetric
+          }
+          title={
+            locale ===
+            "en"
+              ? undefined
+              : "Switch to English to add a new metric"
+          }
           disabled={
-            isPending ||
-            items.length >= 12
+            isStructurePending ||
+            items.length >=
+              12 ||
+            locale !==
+              "en"
           }
         >
           + Add metric
         </button>
       </div>
 
-      {items.length === 0 ? (
+      {locale !==
+      "en" ? (
+        <p
+          className={
+            styles.sectionLanguageHint
+          }
+        >
+          Metric baru hanya dapat
+          dibuat dari tab{" "}
+          <strong>
+            English
+          </strong>{" "}
+          karena value dan label
+          canonical wajib tersedia.
+          Reorder, remove, dan
+          columns tetap shared.
+        </p>
+      ) : null}
+
+      {items.length ===
+      0 ? (
         <div
           className={
             styles.metricsEmpty
@@ -338,9 +1005,9 @@ export default function MetricsSectionEditor({
           </span>
 
           <p>
-            Tambahkan angka atau
-            hasil penting untuk
-            section ini.
+            Tambahkan metric dari
+            tab English untuk mulai
+            membangun section ini.
           </p>
         </div>
       ) : (
@@ -356,243 +1023,320 @@ export default function MetricsSectionEditor({
             (
               item,
               index,
-            ) => (
-              <article
-                className={
-                  styles.metricCard
-                }
-                key={
-                  item.id
-                }
-              >
-                <header
+            ) => {
+              const previewValue =
+                item.value.trim() ||
+                (locale !==
+                "en"
+                  ? item.baseValue
+                  : "") ||
+                "—";
+
+              const previewLabel =
+                item.label.trim() ||
+                (locale !==
+                "en"
+                  ? item.baseLabel
+                  : "") ||
+                "Metric label";
+
+              return (
+                <article
                   className={
-                    styles.metricCardHeader
+                    styles.metricCard
+                  }
+                  key={
+                    item.id
                   }
                 >
-                  <span>
-                    {String(
-                      index + 1,
-                    ).padStart(
-                      2,
-                      "0",
-                    )}
-                  </span>
+                  <header
+                    className={
+                      styles.metricCardHeader
+                    }
+                  >
+                    <span>
+                      {String(
+                        index +
+                          1,
+                      ).padStart(
+                        2,
+                        "0",
+                      )}
+                    </span>
 
-                  <div>
-                    <button
-                      className={
-                        styles.metricsOrderButton
-                      }
-                      type="button"
-                      onClick={() =>
-                        moveMetric(
-                          item.id,
-                          "up",
-                        )
-                      }
-                      disabled={
-                        isPending ||
-                        index === 0
-                      }
-                    >
-                      ↑
-                    </button>
+                    <div>
+                      <button
+                        className={
+                          styles.metricsOrderButton
+                        }
+                        type="button"
+                        onClick={() =>
+                          moveMetric(
+                            item.id,
+                            "up",
+                          )
+                        }
+                        disabled={
+                          isStructurePending ||
+                          index ===
+                            0
+                        }
+                      >
+                        ↑
+                      </button>
 
-                    <button
-                      className={
-                        styles.metricsOrderButton
+                      <button
+                        className={
+                          styles.metricsOrderButton
+                        }
+                        type="button"
+                        onClick={() =>
+                          moveMetric(
+                            item.id,
+                            "down",
+                          )
+                        }
+                        disabled={
+                          isStructurePending ||
+                          index ===
+                            items.length -
+                              1
+                        }
+                      >
+                        ↓
+                      </button>
+                    </div>
+                  </header>
+
+                  <div
+                    className={
+                      styles.metricPreview
+                    }
+                  >
+                    <strong>
+                      {
+                        previewValue
                       }
-                      type="button"
-                      onClick={() =>
-                        moveMetric(
-                          item.id,
-                          "down",
-                        )
+                    </strong>
+
+                    <span>
+                      {
+                        previewLabel
                       }
-                      disabled={
-                        isPending ||
-                        index ===
-                          items.length -
-                            1
-                      }
-                    >
-                      ↓
-                    </button>
+                    </span>
                   </div>
-                </header>
 
-                <div
-                  className={
-                    styles.metricPreview
-                  }
-                >
-                  <strong>
-                    {item.value ||
-                      "—"}
-                  </strong>
-
-                  <span>
-                    {item.label ||
-                      "Metric label"}
-                  </span>
-                </div>
-
-                <div
-                  className={
-                    styles.metricFields
-                  }
-                >
-                  <label
+                  <div
                     className={
-                      styles.field
+                      styles.metricFields
                     }
                   >
-                    <span>
-                      Value *
-                    </span>
+                    {locale !==
+                    "en" ? (
+                      <p
+                        className={
+                          styles.sectionLanguageHint
+                        }
+                      >
+                        English
+                        reference —
+                        Value:{" "}
+                        <strong>
+                          {item.baseValue ||
+                            "—"}
+                        </strong>
+                        {" · "}
+                        Label:{" "}
+                        <strong>
+                          {item.baseLabel ||
+                            "—"}
+                        </strong>
+                        {" · "}
+                        Detail:{" "}
+                        <strong>
+                          {item.baseDetail ||
+                            "—"}
+                        </strong>
+                      </p>
+                    ) : null}
 
-                    <input
+                    <label
                       className={
-                        styles.input
+                        styles.field
                       }
-                      type="text"
-                      value={
-                        item.value
+                    >
+                      <span>
+                        {locale.toUpperCase()}{" "}
+                        Value
+                        {locale ===
+                        "en"
+                          ? " *"
+                          : ""}
+                      </span>
+
+                      <input
+                        className={
+                          styles.input
+                        }
+                        type="text"
+                        value={
+                          item.value
+                        }
+                        onChange={(
+                          event,
+                        ) =>
+                          updateMetric(
+                            item.id,
+                            "value",
+                            event
+                              .target
+                              .value,
+                          )
+                        }
+                        placeholder={
+                          locale ===
+                          "en"
+                            ? "48%"
+                            : "Leave empty to use English"
+                        }
+                        maxLength={
+                          40
+                        }
+                        disabled={
+                          isCopyPending
+                        }
+                      />
+                    </label>
+
+                    <label
+                      className={
+                        styles.field
                       }
-                      onChange={(
-                        event,
-                      ) =>
-                        updateMetric(
+                    >
+                      <span>
+                        {locale.toUpperCase()}{" "}
+                        Label
+                        {locale ===
+                        "en"
+                          ? " *"
+                          : ""}
+                      </span>
+
+                      <input
+                        className={
+                          styles.input
+                        }
+                        type="text"
+                        value={
+                          item.label
+                        }
+                        onChange={(
+                          event,
+                        ) =>
+                          updateMetric(
+                            item.id,
+                            "label",
+                            event
+                              .target
+                              .value,
+                          )
+                        }
+                        placeholder={
+                          locale ===
+                          "en"
+                            ? "Conversion increase"
+                            : "Leave empty to use English"
+                        }
+                        maxLength={
+                          120
+                        }
+                        disabled={
+                          isCopyPending
+                        }
+                      />
+                    </label>
+
+                    <label
+                      className={
+                        styles.field
+                      }
+                    >
+                      <span>
+                        {locale.toUpperCase()}{" "}
+                        Detail
+                      </span>
+
+                      <textarea
+                        className={
+                          styles.textarea
+                        }
+                        value={
+                          item.detail
+                        }
+                        onChange={(
+                          event,
+                        ) =>
+                          updateMetric(
+                            item.id,
+                            "detail",
+                            event
+                              .target
+                              .value,
+                          )
+                        }
+                        placeholder={
+                          locale ===
+                          "en"
+                            ? "Optional context"
+                            : "Leave empty to use English"
+                        }
+                        rows={3}
+                        maxLength={
+                          300
+                        }
+                        disabled={
+                          isCopyPending
+                        }
+                      />
+                    </label>
+                  </div>
+
+                  <footer
+                    className={
+                      styles.metricCardFooter
+                    }
+                  >
+                    <button
+                      className={
+                        styles.mediaDangerButton
+                      }
+                      type="button"
+                      onClick={() =>
+                        removeMetric(
                           item.id,
-                          "value",
-                          event
-                            .target
-                            .value,
                         )
                       }
-                      placeholder="48%"
-                      maxLength={
-                        40
-                      }
                       disabled={
-                        isPending
+                        isStructurePending
                       }
-                    />
-                  </label>
-
-                  <label
-                    className={
-                      styles.field
-                    }
-                  >
-                    <span>
-                      Label *
-                    </span>
-
-                    <input
-                      className={
-                        styles.input
-                      }
-                      type="text"
-                      value={
-                        item.label
-                      }
-                      onChange={(
-                        event,
-                      ) =>
-                        updateMetric(
-                          item.id,
-                          "label",
-                          event
-                            .target
-                            .value,
-                        )
-                      }
-                      placeholder="Conversion increase"
-                      maxLength={
-                        120
-                      }
-                      disabled={
-                        isPending
-                      }
-                    />
-                  </label>
-
-                  <label
-                    className={
-                      styles.field
-                    }
-                  >
-                    <span>
-                      Detail
-                    </span>
-
-                    <textarea
-                      className={
-                        styles.textarea
-                      }
-                      value={
-                        item.detail
-                      }
-                      onChange={(
-                        event,
-                      ) =>
-                        updateMetric(
-                          item.id,
-                          "detail",
-                          event
-                            .target
-                            .value,
-                        )
-                      }
-                      placeholder="Optional context"
-                      rows={3}
-                      maxLength={
-                        300
-                      }
-                      disabled={
-                        isPending
-                      }
-                    />
-                  </label>
-                </div>
-
-                <footer
-                  className={
-                    styles.metricCardFooter
-                  }
-                >
-                  <button
-                    className={
-                      styles.mediaDangerButton
-                    }
-                    type="button"
-                    onClick={() =>
-                      removeMetric(
-                        item.id,
-                      )
-                    }
-                    disabled={
-                      isPending
-                    }
-                  >
-                    Remove
-                  </button>
-                </footer>
-              </article>
-            ),
+                    >
+                      Remove
+                    </button>
+                  </footer>
+                </article>
+              );
+            },
           )}
         </div>
       )}
 
-      {status.message ? (
+      {structureStatus.message ? (
         <div
           className={
             styles.mediaStatus
           }
           data-type={
-            status.status
+            structureStatus.status
           }
           role="status"
           aria-live="polite"
@@ -600,7 +1344,9 @@ export default function MetricsSectionEditor({
           <span />
 
           <p>
-            {status.message}
+            {
+              structureStatus.message
+            }
           </p>
         </div>
       ) : null}
@@ -611,10 +1357,9 @@ export default function MetricsSectionEditor({
         }
       >
         <p>
-          Value mendukung format
-          bebas seperti 48%, 2.4x,
-          100+, 03, atau teks
-          pendek lainnya.
+          Columns, item count,
+          order dan remove berlaku
+          ke semua bahasa.
         </p>
 
         <button
@@ -623,16 +1368,105 @@ export default function MetricsSectionEditor({
           }
           type="button"
           onClick={
-            handleSave
+            handleSaveSharedStructure
           }
           disabled={
-            isPending
+            isStructurePending ||
+            !hasSharedDraftChanges
           }
         >
-          {isPending
-            ? "Saving metrics..."
-            : "Save metrics ↗"}
+          {isStructurePending
+            ? "Saving shared metrics..."
+            : "Save shared metrics ↗"}
         </button>
+      </div>
+
+      <div
+        className={
+          styles.sharedSectionSettings
+        }
+      >
+        <div
+          className={
+            styles.metricsEditorHeader
+          }
+        >
+          <div>
+            <span>
+              {locale.toUpperCase()}{" "}
+              METRICS COPY
+            </span>
+
+            <strong>
+              {String(
+                items.length,
+              ).padStart(
+                2,
+                "0",
+              )}{" "}
+              ITEMS
+            </strong>
+          </div>
+
+          <p>
+            Value, label dan detail
+            mengikuti bahasa aktif.
+            Field kosong pada ID/DE
+            akan fallback ke English.
+          </p>
+        </div>
+
+        {copyStatus.message ? (
+          <div
+            className={
+              styles.mediaStatus
+            }
+            data-type={
+              copyStatus.status
+            }
+            role="status"
+            aria-live="polite"
+          >
+            <span />
+
+            <p>
+              {
+                copyStatus.message
+              }
+            </p>
+          </div>
+        ) : null}
+
+        <div
+          className={
+            styles.metricsFooter
+          }
+        >
+          <p>
+            {locale ===
+            "en"
+              ? "English adalah canonical fallback untuk seluruh metrics copy."
+              : "Kosongkan field yang ingin memakai value, label, atau detail English."}
+          </p>
+
+          <button
+            className={
+              styles.mediaPrimaryButton
+            }
+            type="button"
+            onClick={
+              handleSaveLocalizedCopy
+            }
+            disabled={
+              isCopyPending ||
+              hasSharedDraftChanges
+            }
+          >
+            {isCopyPending
+              ? `Saving ${locale.toUpperCase()} copy...`
+              : `Save ${locale.toUpperCase()} metrics copy ↗`}
+          </button>
+        </div>
       </div>
     </section>
   );

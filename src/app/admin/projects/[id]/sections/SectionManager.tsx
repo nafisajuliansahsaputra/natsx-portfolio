@@ -104,14 +104,13 @@ type SectionManagerProps = {
 };
 
 const initialState:
-  SectionActionState =
-  {
-    status:
-      "idle",
+  SectionActionState = {
+  status:
+    "idle",
 
-    message:
-      "",
-  };
+  message:
+    "",
+};
 
 const sectionTypes = [
   {
@@ -672,22 +671,22 @@ function SectionCard({
   ]);
 
   const legacyEnglish:
-    SectionTranslation =
-    {
-      locale:
-        "en",
+    SectionTranslation = {
+    locale:
+      "en",
 
-      eyebrow:
-        section.eyebrow,
+    eyebrow:
+      section.eyebrow,
 
-      heading:
-        section.heading,
+    heading:
+      section.heading,
 
-      body:
-        section.body,
+    body:
+      section.body,
 
-      content: {},
-    };
+    content:
+      {},
+  };
 
   const activeTranslation =
     contentLocale ===
@@ -700,6 +699,12 @@ function SectionCard({
           .translations[
           contentLocale
         ];
+
+  const activeTranslationContent =
+    section.translations[
+      contentLocale
+    ]?.content ??
+    {};
 
   const canonicalHeading =
     section.translations
@@ -734,7 +739,8 @@ function SectionCard({
             }
           >
             {String(
-              index + 1,
+              index +
+                1,
             ).padStart(
               2,
               "0",
@@ -887,7 +893,7 @@ function SectionCard({
           {contentLocale ===
           "en"
             ? "English adalah canonical fallback untuk section ini."
-            : "Field kosong akan fallback ke English. Specialized content translation akan ditambahkan pada tahap berikutnya."}
+            : "Field kosong akan fallback ke English. Specialized content yang sudah locale-aware mengikuti tab aktif ini."}
         </p>
 
         <form
@@ -1081,44 +1087,53 @@ function SectionCard({
 
       {section.section_type ===
       "image" ? (
-<ImageSectionEditor
-  key={`image-${section.id}-${contentLocale}`}
-  projectId={
-    projectId
-  }
-  section={
-    section
-  }
-  locale={
-    contentLocale
-  }
-  translationContent={
-    section
-      .translations[
-        contentLocale
-      ]
-      ?.content ??
-    {}
-  }
-/>
-      ) : section.section_type ===
-        "gallery" ? (
-        <GallerySectionEditor
+        <ImageSectionEditor
+          key={`image-${section.id}-${contentLocale}`}
           projectId={
             projectId
           }
           section={
             section
+          }
+          locale={
+            contentLocale
+          }
+          translationContent={
+            activeTranslationContent
+          }
+        />
+      ) : section.section_type ===
+        "gallery" ? (
+        <GallerySectionEditor
+          key={`gallery-${section.id}-${contentLocale}`}
+          projectId={
+            projectId
+          }
+          section={
+            section
+          }
+          locale={
+            contentLocale
+          }
+          translationContent={
+            activeTranslationContent
           }
         />
       ) : section.section_type ===
         "metrics" ? (
         <MetricsSectionEditor
+          key={`metrics-${section.id}-${contentLocale}`}
           projectId={
             projectId
           }
           section={
             section
+          }
+          locale={
+            contentLocale
+          }
+          translationContent={
+            activeTranslationContent
           }
         />
       ) : section.section_type ===
@@ -1161,9 +1176,10 @@ function SectionCard({
           </span>
 
           <p>
-            Type, theme, visibility,
-            media dan layout berlaku
-            ke semua bahasa.
+            Type, theme,
+            visibility, media dan
+            layout berlaku ke semua
+            bahasa.
           </p>
         </div>
 
@@ -1286,7 +1302,8 @@ function SectionCard({
 
             <span>
               <strong>
-                Visible on public page
+                Visible on public
+                page
               </strong>
 
               <small>
