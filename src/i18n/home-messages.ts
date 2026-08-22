@@ -106,6 +106,93 @@ const homeMessages = {
         },
       },
     },
+
+    about: {
+      sectionLabel:
+        "04 / About",
+
+      headingPrefix:
+        "I'm",
+
+      headingLine2:
+        "the person",
+
+      headingLine3:
+        "behind",
+
+      lead:
+        "A multidisciplinary digital creator working across design, development, motion, and visual storytelling.",
+
+      body:
+        "I enjoy taking ideas from something abstract into something people can actually see, use, and experience—combining different disciplines instead of treating them as separate parts.",
+
+      moreAbout:
+        "More About Me",
+
+      viewCv:
+        "View CV",
+
+      basedIn:
+        "Based in",
+
+      role:
+        "Role",
+
+      creativeIdentity:
+        "Creative Identity",
+    },
+
+    playground: {
+      sectionLabel:
+        "05 / Playground",
+
+      headingLine1:
+        "Built from",
+
+      headingLine2:
+        "curiosity",
+
+      description:
+        "A space for experiments, visual studies, motion, and ideas explored outside structured project work.",
+
+      explore:
+        "Explore Playground",
+
+      viewExperiment:
+        "View Experiment",
+
+      experimentAria:
+        "View",
+    },
+
+    contact: {
+      sectionLabel:
+        "06 / Contact",
+
+      availability:
+        "Open to selected opportunities",
+
+      eyebrow:
+        "Have an idea?",
+
+      headingLine1:
+        "Let's make",
+
+      headingLine2:
+        "something worth",
+
+      headingLine3:
+        "experiencing",
+
+      intro:
+        "For collaborations, freelance work, creative projects, or just a good conversation.",
+
+      designedBy:
+        "Designed & built by",
+
+      portfolio:
+        "Portfolio",
+    },
   },
 
   id: {
@@ -211,6 +298,93 @@ const homeMessages = {
         },
       },
     },
+
+    about: {
+      sectionLabel:
+        "04 / Tentang",
+
+      headingPrefix:
+        "Saya",
+
+      headingLine2:
+        "sosok di",
+
+      headingLine3:
+        "balik",
+
+      lead:
+        "Kreator digital multidisiplin yang bergerak di bidang desain, development, motion, dan visual storytelling.",
+
+      body:
+        "Saya menikmati proses mengubah ide yang masih abstrak menjadi sesuatu yang benar-benar dapat dilihat, digunakan, dan dirasakan—dengan menghubungkan berbagai disiplin, bukan memisahkannya.",
+
+      moreAbout:
+        "Lebih Tentang Saya",
+
+      viewCv:
+        "Lihat CV",
+
+      basedIn:
+        "Berbasis di",
+
+      role:
+        "Peran",
+
+      creativeIdentity:
+        "Identitas Kreatif",
+    },
+
+    playground: {
+      sectionLabel:
+        "05 / Playground",
+
+      headingLine1:
+        "Berawal dari",
+
+      headingLine2:
+        "rasa ingin tahu",
+
+      description:
+        "Ruang untuk eksperimen, studi visual, motion, dan ide yang dieksplorasi di luar proyek yang terstruktur.",
+
+      explore:
+        "Jelajahi Playground",
+
+      viewExperiment:
+        "Lihat Eksperimen",
+
+      experimentAria:
+        "Lihat",
+    },
+
+    contact: {
+      sectionLabel:
+        "06 / Kontak",
+
+      availability:
+        "Terbuka untuk peluang terpilih",
+
+      eyebrow:
+        "Punya ide?",
+
+      headingLine1:
+        "Mari buat",
+
+      headingLine2:
+        "sesuatu yang",
+
+      headingLine3:
+        "layak dirasakan",
+
+      intro:
+        "Untuk kolaborasi, freelance, proyek kreatif, atau sekadar percakapan yang menarik.",
+
+      designedBy:
+        "Dirancang & dibuat oleh",
+
+      portfolio:
+        "Portfolio",
+    },
   },
 
   de: {
@@ -315,6 +489,93 @@ const homeMessages = {
             "Ideen über einzelne Deliverables hinaus durch Direction, Experimente und visuelle Exploration weiterentwickeln.",
         },
       },
+    },
+
+    about: {
+      sectionLabel:
+        "04 / Über mich",
+
+      headingPrefix:
+        "Ich bin",
+
+      headingLine2:
+        "der Mensch",
+
+      headingLine3:
+        "hinter",
+
+      lead:
+        "Multidisziplinärer Digital Creator an der Schnittstelle von Design, Development, Motion und visuellem Storytelling.",
+
+      body:
+        "Mich reizt der Prozess, abstrakte Ideen in etwas zu verwandeln, das Menschen sehen, nutzen und erleben können—indem verschiedene Disziplinen miteinander verbunden statt getrennt betrachtet werden.",
+
+      moreAbout:
+        "Mehr über mich",
+
+      viewCv:
+        "CV ansehen",
+
+      basedIn:
+        "Standort",
+
+      role:
+        "Rolle",
+
+      creativeIdentity:
+        "Creative Identity",
+    },
+
+    playground: {
+      sectionLabel:
+        "05 / Playground",
+
+      headingLine1:
+        "Aus Neugier",
+
+      headingLine2:
+        "entstanden",
+
+      description:
+        "Ein Raum für Experimente, visuelle Studien, Motion und Ideen außerhalb klassischer Projektstrukturen.",
+
+      explore:
+        "Playground entdecken",
+
+      viewExperiment:
+        "Experiment ansehen",
+
+      experimentAria:
+        "Ansehen",
+    },
+
+    contact: {
+      sectionLabel:
+        "06 / Kontakt",
+
+      availability:
+        "Offen für ausgewählte Möglichkeiten",
+
+      eyebrow:
+        "Eine Idee?",
+
+      headingLine1:
+        "Lass uns",
+
+      headingLine2:
+        "etwas schaffen,",
+
+      headingLine3:
+        "das bleibt",
+
+      intro:
+        "Für Zusammenarbeit, Freelance-Projekte, kreative Ideen oder einfach ein gutes Gespräch.",
+
+      designedBy:
+        "Gestaltet & entwickelt von",
+
+      portfolio:
+        "Portfolio",
     },
   },
 } as const;

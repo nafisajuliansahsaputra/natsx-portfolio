@@ -1,66 +1,142 @@
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   featuredPlaygroundItems,
   type PlaygroundPreviewVisual,
 } from "@/data/playground";
 
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
+
 import styles from "./PlaygroundPreview.module.css";
 
-export default function PlaygroundPreview() {
+type PlaygroundPreviewProps = {
+  locale: Locale;
+};
+
+export default function PlaygroundPreview({
+  locale,
+}: PlaygroundPreviewProps) {
+  const copy =
+    getHomeMessages(
+      locale,
+    ).playground;
+
   return (
     <section
-      className={styles.section}
+      className={
+        styles.section
+      }
       id="playground"
     >
       <div className="site-container">
-        <header className={styles.header}>
-          <div className={styles.label}>
-            <span className={styles.dot} />
-            <span>05 / Playground</span>
+        <header
+          className={
+            styles.header
+          }
+        >
+          <div
+            className={
+              styles.label
+            }
+          >
+            <span
+              className={
+                styles.dot
+              }
+            />
+
+            <span>
+              {
+                copy.sectionLabel
+              }
+            </span>
           </div>
 
-          <div className={styles.headerMain}>
-            <h2 className={styles.heading}>
-              Built from
+          <div
+            className={
+              styles.headerMain
+            }
+          >
+            <h2
+              className={
+                styles.heading
+              }
+            >
+              {
+                copy.headingLine1
+              }
+
               <br />
-              curiosity<span>.</span>
+
+              {
+                copy.headingLine2
+              }
+
+              <span>
+                .
+              </span>
             </h2>
 
-            <div className={styles.headerRight}>
+            <div
+              className={
+                styles.headerRight
+              }
+            >
               <p>
-                A space for experiments,
-                visual studies, motion, and
-                ideas explored outside
-                structured project work.
+                {
+                  copy.description
+                }
               </p>
 
-              <Link
+              <LocaleLink
                 href="/playground"
-                className={styles.allLink}
+                className={
+                  styles.allLink
+                }
               >
-                Explore Playground
-                <span>↗</span>
-              </Link>
+                {
+                  copy.explore
+                }
+
+                <span>
+                  ↗
+                </span>
+              </LocaleLink>
             </div>
           </div>
         </header>
 
-        <div className={styles.gallery}>
+        <div
+          className={
+            styles.gallery
+          }
+        >
           {featuredPlaygroundItems.map(
-            (experiment) => (
+            (
+              experiment,
+            ) => (
               <article
                 className={`${styles.item} ${
                   styles[
                     `layout_${experiment.preview.layout}`
                   ]
                 }`}
-                key={experiment.slug}
+                key={
+                  experiment.slug
+                }
               >
-                <Link
+                <LocaleLink
                   href="/playground"
-                  className={styles.visualLink}
-                  aria-label={`View ${experiment.title}`}
+                  className={
+                    styles.visualLink
+                  }
+                  aria-label={`${copy.experimentAria} ${experiment.title}`}
                 >
                   <div
                     className={`${styles.visual} ${
@@ -71,7 +147,8 @@ export default function PlaygroundPreview() {
                   >
                     <ExperimentArtwork
                       variant={
-                        experiment.preview
+                        experiment
+                          .preview
                           .visual
                       }
                     />
@@ -81,28 +158,45 @@ export default function PlaygroundPreview() {
                         styles.hoverLabel
                       }
                     >
-                      View Experiment ↗
+                      {
+                        copy.viewExperiment
+                      }{" "}
+                      ↗
                     </span>
                   </div>
-                </Link>
+                </LocaleLink>
 
-                <div className={styles.meta}>
+                <div
+                  className={
+                    styles.meta
+                  }
+                >
                   <div>
                     <span
-                      className={styles.number}
+                      className={
+                        styles.number
+                      }
                     >
-                      {experiment.number}
+                      {
+                        experiment.number
+                      }
                     </span>
 
                     <h3>
-                      {experiment.title}
+                      {
+                        experiment.title
+                      }
                     </h3>
                   </div>
 
                   <span
-                    className={styles.category}
+                    className={
+                      styles.category
+                    }
                   >
-                    {experiment.category}
+                    {
+                      experiment.category
+                    }
                   </span>
                 </div>
               </article>
@@ -117,9 +211,13 @@ export default function PlaygroundPreview() {
 function ExperimentArtwork({
   variant,
 }: {
-  variant: PlaygroundPreviewVisual;
+  variant:
+    PlaygroundPreviewVisual;
 }) {
-  if (variant === "generative") {
+  if (
+    variant ===
+    "generative"
+  ) {
     return (
       <div
         className={
@@ -138,16 +236,27 @@ function ExperimentArtwork({
           }
         />
 
-        <span className={styles.artLabel}>
+        <span
+          className={
+            styles.artLabel
+          }
+        >
           GENERATIVE / 001
         </span>
       </div>
     );
   }
 
-  if (variant === "type") {
+  if (
+    variant ===
+    "type"
+  ) {
     return (
-      <div className={styles.typeArtwork}>
+      <div
+        className={
+          styles.typeArtwork
+        }
+      >
         <span>N</span>
         <span>A</span>
         <span>T</span>
@@ -157,19 +266,40 @@ function ExperimentArtwork({
     );
   }
 
-  if (variant === "form") {
+  if (
+    variant ===
+    "form"
+  ) {
     return (
-      <div className={styles.formArtwork}>
-        <div className={styles.formShape} />
+      <div
+        className={
+          styles.formArtwork
+        }
+      >
+        <div
+          className={
+            styles.formShape
+          }
+        />
 
-        <span>FORM / STUDY</span>
+        <span>
+          FORM / STUDY
+        </span>
       </div>
     );
   }
 
   return (
-    <div className={styles.posterArtwork}>
-      <span className={styles.posterSmall}>
+    <div
+      className={
+        styles.posterArtwork
+      }
+    >
+      <span
+        className={
+          styles.posterSmall
+        }
+      >
         KEEP
       </span>
 
@@ -179,7 +309,11 @@ function ExperimentArtwork({
         THINGS.
       </strong>
 
-      <span className={styles.posterIndex}>
+      <span
+        className={
+          styles.posterIndex
+        }
+      >
         04 / NATSX
       </span>
     </div>

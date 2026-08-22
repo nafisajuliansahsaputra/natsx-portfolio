@@ -1,9 +1,18 @@
 import Image from "next/image";
-import Link from "next/link";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   site,
 } from "@/data/site";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
 
 import styles from "./ContactFooter.module.css";
 
@@ -31,7 +40,18 @@ const contactLinks = [
   ),
 ];
 
-export default function ContactFooter() {
+type ContactFooterProps = {
+  locale: Locale;
+};
+
+export default function ContactFooter({
+  locale,
+}: ContactFooterProps) {
+  const copy =
+    getHomeMessages(
+      locale,
+    ).contact;
+
   return (
     <section
       className={
@@ -57,7 +77,9 @@ export default function ContactFooter() {
             />
 
             <span>
-              06 / Contact
+              {
+                copy.sectionLabel
+              }
             </span>
           </div>
 
@@ -66,9 +88,9 @@ export default function ContactFooter() {
               styles.availability
             }
           >
-            {site.availability.statusLines.join(
-              " ",
-            )}
+            {
+              copy.availability
+            }
           </span>
         </div>
 
@@ -82,10 +104,12 @@ export default function ContactFooter() {
               styles.eyebrow
             }
           >
-            Have an idea?
+            {
+              copy.eyebrow
+            }
           </p>
 
-          <Link
+          <LocaleLink
             href="/contact"
             className={
               styles.mainLink
@@ -101,7 +125,9 @@ export default function ContactFooter() {
                   styles.headingLine
                 }
               >
-                Let&apos;s make
+                {
+                  copy.headingLine1
+                }
               </span>
 
               <span
@@ -109,7 +135,9 @@ export default function ContactFooter() {
                   styles.headingLine
                 }
               >
-                something worth
+                {
+                  copy.headingLine2
+                }
               </span>
 
               <span
@@ -117,7 +145,9 @@ export default function ContactFooter() {
                   styles.headingLine
                 }
               >
-                experiencing
+                {
+                  copy.headingLine3
+                }
 
                 <span
                   className={
@@ -136,7 +166,7 @@ export default function ContactFooter() {
             >
               ↗
             </span>
-          </Link>
+          </LocaleLink>
         </div>
 
         <div
@@ -149,11 +179,9 @@ export default function ContactFooter() {
               styles.contactIntro
             }
           >
-            For collaborations,
-            freelance work,
-            creative projects,
-            or just a good
-            conversation.
+            {
+              copy.intro
+            }
           </p>
 
           <div
@@ -219,12 +247,8 @@ export default function ContactFooter() {
             <Image
               src="/images/branding/natsx-logo-black.png"
               alt="NATSX"
-              width={
-                1110
-              }
-              height={
-                380
-              }
+              width={1110}
+              height={380}
               className={
                 styles.logo
               }
@@ -242,8 +266,9 @@ export default function ContactFooter() {
                   styles.metaLabel
                 }
               >
-                Designed &
-                built by
+                {
+                  copy.designedBy
+                }
               </span>
 
               <span>
@@ -259,7 +284,9 @@ export default function ContactFooter() {
                   styles.metaLabel
                 }
               >
-                Portfolio
+                {
+                  copy.portfolio
+                }
               </span>
 
               <span>

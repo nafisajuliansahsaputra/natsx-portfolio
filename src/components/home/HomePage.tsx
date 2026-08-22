@@ -27,28 +27,28 @@ export default function HomePage({
         tabIndex={-1}
       >
         <Hero
-          locale={
-            locale
-          }
+          locale={locale}
         />
 
         <SelectedWork
-          locale={
-            locale
-          }
+          locale={locale}
         />
 
         <Capabilities
-          locale={
-            locale
-          }
+          locale={locale}
         />
 
-        <AboutPreview />
+        <AboutPreview
+          locale={locale}
+        />
 
-        <PlaygroundPreview />
+        <PlaygroundPreview
+          locale={locale}
+        />
 
-        <ContactFooter />
+        <ContactFooter
+          locale={locale}
+        />
       </main>
     </>
   );
