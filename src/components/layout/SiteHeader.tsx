@@ -18,6 +18,12 @@ import {
 
 import styles from "./SiteHeader.module.css";
 
+import {
+  getLocaleFromPathname,
+  localizePath,
+  stripLocaleFromPathname,
+} from "@/i18n/config";
+
 const navigation = [
   {
     number: "01",
@@ -44,6 +50,16 @@ const navigation = [
 export default function SiteHeader() {
   const pathname =
     usePathname();
+
+    const locale =
+  getLocaleFromPathname(
+    pathname,
+  );
+
+const basePath =
+  stripLocaleFromPathname(
+    pathname,
+  );
 
   const [
     menuOpen,
@@ -88,27 +104,27 @@ export default function SiteHeader() {
       null,
     );
 
-  function isActive(
-    href: string,
+function isActive(
+  href: string,
+) {
+  if (
+    href ===
+    "/work"
   ) {
-    if (
-      href ===
-      "/work"
-    ) {
-      return (
-        pathname ===
-          "/work" ||
-        pathname.startsWith(
-          "/work/",
-        )
-      );
-    }
-
     return (
-      pathname ===
-      href
+      basePath ===
+        "/work" ||
+      basePath.startsWith(
+        "/work/",
+      )
     );
   }
+
+  return (
+    basePath ===
+    href
+  );
+}
 
   const closeMenu =
     useCallback(() => {
@@ -679,7 +695,12 @@ export default function SiteHeader() {
       >
         <div className="site-container site-header__inner">
           <Link
-            href="/"
+href={
+  localizePath(
+    "/",
+    locale,
+  )
+}
             className="site-logo"
             aria-label="NATSX home"
             onClick={
@@ -707,9 +728,12 @@ export default function SiteHeader() {
 
                 return (
                   <Link
-                    href={
-                      item.href
-                    }
+href={
+  localizePath(
+    item.href,
+    locale,
+  )
+}
                     key={
                       item.href
                     }
@@ -825,9 +849,12 @@ export default function SiteHeader() {
 
                 return (
                   <Link
-                    href={
-                      item.href
-                    }
+href={
+  localizePath(
+    item.href,
+    locale,
+  )
+}
                     key={
                       item.href
                     }

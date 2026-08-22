@@ -11,6 +11,17 @@ import {
 
 import styles from "./Cv.module.css";
 
+import Link from "next/link";
+
+import {
+  usePathname,
+} from "next/navigation";
+
+import {
+  getLocaleFromPathname,
+  localizePath,
+} from "@/i18n/config";
+
 type CvViewerProps = {
   initialVersion: CvVersion;
 };
@@ -23,6 +34,14 @@ export default function CvViewer({
     setActiveVersion,
   ] = useState(
     initialVersion,
+  );
+  
+  const pathname =
+  usePathname();
+
+const locale =
+  getLocaleFromPathname(
+    pathname,
   );
 
   function selectVersion(
@@ -379,18 +398,23 @@ export default function CvViewer({
                 <span>.</span>
               </p>
 
-              <a
-                href="/contact"
-                className={
-                  styles.closingLink
-                }
-              >
-                Start a conversation
+<Link
+  href={
+    localizePath(
+      "/contact",
+      locale,
+    )
+  }
+  className={
+    styles.closingLink
+  }
+>
+  Start a conversation
 
-                <span>
-                  ↗
-                </span>
-              </a>
+  <span>
+    ↗
+  </span>
+</Link>
             </div>
           </div>
         </div>
