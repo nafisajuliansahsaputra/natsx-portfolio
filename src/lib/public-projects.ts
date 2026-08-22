@@ -6,6 +6,10 @@ import {
   unstable_cache,
 } from "next/cache";
 
+import type {
+  Locale,
+} from "@/i18n/config";
+
 import {
   PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
   PUBLIC_PORTFOLIO_CACHE_TAG,
@@ -20,6 +24,12 @@ const PUBLIC_PROJECT_FIELDS =
 
 const PUBLIC_SECTION_FIELDS =
   "id,project_id,section_type,eyebrow,heading,body,content,theme,sort_order,is_visible,created_at";
+
+const PROJECT_TRANSLATION_FIELDS =
+  "project_id,locale,title,period,summary,categories,roles";
+
+const SECTION_TRANSLATION_FIELDS =
+  "section_id,locale,eyebrow,heading,body,content";
 
 type PublicProjectRow = {
   id: string;
@@ -88,6 +98,70 @@ type PublicProjectSectionRow = {
   sort_order: number;
   is_visible: boolean;
   created_at: string;
+};
+
+type ProjectTranslationRow = {
+  project_id: string;
+  locale: string;
+
+  title:
+    | string
+    | null;
+
+  period:
+    | string
+    | null;
+
+  summary:
+    | string
+    | null;
+
+  categories:
+    | unknown[]
+    | null;
+
+  roles:
+    | unknown[]
+    | null;
+};
+
+type SectionTranslationRow = {
+  section_id: string;
+  locale: string;
+
+  eyebrow:
+    | string
+    | null;
+
+  heading:
+    | string
+    | null;
+
+  body:
+    | string
+    | null;
+
+  content: unknown;
+};
+
+type ProjectTranslationBucket = {
+  requested:
+    | ProjectTranslationRow
+    | null;
+
+  english:
+    | ProjectTranslationRow
+    | null;
+};
+
+type SectionTranslationBucket = {
+  requested:
+    | SectionTranslationRow
+    | null;
+
+  english:
+    | SectionTranslationRow
+    | null;
 };
 
 export type PublicProject = {
@@ -203,10 +277,320 @@ function normalizeContent(
   >;
 }
 
+function mergeContent(
+  base: unknown,
+  override: unknown,
+): Record<
+  string,
+  unknown
+> {
+  const baseRecord =
+    normalizeContent(
+      base,
+    );
+
+  const overrideRecord =
+    normalizeContent(
+      override,
+    );
+
+  const result: Record<
+    string,
+    unknown
+  > = {
+    ...baseRecord,
+  };
+
+  for (
+    const [
+      key,
+      overrideValue,
+    ] of Object.entries(
+      overrideRecord,
+    )
+  ) {
+    const baseValue =
+      result[
+        key
+      ];
+
+    const canMerge =
+      typeof baseValue ===
+        "object" &&
+      baseValue !==
+        null &&
+      !Array.isArray(
+        baseValue,
+      ) &&
+      typeof overrideValue ===
+        "object" &&
+      overrideValue !==
+        null &&
+      !Array.isArray(
+        overrideValue,
+      );
+
+    result[
+      key
+    ] = canMerge
+      ? mergeContent(
+          baseValue,
+          overrideValue,
+        )
+      : overrideValue;
+  }
+
+  return result;
+}
+
+function pickTranslatedText(
+  requested:
+    | string
+    | null
+    | undefined,
+
+  english:
+    | string
+    | null
+    | undefined,
+
+  legacy:
+    | string
+    | null
+    | undefined,
+) {
+  if (
+    typeof requested ===
+    "string"
+  ) {
+    return requested.trim();
+  }
+
+  if (
+    typeof english ===
+    "string"
+  ) {
+    return english.trim();
+  }
+
+  return legacy
+    ?.trim() ??
+    "";
+}
+
+function pickTranslatedTitle(
+  requested:
+    | string
+    | null
+    | undefined,
+
+  english:
+    | string
+    | null
+    | undefined,
+
+  legacy: string,
+) {
+  const candidates = [
+    requested,
+    english,
+    legacy,
+  ];
+
+  for (
+    const candidate of
+    candidates
+  ) {
+    if (
+      typeof candidate !==
+      "string"
+    ) {
+      continue;
+    }
+
+    const normalized =
+      candidate.trim();
+
+    if (normalized) {
+      return normalized;
+    }
+  }
+
+  return legacy;
+}
+
+function pickTranslatedList(
+  requested:
+    | unknown[]
+    | null
+    | undefined,
+
+  english:
+    | unknown[]
+    | null
+    | undefined,
+
+  legacy:
+    | unknown[]
+    | null,
+) {
+  if (
+    Array.isArray(
+      requested,
+    )
+  ) {
+    return normalizeStringList(
+      requested,
+    );
+  }
+
+  if (
+    Array.isArray(
+      english,
+    )
+  ) {
+    return normalizeStringList(
+      english,
+    );
+  }
+
+  return normalizeStringList(
+    legacy,
+  );
+}
+
+function buildProjectTranslationLookup(
+  rows:
+    ProjectTranslationRow[],
+
+  locale: Locale,
+) {
+  const lookup =
+    new Map<
+      string,
+      ProjectTranslationBucket
+    >();
+
+  for (
+    const row of rows
+  ) {
+    const current =
+      lookup.get(
+        row.project_id,
+      ) ?? {
+        requested:
+          null,
+
+        english:
+          null,
+      };
+
+    if (
+      row.locale ===
+      "en"
+    ) {
+      current.english =
+        row;
+    }
+
+    if (
+      row.locale ===
+      locale
+    ) {
+      current.requested =
+        row;
+    }
+
+    lookup.set(
+      row.project_id,
+      current,
+    );
+  }
+
+  return lookup;
+}
+
+function buildSectionTranslationLookup(
+  rows:
+    SectionTranslationRow[],
+
+  locale: Locale,
+) {
+  const lookup =
+    new Map<
+      string,
+      SectionTranslationBucket
+    >();
+
+  for (
+    const row of rows
+  ) {
+    const current =
+      lookup.get(
+        row.section_id,
+      ) ?? {
+        requested:
+          null,
+
+        english:
+          null,
+      };
+
+    if (
+      row.locale ===
+      "en"
+    ) {
+      current.english =
+        row;
+    }
+
+    if (
+      row.locale ===
+      locale
+    ) {
+      current.requested =
+        row;
+    }
+
+    lookup.set(
+      row.section_id,
+      current,
+    );
+  }
+
+  return lookup;
+}
+
 function normalizeProject(
   project:
     PublicProjectRow,
+
+  translations?: ProjectTranslationBucket,
 ): PublicProject {
+  const requested =
+    translations
+      ?.requested;
+
+  const english =
+    translations
+      ?.english;
+
+  const year =
+    String(
+      project.year,
+    );
+
+  const translatedPeriod =
+    pickTranslatedText(
+      requested
+        ?.period,
+
+      english
+        ?.period,
+
+      project.period,
+    );
+
   return {
     id:
       project.id,
@@ -218,30 +602,52 @@ function normalizeProject(
       project.project_number,
 
     title:
-      project.title,
+      pickTranslatedTitle(
+        requested
+          ?.title,
 
-    year:
-      String(
-        project.year,
+        english
+          ?.title,
+
+        project.title,
       ),
+
+    year,
 
     period:
-      project.period ??
-      String(
-        project.year,
-      ),
+      translatedPeriod ||
+      year,
 
     summary:
-      project.summary ??
-      "",
+      pickTranslatedText(
+        requested
+          ?.summary,
+
+        english
+          ?.summary,
+
+        project.summary,
+      ),
 
     disciplines:
-      normalizeStringList(
+      pickTranslatedList(
+        requested
+          ?.categories,
+
+        english
+          ?.categories,
+
         project.categories,
       ),
 
     roles:
-      normalizeStringList(
+      pickTranslatedList(
+        requested
+          ?.roles,
+
+        english
+          ?.roles,
+
         project.roles,
       ),
 
@@ -272,7 +678,31 @@ function normalizeProject(
 function normalizeSection(
   section:
     PublicProjectSectionRow,
+
+  translations?: SectionTranslationBucket,
 ): PublicProjectSection {
+  const requested =
+    translations
+      ?.requested;
+
+  const english =
+    translations
+      ?.english;
+
+  const englishContent =
+    mergeContent(
+      section.content,
+      english
+        ?.content,
+    );
+
+  const localizedContent =
+    mergeContent(
+      englishContent,
+      requested
+        ?.content,
+    );
+
   return {
     id:
       section.id,
@@ -284,24 +714,40 @@ function normalizeSection(
       section.section_type,
 
     eyebrow:
-      section.eyebrow
-        ?.trim() ??
-      "",
+      pickTranslatedText(
+        requested
+          ?.eyebrow,
+
+        english
+          ?.eyebrow,
+
+        section.eyebrow,
+      ),
 
     heading:
-      section.heading
-        ?.trim() ??
-      "",
+      pickTranslatedText(
+        requested
+          ?.heading,
+
+        english
+          ?.heading,
+
+        section.heading,
+      ),
 
     body:
-      section.body
-        ?.trim() ??
-      "",
+      pickTranslatedText(
+        requested
+          ?.body,
+
+        english
+          ?.body,
+
+        section.body,
+      ),
 
     content:
-      normalizeContent(
-        section.content,
-      ),
+      localizedContent,
 
     theme:
       section.theme,
@@ -311,15 +757,143 @@ function normalizeSection(
   };
 }
 
-function normalizeProjects(
-  data: unknown,
+function getLocaleCandidates(
+  locale: Locale,
 ) {
+  return locale ===
+    "en"
+    ? [
+        "en",
+      ]
+    : [
+        "en",
+        locale,
+      ];
+}
+
+async function loadProjectTranslations(
+  projectIds: string[],
+  locale: Locale,
+) {
+  if (
+    projectIds.length ===
+    0
+  ) {
+    return [];
+  }
+
+  const supabase =
+    createPublicClient();
+
+  const {
+    data,
+    error,
+  } = await supabase
+    .from(
+      "project_translations",
+    )
+    .select(
+      PROJECT_TRANSLATION_FIELDS,
+    )
+    .in(
+      "project_id",
+      projectIds,
+    )
+    .in(
+      "locale",
+      getLocaleCandidates(
+        locale,
+      ),
+    );
+
+  if (error) {
+    throw new Error(
+      `Gagal memuat project translations: ${error.message}`,
+    );
+  }
+
   return (
     (data ??
       []) as unknown as
-      PublicProjectRow[]
-  ).map(
-    normalizeProject,
+      ProjectTranslationRow[]
+  );
+}
+
+async function loadSectionTranslations(
+  sectionIds: string[],
+  locale: Locale,
+) {
+  if (
+    sectionIds.length ===
+    0
+  ) {
+    return [];
+  }
+
+  const supabase =
+    createPublicClient();
+
+  const {
+    data,
+    error,
+  } = await supabase
+    .from(
+      "project_section_translations",
+    )
+    .select(
+      SECTION_TRANSLATION_FIELDS,
+    )
+    .in(
+      "section_id",
+      sectionIds,
+    )
+    .in(
+      "locale",
+      getLocaleCandidates(
+        locale,
+      ),
+    );
+
+  if (error) {
+    throw new Error(
+      `Gagal memuat section translations: ${error.message}`,
+    );
+  }
+
+  return (
+    (data ??
+      []) as unknown as
+      SectionTranslationRow[]
+  );
+}
+
+function normalizeProjects(
+  data: unknown,
+
+  translations:
+    ProjectTranslationRow[],
+
+  locale: Locale,
+) {
+  const rows =
+    (data ??
+      []) as unknown as
+      PublicProjectRow[];
+
+  const translationLookup =
+    buildProjectTranslationLookup(
+      translations,
+      locale,
+    );
+
+  return rows.map(
+    (project) =>
+      normalizeProject(
+        project,
+        translationLookup.get(
+          project.id,
+        ),
+      ),
   );
 }
 
@@ -329,7 +903,9 @@ function normalizeProjects(
  * =========================
  */
 
-async function loadPublishedProjects(): Promise<
+async function loadPublishedProjects(
+  locale: Locale,
+): Promise<
   PublicProject[]
 > {
   const supabase =
@@ -363,8 +939,26 @@ async function loadPublishedProjects(): Promise<
     );
   }
 
+  const rows =
+    (data ??
+      []) as unknown as
+      PublicProjectRow[];
+
+  const translations =
+    await loadProjectTranslations(
+      rows.map(
+        (
+          project,
+        ) =>
+          project.id,
+      ),
+      locale,
+    );
+
   return normalizeProjects(
-    data,
+    rows,
+    translations,
+    locale,
   );
 }
 
@@ -372,7 +966,7 @@ const getCachedPublishedProjects =
   unstable_cache(
     loadPublishedProjects,
     [
-      "natsx-published-projects",
+      "natsx-published-projects-v2",
     ],
     {
       tags: [
@@ -384,10 +978,15 @@ const getCachedPublishedProjects =
     },
   );
 
-export async function getPublishedProjects(): Promise<
+export async function getPublishedProjects(
+  locale: Locale =
+    "en",
+): Promise<
   PublicProject[]
 > {
-  return getCachedPublishedProjects();
+  return getCachedPublishedProjects(
+    locale,
+  );
 }
 
 /*
@@ -398,6 +997,7 @@ export async function getPublishedProjects(): Promise<
 
 async function loadFeaturedProjects(
   limit: number,
+  locale: Locale,
 ): Promise<
   PublicProject[]
 > {
@@ -439,8 +1039,26 @@ async function loadFeaturedProjects(
     );
   }
 
+  const rows =
+    (data ??
+      []) as unknown as
+      PublicProjectRow[];
+
+  const translations =
+    await loadProjectTranslations(
+      rows.map(
+        (
+          project,
+        ) =>
+          project.id,
+      ),
+      locale,
+    );
+
   return normalizeProjects(
-    data,
+    rows,
+    translations,
+    locale,
   );
 }
 
@@ -448,7 +1066,7 @@ const getCachedFeaturedProjects =
   unstable_cache(
     loadFeaturedProjects,
     [
-      "natsx-featured-projects",
+      "natsx-featured-projects-v2",
     ],
     {
       tags: [
@@ -462,6 +1080,8 @@ const getCachedFeaturedProjects =
 
 export async function getFeaturedProjects(
   limit = 3,
+  locale: Locale =
+    "en",
 ): Promise<
   PublicProject[]
 > {
@@ -475,6 +1095,7 @@ export async function getFeaturedProjects(
 
   return getCachedFeaturedProjects(
     safeLimit,
+    locale,
   );
 }
 
@@ -486,6 +1107,7 @@ export async function getFeaturedProjects(
 
 async function loadPublishedProjectPage(
   slug: string,
+  locale: Locale,
 ): Promise<
   PublicProjectPageData | null
 > {
@@ -529,10 +1151,9 @@ async function loadPublishedProjectPage(
     return null;
   }
 
-  const project =
-    normalizeProject(
-      projectData as unknown as PublicProjectRow,
-    );
+  const rawProject =
+    projectData as unknown as
+      PublicProjectRow;
 
   const [
     sectionResult,
@@ -548,7 +1169,7 @@ async function loadPublishedProjectPage(
         )
         .eq(
           "project_id",
-          project.id,
+          rawProject.id,
         )
         .eq(
           "is_visible",
@@ -605,17 +1226,86 @@ async function loadPublishedProjectPage(
     );
   }
 
-  const sections = (
+  const rawSections =
     (sectionResult.data ??
       []) as unknown as
-      PublicProjectSectionRow[]
-  ).map(
-    normalizeSection,
-  );
+      PublicProjectSectionRow[];
+
+  const rawProjects =
+    (projectListResult.data ??
+      []) as unknown as
+      PublicProjectRow[];
+
+  const [
+    projectTranslations,
+    sectionTranslations,
+  ] =
+    await Promise.all([
+      loadProjectTranslations(
+        rawProjects.map(
+          (
+            project,
+          ) =>
+            project.id,
+        ),
+        locale,
+      ),
+
+      loadSectionTranslations(
+        rawSections.map(
+          (
+            section,
+          ) =>
+            section.id,
+        ),
+        locale,
+      ),
+    ]);
+
+  const projectLookup =
+    buildProjectTranslationLookup(
+      projectTranslations,
+      locale,
+    );
+
+  const sectionLookup =
+    buildSectionTranslationLookup(
+      sectionTranslations,
+      locale,
+    );
+
+  const project =
+    normalizeProject(
+      rawProject,
+      projectLookup.get(
+        rawProject.id,
+      ),
+    );
+
+  const sections =
+    rawSections.map(
+      (
+        section,
+      ) =>
+        normalizeSection(
+          section,
+          sectionLookup.get(
+            section.id,
+          ),
+        ),
+    );
 
   const projects =
-    normalizeProjects(
-      projectListResult.data,
+    rawProjects.map(
+      (
+        item,
+      ) =>
+        normalizeProject(
+          item,
+          projectLookup.get(
+            item.id,
+          ),
+        ),
     );
 
   const currentIndex =
@@ -658,7 +1348,7 @@ const getCachedPublishedProjectPage =
   unstable_cache(
     loadPublishedProjectPage,
     [
-      "natsx-published-project-page",
+      "natsx-published-project-page-v2",
     ],
     {
       tags: [
@@ -670,15 +1360,17 @@ const getCachedPublishedProjectPage =
     },
   );
 
-/*
- * React cache tetap dipakai supaya
- * generateMetadata() dan page render
- * pada request yang sama tidak
- * melakukan pekerjaan identik dua kali.
- */
 export const getPublishedProjectPage =
   cache(
-    getCachedPublishedProjectPage,
+    async (
+      slug: string,
+      locale: Locale =
+        "en",
+    ) =>
+      getCachedPublishedProjectPage(
+        slug,
+        locale,
+      ),
   );
 
 /*
@@ -694,7 +1386,9 @@ export function getPublicProjectYearRange(
   const years =
     source
       .map(
-        (project) =>
+        (
+          project,
+        ) =>
           Number(
             project.year,
           ),
