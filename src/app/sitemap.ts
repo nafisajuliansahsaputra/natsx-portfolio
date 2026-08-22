@@ -3,6 +3,12 @@ import type {
 } from "next";
 
 import {
+  locales,
+  localizePath,
+  type Locale,
+} from "@/i18n/config";
+
+import {
   getPublishedProjects,
 } from "@/lib/public-projects";
 
@@ -13,112 +19,200 @@ import {
 export const revalidate =
   300;
 
+const staticPages = [
+  {
+    path:
+      "/",
+
+    changeFrequency:
+      "weekly",
+
+    priority:
+      1,
+  },
+
+  {
+    path:
+      "/work",
+
+    changeFrequency:
+      "weekly",
+
+    priority:
+      0.9,
+  },
+
+  {
+    path:
+      "/about",
+
+    changeFrequency:
+      "monthly",
+
+    priority:
+      0.7,
+  },
+
+  {
+    path:
+      "/playground",
+
+    changeFrequency:
+      "monthly",
+
+    priority:
+      0.7,
+  },
+
+  {
+    path:
+      "/contact",
+
+    changeFrequency:
+      "monthly",
+
+    priority:
+      0.6,
+  },
+
+  {
+    path:
+      "/cv",
+
+    changeFrequency:
+      "monthly",
+
+    priority:
+      0.6,
+  },
+] as const;
+
+function getLocalizedUrl(
+  path: string,
+  locale: Locale,
+) {
+  return getAbsoluteUrl(
+    localizePath(
+      path,
+      locale,
+    ),
+  );
+}
+
+function getLanguageAlternates(
+  path: string,
+) {
+  const englishUrl =
+    getLocalizedUrl(
+      path,
+      "en",
+    );
+
+  return {
+    en:
+      englishUrl,
+
+    id:
+      getLocalizedUrl(
+        path,
+        "id",
+      ),
+
+    de:
+      getLocalizedUrl(
+        path,
+        "de",
+      ),
+
+    "x-default":
+      englishUrl,
+  };
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects =
-    await getPublishedProjects();
+    await getPublishedProjects(
+      "en",
+    );
 
   const staticRoutes:
     MetadataRoute.Sitemap =
-    [
-      {
-        url:
-          getAbsoluteUrl(
-            "/",
-          ),
+    staticPages.flatMap(
+      (
+        page,
+      ) => {
+        const alternates =
+          getLanguageAlternates(
+            page.path,
+          );
 
-        changeFrequency:
-          "weekly",
+        return locales.map(
+          (
+            locale,
+          ) => ({
+            url:
+              getLocalizedUrl(
+                page.path,
+                locale,
+              ),
 
-        priority:
-          1,
+            changeFrequency:
+              page.changeFrequency,
+
+            priority:
+              page.priority,
+
+            alternates: {
+              languages:
+                alternates,
+            },
+          }),
+        );
       },
-
-      {
-        url:
-          getAbsoluteUrl(
-            "/work",
-          ),
-
-        changeFrequency:
-          "weekly",
-
-        priority:
-          0.9,
-      },
-
-      {
-        url:
-          getAbsoluteUrl(
-            "/about",
-          ),
-
-        changeFrequency:
-          "monthly",
-
-        priority:
-          0.7,
-      },
-
-      {
-        url:
-          getAbsoluteUrl(
-            "/playground",
-          ),
-
-        changeFrequency:
-          "monthly",
-
-        priority:
-          0.7,
-      },
-
-      {
-        url:
-          getAbsoluteUrl(
-            "/contact",
-          ),
-
-        changeFrequency:
-          "monthly",
-
-        priority:
-          0.6,
-      },
-
-      {
-        url:
-          getAbsoluteUrl(
-            "/cv",
-          ),
-
-        changeFrequency:
-          "monthly",
-
-        priority:
-          0.6,
-      },
-    ];
+    );
 
   const projectRoutes:
     MetadataRoute.Sitemap =
-    projects.map(
-      (project) => ({
-        url:
-          getAbsoluteUrl(
-            `/work/${project.slug}`,
-          ),
+    projects.flatMap(
+      (
+        project,
+      ) => {
+        const path =
+          `/work/${project.slug}`;
 
-        lastModified:
-          new Date(
-            project.updatedAt,
-          ),
+        const alternates =
+          getLanguageAlternates(
+            path,
+          );
 
-        changeFrequency:
-          "monthly",
+        return locales.map(
+          (
+            locale,
+          ) => ({
+            url:
+              getLocalizedUrl(
+                path,
+                locale,
+              ),
 
-        priority:
-          0.8,
-      }),
+            lastModified:
+              new Date(
+                project.updatedAt,
+              ),
+
+            changeFrequency:
+              "monthly" as const,
+
+            priority:
+              0.8,
+
+            alternates: {
+              languages:
+                alternates,
+            },
+          }),
+        );
+      },
     );
 
   return [

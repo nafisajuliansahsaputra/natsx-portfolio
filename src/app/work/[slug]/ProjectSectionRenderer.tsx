@@ -1,5 +1,14 @@
 import Image from "next/image";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getProjectMessages,
+} from "@/i18n/project-messages";
 
 import {
   getFinaleSectionMedia,
@@ -46,6 +55,47 @@ function isAnimatedImage(
   );
 }
 
+function getSectionFallbackLabel(
+  sectionType: string,
+  locale: Locale,
+) {
+  const copy =
+    getProjectMessages(
+      locale,
+    ).sections;
+
+  switch (
+    sectionType
+  ) {
+    case "overview":
+      return copy.overview;
+
+    case "narrative":
+      return copy.narrative;
+
+    case "statement":
+      return copy.statement;
+
+    case "image":
+      return copy.image;
+
+    case "gallery":
+      return copy.gallery;
+
+    case "metrics":
+      return copy.metrics;
+
+    case "quote":
+      return copy.quote;
+
+    case "finale":
+      return copy.finale;
+
+    default:
+      return copy.generic;
+  }
+}
+
 function BodyCopy({
   body,
 }: {
@@ -55,10 +105,14 @@ function BodyCopy({
     body
       .split(/\n{2,}/)
       .map(
-        (paragraph) =>
+        (
+          paragraph,
+        ) =>
           paragraph.trim(),
       )
-      .filter(Boolean);
+      .filter(
+        Boolean,
+      );
 
   if (
     paragraphs.length ===
@@ -94,9 +148,12 @@ function BodyCopy({
 
 function SectionIntroduction({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
   if (
     !section.eyebrow &&
@@ -126,7 +183,10 @@ function SectionIntroduction({
 
         <span>
           {section.eyebrow ||
-            section.sectionType}
+            getSectionFallbackLabel(
+              section.sectionType,
+              locale,
+            )}
         </span>
       </div>
 
@@ -156,10 +216,18 @@ function SectionIntroduction({
 
 function OverviewSection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   return (
     <section
       className={
@@ -190,7 +258,8 @@ function OverviewSection({
 
             <span>
               {section.eyebrow ||
-                "Project Overview"}
+                copy.sections
+                  .overview}
             </span>
           </div>
 
@@ -205,7 +274,10 @@ function OverviewSection({
                 {
                   section.heading
                 }
-                <span>.</span>
+
+                <span>
+                  .
+                </span>
               </h2>
             ) : null}
 
@@ -223,9 +295,12 @@ function OverviewSection({
 
 function NarrativeSection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
   return (
     <section
@@ -242,6 +317,9 @@ function NarrativeSection({
           section={
             section
           }
+          locale={
+            locale
+          }
         />
       </div>
     </section>
@@ -250,15 +328,25 @@ function NarrativeSection({
 
 function StatementSection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   const statement =
     section.heading ||
     section.body;
 
-  if (!statement) {
+  if (
+    !statement
+  ) {
     return null;
   }
 
@@ -283,7 +371,8 @@ function StatementSection({
             data-motion-piece="label"
           >
             {section.eyebrow ||
-              "Statement"}
+              copy.sections
+                .statement}
           </span>
 
           <p
@@ -299,10 +388,18 @@ function StatementSection({
 
 function ImageSection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   const media =
     getImageSectionMedia(
       section.content,
@@ -342,6 +439,9 @@ function ImageSection({
           section={
             section
           }
+          locale={
+            locale
+          }
         />
 
         {imageUrl &&
@@ -364,7 +464,8 @@ function ImageSection({
                 alt={
                   media.alt ||
                   section.heading ||
-                  "Project image"
+                  copy.sections
+                    .imageAlt
                 }
                 fill
                 sizes="100vw"
@@ -403,10 +504,18 @@ function ImageSection({
 
 function GallerySection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   const gallery =
     getGallerySectionMedia(
       section.content,
@@ -437,6 +546,9 @@ function GallerySection({
         <SectionIntroduction
           section={
             section
+          }
+          locale={
+            locale
           }
         />
 
@@ -482,7 +594,7 @@ function GallerySection({
                         }
                         alt={
                           item.alt ||
-                          `Gallery image ${
+                          `${copy.sections.galleryImageAlt} ${
                             index +
                             1
                           }`
@@ -531,9 +643,12 @@ function GallerySection({
 
 function MetricsSection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
   const metrics =
     getMetricsSectionContent(
@@ -563,6 +678,9 @@ function MetricsSection({
         <SectionIntroduction
           section={
             section
+          }
+          locale={
+            locale
           }
         />
 
@@ -645,7 +763,9 @@ function QuoteSection({
       section.content,
     );
 
-  if (!quote.text) {
+  if (
+    !quote.text
+  ) {
     return null;
   }
 
@@ -714,10 +834,18 @@ function QuoteSection({
 
 function FinaleSection({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   const finale =
     getFinaleSectionContent(
       section.content,
@@ -728,7 +856,9 @@ function FinaleSection({
       section.content,
     );
 
-  if (!finale.title) {
+  if (
+    !finale.title
+  ) {
     return null;
   }
 
@@ -775,7 +905,8 @@ function FinaleSection({
               }
             >
               {section.eyebrow ||
-                "Final Showcase"}
+                copy.sections
+                  .finale}
             </span>
 
             <h2>
@@ -796,14 +927,14 @@ function FinaleSection({
               finale.ctaUrl.startsWith(
                 "/",
               ) ? (
-<LocaleLink
-  href={
-    finale.ctaUrl
-  }
-  className={
-    styles.finaleCta
-  }
->
+                <LocaleLink
+                  href={
+                    finale.ctaUrl
+                  }
+                  className={
+                    styles.finaleCta
+                  }
+                >
                   {
                     finale.ctaLabel
                   }
@@ -884,9 +1015,12 @@ function FinaleSection({
 
 export default function ProjectSectionRenderer({
   section,
+  locale,
 }: {
   section:
     PublicProjectSection;
+
+  locale: Locale;
 }) {
   switch (
     section.sectionType
@@ -897,6 +1031,9 @@ export default function ProjectSectionRenderer({
           section={
             section
           }
+          locale={
+            locale
+          }
         />
       );
 
@@ -905,6 +1042,9 @@ export default function ProjectSectionRenderer({
         <NarrativeSection
           section={
             section
+          }
+          locale={
+            locale
           }
         />
       );
@@ -915,6 +1055,9 @@ export default function ProjectSectionRenderer({
           section={
             section
           }
+          locale={
+            locale
+          }
         />
       );
 
@@ -923,6 +1066,9 @@ export default function ProjectSectionRenderer({
         <ImageSection
           section={
             section
+          }
+          locale={
+            locale
           }
         />
       );
@@ -933,6 +1079,9 @@ export default function ProjectSectionRenderer({
           section={
             section
           }
+          locale={
+            locale
+          }
         />
       );
 
@@ -941,6 +1090,9 @@ export default function ProjectSectionRenderer({
         <MetricsSection
           section={
             section
+          }
+          locale={
+            locale
           }
         />
       );
@@ -959,6 +1111,9 @@ export default function ProjectSectionRenderer({
         <FinaleSection
           section={
             section
+          }
+          locale={
+            locale
           }
         />
       );

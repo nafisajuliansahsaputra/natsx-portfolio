@@ -10,6 +10,9 @@ const projectMessages = {
     project:
       "Project",
 
+    notFoundTitle:
+      "Project Not Found",
+
     details: {
       year:
         "Year",
@@ -28,6 +31,41 @@ const projectMessages = {
 
       caseStudy:
         "Case Study",
+    },
+
+    sections: {
+      generic:
+        "Section",
+
+      overview:
+        "Project Overview",
+
+      narrative:
+        "Process",
+
+      statement:
+        "Statement",
+
+      image:
+        "Project Image",
+
+      gallery:
+        "Gallery",
+
+      metrics:
+        "Results",
+
+      quote:
+        "Quote",
+
+      finale:
+        "Final Showcase",
+
+      imageAlt:
+        "Project image",
+
+      galleryImageAlt:
+        "Gallery image",
     },
 
     empty: {
@@ -55,6 +93,9 @@ const projectMessages = {
     project:
       "Proyek",
 
+    notFoundTitle:
+      "Proyek Tidak Ditemukan",
+
     details: {
       year:
         "Tahun",
@@ -73,6 +114,41 @@ const projectMessages = {
 
       caseStudy:
         "Studi Kasus",
+    },
+
+    sections: {
+      generic:
+        "Bagian",
+
+      overview:
+        "Ringkasan Proyek",
+
+      narrative:
+        "Proses",
+
+      statement:
+        "Pernyataan",
+
+      image:
+        "Gambar Proyek",
+
+      gallery:
+        "Galeri",
+
+      metrics:
+        "Hasil",
+
+      quote:
+        "Kutipan",
+
+      finale:
+        "Penutup",
+
+      imageAlt:
+        "Gambar proyek",
+
+      galleryImageAlt:
+        "Gambar galeri",
     },
 
     empty: {
@@ -100,6 +176,9 @@ const projectMessages = {
     project:
       "Projekt",
 
+    notFoundTitle:
+      "Projekt nicht gefunden",
+
     details: {
       year:
         "Jahr",
@@ -118,6 +197,41 @@ const projectMessages = {
 
       caseStudy:
         "Case Study",
+    },
+
+    sections: {
+      generic:
+        "Abschnitt",
+
+      overview:
+        "Projektübersicht",
+
+      narrative:
+        "Prozess",
+
+      statement:
+        "Aussage",
+
+      image:
+        "Projektbild",
+
+      gallery:
+        "Galerie",
+
+      metrics:
+        "Ergebnisse",
+
+      quote:
+        "Zitat",
+
+      finale:
+        "Abschluss",
+
+      imageAlt:
+        "Projektbild",
+
+      galleryImageAlt:
+        "Galeriebild",
     },
 
     empty: {

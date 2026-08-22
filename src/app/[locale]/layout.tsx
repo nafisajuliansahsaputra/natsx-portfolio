@@ -1,7 +1,3 @@
-import type {
-  Metadata,
-} from "next";
-
 import {
   notFound,
 } from "next/navigation";
@@ -22,28 +18,13 @@ type LocaleLayoutProps = {
 
 export function generateStaticParams() {
   return localizedLocales.map(
-    (locale) => ({
+    (
+      locale,
+    ) => ({
       locale,
     }),
   );
 }
-
-export const metadata: Metadata = {
-  /*
-   * Temporary.
-   *
-   * ID / DE masih menggunakan
-   * English content selama fase
-   * infrastructure.
-   *
-   * Jangan index sampai seluruh
-   * translation selesai.
-   */
-  robots: {
-    index: false,
-    follow: true,
-  },
-};
 
 export default async function LocaleLayout({
   children,
@@ -61,14 +42,18 @@ export default async function LocaleLayout({
     notFound();
   }
 
-return (
-  <div
-    lang={locale}
-    data-locale={
-      locale
-    }
-  >
-    {children}
-  </div>
-);
+  return (
+    <div
+      lang={
+        locale
+      }
+      data-locale={
+        locale
+      }
+    >
+      {
+        children
+      }
+    </div>
+  );
 }

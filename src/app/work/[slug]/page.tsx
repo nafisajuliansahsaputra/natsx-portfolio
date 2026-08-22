@@ -59,6 +59,11 @@ export async function generateProjectMetadata(
   slug: string,
   locale: Locale,
 ): Promise<Metadata> {
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   const data =
     await getPublishedProjectPage(
       slug,
@@ -68,7 +73,7 @@ export async function generateProjectMetadata(
   if (!data) {
     return {
       title:
-        "Project Not Found",
+        copy.notFoundTitle,
 
       robots: {
         index: false,
@@ -81,11 +86,6 @@ export async function generateProjectMetadata(
     project,
     sections,
   } = data;
-
-  const copy =
-    getProjectMessages(
-      locale,
-    );
 
   const description =
     project.summary ||
@@ -137,6 +137,11 @@ export async function generateProjectMetadata(
 
     description,
 
+    robots: {
+      index: true,
+      follow: true,
+    },
+
     alternates: {
       canonical,
 
@@ -176,6 +181,22 @@ export async function generateProjectMetadata(
           : locale === "de"
             ? "de_DE"
             : "en_US",
+
+      alternateLocale:
+        locale === "en"
+          ? [
+              "id_ID",
+              "de_DE",
+            ]
+          : locale === "id"
+            ? [
+                "en_US",
+                "de_DE",
+              ]
+            : [
+                "en_US",
+                "id_ID",
+              ],
 
       publishedTime:
         project.publishedAt ??
@@ -633,6 +654,9 @@ export async function ProjectPageContent({
                 <ProjectSectionRenderer
                   section={
                     section
+                  }
+                  locale={
+                    locale
                   }
                   key={
                     section.id

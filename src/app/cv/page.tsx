@@ -71,14 +71,13 @@ export async function CvPageContent({
       : params.lang;
 
   /*
-   * Jika visitor belum memilih
-   * bahasa dokumen CV secara
-   * eksplisit, gunakan bahasa
-   * website sebagai default.
+   * Kalau visitor belum memilih
+   * bahasa CV secara eksplisit,
+   * gunakan locale website.
    *
-   * /cv     → English PDF
-   * /id/cv  → Indonesian PDF
-   * /de/cv  → German PDF
+   * /cv     -> English
+   * /id/cv  -> Indonesian
+   * /de/cv  -> German
    */
   const initialVersion =
     getCvVersion(

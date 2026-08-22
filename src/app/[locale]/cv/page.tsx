@@ -10,6 +10,14 @@ import {
   isLocalizedLocale,
 } from "@/i18n/config";
 
+import {
+  getCvMessages,
+} from "@/i18n/cv-messages";
+
+import {
+  createLocalizedPageMetadata,
+} from "@/lib/page-metadata";
+
 type LocalizedCvPageProps = {
   params: Promise<{
     locale: string;
@@ -21,6 +29,40 @@ type LocalizedCvPageProps = {
       | string[];
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: LocalizedCvPageProps) {
+  const {
+    locale,
+  } = await params;
+
+  if (
+    !isLocalizedLocale(
+      locale,
+    )
+  ) {
+    notFound();
+  }
+
+  const copy =
+    getCvMessages(
+      locale,
+    );
+
+  return createLocalizedPageMetadata({
+    title:
+      "CV",
+
+    description:
+      copy.hero.description,
+
+    path:
+      "/cv",
+
+    locale,
+  });
+}
 
 export default async function LocalizedCvPage({
   params,
