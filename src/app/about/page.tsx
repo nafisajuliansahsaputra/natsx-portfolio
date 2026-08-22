@@ -1,13 +1,25 @@
 import Image from "next/image";
-import Link from "next/link";
 
+import LocaleLink from "@/components/i18n/LocaleLink";
 import SiteHeader from "@/components/layout/SiteHeader";
 
-import styles from "./About.module.css";
+import {
+  site,
+} from "@/data/site";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getAboutMessages,
+} from "@/i18n/about-messages";
 
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import styles from "./About.module.css";
 
 const description =
   "About Nafisa Juliansah Saputra — a multidisciplinary digital creator working across design, development, motion, and visual experiences.";
@@ -25,10 +37,12 @@ export const metadata =
 
 const disciplines = [
   {
-    number: "01",
-    title: "Design",
-    description:
-      "Visual systems, interfaces, identities, and digital experiences shaped with clarity and intention.",
+    number:
+      "01",
+
+    key:
+      "design",
+
     items: [
       "UI/UX Design",
       "Web Design",
@@ -36,11 +50,14 @@ const disciplines = [
       "Visual Identity",
     ],
   },
+
   {
-    number: "02",
-    title: "Development",
-    description:
-      "Turning ideas and visual concepts into responsive, functional, and considered digital products.",
+    number:
+      "02",
+
+    key:
+      "development",
+
     items: [
       "Frontend",
       "Next.js",
@@ -48,11 +65,14 @@ const disciplines = [
       "Creative Development",
     ],
   },
+
   {
-    number: "03",
-    title: "Motion",
-    description:
-      "Using movement, interaction, and editing to bring rhythm, character, and storytelling into digital work.",
+    number:
+      "03",
+
+    key:
+      "motion",
+
     items: [
       "Motion Design",
       "UI Motion",
@@ -60,11 +80,14 @@ const disciplines = [
       "Interaction",
     ],
   },
+
   {
-    number: "04",
-    title: "Creative Direction",
-    description:
-      "Connecting different disciplines into one coherent direction instead of treating each output as a separate piece.",
+    number:
+      "04",
+
+    key:
+      "creative",
+
     items: [
       "Creative Direction",
       "Art Direction",
@@ -72,62 +95,57 @@ const disciplines = [
       "Visual Exploration",
     ],
   },
-];
+] as const;
 
-const principles = [
-  {
-    number: "01",
-    title:
-      "Think beyond the deliverable.",
-    description:
-      "I try to understand the larger idea first—what something needs to communicate, how it should feel, and where every piece fits.",
-  },
-  {
-    number: "02",
-    title:
-      "Move across disciplines.",
-    description:
-      "Design, code, motion, and visual storytelling are different tools for the same goal. I use whichever combination makes the idea stronger.",
-  },
-  {
-    number: "03",
-    title:
-      "Make every detail intentional.",
-    description:
-      "From typography and spacing to interaction and movement, small decisions shape how the final experience is perceived.",
-  },
-];
+export function AboutPageContent({
+  locale,
+}: {
+  locale: Locale;
+}) {
+  const copy =
+    getAboutMessages(
+      locale,
+    );
 
-export default function AboutPage() {
   return (
     <>
       <SiteHeader />
 
-<main
-  id="main-content"
-  tabIndex={-1}
-  className={styles.page}
-  data-motion-page="about"
->
-        {/* =========================
-            HERO
-        ========================= */}
-
-        <section className={styles.hero}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        data-motion-page="about"
+      >
+        <section
+          className={
+            styles.hero
+          }
+        >
           <div className="site-container">
             <div
-              className={styles.heroTop}
+              className={
+                styles.heroTop
+              }
               data-motion-about-hero-piece="top"
             >
               <div
-                className={styles.label}
+                className={
+                  styles.label
+                }
               >
                 <span
-                  className={styles.dot}
+                  className={
+                    styles.dot
+                  }
                 />
 
                 <span>
-                  About / NATSX
+                  {
+                    copy.hero.label
+                  }
                 </span>
               </div>
 
@@ -136,8 +154,13 @@ export default function AboutPage() {
                   styles.heroMeta
                 }
               >
-                Nafisa Juliansah Saputra
-                / Indonesia
+                {
+                  site.person
+                }
+                {" / "}
+                {
+                  site.location
+                }
               </span>
             </div>
 
@@ -152,10 +175,21 @@ export default function AboutPage() {
                 }
                 data-motion-about-hero-piece="title"
               >
-                Different
+                {
+                  copy.hero
+                    .headingLine1
+                }
+
                 <br />
-                disciplines
-                <span>.</span>
+
+                {
+                  copy.hero
+                    .headingLine2
+                }
+
+                <span>
+                  .
+                </span>
               </h1>
 
               <div
@@ -165,24 +199,26 @@ export default function AboutPage() {
                 data-motion-about-hero-piece="statement"
               >
                 <p>
-                  One point of view.
+                  {
+                    copy.hero
+                      .statement
+                  }
                 </p>
 
                 <span>
-                  Digital Creator /
-                  Designer / Developer
+                  {
+                    copy.hero.roles
+                  }
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* =========================
-            PROFILE
-        ========================= */}
-
         <section
-          className={styles.profile}
+          className={
+            styles.profile
+          }
         >
           <div className="site-container">
             <div
@@ -223,7 +259,9 @@ export default function AboutPage() {
 
                   <Image
                     src="/images/natsx-portrait-hero.png"
-                    alt="Nafisa Juliansah Saputra"
+                    alt={
+                      site.person
+                    }
                     fill
                     sizes="(max-width: 700px) 100vw, 45vw"
                     className={
@@ -252,12 +290,16 @@ export default function AboutPage() {
                         styles.metaLabel
                       }
                     >
-                      Name
+                      {
+                        copy.profile
+                          .name
+                      }
                     </span>
 
                     <span>
-                      Nafisa Juliansah
-                      Saputra
+                      {
+                        site.person
+                      }
                     </span>
                   </div>
 
@@ -267,11 +309,16 @@ export default function AboutPage() {
                         styles.metaLabel
                       }
                     >
-                      Identity
+                      {
+                        copy.profile
+                          .identity
+                      }
                     </span>
 
                     <span>
-                      NATSX
+                      {
+                        site.name
+                      }
                     </span>
                   </div>
 
@@ -281,18 +328,25 @@ export default function AboutPage() {
                         styles.metaLabel
                       }
                     >
-                      Based in
+                      {
+                        copy.profile
+                          .basedIn
+                      }
                     </span>
 
                     <span>
-                      Indonesia
+                      {
+                        site.location
+                      }
                     </span>
                   </div>
                 </div>
               </div>
 
               <div
-                className={styles.story}
+                className={
+                  styles.story
+                }
                 data-motion-scroll="about-story"
               >
                 <div
@@ -308,21 +362,44 @@ export default function AboutPage() {
                   />
 
                   <span>
-                    The person behind
-                    the work
+                    {
+                      copy.profile
+                        .storyLabel
+                    }
                   </span>
                 </div>
 
-                <h2 data-motion-piece="title">
-                  I like turning
+                <h2
+                  data-motion-piece="title"
+                >
+                  {
+                    copy.profile
+                      .headingLine1
+                  }
                   <br />
-                  abstract ideas into
+
+                  {
+                    copy.profile
+                      .headingLine2
+                  }
                   <br />
-                  things people can
+
+                  {
+                    copy.profile
+                      .headingLine3
+                  }
                   <br />
-                  actually{" "}
+
+                  {
+                    copy.profile
+                      .headingLine4
+                  }{" "}
+
                   <em>
-                    experience.
+                    {
+                      copy.profile
+                        .headingEmphasis
+                    }
                   </em>
                 </h2>
 
@@ -332,77 +409,64 @@ export default function AboutPage() {
                   }
                   data-motion-piece="copy"
                 >
-                  <p>
-                    I&apos;m Nafisa, a
-                    multidisciplinary
-                    digital creator
-                    working under the
-                    creative identity
-                    NATSX.
-                  </p>
-
-                  <p>
-                    My work moves between
-                    design, development,
-                    motion, branding, and
-                    visual storytelling.
-                    Rather than treating
-                    those as isolated
-                    skills, I like
-                    connecting them to
-                    create work that feels
-                    complete from idea to
-                    execution.
-                  </p>
-
-                  <p>
-                    I&apos;m especially
-                    interested in digital
-                    experiences where
-                    visual identity,
-                    interaction,
-                    technology, and
-                    storytelling can work
-                    together instead of
-                    competing for
-                    attention.
-                  </p>
+                  {copy.profile
+                    .paragraphs
+                    .map(
+                      (
+                        paragraph,
+                      ) => (
+                        <p
+                          key={
+                            paragraph
+                          }
+                        >
+                          {
+                            paragraph
+                          }
+                        </p>
+                      ),
+                    )}
                 </div>
+
                 <div
-  className={
-    styles.cvAccess
-  }
->
-  <span>
-    Professional profile
-  </span>
+                  className={
+                    styles.cvAccess
+                  }
+                >
+                  <span>
+                    {
+                      copy.profile
+                        .professionalProfile
+                    }
+                  </span>
 
-  <Link
-    href="/cv"
-    className={
-      styles.cvLink
-    }
-  >
-    View CV
+                  <LocaleLink
+                    href="/cv"
+                    className={
+                      styles.cvLink
+                    }
+                  >
+                    {
+                      copy.profile
+                        .viewCv
+                    }
 
-    <span
-      aria-hidden="true"
-    >
-      ↗
-    </span>
-  </Link>
-</div>
+                    <span
+                      aria-hidden="true"
+                    >
+                      ↗
+                    </span>
+                  </LocaleLink>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* =========================
-            APPROACH
-        ========================= */}
-
         <section
-          className={styles.approach}
+          className={
+            styles.approach
+          }
         >
           <div className="site-container">
             <div
@@ -424,15 +488,31 @@ export default function AboutPage() {
                 />
 
                 <span>
-                  How I Work
+                  {
+                    copy.approach
+                      .label
+                  }
                 </span>
               </div>
 
-              <h2 data-motion-piece="title">
-                Ideas first.
+              <h2
+                data-motion-piece="title"
+              >
+                {
+                  copy.approach
+                    .headingLine1
+                }
+
                 <br />
-                Disciplines second
-                <span>.</span>
+
+                {
+                  copy.approach
+                    .headingLine2
+                }
+
+                <span>
+                  .
+                </span>
               </h2>
             </div>
 
@@ -441,47 +521,49 @@ export default function AboutPage() {
                 styles.principles
               }
             >
-              {principles.map(
-                (principle) => (
-                  <article
-                    className={
-                      styles.principle
-                    }
-                    key={
-                      principle.number
-                    }
-                    data-motion-scroll="about-principle"
-                  >
-                    <span
+              {copy.approach
+                .principles
+                .map(
+                  (
+                    principle,
+                  ) => (
+                    <article
                       className={
-                        styles
-                          .principleNumber
+                        styles.principle
                       }
-                    >
-                      {
+                      key={
                         principle.number
                       }
-                    </span>
+                      data-motion-scroll="about-principle"
+                    >
+                      <span
+                        className={
+                          styles
+                            .principleNumber
+                        }
+                      >
+                        {
+                          principle.number
+                        }
+                      </span>
 
-                    <h3>
-                      {principle.title}
-                    </h3>
+                      <h3>
+                        {
+                          principle.title
+                        }
+                      </h3>
 
-                    <p>
-                      {
-                        principle.description
-                      }
-                    </p>
-                  </article>
-                ),
-              )}
+                      <p>
+                        {
+                          principle.description
+                        }
+                      </p>
+                    </article>
+                  ),
+                )}
             </div>
           </div>
         </section>
-
-        {/* =========================
-            DISCIPLINES
-        ========================= */}
 
         <section
           className={
@@ -497,7 +579,9 @@ export default function AboutPage() {
               data-motion-scroll="about-disciplines-header"
             >
               <div
-                className={styles.label}
+                className={
+                  styles.label
+                }
                 data-motion-piece="label"
               >
                 <span
@@ -507,15 +591,27 @@ export default function AboutPage() {
                 />
 
                 <span>
-                  Across disciplines
+                  {
+                    copy.disciplines
+                      .label
+                  }
                 </span>
               </div>
 
-              <p data-motion-piece="title">
-                Different tools,
+              <p
+                data-motion-piece="title"
+              >
+                {
+                  copy.disciplines
+                    .introLine1
+                }
+
                 <br />
-                connected by one
-                direction.
+
+                {
+                  copy.disciplines
+                    .introLine2
+                }
               </p>
             </div>
 
@@ -525,75 +621,90 @@ export default function AboutPage() {
               }
             >
               {disciplines.map(
-                (discipline) => (
-                  <article
-                    className={
-                      styles.discipline
-                    }
-                    key={
-                      discipline.number
-                    }
-                    data-motion-scroll="about-discipline"
-                  >
-                    <span
+                (
+                  discipline,
+                ) => {
+                  const content =
+                    copy
+                      .disciplines
+                      .items[
+                        discipline.key
+                      ];
+
+                  return (
+                    <article
                       className={
-                        styles
-                          .disciplineNumber
+                        styles.discipline
                       }
-                    >
-                      {
+                      key={
                         discipline.number
                       }
-                    </span>
-
-                    <div
-                      className={
-                        styles
-                          .disciplineMain
-                      }
+                      data-motion-scroll="about-discipline"
                     >
-                      <h2>
-                        {
-                          discipline.title
+                      <span
+                        className={
+                          styles
+                            .disciplineNumber
                         }
-                      </h2>
-
-                      <p>
+                      >
                         {
-                          discipline.description
+                          discipline.number
                         }
-                      </p>
-                    </div>
+                      </span>
 
-                    <div
-                      className={
-                        styles
-                          .disciplineItems
-                      }
-                    >
-                      {discipline.items.map(
-                        (item) => (
-                          <span
-                            key={item}
-                          >
-                            {item}
-                          </span>
-                        ),
-                      )}
-                    </div>
-                  </article>
-                ),
+                      <div
+                        className={
+                          styles
+                            .disciplineMain
+                        }
+                      >
+                        <h2>
+                          {
+                            content.title
+                          }
+                        </h2>
+
+                        <p>
+                          {
+                            content.description
+                          }
+                        </p>
+                      </div>
+
+                      <div
+                        className={
+                          styles
+                            .disciplineItems
+                        }
+                      >
+                        {discipline.items.map(
+                          (
+                            item,
+                          ) => (
+                            <span
+                              key={
+                                item
+                              }
+                            >
+                              {
+                                item
+                              }
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    </article>
+                  );
+                },
               )}
             </div>
           </div>
         </section>
 
-        {/* =========================
-            CLOSING
-        ========================= */}
-
         <section
-          className={styles.closing}
+          className={
+            styles.closing
+          }
         >
           <div className="site-container">
             <div
@@ -614,7 +725,12 @@ export default function AboutPage() {
                   }
                 />
 
-                <span>Next</span>
+                <span>
+                  {
+                    copy.closing
+                      .label
+                  }
+                </span>
               </div>
 
               <div
@@ -624,27 +740,51 @@ export default function AboutPage() {
                 data-motion-piece="main"
               >
                 <p>
-                  The work says more
+                  {
+                    copy.closing
+                      .line1
+                  }
+
                   <br />
-                  than a bio ever could
-                  <span>.</span>
+
+                  {
+                    copy.closing
+                      .line2
+                  }
+
+                  <span>
+                    .
+                  </span>
                 </p>
 
-                <Link
+                <LocaleLink
                   href="/work"
                   className={
                     styles.closingLink
                   }
                 >
-                  Explore the work
+                  {
+                    copy.closing
+                      .action
+                  }
 
-                  <span>↗</span>
-                </Link>
+                  <span>
+                    ↗
+                  </span>
+                </LocaleLink>
               </div>
             </div>
           </div>
         </section>
       </main>
     </>
+  );
+}
+
+export default function AboutPage() {
+  return (
+    <AboutPageContent
+      locale="en"
+    />
   );
 }

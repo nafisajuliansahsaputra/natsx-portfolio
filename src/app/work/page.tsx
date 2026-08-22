@@ -1,6 +1,18 @@
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getWorkMessages,
+} from "@/i18n/work-messages";
+
+import {
+  createPageMetadata,
+} from "@/lib/page-metadata";
 
 import {
   getPublishedProjects,
@@ -8,10 +20,6 @@ import {
 } from "@/lib/public-projects";
 
 import styles from "./Work.module.css";
-
-import {
-  createPageMetadata,
-} from "@/lib/page-metadata";
 
 export const revalidate =
   3600;
@@ -30,7 +38,16 @@ export const metadata =
       "/work",
   });
 
-export default async function WorkPage() {
+export async function WorkPageContent({
+  locale,
+}: {
+  locale: Locale;
+}) {
+  const copy =
+    getWorkMessages(
+      locale,
+    );
+
   const projects =
     await getPublishedProjects();
 
@@ -52,11 +69,13 @@ export default async function WorkPage() {
       <SiteHeader />
 
       <main
-  id="main-content"
-  tabIndex={-1}
-  className={styles.page}
-  data-motion-page="work"
->
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        data-motion-page="work"
+      >
         <section
           className={
             styles.hero
@@ -81,7 +100,9 @@ export default async function WorkPage() {
                 />
 
                 <span>
-                  Work / Archive
+                  {
+                    copy.hero.label
+                  }
                 </span>
               </div>
 
@@ -90,8 +111,9 @@ export default async function WorkPage() {
                   styles.heroIndex
                 }
               >
-                Selected projects
-                / NATSX
+                {
+                  copy.hero.index
+                }
               </span>
             </div>
 
@@ -106,8 +128,13 @@ export default async function WorkPage() {
                 }
                 data-motion-work-hero-piece="title"
               >
-                Work
-                <span>.</span>
+                {
+                  copy.hero.heading
+                }
+
+                <span>
+                  .
+                </span>
               </h1>
 
               <div
@@ -118,13 +145,10 @@ export default async function WorkPage() {
                 <p
                   data-motion-work-hero-piece="intro"
                 >
-                  A growing archive
-                  of projects across
-                  design,
-                  development,
-                  identity, and
-                  digital
-                  experiences.
+                  {
+                    copy.hero
+                      .description
+                  }
                 </p>
 
                 <div
@@ -139,7 +163,10 @@ export default async function WorkPage() {
                         styles.metaLabel
                       }
                     >
-                      Projects
+                      {
+                        copy.hero
+                          .projects
+                      }
                     </span>
 
                     <span>
@@ -155,7 +182,10 @@ export default async function WorkPage() {
                         styles.metaLabel
                       }
                     >
-                      Period
+                      {
+                        copy.hero
+                          .period
+                      }
                     </span>
 
                     <span>
@@ -182,7 +212,10 @@ export default async function WorkPage() {
               data-motion-scroll="work-archive-header"
             >
               <span>
-                All Projects
+                {
+                  copy.archive
+                    .heading
+                }
               </span>
 
               <span
@@ -190,8 +223,12 @@ export default async function WorkPage() {
                   styles.archiveCount
                 }
               >
-                {projectCount} /
-                Current Archive
+                {projectCount}
+                {" / "}
+                {
+                  copy.archive
+                    .current
+                }
               </span>
             </div>
 
@@ -204,7 +241,7 @@ export default async function WorkPage() {
                 (
                   project,
                 ) => (
-                  <Link
+                  <LocaleLink
                     href={`/work/${project.slug}`}
                     className={
                       styles.project
@@ -282,7 +319,7 @@ export default async function WorkPage() {
                     >
                       ↗
                     </span>
-                  </Link>
+                  </LocaleLink>
                 ),
               )}
             </div>
@@ -307,7 +344,10 @@ export default async function WorkPage() {
                   />
 
                   <span>
-                    ARCHIVE
+                    {
+                      copy.empty
+                        .label
+                    }
                   </span>
                 </div>
 
@@ -317,23 +357,27 @@ export default async function WorkPage() {
                   }
                 >
                   <p>
-                    Published
-                    projects will
-                    appear here.
+                    {
+                      copy.empty
+                        .description
+                    }
                   </p>
 
-                  <Link
+                  <LocaleLink
                     href="/contact"
                     className={
                       styles.contactLink
                     }
                   >
-                    Start a
-                    conversation
+                    {
+                      copy.empty
+                        .contact
+                    }
+
                     <span>
                       ↗
                     </span>
-                  </Link>
+                  </LocaleLink>
                 </div>
               </div>
             ) : (
@@ -355,7 +399,10 @@ export default async function WorkPage() {
                   />
 
                   <span>
-                    ONGOING ARCHIVE
+                    {
+                      copy.closing
+                        .label
+                    }
                   </span>
                 </div>
 
@@ -365,25 +412,27 @@ export default async function WorkPage() {
                   }
                 >
                   <p>
-                    The archive keeps
-                    growing as new
-                    ideas become real
-                    projects.
+                    {
+                      copy.closing
+                        .description
+                    }
                   </p>
 
-                  <Link
+                  <LocaleLink
                     href="/contact"
                     className={
                       styles.contactLink
                     }
                   >
-                    Start a
-                    conversation
+                    {
+                      copy.closing
+                        .contact
+                    }
 
                     <span>
                       ↗
                     </span>
-                  </Link>
+                  </LocaleLink>
                 </div>
               </div>
             )}
@@ -391,5 +440,13 @@ export default async function WorkPage() {
         </section>
       </main>
     </>
+  );
+}
+
+export default function WorkPage() {
+  return (
+    <WorkPageContent
+      locale="en"
+    />
   );
 }
