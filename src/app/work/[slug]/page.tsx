@@ -6,7 +6,7 @@ import type {
   Metadata,
 } from "next";
 
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   notFound,
@@ -318,8 +318,8 @@ export default async function ProjectPage({
               }
               data-motion-project-hero-piece="top"
             >
-              <Link
-                href="/work"
+<LocaleLink
+  href="/work"
                 className={
                   styles.backLink
                 }
@@ -329,7 +329,7 @@ export default async function ProjectPage({
                 </span>
 
                 All Work
-              </Link>
+              </LocaleLink>
 
               <span
                 className={
@@ -615,8 +615,8 @@ export default async function ProjectPage({
                 </span>
               </div>
 
-              <Link
-                href={`/work/${nextProject.slug}`}
+<LocaleLink
+  href={`/work/${nextProject.slug}`}
                 className={
                   styles.nextLink
                 }
@@ -659,7 +659,7 @@ export default async function ProjectPage({
                     ↗
                   </span>
                 </div>
-              </Link>
+</LocaleLink>
             </div>
           </section>
         ) : null}

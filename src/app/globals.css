@@ -359,6 +359,18 @@ select {
   gap: clamp(22px, 2.5vw, 42px);
 }
 
+.site-header__desktop-actions {
+  display: flex;
+  align-items: center;
+
+  gap:
+    clamp(
+      18px,
+      2vw,
+      30px
+    );
+}
+
 .site-nav__link {
   position: relative;
 
@@ -909,6 +921,10 @@ select {
   .site-header.is-scrolled
   .site-header__inner {
   min-height: 68px;
+}
+
+.site-header__desktop-actions {
+  display: none;
 }
 
 .site-header.is-scrolled

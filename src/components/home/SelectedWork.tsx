@@ -2,7 +2,7 @@ import type {
   CSSProperties,
 } from "react";
 
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   getFeaturedProjects,
@@ -110,16 +110,16 @@ export default async function SelectedWork() {
                 "CURRENT"}
             </span>
 
-            <Link
-              href="/work"
-              className={
-                styles.projectLink
-              }
-            >
-              View All Work
+<LocaleLink
+  href="/work"
+  className={
+    styles.projectLink
+  }
+>
+  View All Work
 
-              <span>↗</span>
-            </Link>
+  <span>↗</span>
+</LocaleLink>
           </div>
         </header>
 
@@ -245,18 +245,18 @@ export default async function SelectedWork() {
                       )}
                     </div>
 
-                    <Link
-                      href={`/work/${project.slug}`}
-                      className={
-                        styles.projectLink
-                      }
-                    >
-                      View Project
+<LocaleLink
+  href={`/work/${project.slug}`}
+  className={
+    styles.projectLink
+  }
+>
+  View Project
 
-                      <span>
-                        ↗
-                      </span>
-                    </Link>
+  <span>
+    ↗
+  </span>
+</LocaleLink>
                   </div>
                 </article>
               );

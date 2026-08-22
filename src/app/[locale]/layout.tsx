@@ -61,13 +61,14 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  return (
-    <div
-      data-locale={
-        locale
-      }
-    >
-      {children}
-    </div>
-  );
+return (
+  <div
+    lang={locale}
+    data-locale={
+      locale
+    }
+  >
+    {children}
+  </div>
+);
 }

@@ -1,5 +1,8 @@
-import Link from "next/link";
-import { site } from "@/data/site";
+import LocaleLink from "@/components/i18n/LocaleLink";
+
+import {
+  site,
+} from "@/data/site";
 
 import styles from "./AboutPreview.module.css";
 
@@ -53,43 +56,43 @@ export default function AboutPreview() {
     styles.actions
   }
 >
-  <Link
-    href="/about"
+<LocaleLink
+  href="/about"
+  className={
+    styles.link
+  }
+>
+  <span>
+    More About Me
+  </span>
+
+  <span
     className={
-      styles.link
+      styles.arrow
     }
+    aria-hidden="true"
   >
-    <span>
-      More About Me
-    </span>
+    ↗
+  </span>
+</LocaleLink>
 
-    <span
-      className={
-        styles.arrow
-      }
-      aria-hidden="true"
-    >
-      ↗
-    </span>
-  </Link>
+<LocaleLink
+  href="/cv"
+  className={`${styles.link} ${styles.cvLink}`}
+>
+  <span>
+    View CV
+  </span>
 
-  <Link
-    href="/cv"
-    className={`${styles.link} ${styles.cvLink}`}
+  <span
+    className={
+      styles.cvArrow
+    }
+    aria-hidden="true"
   >
-    <span>
-      View CV
-    </span>
-
-    <span
-      className={
-        styles.cvArrow
-      }
-      aria-hidden="true"
-    >
-      ↗
-    </span>
-  </Link>
+    ↗
+  </span>
+</LocaleLink>
 </div>
           </div>
         </div>

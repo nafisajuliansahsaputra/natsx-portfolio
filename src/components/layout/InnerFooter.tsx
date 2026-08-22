@@ -1,10 +1,16 @@
 "use client";
 
-import Link from "next/link";
-
 import {
   usePathname,
 } from "next/navigation";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
+
+import {
+  getLocaleFromPathname,
+  localizePath,
+  stripLocaleFromPathname,
+} from "@/i18n/config";
 
 import {
   site,
@@ -50,20 +56,30 @@ export default function InnerFooter() {
   const pathname =
     usePathname();
 
-const shouldRender =
-  pathname ===
-    "/work" ||
-  pathname.startsWith(
-    "/work/",
-  ) ||
-  pathname ===
-    "/about" ||
-  pathname ===
-    "/playground" ||
-  pathname ===
-    "/contact" ||
-  pathname ===
-    "/cv";
+  const locale =
+    getLocaleFromPathname(
+      pathname,
+    );
+
+  const basePath =
+    stripLocaleFromPathname(
+      pathname,
+    );
+
+  const shouldRender =
+    basePath ===
+      "/work" ||
+    basePath.startsWith(
+      "/work/",
+    ) ||
+    basePath ===
+      "/about" ||
+    basePath ===
+      "/playground" ||
+    basePath ===
+      "/contact" ||
+    basePath ===
+      "/cv";
 
   if (!shouldRender) {
     return null;
@@ -99,8 +115,21 @@ const shouldRender =
               "Contact",
 
             href:
-              "/contact",
+              localizePath(
+                "/contact",
+                locale,
+              ),
           };
+
+  const primaryContactIsInternal =
+    primaryContact.href.startsWith(
+      "/",
+    );
+
+  const primaryContactIsExternal =
+    primaryContact.href.startsWith(
+      "http",
+    );
 
   function scrollToTop() {
     window.scrollTo({
@@ -123,20 +152,20 @@ const shouldRender =
             styles.top
           }
         >
-          <Link
+          <LocaleLink
             href="/"
             className={
               styles.brand
             }
             aria-label="NATSX home"
           >
-<span
-  className={
-    styles.logo
-  }
-  aria-hidden="true"
-/>
-          </Link>
+            <span
+              className={
+                styles.logo
+              }
+              aria-hidden="true"
+            />
+          </LocaleLink>
 
           <nav
             className={
@@ -148,7 +177,7 @@ const shouldRender =
               (
                 item,
               ) => (
-                <Link
+                <LocaleLink
                   href={
                     item.href
                   }
@@ -159,7 +188,7 @@ const shouldRender =
                   {
                     item.label
                   }
-                </Link>
+                </LocaleLink>
               ),
             )}
           </nav>
@@ -204,32 +233,41 @@ const shouldRender =
               Get in touch
             </span>
 
-            <a
-              href={
-                primaryContact.href
-              }
-              className={
-                styles.metaLink
-              }
-              target={
-                primaryContact.href.startsWith(
-                  "http",
-                )
-                  ? "_blank"
-                  : undefined
-              }
-              rel={
-                primaryContact.href.startsWith(
-                  "http",
-                )
-                  ? "noreferrer"
-                  : undefined
-              }
-            >
-              {
-                primaryContact.label
-              }
-            </a>
+            {primaryContactIsInternal ? (
+              <LocaleLink
+                href="/contact"
+                className={
+                  styles.metaLink
+                }
+              >
+                {
+                  primaryContact.label
+                }
+              </LocaleLink>
+            ) : (
+              <a
+                href={
+                  primaryContact.href
+                }
+                className={
+                  styles.metaLink
+                }
+                target={
+                  primaryContactIsExternal
+                    ? "_blank"
+                    : undefined
+                }
+                rel={
+                  primaryContactIsExternal
+                    ? "noreferrer"
+                    : undefined
+                }
+              >
+                {
+                  primaryContact.label
+                }
+              </a>
+            )}
           </div>
 
           <div
@@ -274,84 +312,85 @@ const shouldRender =
           </div>
 
           <div
-  className={`${styles.meta} ${styles.profileMeta}`}
->
-  <span
-    className={
-      styles.metaLabel
-    }
-  >
-    Profile
-  </span>
+            className={`${styles.meta} ${styles.profileMeta}`}
+          >
+            <span
+              className={
+                styles.metaLabel
+              }
+            >
+              Profile
+            </span>
 
-  {pathname !== "/cv" ? (
-    <Link
-      href="/cv"
-      className={
-        styles.metaLink
-      }
-    >
-      View CV
+            {basePath !==
+            "/cv" ? (
+              <LocaleLink
+                href="/cv"
+                className={
+                  styles.metaLink
+                }
+              >
+                View CV
 
-      <span
-        className={
-          styles.metaArrow
-        }
-        aria-hidden="true"
-      >
-        ↗
-      </span>
-    </Link>
-  ) : (
-    <span>
-      CV / Resume
-    </span>
-  )}
-</div>
+                <span
+                  className={
+                    styles.metaArrow
+                  }
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+              </LocaleLink>
+            ) : (
+              <span>
+                CV / Resume
+              </span>
+            )}
+          </div>
 
           <div
-  className={`${styles.meta} ${styles.right}`}
->
-  <div
-    className={
-      styles.copyright
-    }
-  >
-    <span>
-      ©{" "}
-      {
-        site.year
-      }{" "}
-      {
-        site.name
-      }
-    </span>
+            className={`${styles.meta} ${styles.right}`}
+          >
+            <div
+              className={
+                styles.copyright
+              }
+            >
+              <span>
+                ©{" "}
+                {
+                  site.year
+                }{" "}
+                {
+                  site.name
+                }
+              </span>
 
-    <span>
-      {
-        site.location
-      }
-    </span>
-  </div>
+              <span>
+                {
+                  site.location
+                }
+              </span>
+            </div>
 
-<button
-  type="button"
-  className={
-    styles.backToTop
-  }
-  onClick={
-    scrollToTop
-  }
->
-  Back to top
+            <button
+              type="button"
+              className={
+                styles.backToTop
+              }
+              onClick={
+                scrollToTop
+              }
+            >
+              Back to top
 
-  <span
-    aria-hidden="true"
-  >
-    ↑
-  </span>
-</button>
-</div>
+              <span
+                aria-hidden="true"
+              >
+                ↑
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </footer>

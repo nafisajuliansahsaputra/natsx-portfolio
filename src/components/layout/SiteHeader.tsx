@@ -24,6 +24,8 @@ import {
   stripLocaleFromPathname,
 } from "@/i18n/config";
 
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+
 const navigation = [
   {
     number: "01",
@@ -713,10 +715,11 @@ href={
 />
           </Link>
 
-          <nav
-            className="site-nav"
-            aria-label="Main navigation"
-          >
+<div className="site-header__desktop-actions">
+  <nav
+    className="site-nav"
+    aria-label="Main navigation"
+  >
             {navigation.map(
               (
                 item,
@@ -765,7 +768,10 @@ href={
                 );
               },
             )}
-          </nav>
+  </nav>
+
+  <LanguageSwitcher />
+</div>
 
           <button
             ref={
@@ -909,6 +915,13 @@ href={
               },
             )}
           </nav>
+
+          <LanguageSwitcher
+  variant="mobile"
+  onNavigate={
+    closeMenu
+  }
+/>
 
           <div
             className={

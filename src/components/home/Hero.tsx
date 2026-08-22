@@ -7,7 +7,8 @@ import {
 } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   site,
@@ -455,22 +456,22 @@ export default function Hero() {
                   </span>
                 </a>
 
-                <Link
-                  href="/about"
-                  className={
-                    styles.secondaryLink
-                  }
-                >
-                  <span>
-                    About Me
-                  </span>
+<LocaleLink
+  href="/about"
+  className={
+    styles.secondaryLink
+  }
+>
+  <span>
+    About Me
+  </span>
 
-                  <span
-                    className={`${styles.arrow} ${styles.arrowUp}`}
-                  >
-                    ↗
-                  </span>
-                </Link>
+  <span
+    className={`${styles.arrow} ${styles.arrowUp}`}
+  >
+    ↗
+  </span>
+</LocaleLink>
               </div>
             </div>
           </div>
