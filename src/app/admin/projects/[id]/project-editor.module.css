@@ -562,3 +562,144 @@
     padding: 28px 20px;
   }
 }
+
+.editor {
+  display: grid;
+  gap: 80px;
+}
+
+.translationPanel {
+  margin-bottom: 40px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.languageTabs {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+  gap: 8px;
+}
+
+.languageTab {
+  min-height: 78px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  display: grid;
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.languageTab > span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.languageTab > strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.languageTab > small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.languageTab > small[data-ready="true"] {
+  color: var(--success);
+}
+
+.languageTabActive {
+  border-color: var(--text);
+  background: var(--text);
+  color: #ffffff;
+}
+
+.languageTabActive > span,
+.languageTabActive > small,
+.languageTabActive > small[data-ready="true"] {
+  color: #ffffff;
+}
+
+.translationHint {
+  margin:
+    18px
+    0
+    0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.settingsForm {
+  padding-top: 64px;
+  border-top: 1px solid var(--text);
+}
+
+.formSectionHeading {
+  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns:
+    minmax(160px, 0.5fr)
+    minmax(240px, 1fr);
+  gap: 32px;
+}
+
+.formSectionHeading > span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.formSectionHeading p {
+  max-width: 500px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .editor {
+    gap: 64px;
+  }
+
+  .translationPanel {
+    padding:
+      24px
+      18px;
+  }
+
+  .languageTabs {
+    grid-template-columns: 1fr;
+  }
+
+  .languageTab {
+    min-height: 64px;
+  }
+
+  .settingsForm {
+    padding-top: 48px;
+  }
+
+  .formSectionHeading {
+    grid-template-columns: 1fr;
+  }
+}
