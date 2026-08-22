@@ -2021,3 +2021,207 @@
     width: 100%;
   }
 }
+
+.translationBlock {
+  padding:
+    28px
+    0
+    36px;
+
+  border-bottom:
+    1px solid
+    var(--line);
+}
+
+.sectionLanguageTabs {
+  margin-bottom: 16px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 8px;
+}
+
+.sectionLanguageTab {
+  min-height: 66px;
+
+  padding:
+    12px
+    14px;
+
+  border:
+    1px solid
+    var(--line);
+
+  background:
+    transparent;
+
+  color:
+    var(--text);
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.sectionLanguageTab > span {
+  color:
+    var(--project-accent);
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+.sectionLanguageTab > strong {
+  font-size: 12px;
+}
+
+.sectionLanguageTab > small {
+  color:
+    var(--muted);
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  text-transform:
+    uppercase;
+}
+
+.sectionLanguageTab > small[data-ready="true"] {
+  color:
+    var(--success);
+}
+
+.sectionLanguageTabActive {
+  border-color:
+    var(--text);
+
+  background:
+    var(--text);
+
+  color:
+    #ffffff;
+}
+
+.sectionLanguageTabActive > span,
+.sectionLanguageTabActive > small,
+.sectionLanguageTabActive > small[data-ready="true"] {
+  color:
+    #ffffff;
+}
+
+.sectionLanguageHint {
+  margin:
+    0
+    0
+    28px;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+.sectionSaveHint {
+  max-width: 520px;
+
+  margin: 0;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+.sharedSectionSettings {
+  margin-top: 36px;
+
+  padding-top: 28px;
+
+  border-top:
+    1px solid
+    var(--line);
+}
+
+.sharedSectionHeading {
+  margin-bottom: 28px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(
+      140px,
+      0.4fr
+    )
+    minmax(
+      220px,
+      1fr
+    );
+
+  gap: 24px;
+}
+
+.sharedSectionHeading > span {
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    0.05em;
+}
+
+.sharedSectionHeading p {
+  max-width: 520px;
+
+  margin: 0;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+@media (
+  max-width: 700px
+) {
+  .sectionLanguageTabs {
+    grid-template-columns:
+      1fr;
+  }
+
+  .sectionLanguageTab {
+    min-height:
+      58px;
+  }
+
+  .sharedSectionHeading {
+    grid-template-columns:
+      1fr;
+  }
+}

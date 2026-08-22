@@ -4,96 +4,218 @@ import {
   useActionState,
   useEffect,
   useRef,
+  useState,
 } from "react";
-import { useFormStatus } from "react-dom";
-import { useRouter } from "next/navigation";
+
+import {
+  useFormStatus,
+} from "react-dom";
+
+import {
+  useRouter,
+} from "next/navigation";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  localeLabels,
+  locales,
+} from "@/i18n/config";
+
 import {
   createSection,
   deleteSection,
   moveSection,
-  updateSection,
+  updateSectionSettings,
+  updateSectionTranslation,
   type SectionActionState,
 } from "./actions";
-import styles from "./sections.module.css";
-import ImageSectionEditor from "./ImageSectionEditor";
+
+import FinaleSectionEditor from "./FinaleSectionEditor";
 import GallerySectionEditor from "./GallerySectionEditor";
+import ImageSectionEditor from "./ImageSectionEditor";
 import MetricsSectionEditor from "./MetricsSectionEditor";
 import QuoteSectionEditor from "./QuoteSectionEditor";
-import FinaleSectionEditor from "./FinaleSectionEditor";
+
+import styles from "./sections.module.css";
+
+export type SectionTranslation = {
+  locale: Locale;
+
+  eyebrow:
+    | string
+    | null;
+
+  heading:
+    | string
+    | null;
+
+  body:
+    | string
+    | null;
+
+  content: Record<
+    string,
+    unknown
+  >;
+};
 
 export type SectionRow = {
   id: string;
   project_id: string;
   section_type: string;
-  eyebrow: string | null;
-  heading: string | null;
-  body: string | null;
-  content: Record<string, unknown>;
+
+  eyebrow:
+    | string
+    | null;
+
+  heading:
+    | string
+    | null;
+
+  body:
+    | string
+    | null;
+
+  content: Record<
+    string,
+    unknown
+  >;
+
   theme: string;
   sort_order: number;
   is_visible: boolean;
   created_at: string;
   updated_at: string;
+
+  translations: Record<
+    Locale,
+    SectionTranslation | null
+  >;
 };
 
 type SectionManagerProps = {
   projectId: string;
-  sections: SectionRow[];
+
+  sections:
+    SectionRow[];
 };
 
-const initialState: SectionActionState = {
-  status: "idle",
-  message: "",
-};
+const initialState:
+  SectionActionState =
+  {
+    status:
+      "idle",
+
+    message:
+      "",
+  };
 
 const sectionTypes = [
   {
-    value: "overview",
-    label: "Overview",
+    value:
+      "overview",
+
+    label:
+      "Overview",
   },
+
   {
-    value: "narrative",
-    label: "Narrative / Process",
+    value:
+      "narrative",
+
+    label:
+      "Narrative / Process",
   },
+
   {
-    value: "statement",
-    label: "Large Statement",
+    value:
+      "statement",
+
+    label:
+      "Large Statement",
   },
+
   {
-    value: "image",
-    label: "Single Image",
+    value:
+      "image",
+
+    label:
+      "Single Image",
   },
+
   {
-    value: "gallery",
-    label: "Image Gallery",
+    value:
+      "gallery",
+
+    label:
+      "Image Gallery",
   },
+
   {
-    value: "metrics",
-    label: "Results / Metrics",
+    value:
+      "metrics",
+
+    label:
+      "Results / Metrics",
   },
+
   {
-    value: "quote",
-    label: "Quote",
+    value:
+      "quote",
+
+    label:
+      "Quote",
   },
+
   {
-    value: "finale",
-    label: "Final Showcase",
+    value:
+      "finale",
+
+    label:
+      "Final Showcase",
   },
 ];
 
-function getSectionTypeLabel(value: string) {
+function getSectionTypeLabel(
+  value: string,
+) {
   return (
-    sectionTypes.find((type) => type.value === value)?.label ??
+    sectionTypes.find(
+      (
+        type,
+      ) =>
+        type.value ===
+        value,
+    )?.label ??
     value
   );
 }
 
-function FieldError({ message }: { message?: string }) {
-  if (!message) {
+function FieldError({
+  message,
+}: {
+  message?: string;
+}) {
+  if (
+    !message
+  ) {
     return null;
   }
 
-  return <span className={styles.errorText}>{message}</span>;
+  return (
+    <span
+      className={
+        styles.errorText
+      }
+    >
+      {
+        message
+      }
+    </span>
+  );
 }
 
 function ServerButton({
@@ -107,151 +229,356 @@ function ServerButton({
   className: string;
   disabled?: boolean;
 }) {
-  const { pending } = useFormStatus();
+  const {
+    pending,
+  } =
+    useFormStatus();
 
   return (
     <button
-      className={className}
+      className={
+        className
+      }
       type="submit"
-      disabled={pending || disabled}
+      disabled={
+        pending ||
+        disabled
+      }
     >
-      {pending ? pendingLabel : label}
+      {pending
+        ? pendingLabel
+        : label}
     </button>
   );
 }
 
-function AddSectionForm({ projectId }: { projectId: string }) {
-  const router = useRouter();
-  const formRef = useRef<HTMLFormElement>(null);
-  const action = createSection.bind(null, projectId);
+function hasTranslationContent(
+  translation:
+    | SectionTranslation
+    | null,
+) {
+  if (
+    !translation
+  ) {
+    return false;
+  }
 
-  const [state, formAction, isPending] = useActionState(
-    action,
-    initialState,
+  return Boolean(
+    translation.eyebrow
+      ?.trim() ||
+      translation.heading
+        ?.trim() ||
+      translation.body
+        ?.trim() ||
+      Object.keys(
+        translation.content,
+      ).length >
+        0,
   );
+}
+
+function AddSectionForm({
+  projectId,
+}: {
+  projectId: string;
+}) {
+  const router =
+    useRouter();
+
+  const formRef =
+    useRef<HTMLFormElement>(
+      null,
+    );
+
+  const action =
+    createSection.bind(
+      null,
+      projectId,
+    );
+
+  const [
+    state,
+    formAction,
+    isPending,
+  ] =
+    useActionState(
+      action,
+      initialState,
+    );
 
   useEffect(() => {
-    if (state.status === "success") {
-      formRef.current?.reset();
+    if (
+      state.status ===
+      "success"
+    ) {
+      formRef.current
+        ?.reset();
+
       router.refresh();
     }
-  }, [router, state.status]);
+  }, [
+    router,
+    state.status,
+  ]);
 
   return (
-    <section className={styles.addPanel}>
-      <div className={styles.panelIntroduction}>
-        <span>ADD NEW SECTION</span>
+    <section
+      className={
+        styles.addPanel
+      }
+    >
+      <div
+        className={
+          styles.panelIntroduction
+        }
+      >
+        <span>
+          ADD NEW SECTION
+        </span>
 
         <div>
-          <h2>Build the story.</h2>
+          <h2>
+            Build the story.
+          </h2>
 
           <p>
-            Tambahkan blok baru untuk menyusun cerita dan visual project.
+            Section baru dibuat
+            dengan initial English
+            copy. Bahasa Indonesia
+            dan Deutsch dapat diisi
+            setelah section dibuat.
           </p>
         </div>
       </div>
 
-      <form ref={formRef} className={styles.form} action={formAction}>
-        <div className={styles.fieldGrid}>
-          <label className={styles.field}>
-            <span>Section type</span>
+      <form
+        ref={
+          formRef
+        }
+        className={
+          styles.form
+        }
+        action={
+          formAction
+        }
+      >
+        <div
+          className={
+            styles.fieldGrid
+          }
+        >
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              Section type
+            </span>
 
             <select
-              className={styles.input}
+              className={
+                styles.input
+              }
               name="section_type"
               defaultValue="narrative"
             >
-              {sectionTypes.map((type) => (
-                <option value={type.value} key={type.value}>
-                  {type.label}
-                </option>
-              ))}
+              {sectionTypes.map(
+                (
+                  type,
+                ) => (
+                  <option
+                    value={
+                      type.value
+                    }
+                    key={
+                      type.value
+                    }
+                  >
+                    {
+                      type.label
+                    }
+                  </option>
+                ),
+              )}
             </select>
 
-            <FieldError message={state.errors?.section_type} />
+            <FieldError
+              message={
+                state.errors
+                  ?.section_type
+              }
+            />
           </label>
 
-          <label className={styles.field}>
-            <span>Theme</span>
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              Theme
+            </span>
 
             <select
-              className={styles.input}
+              className={
+                styles.input
+              }
               name="theme"
               defaultValue="light"
             >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="accent">Accent</option>
+              <option value="light">
+                Light
+              </option>
+
+              <option value="dark">
+                Dark
+              </option>
+
+              <option value="accent">
+                Accent
+              </option>
             </select>
 
-            <FieldError message={state.errors?.theme} />
+            <FieldError
+              message={
+                state.errors
+                  ?.theme
+              }
+            />
           </label>
 
-          <label className={styles.field}>
-            <span>Eyebrow</span>
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              English eyebrow
+            </span>
 
             <input
-              className={styles.input}
+              className={
+                styles.input
+              }
               name="eyebrow"
               type="text"
               placeholder="01 / CONTEXT"
-              maxLength={100}
+              maxLength={
+                100
+              }
             />
 
-            <FieldError message={state.errors?.eyebrow} />
+            <FieldError
+              message={
+                state.errors
+                  ?.eyebrow
+              }
+            />
           </label>
 
-          <label className={styles.field}>
-            <span>Heading</span>
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              English heading
+            </span>
 
             <input
-              className={styles.input}
+              className={
+                styles.input
+              }
               name="heading"
               type="text"
               placeholder="The challenge."
-              maxLength={300}
+              maxLength={
+                300
+              }
             />
 
-            <FieldError message={state.errors?.heading} />
+            <FieldError
+              message={
+                state.errors
+                  ?.heading
+              }
+            />
           </label>
 
-          <label className={`${styles.field} ${styles.fullWidth}`}>
-            <span>Body</span>
+          <label
+            className={`${styles.field} ${styles.fullWidth}`}
+          >
+            <span>
+              English body
+            </span>
 
             <textarea
-              className={styles.textarea}
+              className={
+                styles.textarea
+              }
               name="body"
               placeholder="Jelaskan konteks, proses, pemikiran, atau hasil project."
-              rows={5}
-              maxLength={10000}
+              rows={
+                5
+              }
+              maxLength={
+                10000
+              }
             />
 
-            <FieldError message={state.errors?.body} />
+            <FieldError
+              message={
+                state.errors
+                  ?.body
+              }
+            />
           </label>
         </div>
 
         {state.message ? (
           <div
-            className={styles.notice}
-            data-type={state.status}
+            className={
+              styles.notice
+            }
+            data-type={
+              state.status
+            }
             role="status"
           >
             <span />
-            <p>{state.message}</p>
+
+            <p>
+              {
+                state.message
+              }
+            </p>
           </div>
         ) : null}
 
-        <div className={styles.addActions}>
+        <div
+          className={
+            styles.addActions
+          }
+        >
           <p>
-            Section baru otomatis ditambahkan pada urutan terakhir.
+            Section otomatis
+            ditambahkan pada urutan
+            terakhir.
           </p>
 
           <button
-            className={styles.primaryButton}
+            className={
+              styles.primaryButton
+            }
             type="submit"
-            disabled={isPending}
+            disabled={
+              isPending
+            }
           >
-            {isPending ? "Adding section..." : "Add section ↗"}
+            {isPending
+              ? "Adding section..."
+              : "Add section ↗"}
           </button>
         </div>
       </form>
@@ -270,263 +597,814 @@ function SectionCard({
   index: number;
   totalSections: number;
 }) {
-  const router = useRouter();
+  const router =
+    useRouter();
 
-  const updateAction = updateSection.bind(
-    null,
-    projectId,
-    section.id,
-  );
+  const [
+    contentLocale,
+    setContentLocale,
+  ] =
+    useState<Locale>(
+      "en",
+    );
 
-  const moveAction = moveSection.bind(
-    null,
-    projectId,
-    section.id,
-  );
+  const translationAction =
+    updateSectionTranslation.bind(
+      null,
+      projectId,
+      section.id,
+    );
 
-  const removeAction = deleteSection.bind(
-    null,
-    projectId,
-    section.id,
-  );
+  const settingsAction =
+    updateSectionSettings.bind(
+      null,
+      projectId,
+      section.id,
+    );
 
-  const [state, formAction, isPending] = useActionState(
-    updateAction,
-    initialState,
-  );
+  const moveAction =
+    moveSection.bind(
+      null,
+      projectId,
+      section.id,
+    );
+
+  const removeAction =
+    deleteSection.bind(
+      null,
+      projectId,
+      section.id,
+    );
+
+  const [
+    translationState,
+    translationFormAction,
+    translationPending,
+  ] =
+    useActionState(
+      translationAction,
+      initialState,
+    );
+
+  const [
+    settingsState,
+    settingsFormAction,
+    settingsPending,
+  ] =
+    useActionState(
+      settingsAction,
+      initialState,
+    );
 
   useEffect(() => {
-    if (state.status === "success") {
+    if (
+      translationState.status ===
+        "success" ||
+      settingsState.status ===
+        "success"
+    ) {
       router.refresh();
     }
-  }, [router, state.status]);
+  }, [
+    router,
+    settingsState.status,
+    translationState.status,
+  ]);
 
+  const legacyEnglish:
+    SectionTranslation =
+    {
+      locale:
+        "en",
+
+      eyebrow:
+        section.eyebrow,
+
+      heading:
+        section.heading,
+
+      body:
+        section.body,
+
+      content: {},
+    };
+
+  const activeTranslation =
+    contentLocale ===
+      "en"
+      ? section
+          .translations
+          .en ??
+        legacyEnglish
+      : section
+          .translations[
+          contentLocale
+        ];
+
+  const canonicalHeading =
+    section.translations
+      .en?.heading ||
+    section.heading ||
+    getSectionTypeLabel(
+      section.section_type,
+    );
 
   return (
     <article
-      className={styles.sectionCard}
-      data-theme={section.theme}
+      className={
+        styles.sectionCard
+      }
+      data-theme={
+        section.theme
+      }
     >
-      <header className={styles.cardHeader}>
-        <div className={styles.cardIdentity}>
-          <span className={styles.cardNumber}>
-            {String(index + 1).padStart(2, "0")}
+      <header
+        className={
+          styles.cardHeader
+        }
+      >
+        <div
+          className={
+            styles.cardIdentity
+          }
+        >
+          <span
+            className={
+              styles.cardNumber
+            }
+          >
+            {String(
+              index + 1,
+            ).padStart(
+              2,
+              "0",
+            )}
           </span>
 
           <div>
             <h2>
-              {section.heading ||
-                getSectionTypeLabel(section.section_type)}
+              {
+                canonicalHeading
+              }
             </h2>
 
-            <div className={styles.cardMeta}>
-              <span>{getSectionTypeLabel(section.section_type)}</span>
-              <span>{section.theme}</span>
+            <div
+              className={
+                styles.cardMeta
+              }
+            >
+              <span>
+                {
+                  getSectionTypeLabel(
+                    section.section_type,
+                  )
+                }
+              </span>
+
+              <span>
+                {
+                  section.theme
+                }
+              </span>
 
               <span
-                data-visible={section.is_visible}
-                className={styles.visibilityBadge}
+                data-visible={
+                  section.is_visible
+                }
+                className={
+                  styles.visibilityBadge
+                }
               >
-                {section.is_visible ? "Visible" : "Hidden"}
+                {section.is_visible
+                  ? "Visible"
+                  : "Hidden"}
               </span>
             </div>
           </div>
         </div>
 
-        <span className={styles.dragLabel}>
-          ORDER {String(section.sort_order).padStart(2, "0")}
+        <span
+          className={
+            styles.dragLabel
+          }
+        >
+          ORDER{" "}
+          {String(
+            section.sort_order,
+          ).padStart(
+            2,
+            "0",
+          )}
         </span>
       </header>
 
-      <form className={styles.cardForm} action={formAction}>
-        <div className={styles.fieldGrid}>
-          <label className={styles.field}>
-            <span>Section type</span>
+      <div
+        className={
+          styles.translationBlock
+        }
+      >
+        <div
+          className={
+            styles.sectionLanguageTabs
+          }
+          role="group"
+          aria-label="Section content language"
+        >
+          {locales.map(
+            (
+              locale,
+            ) => {
+              const active =
+                locale ===
+                contentLocale;
+
+              const ready =
+                locale ===
+                  "en" ||
+                hasTranslationContent(
+                  section
+                    .translations[
+                    locale
+                  ],
+                );
+
+              return (
+                <button
+                  type="button"
+                  key={
+                    locale
+                  }
+                  className={
+                    active
+                      ? `${styles.sectionLanguageTab} ${styles.sectionLanguageTabActive}`
+                      : styles.sectionLanguageTab
+                  }
+                  aria-pressed={
+                    active
+                  }
+                  onClick={() =>
+                    setContentLocale(
+                      locale,
+                    )
+                  }
+                >
+                  <span>
+                    {
+                      localeLabels[
+                        locale
+                      ].short
+                    }
+                  </span>
+
+                  <strong>
+                    {
+                      localeLabels[
+                        locale
+                      ].label
+                    }
+                  </strong>
+
+                  <small
+                    data-ready={
+                      ready
+                    }
+                  >
+                    {ready
+                      ? "Ready"
+                      : "Empty"}
+                  </small>
+                </button>
+              );
+            },
+          )}
+        </div>
+
+        <p
+          className={
+            styles.sectionLanguageHint
+          }
+        >
+          {contentLocale ===
+          "en"
+            ? "English adalah canonical fallback untuk section ini."
+            : "Field kosong akan fallback ke English. Specialized content translation akan ditambahkan pada tahap berikutnya."}
+        </p>
+
+        <form
+          key={
+            contentLocale
+          }
+          className={
+            styles.cardForm
+          }
+          action={
+            translationFormAction
+          }
+        >
+          <input
+            type="hidden"
+            name="content_locale"
+            value={
+              contentLocale
+            }
+            readOnly
+          />
+
+          <div
+            className={
+              styles.fieldGrid
+            }
+          >
+            <label
+              className={
+                styles.field
+              }
+            >
+              <span>
+                Eyebrow
+              </span>
+
+              <input
+                className={
+                  styles.input
+                }
+                name="eyebrow"
+                type="text"
+                defaultValue={
+                  activeTranslation
+                    ?.eyebrow ??
+                  ""
+                }
+                placeholder="01 / CONTEXT"
+                maxLength={
+                  100
+                }
+              />
+
+              <FieldError
+                message={
+                  translationState
+                    .errors
+                    ?.eyebrow
+                }
+              />
+            </label>
+
+            <label
+              className={
+                styles.field
+              }
+            >
+              <span>
+                Heading
+              </span>
+
+              <input
+                className={
+                  styles.input
+                }
+                name="heading"
+                type="text"
+                defaultValue={
+                  activeTranslation
+                    ?.heading ??
+                  ""
+                }
+                placeholder="The challenge."
+                maxLength={
+                  300
+                }
+              />
+
+              <FieldError
+                message={
+                  translationState
+                    .errors
+                    ?.heading
+                }
+              />
+            </label>
+
+            <label
+              className={`${styles.field} ${styles.fullWidth}`}
+            >
+              <span>
+                Body
+              </span>
+
+              <textarea
+                className={
+                  styles.textarea
+                }
+                name="body"
+                defaultValue={
+                  activeTranslation
+                    ?.body ??
+                  ""
+                }
+                rows={
+                  6
+                }
+                maxLength={
+                  10000
+                }
+              />
+
+              <FieldError
+                message={
+                  translationState
+                    .errors
+                    ?.body
+                }
+              />
+            </label>
+          </div>
+
+          <div
+            className={
+              styles.cardSettings
+            }
+          >
+            <p
+              className={
+                styles.sectionSaveHint
+              }
+            >
+              Menyimpan{" "}
+              <strong>
+                {
+                  localeLabels[
+                    contentLocale
+                  ].label
+                }
+              </strong>{" "}
+              tidak mengubah bahasa
+              lainnya.
+            </p>
+
+            <button
+              className={
+                styles.saveButton
+              }
+              type="submit"
+              disabled={
+                translationPending
+              }
+            >
+              {translationPending
+                ? "Saving..."
+                : `Save ${contentLocale.toUpperCase()} content`}
+            </button>
+          </div>
+
+          {translationState.message ? (
+            <div
+              className={
+                styles.notice
+              }
+              data-type={
+                translationState.status
+              }
+              role="status"
+            >
+              <span />
+
+              <p>
+                {
+                  translationState.message
+                }
+              </p>
+            </div>
+          ) : null}
+        </form>
+      </div>
+
+      {section.section_type ===
+      "image" ? (
+        <ImageSectionEditor
+          projectId={
+            projectId
+          }
+          section={
+            section
+          }
+        />
+      ) : section.section_type ===
+        "gallery" ? (
+        <GallerySectionEditor
+          projectId={
+            projectId
+          }
+          section={
+            section
+          }
+        />
+      ) : section.section_type ===
+        "metrics" ? (
+        <MetricsSectionEditor
+          projectId={
+            projectId
+          }
+          section={
+            section
+          }
+        />
+      ) : section.section_type ===
+        "quote" ? (
+        <QuoteSectionEditor
+          projectId={
+            projectId
+          }
+          section={
+            section
+          }
+        />
+      ) : section.section_type ===
+        "finale" ? (
+        <FinaleSectionEditor
+          projectId={
+            projectId
+          }
+          section={
+            section
+          }
+        />
+      ) : null}
+
+      <form
+        className={
+          styles.sharedSectionSettings
+        }
+        action={
+          settingsFormAction
+        }
+      >
+        <div
+          className={
+            styles.sharedSectionHeading
+          }
+        >
+          <span>
+            SHARED SETTINGS
+          </span>
+
+          <p>
+            Type, theme, visibility,
+            media dan layout berlaku
+            ke semua bahasa.
+          </p>
+        </div>
+
+        <div
+          className={
+            styles.fieldGrid
+          }
+        >
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              Section type
+            </span>
 
             <select
-              className={styles.input}
+              className={
+                styles.input
+              }
               name="section_type"
-              defaultValue={section.section_type}
+              defaultValue={
+                section.section_type
+              }
             >
-              {sectionTypes.map((type) => (
-                <option value={type.value} key={type.value}>
-                  {type.label}
-                </option>
-              ))}
+              {sectionTypes.map(
+                (
+                  type,
+                ) => (
+                  <option
+                    value={
+                      type.value
+                    }
+                    key={
+                      type.value
+                    }
+                  >
+                    {
+                      type.label
+                    }
+                  </option>
+                ),
+              )}
             </select>
 
-            <FieldError message={state.errors?.section_type} />
+            <FieldError
+              message={
+                settingsState
+                  .errors
+                  ?.section_type
+              }
+            />
           </label>
 
-          <label className={styles.field}>
-            <span>Theme</span>
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              Theme
+            </span>
 
             <select
-              className={styles.input}
+              className={
+                styles.input
+              }
               name="theme"
-              defaultValue={section.theme}
+              defaultValue={
+                section.theme
+              }
             >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="accent">Accent</option>
+              <option value="light">
+                Light
+              </option>
+
+              <option value="dark">
+                Dark
+              </option>
+
+              <option value="accent">
+                Accent
+              </option>
             </select>
 
-            <FieldError message={state.errors?.theme} />
-          </label>
-
-          <label className={styles.field}>
-            <span>Eyebrow</span>
-
-            <input
-              className={styles.input}
-              name="eyebrow"
-              type="text"
-              defaultValue={section.eyebrow ?? ""}
-              placeholder="01 / CONTEXT"
-              maxLength={100}
+            <FieldError
+              message={
+                settingsState
+                  .errors
+                  ?.theme
+              }
             />
-
-            <FieldError message={state.errors?.eyebrow} />
-          </label>
-
-          <label className={styles.field}>
-            <span>Heading</span>
-
-            <input
-              className={styles.input}
-              name="heading"
-              type="text"
-              defaultValue={section.heading ?? ""}
-              placeholder="The challenge."
-              maxLength={300}
-            />
-
-            <FieldError message={state.errors?.heading} />
-          </label>
-
-          <label className={`${styles.field} ${styles.fullWidth}`}>
-            <span>Body</span>
-
-            <textarea
-              className={styles.textarea}
-              name="body"
-              defaultValue={section.body ?? ""}
-              rows={6}
-              maxLength={10000}
-            />
-
-            <FieldError message={state.errors?.body} />
           </label>
         </div>
 
-{section.section_type === "image" ? (
-  <ImageSectionEditor
-    projectId={projectId}
-    section={section}
-  />
-) : section.section_type === "gallery" ? (
-  <GallerySectionEditor
-    projectId={projectId}
-    section={section}
-  />
-) : section.section_type === "metrics" ? (
-  <MetricsSectionEditor
-    projectId={projectId}
-    section={section}
-  />
-) : section.section_type === "quote" ? (
-  <QuoteSectionEditor
-    projectId={projectId}
-    section={section}
-  />
-) : section.section_type === "finale" ? (
-  <FinaleSectionEditor
-    projectId={projectId}
-    section={section}
-  />
-) : null}
-
-        <div className={styles.cardSettings}>
-          <label className={styles.visibilityToggle}>
+        <div
+          className={
+            styles.cardSettings
+          }
+        >
+          <label
+            className={
+              styles.visibilityToggle
+            }
+          >
             <input
               name="is_visible"
               type="checkbox"
-              defaultChecked={section.is_visible}
+              defaultChecked={
+                section.is_visible
+              }
             />
 
-            <span className={styles.customCheckbox} />
+            <span
+              className={
+                styles.customCheckbox
+              }
+            />
 
             <span>
-              <strong>Visible on public page</strong>
+              <strong>
+                Visible on public page
+              </strong>
+
               <small>
-                Matikan untuk menyembunyikan section tanpa menghapusnya.
+                Matikan untuk
+                menyembunyikan
+                section tanpa
+                menghapusnya.
               </small>
             </span>
           </label>
 
           <button
-            className={styles.saveButton}
+            className={
+              styles.saveButton
+            }
             type="submit"
-            disabled={isPending}
+            disabled={
+              settingsPending
+            }
           >
-            {isPending ? "Saving..." : "Save section"}
+            {settingsPending
+              ? "Saving..."
+              : "Save shared settings"}
           </button>
         </div>
 
-        {state.message ? (
+        {settingsState.message ? (
           <div
-            className={styles.notice}
-            data-type={state.status}
+            className={
+              styles.notice
+            }
+            data-type={
+              settingsState.status
+            }
             role="status"
           >
             <span />
-            <p>{state.message}</p>
+
+            <p>
+              {
+                settingsState.message
+              }
+            </p>
           </div>
         ) : null}
       </form>
 
-      <footer className={styles.cardToolbar}>
-        <div className={styles.reorderActions}>
-          <form action={moveAction}>
-            <input name="direction" type="hidden" value="up" />
+      <footer
+        className={
+          styles.cardToolbar
+        }
+      >
+        <div
+          className={
+            styles.reorderActions
+          }
+        >
+          <form
+            action={
+              moveAction
+            }
+          >
+            <input
+              name="direction"
+              type="hidden"
+              value="up"
+            />
 
             <ServerButton
-              className={styles.secondaryButton}
+              className={
+                styles.secondaryButton
+              }
               label="↑ Move up"
               pendingLabel="Moving..."
-              disabled={index === 0}
+              disabled={
+                index ===
+                0
+              }
             />
           </form>
 
-          <form action={moveAction}>
-            <input name="direction" type="hidden" value="down" />
+          <form
+            action={
+              moveAction
+            }
+          >
+            <input
+              name="direction"
+              type="hidden"
+              value="down"
+            />
 
             <ServerButton
-              className={styles.secondaryButton}
+              className={
+                styles.secondaryButton
+              }
               label="↓ Move down"
               pendingLabel="Moving..."
-              disabled={index === totalSections - 1}
+              disabled={
+                index ===
+                totalSections -
+                  1
+              }
             />
           </form>
         </div>
 
         <form
-          action={removeAction}
-          onSubmit={(event) => {
-            const confirmed = window.confirm(
-              `Hapus section "${
-                section.heading ||
-                getSectionTypeLabel(section.section_type)
-              }"?`,
-            );
+          action={
+            removeAction
+          }
+          onSubmit={(
+            event,
+          ) => {
+            const confirmed =
+              window.confirm(
+                `Hapus section "${canonicalHeading}"?`,
+              );
 
-            if (!confirmed) {
+            if (
+              !confirmed
+            ) {
               event.preventDefault();
             }
           }}
         >
           <ServerButton
-            className={styles.deleteButton}
+            className={
+              styles.deleteButton
+            }
             label="Delete section"
             pendingLabel="Deleting..."
           />
@@ -541,44 +1419,104 @@ export default function SectionManager({
   sections,
 }: SectionManagerProps) {
   return (
-    <div className={styles.manager}>
-      <AddSectionForm projectId={projectId} />
+    <div
+      className={
+        styles.manager
+      }
+    >
+      <AddSectionForm
+        projectId={
+          projectId
+        }
+      />
 
-      <section className={styles.sectionArchive}>
-        <div className={styles.archiveHeader}>
+      <section
+        className={
+          styles.sectionArchive
+        }
+      >
+        <div
+          className={
+            styles.archiveHeader
+          }
+        >
           <div>
-            <span className={styles.dot} />
-            <span>SECTION ARCHIVE</span>
+            <span
+              className={
+                styles.dot
+              }
+            />
+
+            <span>
+              SECTION ARCHIVE
+            </span>
           </div>
 
-          <span>{sections.length} RECORDS</span>
+          <span>
+            {
+              sections.length
+            }{" "}
+            RECORDS
+          </span>
         </div>
 
-        {sections.length === 0 ? (
-          <div className={styles.emptyState}>
-            <span>NO SECTIONS YET</span>
+        {sections.length ===
+        0 ? (
+          <div
+            className={
+              styles.emptyState
+            }
+          >
+            <span>
+              NO SECTIONS YET
+            </span>
 
             <h2>
               Start with
               <br />
-              the context<span>.</span>
+
+              the context
+              <span>
+                .
+              </span>
             </h2>
 
             <p>
-              Buat section pertama untuk mulai menyusun cerita project.
+              Buat section pertama
+              untuk mulai menyusun
+              cerita project.
             </p>
           </div>
         ) : (
-          <div className={styles.sectionList}>
-            {sections.map((section, index) => (
-              <SectionCard
-                projectId={projectId}
-                section={section}
-                index={index}
-                totalSections={sections.length}
-                key={section.id}
-              />
-            ))}
+          <div
+            className={
+              styles.sectionList
+            }
+          >
+            {sections.map(
+              (
+                section,
+                index,
+              ) => (
+                <SectionCard
+                  projectId={
+                    projectId
+                  }
+                  section={
+                    section
+                  }
+                  index={
+                    index
+                  }
+                  totalSections={
+                    sections.length
+                  }
+                  key={
+                    section.id
+                  }
+                />
+              ),
+            )}
           </div>
         )}
       </section>
