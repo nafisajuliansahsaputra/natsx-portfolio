@@ -7,7 +7,14 @@ import {
   useState,
   type ChangeEvent,
 } from "react";
-import { useRouter } from "next/navigation";
+
+import {
+  useRouter,
+} from "next/navigation";
+
+import type {
+  Locale,
+} from "@/i18n/config";
 
 import {
   IMAGE_MEDIA_MIME_TYPES,
@@ -19,7 +26,9 @@ import {
   type PortfolioImageMimeType,
 } from "@/lib/portfolio-media";
 
-import { createClient } from "@/lib/supabase/client";
+import {
+  createClient,
+} from "@/lib/supabase/client";
 
 import {
   removeImageSectionMedia,
@@ -27,25 +36,120 @@ import {
   type SectionActionState,
 } from "./actions";
 
+import {
+  saveImageSectionLocalizedCopy,
+  type SpecializedTranslationState,
+} from "./specialized-translation-actions";
+
 import styles from "./sections.module.css";
 
-const initialState: SectionActionState = {
-  status: "idle",
-  message: "",
-};
+const initialMediaState:
+  SectionActionState =
+  {
+    status:
+      "idle",
 
-function formatFileSize(bytes: number) {
-  if (bytes < 1024 * 1024) {
-    return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+    message:
+      "",
+  };
+
+const initialTranslationState:
+  SpecializedTranslationState =
+  {
+    status:
+      "idle",
+
+    message:
+      "",
+  };
+
+function isRecord(
+  value: unknown,
+): value is Record<
+  string,
+  unknown
+> {
+  return (
+    typeof value ===
+      "object" &&
+    value !== null &&
+    !Array.isArray(
+      value,
+    )
+  );
+}
+
+function getLocalizedImageCopy(
+  content: Record<
+    string,
+    unknown
+  >,
+) {
+  if (
+    !isRecord(
+      content.image,
+    )
+  ) {
+    return {
+      alt:
+        "",
+
+      caption:
+        "",
+    };
   }
 
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  const image =
+    content.image;
+
+  return {
+    alt:
+      typeof image.alt ===
+      "string"
+        ? image.alt
+        : "",
+
+    caption:
+      typeof image.caption ===
+      "string"
+        ? image.caption
+        : "",
+  };
+}
+
+function formatFileSize(
+  bytes: number,
+) {
+  if (
+    bytes <
+    1024 * 1024
+  ) {
+    return `${Math.max(
+      1,
+      Math.round(
+        bytes /
+          1024,
+      ),
+    )} KB`;
+  }
+
+  return `${(
+    bytes /
+    (
+      1024 *
+      1024
+    )
+  ).toFixed(
+    1,
+  )} MB`;
 }
 
 function getImageExtension(
   mimeType: PortfolioImageMimeType,
 ) {
-  switch (mimeType) {
+  switch (
+    mimeType
+  ) {
     case "image/jpeg":
       return "jpg";
 
@@ -63,64 +167,152 @@ function getImageExtension(
   }
 }
 
-export default function ImageSectionEditor({
-  projectId,
-  section,
-}: {
+type ImageSectionEditorProps = {
   projectId: string;
 
   section: {
     id: string;
-    content: Record<string, unknown>;
+
+    content: Record<
+      string,
+      unknown
+    >;
   };
-}) {
-  const router = useRouter();
+
+  locale: Locale;
+
+  translationContent: Record<
+    string,
+    unknown
+  >;
+};
+
+export default function ImageSectionEditor({
+  projectId,
+  section,
+  locale,
+  translationContent,
+}: ImageSectionEditorProps) {
+  const router =
+    useRouter();
 
   const inputRef =
-    useRef<HTMLInputElement>(null);
+    useRef<HTMLInputElement>(
+      null,
+    );
 
   const previewUrlRef =
-    useRef<string | null>(null);
+    useRef<string | null>(
+      null,
+    );
 
-  const supabase = useMemo(
-    () => createClient(),
-    [],
-  );
+  const supabase =
+    useMemo(
+      () =>
+        createClient(),
+      [],
+    );
 
   const initialMedia =
-    getImageSectionMedia(section.content);
+    getImageSectionMedia(
+      section.content,
+    );
 
-  const [currentMedia, setCurrentMedia] =
+  const localizedInitialCopy =
+    locale ===
+      "en"
+      ? {
+          alt:
+            initialMedia
+              ?.alt ??
+            "",
+
+          caption:
+            initialMedia
+              ?.caption ??
+            "",
+        }
+      : getLocalizedImageCopy(
+          translationContent,
+        );
+
+  const [
+    currentMedia,
+    setCurrentMedia,
+  ] =
     useState<ImageSectionMedia | null>(
       initialMedia,
     );
 
-  const [pendingFile, setPendingFile] =
-    useState<File | null>(null);
+  const [
+    pendingFile,
+    setPendingFile,
+  ] =
+    useState<File | null>(
+      null,
+    );
 
   const [
     pendingPreviewUrl,
     setPendingPreviewUrl,
-  ] = useState<string | null>(null);
+  ] =
+    useState<string | null>(
+      null,
+    );
 
-  const [alt, setAlt] = useState(
-    initialMedia?.alt ?? "",
-  );
+  const [
+    alt,
+    setAlt,
+  ] =
+    useState(
+      localizedInitialCopy.alt,
+    );
 
-  const [caption, setCaption] =
-    useState(initialMedia?.caption ?? "");
+  const [
+    caption,
+    setCaption,
+  ] =
+    useState(
+      localizedInitialCopy.caption,
+    );
 
-  const [isPending, setIsPending] =
-    useState(false);
+  const [
+    isMediaPending,
+    setIsMediaPending,
+  ] =
+    useState(
+      false,
+    );
 
-  const [status, setStatus] =
+  const [
+    isCopyPending,
+    setIsCopyPending,
+  ] =
+    useState(
+      false,
+    );
+
+  const [
+    mediaStatus,
+    setMediaStatus,
+  ] =
     useState<SectionActionState>(
-      initialState,
+      initialMediaState,
+    );
+
+  const [
+    copyStatus,
+    setCopyStatus,
+  ] =
+    useState<SpecializedTranslationState>(
+      initialTranslationState,
     );
 
   useEffect(() => {
     return () => {
-      if (previewUrlRef.current) {
+      if (
+        previewUrlRef.current
+      ) {
         URL.revokeObjectURL(
           previewUrlRef.current,
         );
@@ -131,9 +323,13 @@ export default function ImageSectionEditor({
   const currentPublicUrl =
     currentMedia
       ? supabase.storage
-          .from(currentMedia.asset.bucket)
+          .from(
+            currentMedia
+              .asset.bucket,
+          )
           .getPublicUrl(
-            currentMedia.asset.path,
+            currentMedia
+              .asset.path,
           ).data.publicUrl
       : null;
 
@@ -141,31 +337,42 @@ export default function ImageSectionEditor({
     pendingPreviewUrl ??
     currentPublicUrl;
 
-  const previewLabel = pendingFile
-    ? "NEW IMAGE / NOT SAVED"
-    : currentMedia
-      ? "CURRENT IMAGE"
-      : "NO IMAGE";
+  const previewLabel =
+    pendingFile
+      ? "NEW IMAGE / NOT SAVED"
+      : currentMedia
+        ? "SHARED IMAGE"
+        : "NO IMAGE";
 
   function clearPendingPreview() {
-    if (previewUrlRef.current) {
+    if (
+      previewUrlRef.current
+    ) {
       URL.revokeObjectURL(
         previewUrlRef.current,
       );
 
-      previewUrlRef.current = null;
+      previewUrlRef.current =
+        null;
     }
 
-    setPendingPreviewUrl(null);
+    setPendingPreviewUrl(
+      null,
+    );
   }
 
   function resetFileInput() {
-    setPendingFile(null);
+    setPendingFile(
+      null,
+    );
 
     clearPendingPreview();
 
-    if (inputRef.current) {
-      inputRef.current.value = "";
+    if (
+      inputRef.current
+    ) {
+      inputRef.current.value =
+        "";
     }
   }
 
@@ -173,26 +380,34 @@ export default function ImageSectionEditor({
     event: ChangeEvent<HTMLInputElement>,
   ) {
     const file =
-      event.target.files?.[0];
+      event.target.files
+        ?.[0];
 
-    if (!file) {
+    if (
+      !file
+    ) {
       return;
     }
 
-    const mimeType = file.type;
+    const mimeType =
+      file.type;
 
     if (
       !isAllowedImageMimeType(
         mimeType,
       )
     ) {
-      setStatus({
-        status: "error",
+      setMediaStatus({
+        status:
+          "error",
+
         message:
           "Format gambar tidak didukung. Gunakan JPEG, PNG, WebP, AVIF, atau GIF.",
       });
 
-      event.target.value = "";
+      event.target.value =
+        "";
+
       return;
     }
 
@@ -200,106 +415,127 @@ export default function ImageSectionEditor({
       file.size >
       MAX_PORTFOLIO_MEDIA_FILE_SIZE
     ) {
-      setStatus({
-        status: "error",
+      setMediaStatus({
+        status:
+          "error",
+
         message:
           "Ukuran gambar maksimal 50 MB.",
       });
 
-      event.target.value = "";
+      event.target.value =
+        "";
+
       return;
     }
 
     clearPendingPreview();
 
-    const previewUrl =
-      URL.createObjectURL(file);
+    const preview =
+      URL.createObjectURL(
+        file,
+      );
 
     previewUrlRef.current =
-      previewUrl;
+      preview;
 
     setPendingPreviewUrl(
-      previewUrl,
+      preview,
     );
 
-    setPendingFile(file);
+    setPendingFile(
+      file,
+    );
 
-    setStatus(initialState);
+    setMediaStatus(
+      initialMediaState,
+    );
   }
 
-  async function handleSaveMedia() {
+  async function handleSaveSharedMedia() {
     if (
-      !pendingFile &&
-      !currentMedia
+      !pendingFile
     ) {
-      setStatus({
-        status: "error",
+      setMediaStatus({
+        status:
+          "error",
+
         message:
-          "Pilih gambar terlebih dahulu.",
+          "Pilih gambar baru terlebih dahulu.",
       });
 
       return;
     }
 
-    setIsPending(true);
-    setStatus(initialState);
+    setIsMediaPending(
+      true,
+    );
 
-    let nextMedia =
-      currentMedia;
+    setMediaStatus(
+      initialMediaState,
+    );
 
-    let uploadedPath:
-      | string
-      | null = null;
+    const mimeType =
+      pendingFile.type;
 
-    if (pendingFile) {
-      const mimeType =
-        pendingFile.type;
+    if (
+      !isAllowedImageMimeType(
+        mimeType,
+      )
+    ) {
+      setMediaStatus({
+        status:
+          "error",
 
-      if (
-        !isAllowedImageMimeType(
-          mimeType,
-        )
-      ) {
-        setStatus({
-          status: "error",
-          message:
-            "Format gambar tidak didukung.",
-        });
+        message:
+          "Format gambar tidak didukung.",
+      });
 
-        setIsPending(false);
-        return;
-      }
+      setIsMediaPending(
+        false,
+      );
 
-      if (
-        pendingFile.size >
-        MAX_PORTFOLIO_MEDIA_FILE_SIZE
-      ) {
-        setStatus({
-          status: "error",
-          message:
-            "Ukuran gambar maksimal 50 MB.",
-        });
+      return;
+    }
 
-        setIsPending(false);
-        return;
-      }
+    if (
+      pendingFile.size >
+      MAX_PORTFOLIO_MEDIA_FILE_SIZE
+    ) {
+      setMediaStatus({
+        status:
+          "error",
 
-      const extension =
-        getImageExtension(
-          mimeType,
-        );
+        message:
+          "Ukuran gambar maksimal 50 MB.",
+      });
 
-      const fileId =
-        globalThis.crypto.randomUUID();
+      setIsMediaPending(
+        false,
+      );
 
-      const path =
-        `projects/${projectId}` +
-        `/sections/${section.id}` +
-        `/${fileId}.${extension}`;
+      return;
+    }
 
-      const {
-        error: uploadError,
-      } = await supabase.storage
+    const extension =
+      getImageExtension(
+        mimeType,
+      );
+
+    const fileId =
+      globalThis.crypto
+        .randomUUID();
+
+    const path =
+      `projects/${projectId}` +
+      `/sections/${section.id}` +
+      `/${fileId}.${extension}`;
+
+    const {
+      error:
+        uploadError,
+    } =
+      await supabase.storage
         .from(
           PORTFOLIO_MEDIA_BUCKET,
         )
@@ -307,30 +543,45 @@ export default function ImageSectionEditor({
           path,
           pendingFile,
           {
-            cacheControl: "3600",
+            cacheControl:
+              "3600",
 
             contentType:
               mimeType,
 
-            upsert: false,
+            upsert:
+              false,
           },
         );
 
-      if (uploadError) {
-        setStatus({
-          status: "error",
+    if (
+      uploadError
+    ) {
+      setMediaStatus({
+        status:
+          "error",
 
-          message:
-            `Upload gagal: ${uploadError.message}`,
-        });
+        message:
+          `Upload gagal: ${uploadError.message}`,
+      });
 
-        setIsPending(false);
-        return;
-      }
+      setIsMediaPending(
+        false,
+      );
 
-      uploadedPath = path;
+      return;
+    }
 
-      nextMedia = {
+    /*
+     * Asset adalah shared.
+     *
+     * English metadata lama
+     * dipertahankan ketika image
+     * diganti.
+     */
+    const nextMedia:
+      ImageSectionMedia =
+      {
         asset: {
           bucket:
             PORTFOLIO_MEDIA_BUCKET,
@@ -346,32 +597,16 @@ export default function ImageSectionEditor({
             pendingFile.name,
         },
 
-        alt: alt.trim(),
+        alt:
+          currentMedia
+            ?.alt ??
+          "",
 
         caption:
-          caption.trim(),
+          currentMedia
+            ?.caption ??
+          "",
       };
-    } else if (currentMedia) {
-      nextMedia = {
-        ...currentMedia,
-
-        alt: alt.trim(),
-
-        caption:
-          caption.trim(),
-      };
-    }
-
-    if (!nextMedia) {
-      setStatus({
-        status: "error",
-        message:
-          "Media gambar tidak valid.",
-      });
-
-      setIsPending(false);
-      return;
-    }
 
     try {
       const result =
@@ -385,19 +620,17 @@ export default function ImageSectionEditor({
         result.status ===
         "error"
       ) {
-        if (uploadedPath) {
-          await supabase.storage
-            .from(
-              PORTFOLIO_MEDIA_BUCKET,
-            )
-            .remove([
-              uploadedPath,
-            ]);
-        }
+        await supabase.storage
+          .from(
+            PORTFOLIO_MEDIA_BUCKET,
+          )
+          .remove([
+            path,
+          ]);
 
-        setStatus(result);
-
-        setIsPending(false);
+        setMediaStatus(
+          result,
+        );
 
         return;
       }
@@ -406,53 +639,55 @@ export default function ImageSectionEditor({
         nextMedia,
       );
 
-      setAlt(nextMedia.alt);
-
-      setCaption(
-        nextMedia.caption,
-      );
-
       resetFileInput();
 
-      setStatus(result);
+      setMediaStatus(
+        result,
+      );
 
       router.refresh();
     } catch {
-      setStatus({
-        status: "error",
+      setMediaStatus({
+        status:
+          "error",
 
         message:
           "Status penyimpanan belum dapat dipastikan. Refresh halaman sebelum mencoba lagi.",
       });
     } finally {
-      setIsPending(false);
+      setIsMediaPending(
+        false,
+      );
     }
   }
 
   async function handleRemoveMedia() {
-    if (!currentMedia) {
+    if (
+      !currentMedia
+    ) {
       resetFileInput();
-
-      setStatus({
-        status: "success",
-        message:
-          "Pilihan gambar dibatalkan.",
-      });
 
       return;
     }
 
     const confirmed =
       window.confirm(
-        "Hapus gambar ini dari section dan Storage?",
+        "Hapus shared image ini dari semua bahasa dan Storage?",
       );
 
-    if (!confirmed) {
+    if (
+      !confirmed
+    ) {
       return;
     }
 
-    setIsPending(true);
-    setStatus(initialState);
+    setIsMediaPending(
+      true,
+    );
+
+    setMediaStatus(
+      initialMediaState,
+    );
 
     try {
       const result =
@@ -465,26 +700,124 @@ export default function ImageSectionEditor({
         result.status ===
         "success"
       ) {
-        setCurrentMedia(null);
-
-        setAlt("");
-        setCaption("");
+        setCurrentMedia(
+          null,
+        );
 
         resetFileInput();
 
         router.refresh();
       }
 
-      setStatus(result);
+      setMediaStatus(
+        result,
+      );
     } catch {
-      setStatus({
-        status: "error",
+      setMediaStatus({
+        status:
+          "error",
 
         message:
           "Gagal menghapus media. Refresh halaman lalu coba lagi.",
       });
     } finally {
-      setIsPending(false);
+      setIsMediaPending(
+        false,
+      );
+    }
+  }
+
+  async function handleSaveLocalizedCopy() {
+    if (
+      !currentMedia
+    ) {
+      setCopyStatus({
+        status:
+          "error",
+
+        message:
+          "Upload shared image terlebih dahulu.",
+      });
+
+      return;
+    }
+
+    if (
+      pendingFile
+    ) {
+      setCopyStatus({
+        status:
+          "error",
+
+        message:
+          "Simpan atau batalkan replacement image terlebih dahulu.",
+      });
+
+      return;
+    }
+
+    setIsCopyPending(
+      true,
+    );
+
+    setCopyStatus(
+      initialTranslationState,
+    );
+
+    try {
+      const result =
+        await saveImageSectionLocalizedCopy(
+          projectId,
+          section.id,
+          locale,
+          alt,
+          caption,
+        );
+
+      setCopyStatus(
+        result,
+      );
+
+      if (
+        result.status ===
+        "success"
+      ) {
+        /*
+         * English action juga
+         * menyinkronkan base image
+         * metadata.
+         */
+        if (
+          locale ===
+          "en"
+        ) {
+          setCurrentMedia(
+            {
+              ...currentMedia,
+
+              alt:
+                alt.trim(),
+
+              caption:
+                caption.trim(),
+            },
+          );
+        }
+
+        router.refresh();
+      }
+    } catch {
+      setCopyStatus({
+        status:
+          "error",
+
+        message:
+          "Gagal menyimpan localized image copy. Refresh halaman lalu coba lagi.",
+      });
+    } finally {
+      setIsCopyPending(
+        false,
+      );
     }
   }
 
@@ -500,14 +833,16 @@ export default function ImageSectionEditor({
         }
       >
         <span>
-          IMAGE CONTENT
+          SHARED IMAGE MEDIA
         </span>
 
         <p>
-          Upload gambar ke
-          portfolio-media, lalu
-          simpan metadata visual
-          untuk section ini.
+          File gambar digunakan
+          oleh English, Indonesia,
+          dan Deutsch. Mengganti
+          gambar di sini akan
+          menggantinya untuk semua
+          bahasa.
         </p>
       </div>
 
@@ -528,8 +863,13 @@ export default function ImageSectionEditor({
               }
               role="img"
               aria-label={
-                alt.trim() ||
-                "Project image preview"
+                locale ===
+                "en"
+                  ? alt.trim() ||
+                    "Project image preview"
+                  : currentMedia
+                      ?.alt ||
+                    "Project image preview"
               }
               style={{
                 backgroundImage:
@@ -539,7 +879,9 @@ export default function ImageSectionEditor({
               }}
             >
               <span>
-                {previewLabel}
+                {
+                  previewLabel
+                }
               </span>
             </div>
           ) : (
@@ -553,8 +895,9 @@ export default function ImageSectionEditor({
               </span>
 
               <p>
-                Choose an image
-                for this section.
+                Choose one shared
+                image for this
+                section.
               </p>
             </div>
           )}
@@ -612,19 +955,20 @@ export default function ImageSectionEditor({
             }
           >
             <input
-              ref={inputRef}
+              ref={
+                inputRef
+              }
               type="file"
-
-              accept={IMAGE_MEDIA_MIME_TYPES.join(
-                ",",
-              )}
-
+              accept={
+                IMAGE_MEDIA_MIME_TYPES.join(
+                  ",",
+                )
+              }
               onChange={
                 handleFileChange
               }
-
               disabled={
-                isPending
+                isMediaPending
               }
             />
 
@@ -644,116 +988,6 @@ export default function ImageSectionEditor({
 
           <div
             className={
-              styles.mediaFields
-            }
-          >
-            <label
-              className={
-                styles.field
-              }
-            >
-              <span>
-                Alt text
-              </span>
-
-              <input
-                className={
-                  styles.input
-                }
-
-                type="text"
-
-                value={alt}
-
-                onChange={(
-                  event,
-                ) =>
-                  setAlt(
-                    event.target
-                      .value,
-                  )
-                }
-
-                placeholder="Describe the image for accessibility"
-
-                maxLength={
-                  500
-                }
-
-                disabled={
-                  isPending
-                }
-              />
-            </label>
-
-            <label
-              className={
-                styles.field
-              }
-            >
-              <span>
-                Caption / label
-              </span>
-
-              <textarea
-                className={
-                  styles.textarea
-                }
-
-                value={
-                  caption
-                }
-
-                onChange={(
-                  event,
-                ) =>
-                  setCaption(
-                    event.target
-                      .value,
-                  )
-                }
-
-                placeholder="Optional visual caption"
-
-                rows={4}
-
-                maxLength={
-                  1000
-                }
-
-                disabled={
-                  isPending
-                }
-              />
-            </label>
-          </div>
-
-          {status.message ? (
-            <div
-              className={
-                styles.mediaStatus
-              }
-
-              data-type={
-                status.status
-              }
-
-              role="status"
-
-              aria-live="polite"
-            >
-              <span />
-
-              <p>
-                {
-                  status.message
-                }
-              </p>
-            </div>
-          ) : null}
-
-          <div
-            className={
               styles.mediaActions
             }
           >
@@ -763,23 +997,19 @@ export default function ImageSectionEditor({
                   className={
                     styles.mediaSecondaryButton
                   }
-
                   type="button"
-
                   onClick={() => {
                     resetFileInput();
 
-                    setStatus(
-                      initialState,
+                    setMediaStatus(
+                      initialMediaState,
                     );
                   }}
-
                   disabled={
-                    isPending
+                    isMediaPending
                   }
                 >
-                  Discard
-                  selected
+                  Discard selected
                 </button>
               ) : null}
 
@@ -788,18 +1018,15 @@ export default function ImageSectionEditor({
                   className={
                     styles.mediaDangerButton
                   }
-
                   type="button"
-
                   onClick={
                     handleRemoveMedia
                   }
-
                   disabled={
-                    isPending
+                    isMediaPending
                   }
                 >
-                  Remove image
+                  Remove shared image
                 </button>
               ) : null}
             </div>
@@ -808,28 +1035,246 @@ export default function ImageSectionEditor({
               className={
                 styles.mediaPrimaryButton
               }
-
               type="button"
-
               onClick={
-                handleSaveMedia
+                handleSaveSharedMedia
               }
-
               disabled={
-                isPending ||
-                (!pendingFile &&
-                  !currentMedia)
+                isMediaPending ||
+                !pendingFile
               }
             >
-              {isPending
+              {isMediaPending
                 ? "Saving media..."
-                : pendingFile
-                  ? currentMedia
-                    ? "Replace & save ↗"
-                    : "Upload & save ↗"
-                  : "Save media details ↗"}
+                : currentMedia
+                  ? "Replace shared image ↗"
+                  : "Save shared image ↗"}
             </button>
           </div>
+
+          {mediaStatus.message ? (
+            <div
+              className={
+                styles.mediaStatus
+              }
+              data-type={
+                mediaStatus.status
+              }
+              role="status"
+              aria-live="polite"
+            >
+              <span />
+
+              <p>
+                {
+                  mediaStatus.message
+                }
+              </p>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      <div
+        className={
+          styles.sharedSectionSettings
+        }
+      >
+        <div
+          className={
+            styles.imageEditorHeader
+          }
+        >
+          <span>
+            {locale.toUpperCase()} IMAGE COPY
+          </span>
+
+          <p>
+            Alt text dan caption
+            mengikuti bahasa aktif.
+            Field kosong pada ID/DE
+            akan fallback ke English.
+          </p>
+        </div>
+
+        {locale !==
+        "en" ? (
+          <p
+            className={
+              styles.sectionLanguageHint
+            }
+          >
+            English reference — Alt:{" "}
+            <strong>
+              {currentMedia
+                ?.alt ||
+                "—"}
+            </strong>
+            {" · "}
+            Caption:{" "}
+            <strong>
+              {currentMedia
+                ?.caption ||
+                "—"}
+            </strong>
+          </p>
+        ) : null}
+
+        <div
+          className={
+            styles.mediaFields
+          }
+        >
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              Alt text
+            </span>
+
+            <input
+              className={
+                styles.input
+              }
+              type="text"
+              value={
+                alt
+              }
+              onChange={(
+                event,
+              ) => {
+                setAlt(
+                  event.target
+                    .value,
+                );
+
+                setCopyStatus(
+                  initialTranslationState,
+                );
+              }}
+              placeholder={
+                locale ===
+                "en"
+                  ? "Describe the image for accessibility"
+                  : "Leave empty to use English"
+              }
+              maxLength={
+                500
+              }
+              disabled={
+                isCopyPending ||
+                !currentMedia
+              }
+            />
+          </label>
+
+          <label
+            className={
+              styles.field
+            }
+          >
+            <span>
+              Caption / label
+            </span>
+
+            <textarea
+              className={
+                styles.textarea
+              }
+              value={
+                caption
+              }
+              onChange={(
+                event,
+              ) => {
+                setCaption(
+                  event.target
+                    .value,
+                );
+
+                setCopyStatus(
+                  initialTranslationState,
+                );
+              }}
+              placeholder={
+                locale ===
+                "en"
+                  ? "Optional visual caption"
+                  : "Leave empty to use English"
+              }
+              rows={
+                4
+              }
+              maxLength={
+                1000
+              }
+              disabled={
+                isCopyPending ||
+                !currentMedia
+              }
+            />
+          </label>
+        </div>
+
+        {copyStatus.message ? (
+          <div
+            className={
+              styles.mediaStatus
+            }
+            data-type={
+              copyStatus.status
+            }
+            role="status"
+            aria-live="polite"
+          >
+            <span />
+
+            <p>
+              {
+                copyStatus.message
+              }
+            </p>
+          </div>
+        ) : null}
+
+        <div
+          className={
+            styles.mediaActions
+          }
+        >
+          <p
+            className={
+              styles.sectionSaveHint
+            }
+          >
+            {locale ===
+            "en"
+              ? "English menjadi fallback untuk alt dan caption bahasa lain."
+              : `Hanya ${locale.toUpperCase()} image copy yang akan berubah.`}
+          </p>
+
+          <button
+            className={
+              styles.mediaPrimaryButton
+            }
+            type="button"
+            onClick={
+              handleSaveLocalizedCopy
+            }
+            disabled={
+              isCopyPending ||
+              !currentMedia ||
+              Boolean(
+                pendingFile,
+              )
+            }
+          >
+            {isCopyPending
+              ? "Saving copy..."
+              : `Save ${locale.toUpperCase()} image copy ↗`}
+          </button>
         </div>
       </div>
     </section>

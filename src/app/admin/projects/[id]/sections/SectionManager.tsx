@@ -1081,14 +1081,26 @@ function SectionCard({
 
       {section.section_type ===
       "image" ? (
-        <ImageSectionEditor
-          projectId={
-            projectId
-          }
-          section={
-            section
-          }
-        />
+<ImageSectionEditor
+  key={`image-${section.id}-${contentLocale}`}
+  projectId={
+    projectId
+  }
+  section={
+    section
+  }
+  locale={
+    contentLocale
+  }
+  translationContent={
+    section
+      .translations[
+        contentLocale
+      ]
+      ?.content ??
+    {}
+  }
+/>
       ) : section.section_type ===
         "gallery" ? (
         <GallerySectionEditor
