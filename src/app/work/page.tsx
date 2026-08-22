@@ -48,8 +48,10 @@ export async function WorkPageContent({
       locale,
     );
 
-  const projects =
-    await getPublishedProjects();
+const projects =
+  await getPublishedProjects(
+    locale,
+  );
 
   const projectCount =
     String(

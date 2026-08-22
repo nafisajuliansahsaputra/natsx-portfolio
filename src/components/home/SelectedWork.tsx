@@ -59,10 +59,11 @@ export default async function SelectedWork({
       locale,
     ).selectedWork;
 
-  const featuredProjects =
-    await getFeaturedProjects(
-      3,
-    );
+const featuredProjects =
+  await getFeaturedProjects(
+    3,
+    locale,
+  );
 
   const yearRange =
     getPublicProjectYearRange(
