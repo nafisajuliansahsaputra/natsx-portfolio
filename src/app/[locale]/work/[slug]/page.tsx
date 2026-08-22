@@ -2,9 +2,18 @@ import type {
   Metadata,
 } from "next";
 
-import ProjectPage, {
-  generateMetadata as generateProjectMetadata,
+import {
+  notFound,
+} from "next/navigation";
+
+import {
+  generateProjectMetadata,
+  ProjectPageContent,
 } from "@/app/work/[slug]/page";
+
+import {
+  isLocalizedLocale,
+} from "@/i18n/config";
 
 type LocalizedProjectPageProps = {
   params: Promise<{
@@ -20,30 +29,55 @@ export async function generateMetadata({
   params,
 }: LocalizedProjectPageProps): Promise<Metadata> {
   const {
+    locale,
     slug,
   } = await params;
 
-  return generateProjectMetadata({
-    params:
-      Promise.resolve({
-        slug,
-      }),
-  });
+  if (
+    !isLocalizedLocale(
+      locale,
+    )
+  ) {
+    return {
+      title:
+        "Project Not Found",
+
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  return generateProjectMetadata(
+    slug,
+    locale,
+  );
 }
 
 export default async function LocalizedProjectPage({
   params,
 }: LocalizedProjectPageProps) {
   const {
+    locale,
     slug,
   } = await params;
 
+  if (
+    !isLocalizedLocale(
+      locale,
+    )
+  ) {
+    notFound();
+  }
+
   return (
-    <ProjectPage
-      params={
-        Promise.resolve({
-          slug,
-        })
+    <ProjectPageContent
+      slug={
+        slug
+      }
+      locale={
+        locale
       }
     />
   );

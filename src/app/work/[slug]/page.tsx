@@ -6,13 +6,24 @@ import type {
   Metadata,
 } from "next";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
-
 import {
   notFound,
 } from "next/navigation";
 
+import LocaleLink from "@/components/i18n/LocaleLink";
 import SiteHeader from "@/components/layout/SiteHeader";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  localizePath,
+} from "@/i18n/config";
+
+import {
+  getProjectMessages,
+} from "@/i18n/project-messages";
 
 import {
   getProjectPreviewImage,
@@ -36,18 +47,22 @@ type ProjectPageProps = {
   }>;
 };
 
+type ProjectPageContentProps = {
+  slug: string;
+  locale: Locale;
+};
+
 export const revalidate =
   3600;
 
-export async function generateMetadata({
-  params,
-}: ProjectPageProps): Promise<Metadata> {
-  const { slug } =
-    await params;
-
+export async function generateProjectMetadata(
+  slug: string,
+  locale: Locale,
+): Promise<Metadata> {
   const data =
     await getPublishedProjectPage(
       slug,
+      locale,
     );
 
   if (!data) {
@@ -67,13 +82,48 @@ export async function generateMetadata({
     sections,
   } = data;
 
+  const copy =
+    getProjectMessages(
+      locale,
+    );
+
   const description =
     project.summary ||
-    `${project.title} — a project case study by NATSX.`;
+    `${project.title} — ${copy.metadataFallback}`;
+
+  const path =
+    localizePath(
+      `/work/${project.slug}`,
+      locale,
+    );
 
   const canonical =
     getAbsoluteUrl(
-      `/work/${project.slug}`,
+      path,
+    );
+
+  const englishUrl =
+    getAbsoluteUrl(
+      localizePath(
+        `/work/${project.slug}`,
+        "en",
+      ),
+    );
+
+  const indonesianUrl =
+    getAbsoluteUrl(
+      localizePath(
+        `/work/${project.slug}`,
+        "id",
+      ),
+    );
+
+  const germanUrl =
+    getAbsoluteUrl(
+      localizePath(
+        `/work/${project.slug}`,
+        "de",
+      ),
     );
 
   const previewImage =
@@ -89,6 +139,20 @@ export async function generateMetadata({
 
     alternates: {
       canonical,
+
+      languages: {
+        en:
+          englishUrl,
+
+        id:
+          indonesianUrl,
+
+        de:
+          germanUrl,
+
+        "x-default":
+          englishUrl,
+      },
     },
 
     openGraph: {
@@ -105,6 +169,13 @@ export async function generateMetadata({
 
       siteName:
         "NATSX",
+
+      locale:
+        locale === "id"
+          ? "id_ID"
+          : locale === "de"
+            ? "de_DE"
+            : "en_US",
 
       publishedTime:
         project.publishedAt ??
@@ -144,6 +215,19 @@ export async function generateMetadata({
           : undefined,
     },
   };
+}
+
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const {
+    slug,
+  } = await params;
+
+  return generateProjectMetadata(
+    slug,
+    "en",
+  );
 }
 
 function getAccessibleContrastColor(
@@ -226,15 +310,6 @@ function getAccessibleContrastColor(
         blue,
       );
 
-  /*
-   * Contrast ratio menurut
-   * WCAG relative luminance.
-   *
-   * Black / white dipilih berdasarkan
-   * contrast ratio terbesar sehingga
-   * project accent arbitrary tetap
-   * mempunyai foreground yang aman.
-   */
   const contrastWithWhite =
     1.05 /
     (
@@ -255,20 +330,24 @@ function getAccessibleContrastColor(
     : "#ffffff";
 }
 
-export default async function ProjectPage({
-  params,
-}: ProjectPageProps) {
-  const { slug } =
-    await params;
-
+export async function ProjectPageContent({
+  slug,
+  locale,
+}: ProjectPageContentProps) {
   const data =
     await getPublishedProjectPage(
       slug,
+      locale,
     );
 
   if (!data) {
     notFound();
   }
+
+  const copy =
+    getProjectMessages(
+      locale,
+    );
 
   const {
     project,
@@ -281,10 +360,10 @@ export default async function ProjectPage({
     "--project-accent":
       project.accentColor,
 
-"--project-on-accent":
-  getAccessibleContrastColor(
-    project.accentColor,
-  ),
+    "--project-on-accent":
+      getAccessibleContrastColor(
+        project.accentColor,
+      ),
 
     "--project-secondary":
       project.secondaryColor ||
@@ -296,16 +375,16 @@ export default async function ProjectPage({
       <SiteHeader />
 
       <main
-  id="main-content"
-  tabIndex={-1}
-  className={
-    styles.page
-  }
-  style={
-    projectStyle
-  }
-  data-motion-page="project-detail"
->
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        style={
+          projectStyle
+        }
+        data-motion-page="project-detail"
+      >
         <section
           className={
             styles.hero
@@ -318,8 +397,8 @@ export default async function ProjectPage({
               }
               data-motion-project-hero-piece="top"
             >
-<LocaleLink
-  href="/work"
+              <LocaleLink
+                href="/work"
                 className={
                   styles.backLink
                 }
@@ -328,7 +407,9 @@ export default async function ProjectPage({
                   ←
                 </span>
 
-                All Work
+                {
+                  copy.back
+                }
               </LocaleLink>
 
               <span
@@ -336,7 +417,9 @@ export default async function ProjectPage({
                   styles.projectIndex
                 }
               >
-                Project{" "}
+                {
+                  copy.project
+                }{" "}
                 {
                   project.number
                 }{" "}
@@ -424,7 +507,10 @@ export default async function ProjectPage({
                     styles.detailLabel
                   }
                 >
-                  Year
+                  {
+                    copy.details
+                      .year
+                  }
                 </span>
 
                 <strong>
@@ -440,7 +526,10 @@ export default async function ProjectPage({
                     styles.detailLabel
                   }
                 >
-                  Period
+                  {
+                    copy.details
+                      .period
+                  }
                 </span>
 
                 <strong>
@@ -456,7 +545,10 @@ export default async function ProjectPage({
                     styles.detailLabel
                   }
                 >
-                  Role
+                  {
+                    copy.details
+                      .role
+                  }
                 </span>
 
                 <div
@@ -488,7 +580,10 @@ export default async function ProjectPage({
                     styles.detailLabel
                   }
                 >
-                  Project
+                  {
+                    copy.details
+                      .project
+                  }
                 </span>
 
                 {project.website ? (
@@ -502,7 +597,10 @@ export default async function ProjectPage({
                       styles.liveLink
                     }
                   >
-                    Visit Live
+                    {
+                      copy.details
+                        .visitLive
+                    }
 
                     <span>
                       ↗
@@ -510,7 +608,10 @@ export default async function ProjectPage({
                   </a>
                 ) : (
                   <strong>
-                    Case Study
+                    {
+                      copy.details
+                        .caseStudy
+                    }
                   </strong>
                 )}
               </div>
@@ -547,13 +648,17 @@ export default async function ProjectPage({
             >
               <div className="site-container">
                 <span>
-                  CASE STUDY /
-                  COMING SOON
+                  {
+                    copy.empty
+                      .label
+                  }
                 </span>
 
                 <h2>
-                  Story in
-                  progress
+                  {
+                    copy.empty
+                      .heading
+                  }
 
                   <span>
                     .
@@ -561,11 +666,10 @@ export default async function ProjectPage({
                 </h2>
 
                 <p>
-                  This project is
-                  published, but
-                  its detailed case
-                  study is still
-                  being prepared.
+                  {
+                    copy.empty
+                      .description
+                  }
                 </p>
               </div>
             </section>
@@ -597,7 +701,9 @@ export default async function ProjectPage({
                   />
 
                   <span>
-                    Next Project
+                    {
+                      copy.next
+                    }
                   </span>
                 </div>
 
@@ -615,8 +721,8 @@ export default async function ProjectPage({
                 </span>
               </div>
 
-<LocaleLink
-  href={`/work/${nextProject.slug}`}
+              <LocaleLink
+                href={`/work/${nextProject.slug}`}
                 className={
                   styles.nextLink
                 }
@@ -659,11 +765,28 @@ export default async function ProjectPage({
                     ↗
                   </span>
                 </div>
-</LocaleLink>
+              </LocaleLink>
             </div>
           </section>
         ) : null}
       </main>
     </>
+  );
+}
+
+export default async function ProjectPage({
+  params,
+}: ProjectPageProps) {
+  const {
+    slug,
+  } = await params;
+
+  return (
+    <ProjectPageContent
+      slug={
+        slug
+      }
+      locale="en"
+    />
   );
 }

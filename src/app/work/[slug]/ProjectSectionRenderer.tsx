@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   getFinaleSectionMedia,
@@ -796,14 +796,14 @@ function FinaleSection({
               finale.ctaUrl.startsWith(
                 "/",
               ) ? (
-                <Link
-                  href={
-                    finale.ctaUrl
-                  }
-                  className={
-                    styles.finaleCta
-                  }
-                >
+<LocaleLink
+  href={
+    finale.ctaUrl
+  }
+  className={
+    styles.finaleCta
+  }
+>
                   {
                     finale.ctaLabel
                   }
@@ -811,7 +811,7 @@ function FinaleSection({
                   <span>
                     ↗
                   </span>
-                </Link>
+                </LocaleLink>
               ) : (
                 <a
                   href={
