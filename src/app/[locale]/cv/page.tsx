@@ -1,6 +1,20 @@
-import CVPage from "@/app/cv/page";
+import {
+  notFound,
+} from "next/navigation";
 
-type LocalizedCVPageProps = {
+import {
+  CvPageContent,
+} from "@/app/cv/page";
+
+import {
+  isLocalizedLocale,
+} from "@/i18n/config";
+
+type LocalizedCvPageProps = {
+  params: Promise<{
+    locale: string;
+  }>;
+
   searchParams: Promise<{
     lang?:
       | string
@@ -8,11 +22,27 @@ type LocalizedCVPageProps = {
   }>;
 };
 
-export default function LocalizedCVPage({
+export default async function LocalizedCvPage({
+  params,
   searchParams,
-}: LocalizedCVPageProps) {
+}: LocalizedCvPageProps) {
+  const {
+    locale,
+  } = await params;
+
+  if (
+    !isLocalizedLocale(
+      locale,
+    )
+  ) {
+    notFound();
+  }
+
   return (
-    <CVPage
+    <CvPageContent
+      locale={
+        locale
+      }
       searchParams={
         searchParams
       }

@@ -4,44 +4,45 @@ import {
   useState,
 } from "react";
 
+import LocaleLink from "@/components/i18n/LocaleLink";
+
 import {
   cvVersions,
   type CvVersion,
 } from "@/data/cv";
 
-import styles from "./Cv.module.css";
-
-import Link from "next/link";
-
-import {
-  usePathname,
-} from "next/navigation";
-
-import {
-  getLocaleFromPathname,
-  localizePath,
+import type {
+  Locale,
 } from "@/i18n/config";
 
+import {
+  getCvMessages,
+} from "@/i18n/cv-messages";
+
+import styles from "./Cv.module.css";
+
 type CvViewerProps = {
-  initialVersion: CvVersion;
+  initialVersion:
+    CvVersion;
+
+  locale:
+    Locale;
 };
 
 export default function CvViewer({
   initialVersion,
+  locale,
 }: CvViewerProps) {
+  const copy =
+    getCvMessages(
+      locale,
+    );
+
   const [
     activeVersion,
     setActiveVersion,
   ] = useState(
     initialVersion,
-  );
-  
-  const pathname =
-  usePathname();
-
-const locale =
-  getLocaleFromPathname(
-    pathname,
   );
 
   function selectVersion(
@@ -56,6 +57,18 @@ const locale =
         window.location.href,
       );
 
+    /*
+     * Query ?lang hanya
+     * mengontrol bahasa PDF.
+     *
+     * URL locale website tidak
+     * berubah.
+     *
+     * /de/cv?lang=en
+     * berarti:
+     * - UI Deutsch
+     * - PDF English
+     */
     url.searchParams.set(
       "lang",
       version.id,
@@ -70,10 +83,6 @@ const locale =
 
   return (
     <>
-      {/* =========================
-          LANGUAGE
-      ========================= */}
-
       <section
         className={
           styles.languageSection
@@ -87,11 +96,11 @@ const locale =
             data-motion-scroll="cv-language-header"
           >
             <div
-  className={
-    styles.label
-  }
-  data-motion-piece="label"
->
+              className={
+                styles.label
+              }
+              data-motion-piece="label"
+            >
               <span
                 className={
                   styles.dot
@@ -99,17 +108,23 @@ const locale =
               />
 
               <span>
-                Select language
+                {
+                  copy.language
+                    .label
+                }
               </span>
             </div>
 
-<span
-  className={
-    styles.sectionMeta
-  }
-  data-motion-piece="meta"
->
-              03 / Versions
+            <span
+              className={
+                styles.sectionMeta
+              }
+              data-motion-piece="meta"
+            >
+              {
+                copy.language
+                  .versions
+              }
             </span>
           </div>
 
@@ -120,7 +135,9 @@ const locale =
             data-motion-scroll="cv-language-list"
           >
             {cvVersions.map(
-              (version) => {
+              (
+                version,
+              ) => {
                 const isActive =
                   version.id ===
                   activeVersion.id;
@@ -131,6 +148,7 @@ const locale =
                     data-motion-piece="item"
                     className={[
                       styles.languageItem,
+
                       isActive
                         ? styles.languageItemActive
                         : "",
@@ -138,7 +156,9 @@ const locale =
                       .filter(
                         Boolean,
                       )
-                      .join(" ")}
+                      .join(
+                        " ",
+                      )}
                     key={
                       version.id
                     }
@@ -177,21 +197,30 @@ const locale =
                       }
                     >
                       {isActive
-                        ? "Selected"
-                        : "View"}
+                        ? copy
+                            .language
+                            .selected
+                        : copy
+                            .language
+                            .view}
                     </span>
 
                     <span
-  className={[
-    styles.languageIndicator,
-    isActive
-      ? styles.languageIndicatorActive
-      : "",
-  ]
-    .filter(Boolean)
-    .join(" ")}
-  aria-hidden="true"
-/>
+                      className={[
+                        styles.languageIndicator,
+
+                        isActive
+                          ? styles.languageIndicatorActive
+                          : "",
+                      ]
+                        .filter(
+                          Boolean,
+                        )
+                        .join(
+                          " ",
+                        )}
+                      aria-hidden="true"
+                    />
                   </button>
                 );
               },
@@ -199,10 +228,6 @@ const locale =
           </div>
         </div>
       </section>
-
-      {/* =========================
-          PDF
-      ========================= */}
 
       <section
         className={
@@ -216,31 +241,37 @@ const locale =
             }
             data-motion-scroll="cv-viewer-header"
           >
-<div
-  data-motion-piece="title"
->
-  <span
-    className={
-      styles.viewerEyebrow
-    }
-  >
-                Currently viewing
+            <div
+              data-motion-piece="title"
+            >
+              <span
+                className={
+                  styles.viewerEyebrow
+                }
+              >
+                {
+                  copy.viewer
+                    .eyebrow
+                }
               </span>
 
               <h2>
                 {
                   activeVersion.language
                 }
-                <span>.</span>
+
+                <span>
+                  .
+                </span>
               </h2>
             </div>
 
-<div
-  className={
-    styles.viewerActions
-  }
-  data-motion-piece="actions"
->
+            <div
+              className={
+                styles.viewerActions
+              }
+              data-motion-piece="actions"
+            >
               <a
                 href={
                   activeVersion.file
@@ -251,7 +282,10 @@ const locale =
                   styles.secondaryAction
                 }
               >
-                Open PDF
+                {
+                  copy.viewer
+                    .openPdf
+                }
 
                 <span>
                   ↗
@@ -269,7 +303,10 @@ const locale =
                   styles.primaryAction
                 }
               >
-                Download CV
+                {
+                  copy.viewer
+                    .download
+                }
 
                 <span>
                   ↓
@@ -312,9 +349,7 @@ const locale =
                 className={
                   styles.pdfObject
                 }
-                data={
-  `${activeVersion.file}#page=1&view=FitH&toolbar=0&navpanes=0`
-}
+                data={`${activeVersion.file}#page=1&view=FitH&toolbar=0&navpanes=0`}
                 type="application/pdf"
                 aria-label={`CV ${activeVersion.language}`}
               >
@@ -324,14 +359,17 @@ const locale =
                   }
                 >
                   <span>
-                    PDF Preview
+                    {
+                      copy.viewer
+                        .fallbackTitle
+                    }
                   </span>
 
                   <p>
-                    Your browser
-                    does not support
-                    embedded PDF
-                    preview.
+                    {
+                      copy.viewer
+                        .fallbackDescription
+                    }
                   </p>
 
                   <a
@@ -341,7 +379,11 @@ const locale =
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Open CV
+                    {
+                      copy.viewer
+                        .fallbackAction
+                    }
+
                     <span>
                       ↗
                     </span>
@@ -352,10 +394,6 @@ const locale =
           </div>
         </div>
       </section>
-
-      {/* =========================
-          CLOSING
-      ========================= */}
 
       <section
         className={
@@ -369,12 +407,12 @@ const locale =
             }
             data-motion-scroll="cv-closing"
           >
-<div
-  className={
-    styles.closingLabel
-  }
-  data-motion-piece="label"
->
+            <div
+              className={
+                styles.closingLabel
+              }
+              data-motion-piece="label"
+            >
               <span
                 className={
                   styles.dot
@@ -382,39 +420,45 @@ const locale =
               />
 
               <span>
-                Prefer to talk?
+                {
+                  copy.closing
+                    .label
+                }
               </span>
             </div>
 
-<div
-  className={
-    styles.closingMain
-  }
-  data-motion-piece="main"
->
+            <div
+              className={
+                styles.closingMain
+              }
+              data-motion-piece="main"
+            >
               <p>
-                A CV tells part
-                of the story
-                <span>.</span>
+                {
+                  copy.closing
+                    .heading
+                }
+
+                <span>
+                  .
+                </span>
               </p>
 
-<Link
-  href={
-    localizePath(
-      "/contact",
-      locale,
-    )
-  }
-  className={
-    styles.closingLink
-  }
->
-  Start a conversation
+              <LocaleLink
+                href="/contact"
+                className={
+                  styles.closingLink
+                }
+              >
+                {
+                  copy.closing
+                    .action
+                }
 
-  <span>
-    ↗
-  </span>
-</Link>
+                <span>
+                  ↗
+                </span>
+              </LocaleLink>
             </div>
           </div>
         </div>

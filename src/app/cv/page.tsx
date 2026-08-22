@@ -8,13 +8,21 @@ import {
   site,
 } from "@/data/site";
 
-import CvViewer from "./CvViewer";
+import type {
+  Locale,
+} from "@/i18n/config";
 
-import styles from "./Cv.module.css";
+import {
+  getCvMessages,
+} from "@/i18n/cv-messages";
 
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import CvViewer from "./CvViewer";
+
+import styles from "./Cv.module.css";
 
 const description =
   `View and download the curriculum vitae of ${site.person} / ${site.name}.`;
@@ -30,46 +38,66 @@ export const metadata =
       "/cv",
   });
 
-type CvPageProps = {
-  searchParams: Promise<{
-    lang?:
-      | string
-      | string[];
-  }>;
+type CvSearchParams = Promise<{
+  lang?:
+    | string
+    | string[];
+}>;
+
+type CvPageContentProps = {
+  locale: Locale;
+
+  searchParams:
+    CvSearchParams;
 };
 
-export default async function CvPage({
+export async function CvPageContent({
+  locale,
   searchParams,
-}: CvPageProps) {
+}: CvPageContentProps) {
+  const copy =
+    getCvMessages(
+      locale,
+    );
+
   const params =
     await searchParams;
 
   const languageParam =
-    Array.isArray(params.lang)
+    Array.isArray(
+      params.lang,
+    )
       ? params.lang[0]
       : params.lang;
 
+  /*
+   * Jika visitor belum memilih
+   * bahasa dokumen CV secara
+   * eksplisit, gunakan bahasa
+   * website sebagai default.
+   *
+   * /cv     → English PDF
+   * /id/cv  → Indonesian PDF
+   * /de/cv  → German PDF
+   */
   const initialVersion =
     getCvVersion(
-      languageParam,
+      languageParam ??
+        locale,
     );
 
   return (
     <>
       <SiteHeader />
 
-<main
-  id="main-content"
-  tabIndex={-1}
-  className={
-    styles.page
-  }
-  data-motion-page="cv"
->
-        {/* =========================
-            HERO
-        ========================= */}
-
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        data-motion-page="cv"
+      >
         <section
           className={
             styles.hero
@@ -77,11 +105,11 @@ export default async function CvPage({
         >
           <div className="site-container">
             <div
-  className={
-    styles.heroTop
-  }
-  data-motion-cv-hero-piece="top"
->
+              className={
+                styles.heroTop
+              }
+              data-motion-cv-hero-piece="top"
+            >
               <div
                 className={
                   styles.label
@@ -94,7 +122,9 @@ export default async function CvPage({
                 />
 
                 <span>
-                  CV / Resume
+                  {
+                    copy.hero.label
+                  }
                 </span>
               </div>
 
@@ -103,9 +133,13 @@ export default async function CvPage({
                   styles.heroMeta
                 }
               >
-                {site.person}
+                {
+                  site.person
+                }
                 {" / "}
-                {site.location}
+                {
+                  site.location
+                }
               </span>
             </div>
 
@@ -114,52 +148,87 @@ export default async function CvPage({
                 styles.heroMain
               }
             >
-<h1
-  className={
-    styles.heading
-  }
-  data-motion-cv-hero-piece="title"
->
-                Curriculum
+              <h1
+                className={
+                  styles.heading
+                }
+                data-motion-cv-hero-piece="title"
+              >
+                {
+                  copy.hero
+                    .headingLine1
+                }
+
                 <br />
-                Vitae
-                <span>.</span>
+
+                {
+                  copy.hero
+                    .headingLine2
+                }
+
+                <span>
+                  .
+                </span>
               </h1>
 
-<div
-  className={
-    styles.heroIntro
-  }
-  data-motion-cv-hero-piece="intro"
->
+              <div
+                className={
+                  styles.heroIntro
+                }
+                data-motion-cv-hero-piece="intro"
+              >
                 <p>
-                  A closer look at
-                  my experience,
-                  background, skills,
-                  and selected
-                  professional work.
+                  {
+                    copy.hero
+                      .description
+                  }
                 </p>
 
                 <span>
-                  Choose a language
+                  {
+                    copy.hero
+                      .noteLine1
+                  }
+
                   <br />
-                  View or download
+
+                  {
+                    copy.hero
+                      .noteLine2
+                  }
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* =========================
-            VIEWER
-        ========================= */}
-
         <CvViewer
           initialVersion={
             initialVersion
           }
+          locale={
+            locale
+          }
         />
       </main>
     </>
+  );
+}
+
+type CvPageProps = {
+  searchParams:
+    CvSearchParams;
+};
+
+export default function CvPage({
+  searchParams,
+}: CvPageProps) {
+  return (
+    <CvPageContent
+      locale="en"
+      searchParams={
+        searchParams
+      }
+    />
   );
 }
