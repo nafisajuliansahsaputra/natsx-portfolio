@@ -1,7 +1,41 @@
-import PlaygroundPage from "@/app/playground/page";
+import {
+  notFound,
+} from "next/navigation";
 
-export default function LocalizedPlaygroundPage() {
+import {
+  PlaygroundPageContent,
+} from "@/app/playground/page";
+
+import {
+  isLocalizedLocale,
+} from "@/i18n/config";
+
+type LocalizedPlaygroundPageProps = {
+  params: Promise<{
+    locale: string;
+  }>;
+};
+
+export default async function LocalizedPlaygroundPage({
+  params,
+}: LocalizedPlaygroundPageProps) {
+  const {
+    locale,
+  } = await params;
+
+  if (
+    !isLocalizedLocale(
+      locale,
+    )
+  ) {
+    notFound();
+  }
+
   return (
-    <PlaygroundPage />
+    <PlaygroundPageContent
+      locale={
+        locale
+      }
+    />
   );
 }

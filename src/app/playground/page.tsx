@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -7,11 +7,19 @@ import {
   type PlaygroundVisual,
 } from "@/data/playground";
 
-import styles from "./Playground.module.css";
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getPlaygroundMessages,
+} from "@/i18n/playground-messages";
 
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import styles from "./Playground.module.css";
 
 const description =
   "A collection of experiments, visual studies, motion, typography, and creative explorations by NATSX.";
@@ -32,7 +40,10 @@ function ExperimentVisual({
 }: {
   type: PlaygroundVisual;
 }) {
-  if (type === "generative") {
+  if (
+    type ===
+    "generative"
+  ) {
     return (
       <div
         className={`${styles.visual} ${styles.generativeVisual}`}
@@ -56,13 +67,17 @@ function ExperimentVisual({
         />
 
         <span
-          className={styles.visualIndex}
+          className={
+            styles.visualIndex
+          }
         >
           NATSX / 01
         </span>
 
         <span
-          className={styles.visualPlus}
+          className={
+            styles.visualPlus
+          }
         >
           +
         </span>
@@ -70,20 +85,32 @@ function ExperimentVisual({
     );
   }
 
-  if (type === "motion") {
+  if (
+    type ===
+    "motion"
+  ) {
     return (
       <div
         className={`${styles.visual} ${styles.motionVisual}`}
       >
         <div
-          className={styles.motionWord}
+          className={
+            styles.motionWord
+          }
         >
-          <span>MO</span>
-          <span>VE</span>
+          <span>
+            MO
+          </span>
+
+          <span>
+            VE
+          </span>
         </div>
 
         <span
-          className={styles.motionMeta}
+          className={
+            styles.motionMeta
+          }
         >
           TYPE
           <br />
@@ -93,13 +120,18 @@ function ExperimentVisual({
         </span>
 
         <div
-          className={styles.motionLine}
+          className={
+            styles.motionLine
+          }
         />
       </div>
     );
   }
 
-  if (type === "form") {
+  if (
+    type ===
+    "form"
+  ) {
     return (
       <div
         className={`${styles.visual} ${styles.formVisual}`}
@@ -117,11 +149,15 @@ function ExperimentVisual({
         />
 
         <div
-          className={styles.formBlock}
+          className={
+            styles.formBlock
+          }
         />
 
         <span
-          className={styles.formLabel}
+          className={
+            styles.formLabel
+          }
         >
           FORM
           <br />
@@ -136,9 +172,13 @@ function ExperimentVisual({
       className={`${styles.visual} ${styles.posterVisual}`}
     >
       <div
-        className={styles.posterTop}
+        className={
+          styles.posterTop
+        }
       >
-        <span>NATSX</span>
+        <span>
+          NATSX
+        </span>
 
         <span>
           04 / PLAY
@@ -146,11 +186,21 @@ function ExperimentVisual({
       </div>
 
       <div
-        className={styles.posterWords}
+        className={
+          styles.posterWords
+        }
       >
-        <span>MAKE</span>
-        <span>TRY</span>
-        <span>REPEAT</span>
+        <span>
+          MAKE
+        </span>
+
+        <span>
+          TRY
+        </span>
+
+        <span>
+          REPEAT
+        </span>
       </div>
 
       <div
@@ -162,47 +212,71 @@ function ExperimentVisual({
           VISUAL EXPERIMENT
         </span>
 
-        <span>2026</span>
+        <span>
+          2026
+        </span>
       </div>
     </div>
   );
 }
 
-export default function PlaygroundPage() {
-  const experimentCount = String(
-    playgroundItems.length,
-  ).padStart(2, "0");
+export function PlaygroundPageContent({
+  locale,
+}: {
+  locale: Locale;
+}) {
+  const copy =
+    getPlaygroundMessages(
+      locale,
+    );
+
+  const experimentCount =
+    String(
+      playgroundItems.length,
+    ).padStart(
+      2,
+      "0",
+    );
 
   return (
     <>
       <SiteHeader />
 
-<main
-  id="main-content"
-  tabIndex={-1}
-  className={styles.page}
-  data-motion-page="playground"
->
-        {/* =========================
-            HERO
-        ========================= */}
-
-        <section className={styles.hero}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        data-motion-page="playground"
+      >
+        <section
+          className={
+            styles.hero
+          }
+        >
           <div className="site-container">
             <div
-              className={styles.heroTop}
+              className={
+                styles.heroTop
+              }
               data-motion-playground-hero-piece="top"
             >
               <div
-                className={styles.label}
+                className={
+                  styles.label
+                }
               >
                 <span
-                  className={styles.dot}
+                  className={
+                    styles.dot
+                  }
                 />
 
                 <span>
-                  Playground /
-                  Experiments
+                  {
+                    copy.hero.label
+                  }
                 </span>
               </div>
 
@@ -211,9 +285,9 @@ export default function PlaygroundPage() {
                   styles.heroMeta
                 }
               >
-                Curious /
-                Uncommissioned /
-                Ongoing
+                {
+                  copy.hero.meta
+                }
               </span>
             </div>
 
@@ -228,10 +302,21 @@ export default function PlaygroundPage() {
                 }
                 data-motion-playground-hero-piece="title"
               >
-                Where ideas
+                {
+                  copy.hero
+                    .headingLine1
+                }
+
                 <br />
-                get to wander
-                <span>.</span>
+
+                {
+                  copy.hero
+                    .headingLine2
+                }
+
+                <span>
+                  .
+                </span>
               </h1>
 
               <div
@@ -241,32 +326,34 @@ export default function PlaygroundPage() {
                 data-motion-playground-hero-piece="intro"
               >
                 <p>
-                  A space for
-                  experiments, visual
-                  studies, motion,
-                  typography, and ideas
-                  explored outside
-                  structured project
-                  work.
+                  {
+                    copy.hero
+                      .description
+                  }
                 </p>
 
                 <span>
-                  No fixed outcome.
+                  {
+                    copy.hero
+                      .noteLine1
+                  }
+
                   <br />
-                  Just something worth
-                  trying.
+
+                  {
+                    copy.hero
+                      .noteLine2
+                  }
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* =========================
-            GALLERY
-        ========================= */}
-
         <section
-          className={styles.gallery}
+          className={
+            styles.gallery
+          }
         >
           <div className="site-container">
             <div
@@ -276,14 +363,21 @@ export default function PlaygroundPage() {
               data-motion-scroll="playground-gallery-header"
             >
               <div
-                className={styles.label}
+                className={
+                  styles.label
+                }
               >
                 <span
-                  className={styles.dot}
+                  className={
+                    styles.dot
+                  }
                 />
 
                 <span>
-                  Current Experiments
+                  {
+                    copy.gallery
+                      .label
+                  }
                 </span>
               </div>
 
@@ -292,8 +386,14 @@ export default function PlaygroundPage() {
                   styles.galleryCount
                 }
               >
-                {experimentCount} /
-                Ongoing Collection
+                {
+                  experimentCount
+                }
+                {" / "}
+                {
+                  copy.gallery
+                    .collection
+                }
               </span>
             </div>
 
@@ -303,7 +403,9 @@ export default function PlaygroundPage() {
               }
             >
               {playgroundItems.map(
-                (experiment) => (
+                (
+                  experiment,
+                ) => (
                   <article
                     className={
                       styles.experiment
@@ -375,10 +477,6 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
-        {/* =========================
-            MANIFESTO
-        ========================= */}
-
         <section
           className={
             styles.manifesto
@@ -404,7 +502,10 @@ export default function PlaygroundPage() {
                 />
 
                 <span>
-                  Why Playground?
+                  {
+                    copy.manifesto
+                      .label
+                  }
                 </span>
               </div>
 
@@ -416,12 +517,28 @@ export default function PlaygroundPage() {
                 <h2
                   data-motion-piece="title"
                 >
-                  Not everything
+                  {
+                    copy.manifesto
+                      .headingLine1
+                  }
+
                   <br />
-                  needs a brief to be
+
+                  {
+                    copy.manifesto
+                      .headingLine2
+                  }
+
                   <br />
-                  worth making
-                  <span>.</span>
+
+                  {
+                    copy.manifesto
+                      .headingLine3
+                  }
+
+                  <span>
+                    .
+                  </span>
                 </h2>
 
                 <div
@@ -431,23 +548,17 @@ export default function PlaygroundPage() {
                   data-motion-piece="copy"
                 >
                   <p>
-                    Some ideas exist
-                    simply because they
-                    are interesting
-                    enough to explore.
+                    {
+                      copy.manifesto
+                        .paragraph1
+                    }
                   </p>
 
                   <p>
-                    The playground is
-                    where I can test
-                    those ideas, learn
-                    something new,
-                    break familiar
-                    patterns, and
-                    occasionally
-                    discover something
-                    worth carrying into
-                    real project work.
+                    {
+                      copy.manifesto
+                        .paragraph2
+                    }
                   </p>
                 </div>
               </div>
@@ -455,12 +566,10 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
-        {/* =========================
-            CLOSING
-        ========================= */}
-
         <section
-          className={styles.closing}
+          className={
+            styles.closing
+          }
         >
           <div className="site-container">
             <div
@@ -476,12 +585,16 @@ export default function PlaygroundPage() {
                 data-motion-piece="label"
               >
                 <span
-                  className={styles.dot}
+                  className={
+                    styles.dot
+                  }
                 />
 
                 <span>
-                  Looking for finished
-                  work?
+                  {
+                    copy.closing
+                      .label
+                  }
                 </span>
               </div>
 
@@ -492,28 +605,51 @@ export default function PlaygroundPage() {
                 data-motion-piece="main"
               >
                 <p>
-                  Experiments are one
-                  side.
+                  {
+                    copy.closing
+                      .headingLine1
+                  }
+
                   <br />
-                  Projects are the other
-                  <span>.</span>
+
+                  {
+                    copy.closing
+                      .headingLine2
+                  }
+
+                  <span>
+                    .
+                  </span>
                 </p>
 
-                <Link
+                <LocaleLink
                   href="/work"
                   className={
                     styles.closingLink
                   }
                 >
-                  Explore selected work
+                  {
+                    copy.closing
+                      .action
+                  }
 
-                  <span>↗</span>
-                </Link>
+                  <span>
+                    ↗
+                  </span>
+                </LocaleLink>
               </div>
             </div>
           </div>
         </section>
       </main>
     </>
+  );
+}
+
+export default function PlaygroundPage() {
+  return (
+    <PlaygroundPageContent
+      locale="en"
+    />
   );
 }
