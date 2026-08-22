@@ -42,6 +42,12 @@ export const messages = {
 
       closeMenu:
         "Close navigation menu",
+
+      changeLanguage:
+        "Change language",
+
+      languageSelector:
+        "Language selector",
     },
 
     identity: {
@@ -114,6 +120,12 @@ export const messages = {
 
       closeMenu:
         "Tutup menu navigasi",
+
+      changeLanguage:
+        "Ganti bahasa",
+
+      languageSelector:
+        "Pemilih bahasa",
     },
 
     identity: {
@@ -186,6 +198,12 @@ export const messages = {
 
       closeMenu:
         "Navigationsmenü schließen",
+
+      changeLanguage:
+        "Sprache ändern",
+
+      languageSelector:
+        "Sprachauswahl",
     },
 
     identity: {

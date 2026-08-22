@@ -115,6 +115,10 @@ const introBootstrapScript = `
   })();
 `;
 
+const isVercelDeployment =
+  process.env.VERCEL ===
+  "1";
+
 export const metadata: Metadata = {
   metadataBase:
     new URL(
@@ -135,9 +139,9 @@ export const metadata: Metadata = {
   description,
 
   alternates: {
-  canonical:
-    getSiteUrl(),
-},
+    canonical:
+      getSiteUrl(),
+  },
 
   creator:
     site.person,
@@ -249,7 +253,9 @@ export default function RootLayout({
 
         <InnerFooter />
 
-        <Analytics />
+        {isVercelDeployment ? (
+          <Analytics />
+        ) : null}
       </body>
     </html>
   );

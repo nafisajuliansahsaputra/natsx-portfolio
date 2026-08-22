@@ -440,7 +440,7 @@ export default function HeroVisual({
               .portrait
           }
           fill
-          priority
+          preload
           sizes="(max-width: 960px) 100vw, 42vw"
           className={
             styles.portraitImage

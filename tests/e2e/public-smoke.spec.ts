@@ -514,19 +514,35 @@ test(
       "/",
     );
 
-    await page
-      .locator(
-        'button[aria-haspopup="menu"]',
+    const trigger =
+      page.getByRole(
+        "button",
+        {
+          name:
+            "Change language",
+        },
+      );
+
+    await trigger.click();
+
+    const selector =
+      page.getByRole(
+        "group",
+        {
+          name:
+            "Language selector",
+        },
+      );
+
+    await selector
+      .getByRole(
+        "button",
+        {
+          name:
+            "Indonesia",
+        },
       )
       .click();
-
-    await page.getByRole(
-      "menuitemradio",
-      {
-        name:
-          /Indonesia/i,
-      },
-    ).click();
 
     await expect(
       page,
@@ -569,19 +585,35 @@ test(
       "/work?source=e2e#archive",
     );
 
-    await page
-      .locator(
-        'button[aria-haspopup="menu"]',
+    const trigger =
+      page.getByRole(
+        "button",
+        {
+          name:
+            "Change language",
+        },
+      );
+
+    await trigger.click();
+
+    const selector =
+      page.getByRole(
+        "group",
+        {
+          name:
+            "Language selector",
+        },
+      );
+
+    await selector
+      .getByRole(
+        "button",
+        {
+          name:
+            "Deutsch",
+        },
       )
       .click();
-
-    await page.getByRole(
-      "menuitemradio",
-      {
-        name:
-          /Deutsch/i,
-      },
-    ).click();
 
     await expect(
       page,

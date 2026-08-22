@@ -30,6 +30,9 @@ import styles from "./LanguageSwitcher.module.css";
 const STORAGE_KEY =
   "natsx:locale";
 
+const DESKTOP_OPTIONS_ID =
+  "language-selector-options";
+
 type LanguageSwitcherProps = {
   variant?:
     | "desktop"
@@ -62,17 +65,24 @@ export default function LanguageSwitcher({
   const [
     open,
     setOpen,
-  ] = useState(false);
+  ] = useState(
+    false,
+  );
 
   const rootRef =
     useRef<HTMLDivElement>(
       null,
     );
 
+  const triggerRef =
+    useRef<HTMLButtonElement>(
+      null,
+    );
+
   /*
-   * Keep the real document language
-   * synchronized with the active
-   * route locale.
+   * Keep the real document
+   * language synchronized with
+   * the active route locale.
    */
   useEffect(() => {
     document.documentElement.lang =
@@ -142,8 +152,10 @@ export default function LanguageSwitcher({
           currentLocale,
         );
       } catch {
-        // Preference storage
-        // is optional.
+        /*
+         * Preference storage
+         * is optional.
+         */
       }
 
       return;
@@ -168,8 +180,10 @@ export default function LanguageSwitcher({
             currentLocale,
           );
         } catch {
-          // Preference storage
-          // is optional.
+          /*
+           * Preference storage
+           * is optional.
+           */
         }
       }
 
@@ -233,13 +247,20 @@ export default function LanguageSwitcher({
       event: KeyboardEvent,
     ) {
       if (
-        event.key ===
+        event.key !==
         "Escape"
       ) {
-        setOpen(
-          false,
-        );
+        return;
       }
+
+      event.preventDefault();
+
+      setOpen(
+        false,
+      );
+
+      triggerRef.current
+        ?.focus();
     }
 
     document.addEventListener(
@@ -279,6 +300,14 @@ export default function LanguageSwitcher({
         false,
       );
 
+      if (
+        variant ===
+        "desktop"
+      ) {
+        triggerRef.current
+          ?.focus();
+      }
+
       return;
     }
 
@@ -308,6 +337,14 @@ export default function LanguageSwitcher({
       false,
     );
 
+    if (
+      variant ===
+      "desktop"
+    ) {
+      triggerRef.current
+        ?.focus();
+    }
+
     onNavigate?.();
 
     router.push(
@@ -324,9 +361,11 @@ export default function LanguageSwitcher({
         className={
           styles.mobile
         }
+        role="group"
         aria-label={
-          copy.language
-            .label
+          copy
+            .accessibility
+            .languageSelector
         }
       >
         <span
@@ -364,6 +403,11 @@ export default function LanguageSwitcher({
                       ? `${styles.mobileOption} ${styles.mobileOptionActive}`
                       : styles.mobileOption
                   }
+                  aria-label={
+                    localeLabels[
+                      locale
+                    ].label
+                  }
                   aria-pressed={
                     active
                   }
@@ -397,13 +441,23 @@ export default function LanguageSwitcher({
       }
     >
       <button
+        ref={
+          triggerRef
+        }
         type="button"
         className={
           styles.trigger
         }
-        aria-haspopup="menu"
+        aria-label={
+          copy
+            .accessibility
+            .changeLanguage
+        }
         aria-expanded={
           open
+        }
+        aria-controls={
+          DESKTOP_OPTIONS_ID
         }
         onClick={() =>
           setOpen(
@@ -435,12 +489,20 @@ export default function LanguageSwitcher({
       </button>
 
       <div
+        id={
+          DESKTOP_OPTIONS_ID
+        }
         className={
           open
             ? `${styles.menu} ${styles.menuOpen}`
             : styles.menu
         }
-        role="menu"
+        role="group"
+        aria-label={
+          copy
+            .accessibility
+            .languageSelector
+        }
         aria-hidden={
           !open
         }
@@ -456,8 +518,12 @@ export default function LanguageSwitcher({
             return (
               <button
                 type="button"
-                role="menuitemradio"
-                aria-checked={
+                aria-label={
+                  localeLabels[
+                    locale
+                  ].label
+                }
+                aria-pressed={
                   active
                 }
                 key={
@@ -487,7 +553,9 @@ export default function LanguageSwitcher({
                   }
                 </span>
 
-                <span>
+                <span
+                  aria-hidden="true"
+                >
                   {
                     localeLabels[
                       locale
