@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -6,11 +6,19 @@ import {
   site,
 } from "@/data/site";
 
-import styles from "./Contact.module.css";
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getContactMessages,
+} from "@/i18n/contact-messages";
 
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import styles from "./Contact.module.css";
 
 const description =
   `Get in touch with ${site.person} / ${site.name} for selected freelance work, collaborations, and creative projects.`;
@@ -26,7 +34,16 @@ export const metadata =
       "/contact",
   });
 
-export default function ContactPage() {
+export function ContactPageContent({
+  locale,
+}: {
+  locale: Locale;
+}) {
+  const copy =
+    getContactMessages(
+      locale,
+    );
+
   const emailParts =
     site.email
       ? site.email.split(
@@ -54,7 +71,7 @@ export default function ContactPage() {
     site.email
       ? {
           label:
-            "Email",
+            copy.primary.email,
 
           lineOne:
             emailLocal,
@@ -76,20 +93,22 @@ export default function ContactPage() {
               fallbackSocial.username,
 
             lineTwo:
-              "Let\u2019s connect ↗",
+              copy.primary.connect,
 
             href:
               fallbackSocial.href,
           }
         : {
             label:
-              "Portfolio",
+              copy.primary
+                .portfolio,
 
             lineOne:
-              "Explore",
+              copy.primary
+                .explore,
 
             lineTwo:
-              "the work ↗",
+              copy.primary.work,
 
             href:
               "/work",
@@ -100,18 +119,69 @@ export default function ContactPage() {
       "http",
     );
 
+  const primaryIsInternal =
+    primaryContact.href.startsWith(
+      "/",
+    );
+
+  const primaryContent = (
+    <>
+      <span
+        className={
+          styles.emailLabel
+        }
+        data-motion-piece="label"
+      >
+        {
+          primaryContact.label
+        }
+      </span>
+
+      <span
+        className={
+          styles.emailAddress
+        }
+        data-motion-piece="address"
+      >
+        {
+          primaryContact.lineOne
+        }
+
+        {primaryContact.lineTwo ? (
+          <>
+            <br />
+
+            {
+              primaryContact.lineTwo
+            }
+          </>
+        ) : null}
+      </span>
+
+      <span
+        className={
+          styles.emailArrow
+        }
+        aria-hidden="true"
+        data-motion-piece="arrow"
+      >
+        ↗
+      </span>
+    </>
+  );
+
   return (
     <>
       <SiteHeader />
 
-<main
-  id="main-content"
-  tabIndex={-1}
-  className={
-    styles.page
-  }
-  data-motion-page="contact"
->
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={
+          styles.page
+        }
+        data-motion-page="contact"
+      >
         <section
           className={
             styles.hero
@@ -136,7 +206,10 @@ export default function ContactPage() {
                 />
 
                 <span>
-                  Contact /{" "}
+                  {
+                    copy.hero.label
+                  }
+                  {" / "}
                   {
                     site.name
                   }
@@ -150,10 +223,11 @@ export default function ContactPage() {
               >
                 {
                   site.location
-                }{" "}
-                /{" "}
+                }
+                {" / "}
                 {
-                  site.availability.scope
+                  copy.hero
+                    .worldwide
                 }
               </span>
             </div>
@@ -169,9 +243,17 @@ export default function ContactPage() {
                 }
                 data-motion-contact-hero-piece="title"
               >
-                Have an idea
+                {
+                  copy.hero
+                    .headingLine1
+                }
+
                 <br />
-                worth exploring
+
+                {
+                  copy.hero
+                    .headingLine2
+                }
 
                 <span>
                   ?
@@ -185,25 +267,24 @@ export default function ContactPage() {
                 data-motion-contact-hero-piece="intro"
               >
                 <p>
-                  I&apos;m open
-                  to selected
-                  freelance work,
-                  creative
-                  collaborations,
-                  and digital
-                  projects where
-                  different
-                  disciplines can
-                  come together.
+                  {
+                    copy.hero
+                      .description
+                  }
                 </p>
 
                 <span>
-                  Design /
-                  Development
+                  {
+                    copy.hero
+                      .disciplinesLine1
+                  }
+
                   <br />
-                  Motion /
-                  Creative
-                  Direction
+
+                  {
+                    copy.hero
+                      .disciplinesLine2
+                  }
                 </span>
               </div>
             </div>
@@ -234,8 +315,10 @@ export default function ContactPage() {
                 />
 
                 <span>
-                  Start a
-                  conversation
+                  {
+                    copy.primary
+                      .label
+                  }
                 </span>
               </div>
 
@@ -244,72 +327,52 @@ export default function ContactPage() {
                   styles.primaryHint
                 }
               >
-                Best way to
-                reach me
+                {
+                  copy.primary
+                    .hint
+                }
               </span>
             </div>
 
-            <a
-              href={
-                primaryContact.href
-              }
-              className={
-                styles.emailLink
-              }
-              data-motion-scroll="contact-email"
-              target={
-                primaryIsExternal
-                  ? "_blank"
-                  : undefined
-              }
-              rel={
-                primaryIsExternal
-                  ? "noreferrer"
-                  : undefined
-              }
-            >
-              <span
-                className={
-                  styles.emailLabel
+            {primaryIsInternal ? (
+              <LocaleLink
+                href={
+                  primaryContact.href
                 }
-                data-motion-piece="label"
+                className={
+                  styles.emailLink
+                }
+                data-motion-scroll="contact-email"
               >
                 {
-                  primaryContact.label
+                  primaryContent
                 }
-              </span>
-
-              <span
+              </LocaleLink>
+            ) : (
+              <a
+                href={
+                  primaryContact.href
+                }
                 className={
-                  styles.emailAddress
+                  styles.emailLink
                 }
-                data-motion-piece="address"
+                data-motion-scroll="contact-email"
+                target={
+                  primaryIsExternal
+                    ? "_blank"
+                    : undefined
+                }
+                rel={
+                  primaryIsExternal
+                    ? "noreferrer"
+                    : undefined
+                }
               >
                 {
-                  primaryContact.lineOne
+                  primaryContent
                 }
-
-                {primaryContact.lineTwo ? (
-                  <>
-                    <br />
-
-                    {
-                      primaryContact.lineTwo
-                    }
-                  </>
-                ) : null}
-              </span>
-
-              <span
-                className={
-                  styles.emailArrow
-                }
-                aria-hidden="true"
-                data-motion-piece="arrow"
-              >
-                ↗
-              </span>
-            </a>
+              </a>
+            )}
           </div>
         </section>
 
@@ -343,7 +406,10 @@ export default function ContactPage() {
                   />
 
                   <span>
-                    Availability
+                    {
+                      copy.availability
+                        .label
+                    }
                   </span>
                 </div>
 
@@ -365,64 +431,75 @@ export default function ContactPage() {
                     />
 
                     <span>
-                      {site.availability.statusLines.map(
-                        (
-                          line,
-                          index,
-                        ) => (
-                          <span
-                            key={
-                              line
-                            }
-                          >
-                            {
-                              line
-                            }
+                      {copy
+                        .availability
+                        .statusLines
+                        .map(
+                          (
+                            line,
+                            index,
+                          ) => (
+                            <span
+                              key={
+                                line
+                              }
+                            >
+                              {
+                                line
+                              }
 
-                            {index <
-                              site
-                                .availability
-                                .statusLines
-                                .length -
-                                1 && (
-                              <br />
-                            )}
-                          </span>
-                        ),
-                      )}
+                              {index <
+                                copy
+                                  .availability
+                                  .statusLines
+                                  .length -
+                                  1 && (
+                                <br />
+                              )}
+                            </span>
+                          ),
+                        )}
                     </span>
                   </div>
 
                   <p>
                     {
-                      site.availability.description
+                      copy.availability
+                        .description
                     }
                   </p>
                 </div>
+
                 <div
-  className={
-    styles.contactCv
-  }
->
-  <span>
-    Professional profile
-  </span>
+                  className={
+                    styles.contactCv
+                  }
+                >
+                  <span>
+                    {
+                      copy.availability
+                        .professionalProfile
+                    }
+                  </span>
 
-  <Link
-    href="/cv"
-    className={
-      styles.contactCvLink
-    }
-  >
-    View CV
+                  <LocaleLink
+                    href="/cv"
+                    className={
+                      styles.contactCvLink
+                    }
+                  >
+                    {
+                      copy.availability
+                        .viewCv
+                    }
 
-    <span
-      aria-hidden="true"
-    >
-      ↗
-    </span>
-  </Link>
-</div>
+                    <span
+                      aria-hidden="true"
+                    >
+                      ↗
+                    </span>
+                  </LocaleLink>
+                </div>
               </div>
 
               <div
@@ -444,8 +521,10 @@ export default function ContactPage() {
                   />
 
                   <span>
-                    What we
-                    could make
+                    {
+                      copy.collaboration
+                        .label
+                    }
                   </span>
                 </div>
 
@@ -454,38 +533,41 @@ export default function ContactPage() {
                     styles.collaborationList
                   }
                 >
-                  {site.collaborationTypes.map(
-                    (
-                      item,
-                      index,
-                    ) => (
-                      <div
-                        className={
-                          styles.collaborationItem
-                        }
-                        key={
-                          item
-                        }
-                        data-motion-piece="item"
-                      >
-                        <span>
-                          {String(
-                            index +
-                              1,
-                          ).padStart(
-                            2,
-                            "0",
-                          )}
-                        </span>
-
-                        <p>
-                          {
+                  {copy
+                    .collaboration
+                    .items
+                    .map(
+                      (
+                        item,
+                        index,
+                      ) => (
+                        <div
+                          className={
+                            styles.collaborationItem
+                          }
+                          key={
                             item
                           }
-                        </p>
-                      </div>
-                    ),
-                  )}
+                          data-motion-piece="item"
+                        >
+                          <span>
+                            {String(
+                              index +
+                                1,
+                            ).padStart(
+                              2,
+                              "0",
+                            )}
+                          </span>
+
+                          <p>
+                            {
+                              item
+                            }
+                          </p>
+                        </div>
+                      ),
+                    )}
                 </div>
               </div>
             </div>
@@ -517,17 +599,27 @@ export default function ContactPage() {
                 />
 
                 <span>
-                  Elsewhere
+                  {
+                    copy.social
+                      .label
+                  }
                 </span>
               </div>
 
               <p
                 data-motion-piece="title"
               >
-                A few other
-                places
+                {
+                  copy.social
+                    .headingLine1
+                }
+
                 <br />
-                you can find me
+
+                {
+                  copy.social
+                    .headingLine2
+                }
 
                 <span>
                   .
@@ -633,8 +725,10 @@ export default function ContactPage() {
                 />
 
                 <span>
-                  Still
-                  exploring?
+                  {
+                    copy.closing
+                      .label
+                  }
                 </span>
               </div>
 
@@ -645,33 +739,51 @@ export default function ContactPage() {
                 data-motion-piece="main"
               >
                 <p>
-                  Take a look at
+                  {
+                    copy.closing
+                      .headingLine1
+                  }
+
                   <br />
-                  what I&apos;ve
-                  been making
+
+                  {
+                    copy.closing
+                      .headingLine2
+                  }
 
                   <span>
                     .
                   </span>
                 </p>
 
-                <Link
+                <LocaleLink
                   href="/work"
                   className={
                     styles.closingLink
                   }
                 >
-                  Explore the work
+                  {
+                    copy.closing
+                      .action
+                  }
 
                   <span>
                     ↗
                   </span>
-                </Link>
+                </LocaleLink>
               </div>
             </div>
           </div>
         </section>
       </main>
     </>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <ContactPageContent
+      locale="en"
+    />
   );
 }
