@@ -16,7 +16,25 @@ import {
 
 import styles from "./Hero.module.css";
 
-export default function Hero() {
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
+
+type HeroProps = {
+  locale: Locale;
+};
+
+export default function Hero({
+  locale,
+}: HeroProps) {
+  const copy =
+    getHomeMessages(
+      locale,
+    );
   const [
     portraitLoaded,
     setPortraitLoaded,
@@ -380,14 +398,20 @@ export default function Hero() {
                   styles.titleLine
                 }
               >
-                <strong>
-                  Designing
-                </strong>{" "}
-                <span
-                  className={`${styles.titleLight} ${styles.kineticWord}`}
-                >
-                  Ideas
-                </span>
+<strong>
+  {
+    copy.hero
+      .titlePrimary
+  }
+</strong>{" "}
+<span
+  className={`${styles.titleLight} ${styles.kineticWord}`}
+>
+  {
+    copy.hero
+      .titleSecondary
+  }
+</span>
               </span>
 
               <span
@@ -395,15 +419,21 @@ export default function Hero() {
                   styles.titleLine
                 }
               >
-                <span
-                  className={
-                    styles.titleLight
-                  }
-                >
-                  Into
-                </span>{" "}
+<span
+  className={
+    styles.titleLight
+  }
+>
+  {
+    copy.hero
+      .titleTertiary
+  }
+</span>{" "}
                 <strong>
-                  Experience
+  {
+    copy.hero
+      .titleQuaternary
+  }
                   <span
                     className={
                       styles.titleAccent
@@ -421,18 +451,16 @@ export default function Hero() {
               }
               data-motion-hero-piece="intro"
             >
-              <p
-                className={
-                  styles.description
-                }
-              >
-                Multidisciplinary
-                digital creator
-                working across design,
-                development, motion,
-                and visual
-                experiences.
-              </p>
+<p
+  className={
+    styles.description
+  }
+>
+  {
+    copy.hero
+      .description
+  }
+</p>
 
               <div
                 className={
@@ -445,9 +473,12 @@ export default function Hero() {
                     styles.primaryLink
                   }
                 >
-                  <span>
-                    Selected Work
-                  </span>
+<span>
+  {
+    copy.hero
+      .selectedWork
+  }
+</span>
 
                   <span
                     className={`${styles.arrow} ${styles.arrowDown}`}
@@ -462,9 +493,12 @@ export default function Hero() {
     styles.secondaryLink
   }
 >
-  <span>
-    About Me
-  </span>
+<span>
+  {
+    copy.hero
+      .aboutMe
+  }
+</span>
 
   <span
     className={`${styles.arrow} ${styles.arrowUp}`}

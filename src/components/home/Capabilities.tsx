@@ -1,18 +1,36 @@
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
+
 import styles from "./Capabilities.module.css";
 
 const capabilities = [
   {
-    number: "01",
-    title: "Design",
-    description:
-      "Creating clear and considered visual experiences across digital products, interfaces, and brand systems.",
-    skills: ["UI/UX Design", "Web Design", "Graphic Design", "Visual Identity"],
+    number:
+      "01",
+
+    key:
+      "design",
+
+    skills: [
+      "UI/UX Design",
+      "Web Design",
+      "Graphic Design",
+      "Visual Identity",
+    ],
   },
+
   {
-    number: "02",
-    title: "Development",
-    description:
-      "Turning visual concepts into responsive and functional digital experiences with modern web technologies.",
+    number:
+      "02",
+
+    key:
+      "development",
+
     skills: [
       "Frontend Development",
       "Next.js",
@@ -20,18 +38,29 @@ const capabilities = [
       "Creative Development",
     ],
   },
+
   {
-    number: "03",
-    title: "Motion",
-    description:
-      "Adding movement with purpose through motion graphics, interaction, editing, and visual storytelling.",
-    skills: ["Motion Design", "UI Motion", "Video Editing", "Interaction"],
+    number:
+      "03",
+
+    key:
+      "motion",
+
+    skills: [
+      "Motion Design",
+      "UI Motion",
+      "Video Editing",
+      "Interaction",
+    ],
   },
+
   {
-    number: "04",
-    title: "Creative",
-    description:
-      "Shaping ideas beyond individual deliverables through direction, experimentation, and visual exploration.",
+    number:
+      "04",
+
+    key:
+      "creative",
+
     skills: [
       "Creative Direction",
       "Art Direction",
@@ -39,63 +68,184 @@ const capabilities = [
       "Visual Exploration",
     ],
   },
-];
+] as const;
 
-export default function Capabilities() {
+type CapabilitiesProps = {
+  locale: Locale;
+};
+
+export default function Capabilities({
+  locale,
+}: CapabilitiesProps) {
+  const copy =
+    getHomeMessages(
+      locale,
+    ).capabilities;
+
   return (
-    <section className={styles.section} id="capabilities">
+    <section
+      className={
+        styles.section
+      }
+      id="capabilities"
+    >
       <div className="site-container">
-        <div className={styles.layout}>
-          <div className={styles.introColumn}>
-            <div className={styles.intro}>
-              <div className={styles.sectionLabel}>
-                <span className={styles.dot} />
-                <span>03 / Capabilities</span>
+        <div
+          className={
+            styles.layout
+          }
+        >
+          <div
+            className={
+              styles.introColumn
+            }
+          >
+            <div
+              className={
+                styles.intro
+              }
+            >
+              <div
+                className={
+                  styles.sectionLabel
+                }
+              >
+                <span
+                  className={
+                    styles.dot
+                  }
+                />
+
+                <span>
+                  {
+                    copy.sectionLabel
+                  }
+                </span>
               </div>
 
-              <h2 className={styles.heading}>
-                Ideas across
+              <h2
+                className={
+                  styles.heading
+                }
+              >
+                {
+                  copy.headingLine1
+                }
+
                 <br />
-                disciplines<span>.</span>
+
+                {
+                  copy.headingLine2
+                }
+
+                <span>
+                  .
+                </span>
               </h2>
 
-              <p className={styles.introText}>
-                I work across design, development, motion, and creative
-                direction—connecting different disciplines to build complete
-                digital experiences.
+              <p
+                className={
+                  styles.introText
+                }
+              >
+                {
+                  copy.intro
+                }
               </p>
             </div>
           </div>
 
-          <div className={styles.list}>
-            {capabilities.map((capability) => (
-              <article className={styles.item} key={capability.number}>
-                <div className={styles.itemTop}>
-                  <span className={styles.number}>
-                    {capability.number}
-                  </span>
+          <div
+            className={
+              styles.list
+            }
+          >
+            {capabilities.map(
+              (
+                capability,
+              ) => {
+                const content =
+                  copy.items[
+                    capability.key
+                  ];
 
-                  <h3 className={styles.title}>
-                    {capability.title}
-                  </h3>
-                </div>
-
-                <div className={styles.itemContent}>
-                  <p className={styles.description}>
-                    {capability.description}
-                  </p>
-
-                  <div
-                    className={styles.skills}
-                    aria-label={`${capability.title} skills`}
+                return (
+                  <article
+                    className={
+                      styles.item
+                    }
+                    key={
+                      capability.number
+                    }
                   >
-                    {capability.skills.map((skill) => (
-                      <span key={skill}>{skill}</span>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ))}
+                    <div
+                      className={
+                        styles.itemTop
+                      }
+                    >
+                      <span
+                        className={
+                          styles.number
+                        }
+                      >
+                        {
+                          capability.number
+                        }
+                      </span>
+
+                      <h3
+                        className={
+                          styles.title
+                        }
+                      >
+                        {
+                          content.title
+                        }
+                      </h3>
+                    </div>
+
+                    <div
+                      className={
+                        styles.itemContent
+                      }
+                    >
+                      <p
+                        className={
+                          styles.description
+                        }
+                      >
+                        {
+                          content.description
+                        }
+                      </p>
+
+                      <div
+                        className={
+                          styles.skills
+                        }
+                        aria-label={`${content.title} ${copy.skillsLabel}`}
+                      >
+                        {capability.skills.map(
+                          (
+                            skill,
+                          ) => (
+                            <span
+                              key={
+                                skill
+                              }
+                            >
+                              {
+                                skill
+                              }
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              },
+            )}
           </div>
         </div>
       </div>

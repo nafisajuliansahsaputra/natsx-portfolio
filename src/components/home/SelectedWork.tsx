@@ -4,6 +4,14 @@ import type {
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
+
 import {
   getFeaturedProjects,
   getPublicProjectYearRange,
@@ -22,6 +30,15 @@ type HomeVisual =
   | "vision"
   | "stay";
 
+type SelectedWorkProps = {
+  locale: Locale;
+};
+
+type SelectedWorkCopy =
+  ReturnType<
+    typeof getHomeMessages
+  >["selectedWork"];
+
 const HOME_LAYOUTS: HomeLayout[] = [
   "wide",
   "right",
@@ -34,7 +51,14 @@ const HOME_VISUALS: HomeVisual[] = [
   "stay",
 ];
 
-export default async function SelectedWork() {
+export default async function SelectedWork({
+  locale,
+}: SelectedWorkProps) {
+  const copy =
+    getHomeMessages(
+      locale,
+    ).selectedWork;
+
   const featuredProjects =
     await getFeaturedProjects(
       3,
@@ -72,7 +96,9 @@ export default async function SelectedWork() {
             />
 
             <span>
-              02 / Selected Work
+              {
+                copy.sectionLabel
+              }
             </span>
           </div>
 
@@ -82,9 +108,19 @@ export default async function SelectedWork() {
             }
             data-motion-piece="title"
           >
-            Selected
+            {
+              copy.headingLine1
+            }
+
             <br />
-            Work<span>.</span>
+
+            {
+              copy.headingLine2
+            }
+
+            <span>
+              .
+            </span>
           </h2>
 
           <div
@@ -94,11 +130,9 @@ export default async function SelectedWork() {
             data-motion-piece="description"
           >
             <p>
-              A selection of
-              projects across
-              design, development,
-              identity, and digital
-              experiences.
+              {
+                copy.description
+              }
             </p>
 
             <span
@@ -107,19 +141,23 @@ export default async function SelectedWork() {
               }
             >
               {yearRange ||
-                "CURRENT"}
+                copy.current}
             </span>
 
-<LocaleLink
-  href="/work"
-  className={
-    styles.projectLink
-  }
->
-  View All Work
+            <LocaleLink
+              href="/work"
+              className={
+                styles.projectLink
+              }
+            >
+              {
+                copy.viewAll
+              }
 
-  <span>↗</span>
-</LocaleLink>
+              <span>
+                ↗
+              </span>
+            </LocaleLink>
           </div>
         </header>
 
@@ -215,6 +253,9 @@ export default async function SelectedWork() {
                       variant={
                         visual
                       }
+                      copy={
+                        copy
+                      }
                     />
                   </div>
 
@@ -245,18 +286,20 @@ export default async function SelectedWork() {
                       )}
                     </div>
 
-<LocaleLink
-  href={`/work/${project.slug}`}
-  className={
-    styles.projectLink
-  }
->
-  View Project
+                    <LocaleLink
+                      href={`/work/${project.slug}`}
+                      className={
+                        styles.projectLink
+                      }
+                    >
+                      {
+                        copy.viewProject
+                      }
 
-  <span>
-    ↗
-  </span>
-</LocaleLink>
+                      <span>
+                        ↗
+                      </span>
+                    </LocaleLink>
                   </div>
                 </article>
               );
@@ -271,9 +314,11 @@ export default async function SelectedWork() {
 function ProjectArtwork({
   project,
   variant,
+  copy,
 }: {
   project: PublicProject;
   variant: HomeVisual;
+  copy: SelectedWorkCopy;
 }) {
   const titleLines =
     getTitleLines(
@@ -287,7 +332,7 @@ function ProjectArtwork({
         2,
       )
       .join(" / ") ||
-    "Selected Project";
+    copy.selectedProject;
 
   if (
     variant ===
@@ -318,7 +363,9 @@ function ProjectArtwork({
               <span
                 key={`${line}-${index}`}
               >
-                {line}
+                {
+                  line
+                }
               </span>
             ),
           )}
@@ -329,7 +376,9 @@ function ProjectArtwork({
             styles.visualLabel
           }
         >
-          {visualLabel}
+          {
+            visualLabel
+          }
         </span>
       </div>
     );
@@ -388,7 +437,10 @@ function ProjectArtwork({
             </p>
 
             <span>
-              View case study ↗
+              {
+                copy.viewCaseStudy
+              }{" "}
+              ↗
             </span>
           </div>
         </div>
@@ -398,7 +450,9 @@ function ProjectArtwork({
             styles.visualLabel
           }
         >
-          {visualLabel}
+          {
+            visualLabel
+          }
         </span>
       </div>
     );
@@ -435,8 +489,10 @@ function ProjectArtwork({
               styles.spallMiniLabel
             }
           >
-            {project.number} /
-            NATSX
+            {
+              project.number
+            }{" "}
+            / NATSX
           </span>
 
           <strong>
@@ -482,7 +538,9 @@ function ProjectArtwork({
           styles.visualLabel
         }
       >
-        {visualLabel}
+        {
+          visualLabel
+        }
       </span>
     </div>
   );
