@@ -575,6 +575,15 @@ function GallerySection({
                       .path,
                   );
 
+                const isWideItem =
+                  index % 3 ===
+                  0;
+
+                const imageSizes =
+                  isWideItem
+                    ? "100vw"
+                    : "(max-width: 700px) 100vw, 50vw";
+
                 return (
                   <figure
                     className={
@@ -600,7 +609,9 @@ function GallerySection({
                           }`
                         }
                         fill
-                        sizes="(max-width: 700px) 100vw, 50vw"
+                        sizes={
+                          imageSizes
+                        }
                         unoptimized={isAnimatedImage(
                           item.asset
                             .mimeType,
