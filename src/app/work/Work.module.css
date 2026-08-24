@@ -1,6 +1,9 @@
 .page {
-  background: var(--background);
-  color: var(--foreground);
+  background:
+    var(--background);
+
+  color:
+    var(--foreground);
 }
 
 /* =========================
@@ -9,35 +12,56 @@
 
 .hero {
   padding-block:
-    clamp(90px, 9vw, 140px)
-    clamp(88px, 9vw, 140px);
+    clamp(
+      90px,
+      9vw,
+      140px
+    )
+    clamp(
+      88px,
+      9vw,
+      140px
+    );
 
-  border-bottom: 1px solid var(--border);
+  border-bottom:
+    1px solid
+    var(--border);
 }
 
 .heroTop {
   display: flex;
+
   align-items: center;
-  justify-content: space-between;
+
+  justify-content:
+    space-between;
 
   gap: 32px;
 }
 
 .label {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 
-  color: var(--foreground);
+  color:
+    var(--foreground);
 
   font-size: 11px;
   font-weight: 700;
 
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing:
+    0.04em;
+
+  text-transform:
+    uppercase;
 }
 
 .dot {
+  position: relative;
+
   width: 7px;
   height: 7px;
 
@@ -45,49 +69,82 @@
 
   border-radius: 50%;
 
-  background: var(--accent);
+  background:
+    var(--accent);
 }
 
 .heroIndex {
-  color: var(--muted);
+  color:
+    var(--muted);
 
   font-size: 10px;
   font-weight: 600;
 
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
+  letter-spacing:
+    0.055em;
+
+  text-transform:
+    uppercase;
 }
 
 .heroMain {
-  margin-top: clamp(90px, 10vw, 150px);
+  margin-top:
+    clamp(
+      90px,
+      10vw,
+      150px
+    );
 
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
 
-  column-gap: clamp(18px, 2.2vw, 36px);
+  grid-template-columns:
+    repeat(
+      12,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  column-gap:
+    clamp(
+      18px,
+      2.2vw,
+      36px
+    );
 
   align-items: end;
 }
 
 .heading {
-  grid-column: 1 / span 8;
+  grid-column:
+    1 / span 8;
 
   margin: 0;
 
-  font-size: clamp(96px, 12.5vw, 190px);
+  font-size:
+    clamp(
+      96px,
+      12.5vw,
+      190px
+    );
+
   font-weight: 600;
 
   line-height: 0.78;
 
-  letter-spacing: -0.085em;
+  letter-spacing:
+    -0.085em;
 }
 
 .heading span {
-  color: var(--accent);
+  color:
+    var(--accent);
 }
 
 .intro {
-  grid-column: 9 / -1;
+  grid-column:
+    9 / -1;
 
   padding-bottom: 2px;
 }
@@ -97,30 +154,55 @@
 
   margin: 0;
 
-  color: #333330;
+  color:
+    #333330;
 
-  font-size: clamp(15px, 1.2vw, 18px);
+  font-size:
+    clamp(
+      15px,
+      1.2vw,
+      18px
+    );
+
   line-height: 1.65;
 
-  letter-spacing: -0.025em;
+  letter-spacing:
+    -0.025em;
 }
 
 .introMeta {
-  margin-top: clamp(44px, 5vw, 70px);
+  margin-top:
+    clamp(
+      44px,
+      5vw,
+      70px
+    );
 
   padding-top: 20px;
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
 
   gap: 24px;
 
-  border-top: 1px solid var(--border);
+  border-top:
+    1px solid
+    var(--border);
 }
 
 .introMeta > div {
   display: flex;
-  flex-direction: column;
+
+  flex-direction:
+    column;
 
   gap: 7px;
 
@@ -129,13 +211,17 @@
 }
 
 .metaLabel {
-  color: var(--muted);
+  color:
+    var(--muted);
 
   font-size: 9px;
   font-weight: 600;
 
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing:
+    0.06em;
+
+  text-transform:
+    uppercase;
 }
 
 /* =========================
@@ -144,221 +230,740 @@
 
 .archive {
   padding-block:
-    clamp(70px, 8vw, 110px)
-    clamp(120px, 13vw, 190px);
+    clamp(
+      70px,
+      8vw,
+      110px
+    )
+    clamp(
+      120px,
+      13vw,
+      190px
+    );
 }
 
 .archiveHeader {
   padding-bottom: 22px;
 
   display: flex;
-  justify-content: space-between;
+
+  justify-content:
+    space-between;
+
   align-items: center;
 
   gap: 30px;
 
-  border-bottom: 1px solid var(--foreground);
+  border-bottom:
+    1px solid
+    var(--foreground);
 
   font-size: 11px;
   font-weight: 700;
 
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing:
+    0.04em;
+
+  text-transform:
+    uppercase;
 }
 
 .archiveCount {
-  color: var(--muted);
+  color:
+    var(--muted);
 
   font-size: 10px;
   font-weight: 600;
 }
 
 /* =========================
-   PROJECT LIST
+   PROJECT ARCHIVE
 ========================= */
 
 .projects {
   display: flex;
-  flex-direction: column;
+
+  flex-direction:
+    column;
 }
 
 .project {
+  --row-accent:
+    var(--accent);
+
   position: relative;
 
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  isolation: isolate;
 
-  column-gap: clamp(18px, 2.2vw, 36px);
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      12,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  column-gap:
+    clamp(
+      18px,
+      2.2vw,
+      36px
+    );
 
   align-items: center;
 
-  min-height: clamp(180px, 17vw, 250px);
+  min-height:
+    clamp(
+      210px,
+      20vw,
+      300px
+    );
 
-  padding-block: clamp(40px, 4.5vw, 68px);
+  padding-block:
+    clamp(
+      44px,
+      5vw,
+      74px
+    );
 
-  border-bottom: 1px solid var(--border);
+  border-bottom:
+    1px solid
+    var(--border);
 
-  transition:
-    background 220ms ease,
-    padding-inline 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
 }
 
 .project::before {
   content: "";
 
   position: absolute;
+
   inset: 0;
 
-  z-index: 0;
+  z-index: -2;
 
-  background: rgba(88, 98, 236, 0.045);
+  background:
+    color-mix(
+      in srgb,
+      var(--row-accent)
+        6%,
+      transparent
+    );
 
-  transform: scaleY(0);
-  transform-origin: bottom;
+  opacity: 0;
 
-  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform:
+    scaleY(0);
 
-  pointer-events: none;
+  transform-origin:
+    bottom;
+
+  transition:
+    opacity
+      320ms
+      ease,
+    transform
+      650ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
-.project > * {
-  position: relative;
-  z-index: 1;
+.project::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+
+  left:
+    calc(
+      50% -
+      50vw
+    );
+
+  right:
+    calc(
+      50% -
+      50vw
+    );
+
+  z-index: -3;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--row-accent)
+        2.8%,
+      transparent
+    );
+
+  opacity: 0;
+
+  transition:
+    opacity
+      400ms
+      ease;
+
+  pointer-events:
+    none;
 }
 
 .projectNumber {
-  grid-column: 1 / span 1;
-  align-self: start;
+  grid-column:
+    1 / span 1;
+
+  align-self:
+    start;
 
   padding-top: 7px;
 
-  color: var(--accent);
+  color:
+    var(--row-accent);
 
   font-size: 11px;
   font-weight: 700;
+
+  transition:
+    transform
+      600ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
 .projectMain {
-  grid-column: 2 / span 7;
+  position: relative;
+
+  z-index: 5;
+
+  grid-column:
+    2 / span 7;
+
+  min-width: 0;
 }
 
 .projectMain h2 {
   margin: 0;
 
-  font-size: clamp(46px, 5.6vw, 86px);
+  max-width: 860px;
+
+  font-size:
+    clamp(
+      48px,
+      6vw,
+      92px
+    );
+
   font-weight: 500;
 
-  line-height: 0.94;
+  line-height: 0.91;
 
-  letter-spacing: -0.065em;
+  letter-spacing:
+    -0.07em;
 
   transition:
-    color 220ms ease,
-    transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    color
+      350ms
+      ease,
+    transform
+      700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
 .categories {
-  margin-top: clamp(20px, 2.3vw, 30px);
+  margin-top:
+    clamp(
+      20px,
+      2.3vw,
+      30px
+    );
 
   display: flex;
+
   flex-wrap: wrap;
+
   align-items: center;
 
   gap: 0;
 
-  color: var(--muted);
+  color:
+    var(--muted);
 
   font-size: 11px;
   font-weight: 500;
+
+  transition:
+    transform
+      700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
 .categories span {
   display: inline-flex;
+
   align-items: center;
 }
 
-.categories span:not(:last-child)::after {
+.categories
+  span:not(
+    :last-child
+  )::after {
   content: "/";
 
   margin-inline: 8px;
 
-  color: #aaa9a4;
+  color:
+    #aaa9a4;
 }
 
 .projectMeta {
-  grid-column: 10 / span 2;
+  position: relative;
 
-  min-height: 64px;
+  z-index: 6;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
+  grid-column:
+    10 / span 2;
 
-  gap: 24px;
+  align-self:
+    start;
+
+  padding-top: 7px;
 
   font-size: 11px;
   font-weight: 600;
 }
 
 .projectYear {
-  color: var(--muted);
-}
+  color:
+    var(--muted);
 
-.viewLabel {
-  transition: color 220ms ease;
+  transition:
+    color
+      300ms
+      ease,
+    transform
+      600ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
 .projectArrow {
-  grid-column: 12 / -1;
+  position: relative;
+
+  z-index: 7;
+
+  grid-column:
+    12 / -1;
 
   justify-self: end;
 
   display: flex;
-  justify-content: center;
+
+  justify-content:
+    center;
+
   align-items: center;
 
-  width: clamp(48px, 4.3vw, 66px);
+  width:
+    clamp(
+      48px,
+      4.3vw,
+      66px
+    );
+
   aspect-ratio: 1;
 
-  border: 1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
+
   border-radius: 50%;
 
-  font-size: clamp(18px, 1.5vw, 24px);
+  font-size:
+    clamp(
+      18px,
+      1.5vw,
+      24px
+    );
 
   transition:
-    background 220ms ease,
-    color 220ms ease,
-    border-color 220ms ease,
-    transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    background
+      300ms
+      ease,
+    color
+      300ms
+      ease,
+    border-color
+      300ms
+      ease,
+    transform
+      700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
 /* =========================
-   HOVER
+   FLOATING PREVIEW
 ========================= */
 
-.project:hover::before {
-  transform: scaleY(1);
-  transform-origin: top;
+.previewStage {
+  position: absolute;
+
+  top: 50%;
+  left: 61%;
+
+  z-index: 4;
+
+  width:
+    clamp(
+      230px,
+      22vw,
+      355px
+    );
+
+  aspect-ratio:
+    16 / 10;
+
+  opacity: 0;
+
+  pointer-events:
+    none;
+
+  transform:
+    translate3d(
+      -50%,
+      -42%,
+      0
+    )
+    rotate(-2.2deg)
+    scale(0.88);
+
+  transform-origin:
+    center;
+
+  transition:
+    opacity
+      300ms
+      ease,
+    transform
+      850ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
 }
 
-.project:hover .projectMain h2 {
-  color: var(--accent);
+.project[
+  data-preview-variant="drop"
+]
+  .previewStage {
+  top: 55%;
+  left: 62%;
 
-  transform: translateX(8px);
+  transform:
+    translate3d(
+      -50%,
+      -48%,
+      0
+    )
+    rotate(2.4deg)
+    scale(0.88);
 }
 
-.project:hover .viewLabel {
-  color: var(--accent);
+.project[
+  data-preview-variant="center"
+]
+  .previewStage {
+  top: 48%;
+  left: 59.5%;
+
+  transform:
+    translate3d(
+      -50%,
+      -50%,
+      0
+    )
+    rotate(-1deg)
+    scale(0.88);
 }
 
-.project:hover .projectArrow {
-  background: var(--foreground);
-  border-color: var(--foreground);
+.previewFrame {
+  position: absolute;
 
-  color: var(--background);
+  inset: 0;
 
-  transform: rotate(45deg);
+  overflow: hidden;
+
+  background:
+    #efeee9;
+
+  border:
+    1px solid
+    rgba(
+      17,
+      17,
+      17,
+      0.08
+    );
+
+  box-shadow:
+    0 28px 70px
+      rgba(
+        17,
+        17,
+        0.14
+      );
+}
+
+.previewFrame::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  box-shadow:
+    inset
+      0
+      0
+      0
+      1px
+      rgba(
+        255,
+        255,
+        255,
+        0.12
+      );
+
+  pointer-events:
+    none;
+}
+
+.previewImage {
+  object-fit: cover;
+
+  object-position:
+    top center;
+
+  transition:
+    transform
+      1100ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+/* =========================
+   PROJECT HOVER
+========================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .project:hover,
+  .project:focus-visible {
+    z-index: 20;
+  }
+
+  .project:hover::before,
+  .project:focus-visible::before {
+    opacity: 1;
+
+    transform:
+      scaleY(1);
+
+    transform-origin:
+      top;
+  }
+
+  .project:hover::after,
+  .project:focus-visible::after {
+    opacity: 1;
+  }
+
+  .project:hover
+    .projectMain h2,
+  .project:focus-visible
+    .projectMain h2 {
+    color:
+      var(--row-accent);
+
+    transform:
+      translate3d(
+        8px,
+        0,
+        0
+      );
+  }
+
+  .project:hover
+    .categories,
+  .project:focus-visible
+    .categories {
+    transform:
+      translate3d(
+        8px,
+        0,
+        0
+      );
+  }
+
+  .project:hover
+    .projectNumber,
+  .project:focus-visible
+    .projectNumber {
+    transform:
+      translate3d(
+        0,
+        -3px,
+        0
+      );
+  }
+
+  .project:hover
+    .projectYear,
+  .project:focus-visible
+    .projectYear {
+    color:
+      var(--row-accent);
+
+    transform:
+      translate3d(
+        0,
+        -3px,
+        0
+      );
+  }
+
+  .project:hover
+    .projectArrow,
+  .project:focus-visible
+    .projectArrow {
+    background:
+      var(--foreground);
+
+    border-color:
+      var(--foreground);
+
+    color:
+      var(--background);
+
+    transform:
+      rotate(
+        45deg
+      );
+  }
+
+  .project[
+    data-has-preview="true"
+  ]:hover
+    .previewStage,
+  .project[
+    data-has-preview="true"
+  ]:focus-visible
+    .previewStage {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        -50%,
+        -50%,
+        0
+      )
+      rotate(-1.2deg)
+      scale(1);
+  }
+
+  .project[
+    data-preview-variant="drop"
+  ]:hover
+    .previewStage,
+  .project[
+    data-preview-variant="drop"
+  ]:focus-visible
+    .previewStage {
+    transform:
+      translate3d(
+        -50%,
+        -50%,
+        0
+      )
+      rotate(1.4deg)
+      scale(1);
+  }
+
+  .project[
+    data-preview-variant="center"
+  ]:hover
+    .previewStage,
+  .project[
+    data-preview-variant="center"
+  ]:focus-visible
+    .previewStage {
+    transform:
+      translate3d(
+        -50%,
+        -50%,
+        0
+      )
+      rotate(-0.4deg)
+      scale(1);
+  }
+
+  .project:hover
+    .previewImage,
+  .project:focus-visible
+    .previewImage {
+    transform:
+      scale(1.035);
+  }
+}
+
+.project:focus-visible {
+  outline:
+    2px solid
+    var(--row-accent);
+
+  outline-offset:
+    5px;
 }
 
 /* =========================
@@ -366,23 +971,46 @@
 ========================= */
 
 .closing {
-  margin-top: clamp(110px, 13vw, 190px);
+  margin-top:
+    clamp(
+      110px,
+      13vw,
+      190px
+    );
 
   padding-top: 26px;
 
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
 
-  column-gap: clamp(18px, 2.2vw, 36px);
+  grid-template-columns:
+    repeat(
+      12,
+      minmax(
+        0,
+        1fr
+      )
+    );
 
-  border-top: 1px solid var(--border);
+  column-gap:
+    clamp(
+      18px,
+      2.2vw,
+      36px
+    );
+
+  border-top:
+    1px solid
+    var(--border);
 }
 
 .closingLabel {
-  grid-column: 1 / span 3;
+  grid-column:
+    1 / span 3;
 
   display: flex;
+
   align-items: center;
+
   align-self: start;
 
   gap: 10px;
@@ -390,16 +1018,24 @@
   font-size: 10px;
   font-weight: 700;
 
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
+  letter-spacing:
+    0.045em;
+
+  text-transform:
+    uppercase;
 }
 
 .closingMain {
-  grid-column: 7 / -1;
+  grid-column:
+    7 / -1;
 
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+
+  flex-direction:
+    column;
+
+  align-items:
+    flex-start;
 
   gap: 42px;
 }
@@ -409,47 +1045,62 @@
 
   margin: 0;
 
-  font-size: clamp(32px, 3.8vw, 58px);
+  font-size:
+    clamp(
+      32px,
+      3.8vw,
+      58px
+    );
+
   font-weight: 500;
 
   line-height: 1.03;
 
-  letter-spacing: -0.055em;
+  letter-spacing:
+    -0.055em;
 }
 
 .contactLink {
   display: inline-flex;
+
   align-items: center;
 
   gap: 10px;
 
-  color: var(--accent);
+  color:
+    var(--accent);
 
   font-size: 13px;
   font-weight: 600;
 
-  letter-spacing: -0.02em;
+  letter-spacing:
+    -0.02em;
 }
 
 .contactLink span {
   display: inline-block;
 
-  transition: transform 220ms ease;
+  transition:
+    transform
+      220ms
+      ease;
 }
 
 .contactLink:hover span {
-  transform: translate(4px, -4px);
+  transform:
+    translate(
+      4px,
+      -4px
+    );
 }
 
 /* =========================
    TABLET
 ========================= */
 
-@media (max-width: 960px) {
-  /* =========================
-     HERO
-  ========================= */
-
+@media (
+  max-width: 960px
+) {
   .hero {
     padding-block:
       72px
@@ -474,34 +1125,45 @@
   .heroMain {
     margin-top: 76px;
 
-    display: grid;
     grid-template-columns:
-      repeat(12, minmax(0, 1fr));
+      repeat(
+        12,
+        minmax(
+          0,
+          1fr
+        )
+      );
 
     column-gap:
-      clamp(16px, 2vw, 24px);
-
-    align-items: end;
+      clamp(
+        16px,
+        2vw,
+        24px
+      );
   }
 
   .heading {
-    grid-column: 1 / span 6;
+    grid-column:
+      1 / span 6;
 
-    font-size: clamp(
-      84px,
-      14vw,
-      112px
-    );
+    font-size:
+      clamp(
+        84px,
+        14vw,
+        112px
+      );
 
     line-height: 0.8;
   }
 
   .intro {
-    grid-column: 7 / -1;
+    grid-column:
+      7 / -1;
 
     max-width: none;
 
     margin: 0;
+
     padding-bottom: 2px;
   }
 
@@ -509,6 +1171,7 @@
     max-width: 340px;
 
     font-size: 14px;
+
     line-height: 1.65;
   }
 
@@ -528,10 +1191,6 @@
     font-size: 8px;
   }
 
-  /* =========================
-     ARCHIVE
-  ========================= */
-
   .archive {
     padding-block:
       62px
@@ -548,74 +1207,91 @@
     font-size: 9px;
   }
 
-  /* =========================
-     PROJECT LIST
-  ========================= */
-
   .project {
     min-width: 0;
-    min-height: 156px;
 
-    padding-block: 38px;
+    min-height: 190px;
+
+    padding-block: 40px;
 
     column-gap:
-      clamp(14px, 2vw, 22px);
+      clamp(
+        14px,
+        2vw,
+        22px
+      );
   }
 
   .projectNumber {
-    grid-column: 1;
-
-    padding-top: 5px;
-
     font-size: 10px;
   }
 
   .projectMain {
-    grid-column: 2 / span 7;
-
-    min-width: 0;
+    grid-column:
+      2 / span 7;
   }
 
   .projectMain h2 {
-    font-size: clamp(
-      42px,
-      6.6vw,
-      56px
-    );
+    font-size:
+      clamp(
+        42px,
+        6.6vw,
+        58px
+      );
   }
 
   .categories {
     margin-top: 18px;
 
     font-size: 10px;
+
     line-height: 1.55;
   }
 
-  .categories span:not(:last-child)::after {
+  .categories
+    span:not(
+      :last-child
+    )::after {
     margin-inline: 7px;
   }
 
   .projectMeta {
-    grid-column: 10 / span 1;
-
-    min-height: auto;
-
-    justify-content: flex-start;
+    grid-column:
+      10 / span 1;
 
     font-size: 10px;
   }
 
   .projectArrow {
-    grid-column: 12 / -1;
-
     width: 48px;
 
     font-size: 18px;
   }
 
-  /* =========================
-     CLOSING
-  ========================= */
+  .previewStage {
+    left: 60%;
+
+    width:
+      clamp(
+        190px,
+        25vw,
+        250px
+      );
+  }
+
+  .project[
+    data-preview-variant="drop"
+  ]
+    .previewStage {
+    left: 61%;
+  }
+
+  .project[
+    data-preview-variant="center"
+  ]
+    .previewStage {
+    left: 59%;
+  }
 
   .closing {
     margin-top: 110px;
@@ -624,7 +1300,8 @@
   }
 
   .closingLabel {
-    grid-column: 1 / span 4;
+    grid-column:
+      1 / span 4;
 
     gap: 9px;
 
@@ -632,17 +1309,19 @@
   }
 
   .closingMain {
-    grid-column: 6 / -1;
+    grid-column:
+      6 / -1;
 
     gap: 32px;
   }
 
   .closingMain p {
-    font-size: clamp(
-      30px,
-      4.8vw,
-      40px
-    );
+    font-size:
+      clamp(
+        30px,
+        4.8vw,
+        40px
+      );
 
     line-height: 1;
   }
@@ -656,11 +1335,9 @@
    MOBILE
 ========================= */
 
-@media (max-width: 700px) {
-  /* =========================
-     HERO
-  ========================= */
-
+@media (
+  max-width: 700px
+) {
   .hero {
     padding-block:
       64px
@@ -678,11 +1355,12 @@
   }
 
   .heading {
-    font-size: clamp(
-      82px,
-      25vw,
-      104px
-    );
+    font-size:
+      clamp(
+        82px,
+        25vw,
+        104px
+      );
 
     line-height: 0.8;
   }
@@ -697,6 +1375,7 @@
     max-width: 325px;
 
     font-size: 13.5px;
+
     line-height: 1.68;
   }
 
@@ -716,10 +1395,6 @@
     font-size: 10px;
   }
 
-  /* =========================
-     ARCHIVE
-  ========================= */
-
   .archive {
     padding-block:
       52px
@@ -736,585 +1411,195 @@
     display: none;
   }
 
-  /* =========================
-     PROJECT ROW
-  ========================= */
-
   .project {
+    display: grid;
+
     grid-template-columns:
       26px
-      minmax(0, 1fr)
+      minmax(
+        0,
+        1fr
+      )
       40px;
+
+    grid-template-rows:
+      auto
+      auto;
 
     column-gap: 10px;
 
-    min-width: 0;
-    min-height: auto;
+    min-height: 0;
 
     padding-block:
-      32px
       34px;
 
-    align-items: start;
+    overflow: visible;
+  }
+
+  .project::before,
+  .project::after {
+    display: none;
   }
 
   .projectNumber {
     grid-column: 1;
+
     grid-row: 1;
 
-    padding-top: 4px;
+    padding-top: 5px;
 
     font-size: 9px;
   }
 
   .projectMain {
     grid-column: 2;
-    grid-row: 1;
 
-    min-width: 0;
+    grid-row: 1;
   }
 
   .projectMain h2 {
-    font-size: clamp(
-      35px,
-      9.4vw,
-      41px
-    );
+    font-size:
+      clamp(
+        31px,
+        9.6vw,
+        42px
+      );
 
-    line-height: 0.96;
-
-    letter-spacing: -0.06em;
+    line-height: 0.93;
   }
 
   .categories {
     margin-top: 15px;
 
-    gap: 0;
-
     font-size: 9px;
-    line-height: 1.65;
+
+    line-height: 1.5;
   }
 
-  .categories span:not(:last-child)::after {
+  .categories
+    span:not(
+      :last-child
+    )::after {
     margin-inline: 6px;
   }
 
   .projectMeta {
-    grid-column: 2;
-    grid-row: 2;
-
-    min-height: auto;
-
-    margin-top: 18px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    gap: 16px;
-
-    font-size: 9px;
-  }
-
-  .viewLabel {
     display: none;
   }
 
   .projectArrow {
     grid-column: 3;
+
     grid-row: 1;
+
+    align-self: start;
 
     width: 40px;
 
-    font-size: 16px;
+    margin-top: -2px;
+
+    font-size: 15px;
   }
 
-  .project:hover .projectMain h2 {
+  .previewStage {
+    position: relative;
+
+    top: auto;
+    left: auto;
+
+    grid-column:
+      2 / -1;
+
+    grid-row: 2;
+
+    justify-self: end;
+
+    width: 82%;
+
+    margin-top: 26px;
+
+    aspect-ratio:
+      16 / 10;
+
+    opacity: 1;
+
     transform: none;
   }
 
-  /* =========================
-     CLOSING
-  ========================= */
+  .project[
+    data-preview-variant="drop"
+  ]
+    .previewStage {
+    top: auto;
+    left: auto;
+
+    justify-self:
+      start;
+
+    width: 76%;
+
+    transform: none;
+  }
+
+  .project[
+    data-preview-variant="center"
+  ]
+    .previewStage {
+    top: auto;
+    left: auto;
+
+    justify-self:
+      center;
+
+    width: 86%;
+
+    transform: none;
+  }
+
+  .previewFrame {
+    box-shadow:
+      0 18px 44px
+      rgba(
+        17,
+        17,
+        17,
+        0.1
+      );
+  }
 
   .closing {
-    margin-top: 82px;
+    margin-top: 88px;
 
-    padding-top: 20px;
+    padding-top: 18px;
 
     display: block;
   }
 
   .closingLabel {
+    margin-bottom: 44px;
+
     font-size: 9px;
   }
 
   .closingMain {
-    margin-top: 58px;
-
     gap: 28px;
   }
 
   .closingMain p {
-    max-width: 340px;
+    max-width: 330px;
 
-    font-size: clamp(
-      34px,
-      10vw,
-      42px
-    );
+    font-size:
+      clamp(
+        28px,
+        8.4vw,
+        38px
+      );
 
     line-height: 0.98;
   }
 
   .contactLink {
     font-size: 11px;
-  }
-}
-
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media (max-width: 370px) {
-  .hero {
-    padding-block:
-      58px
-      72px;
-  }
-
-  .heroMain {
-    margin-top: 52px;
-  }
-
-  .heading {
-    font-size: clamp(
-      76px,
-      24vw,
-      90px
-    );
-  }
-
-  .intro {
-    margin-top: 42px;
-  }
-
-  .intro > p {
-    font-size: 13px;
-  }
-
-  .project {
-    grid-template-columns:
-      24px
-      minmax(0, 1fr)
-      38px;
-
-    column-gap: 8px;
-
-    padding-block: 30px;
-  }
-
-  .projectMain h2 {
-    font-size: clamp(
-      33px,
-      9vw,
-      37px
-    );
-  }
-
-  .categories {
-    font-size: 8.5px;
-  }
-
-  .projectArrow {
-    width: 38px;
-  }
-
-  .closingMain p {
-    font-size: clamp(
-      32px,
-      9.5vw,
-      38px
-    );
-  }
-}
-
-/* =========================
-   AMBIENT / WORK PAGE
-========================= */
-
-.dot {
-  position: relative;
-}
-
-.dot::after {
-  content: "";
-
-  position: absolute;
-
-  inset: -5px;
-
-  border:
-    1px solid
-    var(--accent);
-
-  border-radius: 50%;
-
-  opacity: 0;
-
-  scale: 0.7;
-
-  pointer-events: none;
-}
-
-.heading > span {
-  display: inline-block;
-
-  transform-origin:
-    center bottom;
-}
-
-.projectNumber,
-.projectArrow,
-.contactLink span {
-  will-change:
-    translate;
-}
-
-/* =========================
-   AMBIENT MOTION
-========================= */
-
-@media (
-  prefers-reduced-motion:
-    no-preference
-) {
-  /* =========================
-     HERO
-  ========================= */
-
-  [data-motion-page="work"]
-    .hero
-    .dot::after {
-    animation:
-      work-dot-pulse
-      5s
-      ease-out
-      0.8s
-      infinite;
-  }
-
-  [data-motion-page="work"]
-    .heading
-    > span {
-    animation:
-      work-heading-accent
-      5.6s
-      ease-in-out
-      1.4s
-      infinite;
-  }
-
-  [data-motion-page="work"]
-    .introMeta
-    > div:first-child
-    > span:last-child {
-    animation:
-      work-meta-tick
-      7.4s
-      ease-in-out
-      1.2s
-      infinite;
-  }
-
-  [data-motion-page="work"]
-    .introMeta
-    > div:last-child
-    > span:last-child {
-    animation:
-      work-meta-tick-alt
-      8.2s
-      ease-in-out
-      2.1s
-      infinite;
-  }
-
-  /* =========================
-     PROJECT ROWS
-  ========================= */
-
-  [data-motion-scroll="work-project"][
-    data-motion-visible="true"
-  ]
-    .projectArrow {
-    animation:
-      work-project-arrow
-      4.8s
-      ease-in-out
-      infinite;
-  }
-
-  .projects
-    > :nth-child(4n + 2)
-    .projectArrow {
-    animation-delay:
-      0.7s;
-  }
-
-  .projects
-    > :nth-child(4n + 3)
-    .projectArrow {
-    animation-delay:
-      1.4s;
-  }
-
-  .projects
-    > :nth-child(4n + 4)
-    .projectArrow {
-    animation-delay:
-      2.1s;
-  }
-
-  [data-motion-scroll="work-project"][
-    data-motion-visible="true"
-  ]
-    .projectNumber {
-    animation:
-      work-project-number
-      6.4s
-      ease-in-out
-      infinite;
-  }
-
-  .projects
-    > :nth-child(even)
-    .projectNumber {
-    animation-delay:
-      1.1s;
-  }
-
-  /*
-   * Hover harus tetap jadi motion terkuat.
-   * Ambient dimatikan saat row sedang di-hover.
-   */
-
-  .project:hover
-    .projectArrow,
-  .project:hover
-    .projectNumber {
-    animation: none;
-
-    translate:
-      0
-      0;
-  }
-
-  /* =========================
-     CLOSING
-  ========================= */
-
-  [data-motion-scroll="work-closing"][
-    data-motion-visible="true"
-  ]
-    .dot::after {
-    animation:
-      work-dot-pulse
-      4.8s
-      ease-out
-      0.6s
-      infinite;
-  }
-
-  [data-motion-scroll="work-closing"][
-    data-motion-visible="true"
-  ]
-    .contactLink
-    span {
-    animation:
-      work-contact-arrow
-      3.2s
-      ease-in-out
-      0.7s
-      infinite;
-  }
-
-  .contactLink:hover
-    span {
-    animation: none;
-
-    translate:
-      0
-      0;
-  }
-}
-
-/* =========================
-   KEYFRAMES
-========================= */
-
-@keyframes
-  work-dot-pulse {
-  0%,
-  72%,
-  100% {
-    opacity: 0;
-
-    scale: 0.7;
-  }
-
-  81% {
-    opacity: 0.27;
-  }
-
-  94% {
-    opacity: 0;
-
-    scale: 1.65;
-  }
-}
-
-@keyframes
-  work-heading-accent {
-  0%,
-  68%,
-  100% {
-    opacity: 1;
-
-    scale: 1;
-  }
-
-  78% {
-    opacity: 0.58;
-
-    scale: 0.82;
-  }
-
-  89% {
-    opacity: 1;
-
-    scale: 1.17;
-  }
-}
-
-@keyframes
-  work-meta-tick {
-  0%,
-  74%,
-  100% {
-    translate:
-      0
-      0;
-  }
-
-  82% {
-    translate:
-      0
-      -2px;
-  }
-
-  90% {
-    translate:
-      0
-      0;
-  }
-}
-
-@keyframes
-  work-meta-tick-alt {
-  0%,
-  72%,
-  100% {
-    translate:
-      0
-      0;
-  }
-
-  81% {
-    translate:
-      1.5px
-      0;
-  }
-
-  90% {
-    translate:
-      0
-      0;
-  }
-}
-
-/* =========================
-   PROJECT ROWS
-========================= */
-
-@keyframes
-  work-project-arrow {
-  0%,
-  72%,
-  100% {
-    translate:
-      0
-      0;
-  }
-
-  81% {
-    translate:
-      2.5px
-      -2.5px;
-  }
-
-  90% {
-    translate:
-      0.7px
-      -0.7px;
-  }
-}
-
-@keyframes
-  work-project-number {
-  0%,
-  76%,
-  100% {
-    translate:
-      0
-      0;
-  }
-
-  84% {
-    translate:
-      0
-      -2px;
-  }
-
-  91% {
-    translate:
-      0
-      0;
-  }
-}
-
-/* =========================
-   CLOSING
-========================= */
-
-@keyframes
-  work-contact-arrow {
-  0%,
-  100% {
-    translate:
-      0
-      0;
-  }
-
-  44% {
-    translate:
-      2.5px
-      -2.5px;
-  }
-
-  62% {
-    translate:
-      0.8px
-      -0.8px;
   }
 }
 
@@ -1326,17 +1611,16 @@
   prefers-reduced-motion:
     reduce
 ) {
-  .dot::after {
-    display: none;
-  }
-
-  .heading > span,
+  .project::before,
+  .project::after,
+  .projectMain h2,
+  .categories,
   .projectNumber,
+  .projectYear,
   .projectArrow,
-  .contactLink span,
-  .introMeta
-    > div
-    > span:last-child {
-    animation: none;
+  .previewStage,
+  .previewImage {
+    transition-duration:
+      0.01ms !important;
   }
 }

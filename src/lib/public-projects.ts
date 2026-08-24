@@ -20,7 +20,7 @@ import {
 } from "@/lib/supabase/public";
 
 const PUBLIC_PROJECT_FIELDS =
-  "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,updated_at,published_at";
+  "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,hero_image_path,card_image_path,updated_at,published_at";
 
 const PUBLIC_SECTION_FIELDS =
   "id,project_id,section_type,eyebrow,heading,body,content,theme,sort_order,is_visible,created_at";
@@ -66,6 +66,14 @@ type PublicProjectRow = {
     | null;
 
   secondary_color:
+    | string
+    | null;
+
+  hero_image_path:
+    | string
+    | null;
+
+  card_image_path:
     | string
     | null;
 
@@ -184,6 +192,14 @@ export type PublicProject = {
   accentColor: string;
 
   secondaryColor:
+    | string
+    | null;
+
+  heroImagePath:
+    | string
+    | null;
+
+  cardImagePath:
     | string
     | null;
 
@@ -411,7 +427,9 @@ function pickTranslatedTitle(
     const normalized =
       candidate.trim();
 
-    if (normalized) {
+    if (
+      normalized
+    ) {
       return normalized;
     }
   }
@@ -667,6 +685,14 @@ function normalizeProject(
     secondaryColor:
       project.secondary_color,
 
+    heroImagePath:
+      project
+        .hero_image_path,
+
+    cardImagePath:
+      project
+        .card_image_path,
+
     updatedAt:
       project.updated_at,
 
@@ -897,12 +923,6 @@ function normalizeProjects(
   );
 }
 
-/*
- * =========================
- * PUBLISHED PROJECTS
- * =========================
- */
-
 async function loadPublishedProjects(
   locale: Locale,
 ): Promise<
@@ -988,12 +1008,6 @@ export async function getPublishedProjects(
     locale,
   );
 }
-
-/*
- * =========================
- * FEATURED PROJECTS
- * =========================
- */
 
 async function loadFeaturedProjects(
   limit: number,
@@ -1098,12 +1112,6 @@ export async function getFeaturedProjects(
     locale,
   );
 }
-
-/*
- * =========================
- * PROJECT DETAIL
- * =========================
- */
 
 async function loadPublishedProjectPage(
   slug: string,
@@ -1372,12 +1380,6 @@ export const getPublishedProjectPage =
         locale,
       ),
   );
-
-/*
- * =========================
- * PROJECT YEAR RANGE
- * =========================
- */
 
 export function getPublicProjectYearRange(
   source:

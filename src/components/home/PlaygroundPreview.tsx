@@ -1,17 +1,18 @@
-import LocaleLink from "@/components/i18n/LocaleLink";
+"use client";
 
 import {
-  featuredPlaygroundItems,
-  type PlaygroundPreviewVisual,
-} from "@/data/playground";
+  useRef,
+} from "react";
+
+import type {
+  PointerEvent as ReactPointerEvent,
+} from "react";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import type {
   Locale,
 } from "@/i18n/config";
-
-import {
-  getPlaygroundExperimentMessages,
-} from "@/i18n/playground-messages";
 
 import {
   getHomeMessages,
@@ -23,6 +24,38 @@ type PlaygroundPreviewProps = {
   locale: Locale;
 };
 
+const experiments = [
+  {
+    number: "01",
+    title: "Kinetic Type",
+  },
+  {
+    number: "02",
+    title: "Magnetic Field",
+  },
+  {
+    number: "03",
+    title: "Spatial Composition",
+  },
+  {
+    number: "04",
+    title: "Break the Grid",
+  },
+] as const;
+
+function prefersReducedMotion() {
+  if (
+    typeof window ===
+    "undefined"
+  ) {
+    return false;
+  }
+
+  return window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+}
+
 export default function PlaygroundPreview({
   locale,
 }: PlaygroundPreviewProps) {
@@ -31,12 +64,128 @@ export default function PlaygroundPreview({
       locale,
     ).playground;
 
+  const visualRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  function handlePointerMove(
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) {
+    if (
+      prefersReducedMotion()
+    ) {
+      return;
+    }
+
+    const element =
+      visualRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const rect =
+      element.getBoundingClientRect();
+
+    const x =
+      (
+        (
+          event.clientX -
+          rect.left
+        ) /
+          rect.width -
+        0.5
+      ) *
+      2;
+
+    const y =
+      (
+        (
+          event.clientY -
+          rect.top
+        ) /
+          rect.height -
+        0.5
+      ) *
+      2;
+
+    element.style.setProperty(
+      "--lab-x",
+      `${x * 24}px`,
+    );
+
+    element.style.setProperty(
+      "--lab-y",
+      `${y * 18}px`,
+    );
+
+    element.style.setProperty(
+      "--lab-x-reverse",
+      `${x * -18}px`,
+    );
+
+    element.style.setProperty(
+      "--lab-y-reverse",
+      `${y * -12}px`,
+    );
+
+    element.style.setProperty(
+      "--lab-rotate",
+      `${x * 2.2}deg`,
+    );
+
+    element.style.setProperty(
+      "--cursor-x",
+      `${
+        event.clientX -
+        rect.left
+      }px`,
+    );
+
+    element.style.setProperty(
+      "--cursor-y",
+      `${
+        event.clientY -
+        rect.top
+      }px`,
+    );
+  }
+
+  function resetPointer() {
+    const element =
+      visualRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    [
+      "--lab-x",
+      "--lab-y",
+      "--lab-x-reverse",
+      "--lab-y-reverse",
+      "--lab-rotate",
+      "--cursor-x",
+      "--cursor-y",
+    ].forEach(
+      (
+        property,
+      ) => {
+        element.style.removeProperty(
+          property,
+        );
+      },
+    );
+  }
+
   return (
     <section
       className={
         styles.section
       }
       id="playground"
+      data-motion-scroll="playground-preview"
     >
       <div className="site-container">
         <header
@@ -116,226 +265,171 @@ export default function PlaygroundPreview({
           </div>
         </header>
 
-        <div
+        <LocaleLink
+          href="/playground"
           className={
-            styles.gallery
+            styles.labLink
+          }
+          aria-label={
+            copy.explore
           }
         >
-          {featuredPlaygroundItems.map(
+          <div
+            ref={
+              visualRef
+            }
+            className={
+              styles.lab
+            }
+            onPointerMove={
+              handlePointerMove
+            }
+            onPointerLeave={
+              resetPointer
+            }
+          >
+            <div
+              className={
+                styles.labTop
+              }
+            >
+              <span>
+                NATSX / LIVE LAB
+              </span>
+
+              <span>
+                04 EXPERIMENTS
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.labType
+              }
+              aria-hidden="true"
+            >
+              <span
+                className={
+                  styles.wordPlay
+                }
+              >
+                PLAY
+              </span>
+
+              <span
+                className={
+                  styles.wordWith
+                }
+              >
+                WITH
+              </span>
+
+              <span
+                className={
+                  styles.wordIdeas
+                }
+              >
+                IDEAS
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.labField
+              }
+              aria-hidden="true"
+            >
+              {Array.from(
+                {
+                  length: 24,
+                },
+                (
+                  _,
+                  index,
+                ) => (
+                  <span
+                    key={
+                      index
+                    }
+                  />
+                ),
+              )}
+            </div>
+
+            <div
+              className={
+                styles.cursor
+              }
+              aria-hidden="true"
+            />
+
+            <div
+              className={
+                styles.labBottom
+              }
+            >
+              <span>
+                MOVE / HOVER / INTERRUPT
+              </span>
+
+              <span>
+                OPEN LAB ↗
+              </span>
+            </div>
+          </div>
+        </LocaleLink>
+
+        <div
+          className={
+            styles.experimentList
+          }
+        >
+          {experiments.map(
             (
               experiment,
-            ) => {
-              const localized =
-                getPlaygroundExperimentMessages(
-                  locale,
-                  experiment.slug,
-                );
-
-              const title =
-                localized?.title ??
-                experiment.title;
-
-              const category =
-                localized?.category ??
-                experiment.category;
-
-              return (
-                <article
-                  className={`${styles.item} ${
-                    styles[
-                      `layout_${experiment.preview.layout}`
-                    ]
-                  }`}
-                  key={
-                    experiment.slug
+            ) => (
+              <LocaleLink
+                href="/playground"
+                className={
+                  styles.experiment
+                }
+                key={
+                  experiment.number
+                }
+              >
+                <span
+                  className={
+                    styles.number
                   }
                 >
-                  <LocaleLink
-                    href="/playground"
-                    className={
-                      styles.visualLink
-                    }
-                    aria-label={`${copy.experimentAria} ${title}`}
-                  >
-                    <div
-                      className={`${styles.visual} ${
-                        styles[
-                          `visual_${experiment.preview.visual}`
-                        ]
-                      }`}
-                    >
-                      <ExperimentArtwork
-                        variant={
-                          experiment
-                            .preview
-                            .visual
-                        }
-                      />
+                  {
+                    experiment.number
+                  }
+                </span>
 
-                      <span
-                        className={
-                          styles.hoverLabel
-                        }
-                      >
-                        {
-                          copy.viewExperiment
-                        }{" "}
-                        ↗
-                      </span>
-                    </div>
-                  </LocaleLink>
+                <span
+                  className={
+                    styles.experimentTitle
+                  }
+                >
+                  {
+                    experiment.title
+                  }
+                </span>
 
-                  <div
-                    className={
-                      styles.meta
-                    }
-                  >
-                    <div>
-                      <span
-                        className={
-                          styles.number
-                        }
-                      >
-                        {
-                          experiment.number
-                        }
-                      </span>
-
-                      <h3>
-                        {
-                          title
-                        }
-                      </h3>
-                    </div>
-
-                    <span
-                      className={
-                        styles.category
-                      }
-                    >
-                      {
-                        category
-                      }
-                    </span>
-                  </div>
-                </article>
-              );
-            },
+                <span
+                  className={
+                    styles.arrow
+                  }
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+              </LocaleLink>
+            ),
           )}
         </div>
       </div>
     </section>
-  );
-}
-
-function ExperimentArtwork({
-  variant,
-}: {
-  variant:
-    PlaygroundPreviewVisual;
-}) {
-  if (
-    variant ===
-    "generative"
-  ) {
-    return (
-      <div
-        className={
-          styles.generativeArtwork
-        }
-      >
-        <div
-          className={
-            styles.generativeCircle
-          }
-        />
-
-        <div
-          className={
-            styles.generativeGrid
-          }
-        />
-
-        <span
-          className={
-            styles.artLabel
-          }
-        >
-          GENERATIVE / 001
-        </span>
-      </div>
-    );
-  }
-
-  if (
-    variant ===
-    "type"
-  ) {
-    return (
-      <div
-        className={
-          styles.typeArtwork
-        }
-      >
-        <span>N</span>
-        <span>A</span>
-        <span>T</span>
-        <span>S</span>
-        <span>X</span>
-      </div>
-    );
-  }
-
-  if (
-    variant ===
-    "form"
-  ) {
-    return (
-      <div
-        className={
-          styles.formArtwork
-        }
-      >
-        <div
-          className={
-            styles.formShape
-          }
-        />
-
-        <span>
-          FORM / STUDY
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={
-        styles.posterArtwork
-      }
-    >
-      <span
-        className={
-          styles.posterSmall
-        }
-      >
-        KEEP
-      </span>
-
-      <strong>
-        MAKING
-        <br />
-        THINGS.
-      </strong>
-
-      <span
-        className={
-          styles.posterIndex
-        }
-      >
-        04 / NATSX
-      </span>
-    </div>
   );
 }

@@ -2,23 +2,19 @@ import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
-import {
-  playgroundItems,
-  type PlaygroundVisual,
-} from "@/data/playground";
-
 import type {
   Locale,
 } from "@/i18n/config";
 
 import {
-  getPlaygroundExperimentMessages,
   getPlaygroundMessages,
 } from "@/i18n/playground-messages";
 
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import PlaygroundLab from "./PlaygroundLab";
 
 import styles from "./Playground.module.css";
 
@@ -36,191 +32,6 @@ export const metadata =
       "/playground",
   });
 
-function ExperimentVisual({
-  type,
-}: {
-  type: PlaygroundVisual;
-}) {
-  if (
-    type ===
-    "generative"
-  ) {
-    return (
-      <div
-        className={`${styles.visual} ${styles.generativeVisual}`}
-      >
-        <div
-          className={
-            styles.generativeGrid
-          }
-        />
-
-        <div
-          className={
-            styles.generativeCircle
-          }
-        />
-
-        <div
-          className={
-            styles.generativeSquare
-          }
-        />
-
-        <span
-          className={
-            styles.visualIndex
-          }
-        >
-          NATSX / 01
-        </span>
-
-        <span
-          className={
-            styles.visualPlus
-          }
-        >
-          +
-        </span>
-      </div>
-    );
-  }
-
-  if (
-    type ===
-    "motion"
-  ) {
-    return (
-      <div
-        className={`${styles.visual} ${styles.motionVisual}`}
-      >
-        <div
-          className={
-            styles.motionWord
-          }
-        >
-          <span>
-            MO
-          </span>
-
-          <span>
-            VE
-          </span>
-        </div>
-
-        <span
-          className={
-            styles.motionMeta
-          }
-        >
-          TYPE
-          <br />
-          IN
-          <br />
-          MOTION
-        </span>
-
-        <div
-          className={
-            styles.motionLine
-          }
-        />
-      </div>
-    );
-  }
-
-  if (
-    type ===
-    "form"
-  ) {
-    return (
-      <div
-        className={`${styles.visual} ${styles.formVisual}`}
-      >
-        <div
-          className={
-            styles.formCircleLarge
-          }
-        />
-
-        <div
-          className={
-            styles.formCircleSmall
-          }
-        />
-
-        <div
-          className={
-            styles.formBlock
-          }
-        />
-
-        <span
-          className={
-            styles.formLabel
-          }
-        >
-          FORM
-          <br />
-          STUDY
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={`${styles.visual} ${styles.posterVisual}`}
-    >
-      <div
-        className={
-          styles.posterTop
-        }
-      >
-        <span>
-          NATSX
-        </span>
-
-        <span>
-          04 / PLAY
-        </span>
-      </div>
-
-      <div
-        className={
-          styles.posterWords
-        }
-      >
-        <span>
-          MAKE
-        </span>
-
-        <span>
-          TRY
-        </span>
-
-        <span>
-          REPEAT
-        </span>
-      </div>
-
-      <div
-        className={
-          styles.posterBottom
-        }
-      >
-        <span>
-          VISUAL EXPERIMENT
-        </span>
-
-        <span>
-          2026
-        </span>
-      </div>
-    </div>
-  );
-}
-
 export function PlaygroundPageContent({
   locale,
 }: {
@@ -229,14 +40,6 @@ export function PlaygroundPageContent({
   const copy =
     getPlaygroundMessages(
       locale,
-    );
-
-  const experimentCount =
-    String(
-      playgroundItems.length,
-    ).padStart(
-      2,
-      "0",
     );
 
   return (
@@ -348,155 +151,31 @@ export function PlaygroundPageContent({
                 </span>
               </div>
             </div>
-          </div>
-        </section>
 
-        <section
-          className={
-            styles.gallery
-          }
-        >
-          <div className="site-container">
             <div
               className={
-                styles.galleryHeader
+                styles.heroSignal
               }
-              data-motion-scroll="playground-gallery-header"
+              aria-hidden="true"
             >
-              <div
-                className={
-                  styles.label
-                }
-              >
-                <span
-                  className={
-                    styles.dot
-                  }
-                />
+              <span>
+                SCROLL
+              </span>
 
-                <span>
-                  {
-                    copy.gallery
-                      .label
-                  }
-                </span>
-              </div>
+              <i />
 
-              <span
-                className={
-                  styles.galleryCount
-                }
-              >
-                {
-                  experimentCount
-                }
-                {" / "}
-                {
-                  copy.gallery
-                    .collection
-                }
+              <span>
+                PLAY
               </span>
             </div>
-
-            <div
-              className={
-                styles.galleryGrid
-              }
-            >
-              {playgroundItems.map(
-                (
-                  experiment,
-                ) => {
-                  const localized =
-                    getPlaygroundExperimentMessages(
-                      locale,
-                      experiment.slug,
-                    );
-
-                  const title =
-                    localized?.title ??
-                    experiment.title;
-
-                  const category =
-                    localized?.category ??
-                    experiment.category;
-
-                  const experimentDescription =
-                    localized?.description ??
-                    experiment.description;
-
-                  return (
-                    <article
-                      className={
-                        styles.experiment
-                      }
-                      key={
-                        experiment.slug
-                      }
-                      data-motion-scroll="playground-experiment"
-                    >
-                      <div
-                        className={
-                          styles.visualWrap
-                        }
-                        data-motion-piece="visual"
-                      >
-                        <ExperimentVisual
-                          type={
-                            experiment.visual
-                          }
-                        />
-                      </div>
-
-                      <div
-                        className={
-                          styles.experimentInfo
-                        }
-                        data-motion-piece="info"
-                      >
-                        <div
-                          className={
-                            styles.experimentHeading
-                          }
-                        >
-                          <span>
-                            {
-                              experiment.number
-                            }
-                          </span>
-
-                          <h2>
-                            {
-                              title
-                            }
-                          </h2>
-                        </div>
-
-                        <div
-                          className={
-                            styles.experimentMeta
-                          }
-                        >
-                          <span>
-                            {
-                              category
-                            }
-                          </span>
-
-                          <p>
-                            {
-                              experimentDescription
-                            }
-                          </p>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                },
-              )}
-            </div>
           </div>
         </section>
+
+        <PlaygroundLab
+          locale={
+            locale
+          }
+        />
 
         <section
           className={

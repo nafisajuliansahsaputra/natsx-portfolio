@@ -1,3 +1,9 @@
+import type {
+  CSSProperties,
+} from "react";
+
+import Image from "next/image";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -13,6 +19,11 @@ import {
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import {
+  getProjectPrimaryVisualUrl,
+  getProjectSecondaryVisualUrl,
+} from "@/lib/public-media";
 
 import {
   getPublishedProjects,
@@ -38,6 +49,26 @@ export const metadata =
       "/work",
   });
 
+function getPreviewVariant(
+  index: number,
+) {
+  if (
+    index % 3 ===
+    1
+  ) {
+    return "drop";
+  }
+
+  if (
+    index % 3 ===
+    2
+  ) {
+    return "center";
+  }
+
+  return "rise";
+}
+
 export async function WorkPageContent({
   locale,
 }: {
@@ -48,10 +79,10 @@ export async function WorkPageContent({
       locale,
     );
 
-const projects =
-  await getPublishedProjects(
-    locale,
-  );
+  const projects =
+    await getPublishedProjects(
+      locale,
+    );
 
   const projectCount =
     String(
@@ -242,87 +273,143 @@ const projects =
               {projects.map(
                 (
                   project,
-                ) => (
-                  <LocaleLink
-                    href={`/work/${project.slug}`}
-                    className={
-                      styles.project
-                    }
-                    key={
-                      project.id
-                    }
-                    data-motion-scroll="work-project"
-                  >
-                    <span
-                      className={
-                        styles.projectNumber
-                      }
-                    >
-                      {
-                        project.number
-                      }
-                    </span>
+                  index,
+                ) => {
+                  const previewImage =
+                    getProjectPrimaryVisualUrl(
+                      project,
+                    ) ??
+                    getProjectSecondaryVisualUrl(
+                      project,
+                    );
 
-                    <div
+                  const projectStyle = {
+                    "--row-accent":
+                      project.accentColor,
+                  } as CSSProperties;
+
+                  return (
+                    <LocaleLink
+                      href={`/work/${project.slug}`}
                       className={
-                        styles.projectMain
+                        styles.project
                       }
-                    >
-                      <h2>
-                        {
-                          project.title
-                        }
-                      </h2>
-
-                      <div
-                        className={
-                          styles.categories
-                        }
-                      >
-                        {project.disciplines.map(
-                          (
-                            discipline,
-                          ) => (
-                            <span
-                              key={
-                                discipline
-                              }
-                            >
-                              {
-                                discipline
-                              }
-                            </span>
-                          ),
-                        )}
-                      </div>
-                    </div>
-
-                    <div
-                      className={
-                        styles.projectMeta
+                      key={
+                        project.id
+                      }
+                      data-motion-scroll="work-project"
+                      data-preview-variant={
+                        getPreviewVariant(
+                          index,
+                        )
+                      }
+                      data-has-preview={
+                        previewImage
+                          ? "true"
+                          : "false"
+                      }
+                      style={
+                        projectStyle
                       }
                     >
                       <span
                         className={
-                          styles.projectYear
+                          styles.projectNumber
                         }
                       >
                         {
-                          project.year
+                          project.number
                         }
                       </span>
-                    </div>
 
-                    <span
-                      className={
-                        styles.projectArrow
-                      }
-                      aria-hidden="true"
-                    >
-                      ↗
-                    </span>
-                  </LocaleLink>
-                ),
+                      <div
+                        className={
+                          styles.projectMain
+                        }
+                      >
+                        <h2>
+                          {
+                            project.title
+                          }
+                        </h2>
+
+                        <div
+                          className={
+                            styles.categories
+                          }
+                        >
+                          {project.disciplines.map(
+                            (
+                              discipline,
+                            ) => (
+                              <span
+                                key={
+                                  discipline
+                                }
+                              >
+                                {
+                                  discipline
+                                }
+                              </span>
+                            ),
+                          )}
+                        </div>
+                      </div>
+
+                      {previewImage ? (
+                        <div
+                          className={
+                            styles.previewStage
+                          }
+                          aria-hidden="true"
+                        >
+                          <div
+                            className={
+                              styles.previewFrame
+                            }
+                          >
+                            <Image
+                              src={
+                                previewImage
+                              }
+                              alt=""
+                              fill
+                              sizes="(max-width: 700px) 74vw, 340px"
+                              className={
+                                styles.previewImage
+                              }
+                            />
+                          </div>
+                        </div>
+                      ) : null}
+
+                      <div
+                        className={
+                          styles.projectMeta
+                        }
+                      >
+                        <span
+                          className={
+                            styles.projectYear
+                          }
+                        >
+                          {
+                            project.year
+                          }
+                        </span>
+                      </div>
+
+                      <span
+                        className={
+                          styles.projectArrow
+                        }
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
+                    </LocaleLink>
+                  );
+                },
               )}
             </div>
 

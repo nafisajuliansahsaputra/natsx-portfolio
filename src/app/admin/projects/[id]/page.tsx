@@ -13,6 +13,8 @@ import {
   createClient,
 } from "@/lib/supabase/server";
 
+import ProjectCoverEditor from "./ProjectCoverEditor";
+
 import ProjectEditorForm, {
   type EditableProject,
   type EditableProjectTranslation,
@@ -31,8 +33,13 @@ type ProjectRow =
     EditableProject,
     "translations"
   > & {
-    created_at: string;
-    updated_at: string;
+    hero_image_path:
+      | string
+      | null;
+
+    card_image_path:
+      | string
+      | null;
   };
 
 type TranslationRow = {
@@ -150,9 +157,9 @@ export default async function ProjectEditorPage({
             live_url,
             accent_color,
             secondary_color,
-            published_at,
-            created_at,
-            updated_at
+            hero_image_path,
+            card_image_path,
+            published_at
           `,
         )
         .eq(
@@ -288,10 +295,6 @@ export default async function ProjectEditorPage({
     };
   }
 
-  /*
-   * Safety fallback kalau suatu
-   * environment belum punya EN row.
-   */
   if (
     !translations.en
   ) {
@@ -316,13 +319,23 @@ export default async function ProjectEditorPage({
     };
   }
 
-  const project:
-    EditableProject =
-    {
-      ...projectRow,
+  const {
+    hero_image_path:
+      heroImagePath,
 
-      translations,
-    };
+    card_image_path:
+      cardImagePath,
+
+    ...editableProjectRow
+  } =
+    projectRow;
+
+  const project:
+    EditableProject = {
+    ...editableProjectRow,
+
+    translations,
+  };
 
   return (
     <main
@@ -485,6 +498,35 @@ export default async function ProjectEditorPage({
               </dl>
             </div>
           </div>
+        </section>
+
+        <section
+          className={
+            styles.editorSection
+          }
+        >
+          <p
+            className={
+              styles.sectionLabel
+            }
+          >
+            PROJECT VISUALS
+          </p>
+
+          <ProjectCoverEditor
+            projectId={
+              project.id
+            }
+            projectTitle={
+              project.title
+            }
+            cardImagePath={
+              cardImagePath
+            }
+            heroImagePath={
+              heroImagePath
+            }
+          />
         </section>
 
         <section

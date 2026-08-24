@@ -88,8 +88,41 @@ export default function Capabilities({
         styles.section
       }
       id="capabilities"
+      data-motion-scroll="capabilities"
     >
       <div className="site-container">
+        <div
+          className={
+            styles.top
+          }
+        >
+          <div
+            className={
+              styles.sectionLabel
+            }
+          >
+            <span
+              className={
+                styles.dot
+              }
+            />
+
+            <span>
+              {
+                copy.sectionLabel
+              }
+            </span>
+          </div>
+
+          <span
+            className={
+              styles.index
+            }
+          >
+            04 / DISCIPLINES
+          </span>
+        </div>
+
         <div
           className={
             styles.layout
@@ -97,62 +130,38 @@ export default function Capabilities({
         >
           <div
             className={
-              styles.introColumn
+              styles.intro
             }
           >
-            <div
+            <h2
               className={
-                styles.intro
+                styles.heading
               }
             >
-              <div
-                className={
-                  styles.sectionLabel
-                }
-              >
-                <span
-                  className={
-                    styles.dot
-                  }
-                />
+              {
+                copy.headingLine1
+              }
 
-                <span>
-                  {
-                    copy.sectionLabel
-                  }
-                </span>
-              </div>
+              <br />
 
-              <h2
-                className={
-                  styles.heading
-                }
-              >
-                {
-                  copy.headingLine1
-                }
+              {
+                copy.headingLine2
+              }
 
-                <br />
+              <span>
+                .
+              </span>
+            </h2>
 
-                {
-                  copy.headingLine2
-                }
-
-                <span>
-                  .
-                </span>
-              </h2>
-
-              <p
-                className={
-                  styles.introText
-                }
-              >
-                {
-                  copy.intro
-                }
-              </p>
-            </div>
+            <p
+              className={
+                styles.introText
+              }
+            >
+              {
+                copy.intro
+              }
+            </p>
           </div>
 
           <div
@@ -178,21 +187,21 @@ export default function Capabilities({
                       capability.number
                     }
                   >
-                    <div
+                    <span
                       className={
-                        styles.itemTop
+                        styles.number
                       }
                     >
-                      <span
-                        className={
-                          styles.number
-                        }
-                      >
-                        {
-                          capability.number
-                        }
-                      </span>
+                      {
+                        capability.number
+                      }
+                    </span>
 
+                    <div
+                      className={
+                        styles.identity
+                      }
+                    >
                       <h3
                         className={
                           styles.title
@@ -202,13 +211,7 @@ export default function Capabilities({
                           content.title
                         }
                       </h3>
-                    </div>
 
-                    <div
-                      className={
-                        styles.itemContent
-                      }
-                    >
                       <p
                         className={
                           styles.description
@@ -218,30 +221,39 @@ export default function Capabilities({
                           content.description
                         }
                       </p>
-
-                      <div
-                        className={
-                          styles.skills
-                        }
-                        aria-label={`${content.title} ${copy.skillsLabel}`}
-                      >
-                        {capability.skills.map(
-                          (
-                            skill,
-                          ) => (
-                            <span
-                              key={
-                                skill
-                              }
-                            >
-                              {
-                                skill
-                              }
-                            </span>
-                          ),
-                        )}
-                      </div>
                     </div>
+
+                    <div
+                      className={
+                        styles.skills
+                      }
+                      aria-label={`${content.title} ${copy.skillsLabel}`}
+                    >
+                      {capability.skills.map(
+                        (
+                          skill,
+                        ) => (
+                          <span
+                            key={
+                              skill
+                            }
+                          >
+                            {
+                              skill
+                            }
+                          </span>
+                        ),
+                      )}
+                    </div>
+
+                    <span
+                      className={
+                        styles.marker
+                      }
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
                   </article>
                 );
               },

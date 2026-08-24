@@ -129,6 +129,7 @@ export async function generateProjectMetadata(
   const previewImage =
     getProjectPreviewImage(
       sections,
+      project,
     );
 
   return {

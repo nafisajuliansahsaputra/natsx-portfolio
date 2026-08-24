@@ -1,10 +1,12 @@
 import {
+  PORTFOLIO_MEDIA_BUCKET,
   getFinaleSectionMedia,
   getGallerySectionMedia,
   getImageSectionMedia,
 } from "@/lib/portfolio-media";
 
 import type {
+  PublicProject,
   PublicProjectSection,
 } from "@/lib/public-projects";
 
@@ -19,7 +21,9 @@ let publicClient:
   | null = null;
 
 function getPublicClient() {
-  if (!publicClient) {
+  if (
+    !publicClient
+  ) {
     publicClient =
       createPublicClient();
   }
@@ -33,23 +37,82 @@ export function getPortfolioMediaPublicUrl(
 ) {
   return getPublicClient()
     .storage
-    .from(bucket)
-    .getPublicUrl(path)
+    .from(
+      bucket,
+    )
+    .getPublicUrl(
+      path,
+    )
     .data.publicUrl;
 }
 
-export function getProjectPreviewImage(
-  sections: PublicProjectSection[],
+export function getProjectPrimaryVisualUrl(
+  project: PublicProject,
 ) {
+  if (
+    !project.heroImagePath
+  ) {
+    return null;
+  }
+
+  return getPortfolioMediaPublicUrl(
+    PORTFOLIO_MEDIA_BUCKET,
+    project.heroImagePath,
+  );
+}
+
+export function getProjectSecondaryVisualUrl(
+  project: PublicProject,
+) {
+  if (
+    !project.cardImagePath
+  ) {
+    return null;
+  }
+
+  return getPortfolioMediaPublicUrl(
+    PORTFOLIO_MEDIA_BUCKET,
+    project.cardImagePath,
+  );
+}
+
+export function getProjectPreviewImage(
+  sections:
+    PublicProjectSection[],
+
+  project?:
+    PublicProject,
+) {
+  if (
+    project
+  ) {
+    const showcaseVisual =
+      getProjectPrimaryVisualUrl(
+        project,
+      ) ??
+      getProjectSecondaryVisualUrl(
+        project,
+      );
+
+    if (
+      showcaseVisual
+    ) {
+      return showcaseVisual;
+    }
+  }
+
   for (
-    const section of sections
+    const section of
+    sections
   ) {
     const image =
       getImageSectionMedia(
         section.content,
       );
 
-    if (image) {
+    if (
+      image
+    ) {
       return getPortfolioMediaPublicUrl(
         image.asset.bucket,
         image.asset.path,

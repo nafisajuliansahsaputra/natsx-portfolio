@@ -1,0 +1,1566 @@
+.lab {
+  background:
+    #111111;
+
+  color:
+    #f7f6f2;
+}
+
+.labHeader {
+  min-height:
+    170px;
+
+  padding-block:
+    28px;
+
+  display: flex;
+
+  align-items:
+    flex-start;
+
+  justify-content:
+    space-between;
+
+  gap: 40px;
+
+  border-bottom:
+    1px solid
+    rgba(
+      247,
+      246,
+      242,
+      0.18
+    );
+}
+
+.labLabel {
+  display: flex;
+
+  align-items:
+    center;
+
+  gap: 10px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.05em;
+
+  text-transform:
+    uppercase;
+}
+
+.labDot {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 auto;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+}
+
+.labMeta {
+  color:
+    rgba(
+      247,
+      246,
+      242,
+      0.5
+    );
+
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing:
+    0.08em;
+
+  text-transform:
+    uppercase;
+}
+
+/* =========================
+   EXPERIMENT SHELL
+========================= */
+
+.experiments {
+  overflow: hidden;
+}
+
+.experiment {
+  position: relative;
+
+  min-height:
+    clamp(
+      760px,
+      92vh,
+      980px
+    );
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      12,
+      minmax(0, 1fr)
+    );
+}
+
+.experimentMeta {
+  position: relative;
+
+  z-index: 10;
+
+  display: grid;
+
+  grid-template-rows:
+    auto 1fr;
+
+  padding:
+    clamp(
+      36px,
+      4vw,
+      64px
+    );
+
+  border-right:
+    1px solid
+    currentColor;
+}
+
+.metaDark {
+  grid-column:
+    1 / span 4;
+
+  color:
+    #111111;
+
+  border-color:
+    rgba(
+      17,
+      17,
+      17,
+      0.16
+    );
+}
+
+.metaLight {
+  grid-column:
+    9 / -1;
+
+  order: 2;
+
+  color:
+    #f7f6f2;
+
+  border-left:
+    1px solid
+    rgba(
+      247,
+      246,
+      242,
+      0.16
+    );
+
+  border-right: 0;
+}
+
+.experimentIdentity {
+  display: grid;
+
+  grid-template-columns:
+    46px
+    minmax(0, 1fr);
+
+  gap: 18px;
+}
+
+.experimentNumber {
+  padding-top: 6px;
+
+  color:
+    var(--accent);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.experimentIdentity h2 {
+  margin: 0;
+
+  font-size:
+    clamp(
+      38px,
+      4vw,
+      64px
+    );
+
+  font-weight: 500;
+
+  line-height: 0.92;
+
+  letter-spacing:
+    -0.06em;
+}
+
+.experimentCategory {
+  display: block;
+
+  margin-top:
+    15px;
+
+  opacity: 0.52;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  line-height: 1.5;
+
+  letter-spacing:
+    0.07em;
+
+  text-transform:
+    uppercase;
+}
+
+.experimentDescription {
+  align-self: end;
+
+  max-width: 330px;
+
+  margin-left: 64px;
+}
+
+.experimentDescription p {
+  margin: 0;
+
+  opacity: 0.62;
+
+  font-size: 12px;
+
+  line-height: 1.75;
+
+  letter-spacing:
+    -0.01em;
+}
+
+.experimentInstruction {
+  margin-top:
+    34px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.08em;
+
+  text-transform:
+    uppercase;
+}
+
+.experimentInstruction i {
+  width: 6px;
+  height: 6px;
+
+  border-radius:
+    50%;
+
+  background:
+    currentColor;
+
+  opacity: 0.55;
+}
+
+/* =========================
+   01 — KINETIC TYPE
+========================= */
+
+.kineticExperiment {
+  background:
+    var(--accent);
+}
+
+.kineticVisual {
+  --kinetic-x:
+    0px;
+
+  --kinetic-y:
+    0px;
+
+  --kinetic-x-reverse:
+    0px;
+
+  --kinetic-y-reverse:
+    0px;
+
+  --kinetic-skew:
+    0deg;
+
+  --kinetic-rotate:
+    0deg;
+
+  position: relative;
+
+  grid-column:
+    5 / -1;
+
+  overflow: hidden;
+
+  background:
+    var(--accent);
+
+  color:
+    #111111;
+
+  cursor:
+    crosshair;
+}
+
+.kineticVisual::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  opacity: 0.22;
+
+  background-image:
+    linear-gradient(
+      rgba(
+        17,
+        17,
+        17,
+        0.22
+      )
+      1px,
+      transparent
+      1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(
+        17,
+        17,
+        17,
+        0.22
+      )
+      1px,
+      transparent
+      1px
+    );
+
+  background-size:
+    12.5%
+    12.5%;
+
+  pointer-events:
+    none;
+}
+
+.kineticTop {
+  position: absolute;
+
+  top: 34px;
+  right: 38px;
+  left: 38px;
+
+  z-index: 3;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  gap: 30px;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.09em;
+}
+
+.kineticWords {
+  position: absolute;
+
+  inset:
+    12% 5% 8%;
+
+  display: flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    center;
+}
+
+.kineticWords > span {
+  display: block;
+
+  width: max-content;
+
+  font-size:
+    clamp(
+      92px,
+      11vw,
+      190px
+    );
+
+  font-weight: 600;
+
+  line-height: 0.69;
+
+  letter-spacing:
+    -0.085em;
+
+  will-change:
+    transform;
+
+  transition:
+    transform
+    620ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.kineticWordA {
+  transform:
+    translate3d(
+      var(
+        --kinetic-x
+      ),
+      var(
+        --kinetic-y
+      ),
+      0
+    )
+    skewX(
+      var(
+        --kinetic-skew
+      )
+    );
+}
+
+.kineticWordB {
+  align-self:
+    center;
+
+  color:
+    transparent;
+
+  -webkit-text-stroke:
+    1px
+    #111111;
+
+  transform:
+    translate3d(
+      var(
+        --kinetic-x-reverse
+      ),
+      var(
+        --kinetic-y-reverse
+      ),
+      0
+    )
+    rotate(
+      var(
+        --kinetic-rotate
+      )
+    );
+}
+
+.kineticWordC {
+  align-self:
+    flex-end;
+
+  transform:
+    translate3d(
+      var(
+        --kinetic-x
+      ),
+      var(
+        --kinetic-y-reverse
+      ),
+      0
+    )
+    skewX(
+      var(
+        --kinetic-skew
+      )
+    );
+}
+
+.kineticAxis {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events:
+    none;
+}
+
+.kineticAxis span {
+  position: absolute;
+
+  display: block;
+
+  background:
+    rgba(
+      17,
+      17,
+      17,
+      0.3
+    );
+}
+
+.kineticAxis
+  span:first-child {
+  top: 50%;
+  right: 0;
+  left: 0;
+
+  height: 1px;
+}
+
+.kineticAxis
+  span:last-child {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+
+  width: 1px;
+}
+
+/* =========================
+   02 — MAGNETIC FIELD
+========================= */
+
+.magneticExperiment {
+  background:
+    #111111;
+
+  color:
+    #f7f6f2;
+}
+
+.magneticVisual {
+  --field-x:
+    50%;
+
+  --field-y:
+    50%;
+
+  position: relative;
+
+  grid-column:
+    1 / span 8;
+
+  overflow: hidden;
+
+  cursor:
+    none;
+
+  background:
+    #111111;
+}
+
+.magneticGrid {
+  position: absolute;
+
+  inset:
+    10% 8%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      9,
+      1fr
+    );
+
+  grid-template-rows:
+    repeat(
+      6,
+      1fr
+    );
+
+  align-items: center;
+
+  justify-items:
+    center;
+}
+
+.magneticGrid span {
+  width:
+    clamp(
+      5px,
+      0.55vw,
+      9px
+    );
+
+  aspect-ratio: 1;
+
+  border-radius:
+    50%;
+
+  background:
+    #f7f6f2;
+
+  opacity: 0.66;
+
+  will-change:
+    transform;
+
+  transition:
+    transform
+    360ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    ),
+    opacity
+    300ms
+    ease;
+}
+
+.fieldCursor {
+  position: absolute;
+
+  top:
+    var(
+      --field-y
+    );
+
+  left:
+    var(
+      --field-x
+    );
+
+  z-index: 3;
+
+  width: 74px;
+  height: 74px;
+
+  border:
+    1px solid
+    var(--accent);
+
+  border-radius:
+    50%;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  box-shadow:
+    inset
+    0
+    0
+    0
+    1px
+    rgba(
+      89,
+      97,
+      237,
+      0.08
+    );
+
+  transition:
+    width
+    240ms
+    ease,
+    height
+    240ms
+    ease;
+
+  pointer-events:
+    none;
+}
+
+.fieldCursor::after {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 5px;
+  height: 5px;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+}
+
+.magneticVisual:hover
+  .fieldCursor {
+  width: 92px;
+  height: 92px;
+}
+
+.fieldCoordinates {
+  position: absolute;
+
+  right: 34px;
+  bottom: 32px;
+  left: 34px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  gap: 20px;
+
+  color:
+    rgba(
+      247,
+      246,
+      242,
+      0.42
+    );
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.1em;
+}
+
+/* =========================
+   03 — SPATIAL
+========================= */
+
+.spatialExperiment {
+  background:
+    #e8e7e1;
+}
+
+.spatialVisual {
+  --space-a-x:
+    0px;
+
+  --space-a-y:
+    0px;
+
+  --space-b-x:
+    0px;
+
+  --space-b-y:
+    0px;
+
+  --space-c-x:
+    0px;
+
+  --space-c-y:
+    0px;
+
+  --space-line:
+    0deg;
+
+  position: relative;
+
+  grid-column:
+    5 / -1;
+
+  overflow: hidden;
+
+  background:
+    #e8e7e1;
+
+  color:
+    #111111;
+
+  cursor:
+    crosshair;
+}
+
+.spatialIndex {
+  position: absolute;
+
+  top: 34px;
+  right: 36px;
+
+  z-index: 5;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.09em;
+}
+
+.spatialCircle {
+  position: absolute;
+
+  top: 14%;
+  right: 11%;
+
+  width: 36%;
+
+  aspect-ratio: 1;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+
+  box-shadow:
+    0 32px 80px
+    rgba(
+      89,
+      97,
+      237,
+      0.2
+    );
+
+  transform:
+    translate3d(
+      var(
+        --space-a-x
+      ),
+      var(
+        --space-a-y
+      ),
+      0
+    );
+
+  transition:
+    transform
+    760ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.spatialFrame {
+  position: absolute;
+
+  top: 20%;
+  left: 15%;
+
+  width: 39%;
+  height: 53%;
+
+  border:
+    1px solid
+    #111111;
+
+  transform:
+    translate3d(
+      var(
+        --space-b-x
+      ),
+      var(
+        --space-b-y
+      ),
+      0
+    )
+    rotate(-7deg);
+
+  transition:
+    transform
+    840ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.spatialBlock {
+  position: absolute;
+
+  right: 20%;
+  bottom: 12%;
+
+  width: 25%;
+  height: 29%;
+
+  background:
+    #111111;
+
+  transform:
+    translate3d(
+      var(
+        --space-c-x
+      ),
+      var(
+        --space-c-y
+      ),
+      0
+    )
+    rotate(4deg);
+
+  box-shadow:
+    0 26px 70px
+    rgba(
+      17,
+      17,
+      17,
+      0.16
+    );
+
+  transition:
+    transform
+    900ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.spatialLine {
+  position: absolute;
+
+  top: 7%;
+  bottom: 7%;
+  left: 57%;
+
+  width: 1px;
+
+  background:
+    rgba(
+      17,
+      17,
+      17,
+      0.35
+    );
+
+  transform:
+    rotate(
+      var(
+        --space-line
+      )
+    );
+
+  transform-origin:
+    center;
+
+  transition:
+    transform
+    700ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.spatialPlus {
+  position: absolute;
+
+  left: 8%;
+  bottom: 7%;
+
+  font-size:
+    38px;
+
+  line-height: 1;
+}
+
+/* =========================
+   04 — CURSOR TYPE
+========================= */
+
+.cursorExperiment {
+  background:
+    #111111;
+
+  color:
+    #f7f6f2;
+}
+
+.cursorVisual {
+  --cursor-x:
+    50%;
+
+  --cursor-y:
+    50%;
+
+  position: relative;
+
+  grid-column:
+    1 / span 8;
+
+  overflow: hidden;
+
+  background:
+    #111111;
+
+  color:
+    #f7f6f2;
+
+  cursor:
+    none;
+}
+
+.cursorMeta {
+  position: absolute;
+
+  top: 32px;
+  right: 34px;
+  left: 34px;
+
+  z-index: 4;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  gap: 30px;
+
+  color:
+    rgba(
+      247,
+      246,
+      242,
+      0.45
+    );
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing:
+    0.1em;
+}
+
+.cursorWord {
+  position: absolute;
+
+  z-index: 2;
+
+  display: flex;
+
+  font-size:
+    clamp(
+      92px,
+      11vw,
+      185px
+    );
+
+  font-weight: 600;
+
+  line-height: 0.72;
+
+  letter-spacing:
+    -0.09em;
+
+  white-space:
+    nowrap;
+}
+
+.cursorWord span {
+  display: inline-block;
+
+  will-change:
+    transform;
+
+  transition:
+    transform
+    520ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.cursorWordA {
+  top: 18%;
+  left: 6%;
+}
+
+.cursorWordB {
+  top: 42%;
+  right: 9%;
+
+  color:
+    var(--accent);
+}
+
+.cursorWordC {
+  right: 5%;
+  bottom: 8%;
+}
+
+.cursorFollower {
+  position: absolute;
+
+  top:
+    var(
+      --cursor-y
+    );
+
+  left:
+    var(
+      --cursor-x
+    );
+
+  z-index: 5;
+
+  width: 42px;
+  height: 42px;
+
+  border:
+    1px solid
+    var(--accent);
+
+  border-radius:
+    50%;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  pointer-events:
+    none;
+}
+
+.cursorFollower::before,
+.cursorFollower::after {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  background:
+    var(--accent);
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+}
+
+.cursorFollower::before {
+  width: 8px;
+  height: 1px;
+}
+
+.cursorFollower::after {
+  width: 1px;
+  height: 8px;
+}
+
+.cursorRule {
+  position: absolute;
+
+  top: 10%;
+  bottom: 10%;
+  left: 50%;
+
+  width: 1px;
+
+  background:
+    rgba(
+      247,
+      246,
+      242,
+      0.12
+    );
+}
+
+/* =========================
+   AMBIENT
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  [data-motion-scroll="playground-experiment"][
+    data-motion-visible="true"
+  ]
+    .experimentInstruction
+    i {
+    animation:
+      lab-instruction-pulse
+      2.8s
+      ease-in-out
+      infinite;
+  }
+
+  [data-motion-scroll="playground-experiment"][
+    data-motion-visible="true"
+  ]
+    .spatialCircle {
+    animation:
+      lab-spatial-breathe
+      7s
+      ease-in-out
+      infinite;
+  }
+}
+
+@keyframes
+  lab-instruction-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+
+    transform:
+      scale(1);
+  }
+
+  50% {
+    opacity: 1;
+
+    transform:
+      scale(1.4);
+  }
+}
+
+@keyframes
+  lab-spatial-breathe {
+  0%,
+  100% {
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.025;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  .labHeader {
+    min-height:
+      130px;
+  }
+
+  .experiment {
+    min-height:
+      720px;
+  }
+
+  .experimentMeta {
+    padding:
+      34px 28px;
+  }
+
+  .experimentIdentity {
+    grid-template-columns:
+      34px
+      minmax(0, 1fr);
+
+    gap: 12px;
+  }
+
+  .experimentDescription {
+    margin-left:
+      46px;
+  }
+
+  .kineticWords > span,
+  .cursorWord {
+    font-size:
+      clamp(
+        76px,
+        12vw,
+        120px
+      );
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  .labHeader {
+    min-height:
+      105px;
+
+    padding-block:
+      22px;
+  }
+
+  .labLabel {
+    font-size: 9px;
+  }
+
+  .labDot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .labMeta {
+    max-width: 150px;
+
+    text-align: right;
+
+    font-size: 7px;
+
+    line-height: 1.5;
+  }
+
+  .experiment {
+    min-height: 0;
+
+    display: flex;
+
+    flex-direction:
+      column;
+  }
+
+  .experimentMeta,
+  .metaDark,
+  .metaLight {
+    order: 1;
+
+    width: 100%;
+
+    padding:
+      32px 20px
+      38px;
+
+    display: block;
+
+    border: 0;
+
+    border-bottom:
+      1px solid
+      currentColor;
+  }
+
+  .metaDark {
+    border-color:
+      rgba(
+        17,
+        17,
+        17,
+        0.15
+      );
+  }
+
+  .metaLight {
+    border-color:
+      rgba(
+        247,
+        246,
+        242,
+        0.15
+      );
+  }
+
+  .experimentIdentity {
+    grid-template-columns:
+      30px
+      minmax(0, 1fr);
+
+    gap: 10px;
+  }
+
+  .experimentNumber {
+    font-size: 8px;
+  }
+
+  .experimentIdentity h2 {
+    font-size:
+      clamp(
+        34px,
+        10.5vw,
+        44px
+      );
+  }
+
+  .experimentCategory {
+    margin-top:
+      11px;
+
+    font-size: 7px;
+  }
+
+  .experimentDescription {
+    max-width: 310px;
+
+    margin:
+      34px
+      0
+      0
+      40px;
+  }
+
+  .experimentDescription p {
+    font-size: 11px;
+  }
+
+  .experimentInstruction {
+    display: none;
+  }
+
+  .kineticVisual,
+  .magneticVisual,
+  .spatialVisual,
+  .cursorVisual {
+    order: 2;
+
+    width: 100%;
+
+    min-height: 520px;
+
+    grid-column: auto;
+  }
+
+  .magneticVisual,
+  .cursorVisual {
+    cursor: default;
+  }
+
+  .kineticWords {
+    inset:
+      13% 6%;
+  }
+
+  .kineticWords > span {
+    font-size:
+      clamp(
+        58px,
+        20vw,
+        84px
+      );
+  }
+
+  .kineticTop,
+  .fieldCoordinates,
+  .cursorMeta {
+    right: 20px;
+    left: 20px;
+  }
+
+  .magneticGrid {
+    inset:
+      9% 5%;
+  }
+
+  .fieldCursor,
+  .cursorFollower {
+    display: none;
+  }
+
+  .spatialCircle {
+    width: 44%;
+  }
+
+  .spatialFrame {
+    left: 9%;
+
+    width: 45%;
+  }
+
+  .spatialBlock {
+    right: 12%;
+
+    width: 30%;
+  }
+
+  .cursorWord {
+    font-size:
+      clamp(
+        62px,
+        21vw,
+        88px
+      );
+  }
+
+  .cursorWordA {
+    top: 19%;
+    left: 5%;
+  }
+
+  .cursorWordB {
+    top: 43%;
+    right: 8%;
+  }
+
+  .cursorWordC {
+    right: 4%;
+    bottom: 11%;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .kineticWords > span,
+  .magneticGrid span,
+  .spatialCircle,
+  .spatialFrame,
+  .spatialBlock,
+  .spatialLine,
+  .cursorWord span,
+  .experimentInstruction
+    i {
+    animation:
+      none !important;
+
+    transform:
+      none !important;
+
+    transition-duration:
+      0.01ms !important;
+  }
+
+  .fieldCursor,
+  .cursorFollower {
+    display: none;
+  }
+}

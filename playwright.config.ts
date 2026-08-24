@@ -3,6 +3,15 @@ import {
   devices,
 } from "@playwright/test";
 
+const E2E_PORT =
+  Number(
+    process.env.PLAYWRIGHT_PORT ??
+      3100,
+  );
+
+const E2E_BASE_URL =
+  `http://127.0.0.1:${E2E_PORT}`;
+
 export default defineConfig({
   testDir:
     "./tests/e2e",
@@ -44,7 +53,7 @@ export default defineConfig({
 
   use: {
     baseURL:
-      "http://127.0.0.1:3000",
+      E2E_BASE_URL,
 
     trace:
       "on-first-retry",
@@ -71,10 +80,10 @@ export default defineConfig({
 
   webServer: {
     command:
-      "npm run start",
+      `npm run start -- -p ${E2E_PORT}`,
 
     url:
-      "http://127.0.0.1:3000",
+      E2E_BASE_URL,
 
     reuseExistingServer:
       false,
