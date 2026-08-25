@@ -208,10 +208,10 @@ const aboutMessages = {
         "ide abstrak menjadi",
 
       headingLine3:
-        "sesuatu yang benar-benar",
+        "sesuatu yang bisa",
 
       headingLine4:
-        "bisa",
+        "benar-benar",
 
       headingEmphasis:
         "dirasakan.",

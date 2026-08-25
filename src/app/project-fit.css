@@ -4,21 +4,30 @@
  * =========================
  *
  * Project detail memakai oversized
- * editorial typography.
+ * editorial typography dan art-directed
+ * media composition.
  *
- * Desktop tetap untouched.
+ * Guard ini menangani dua hal:
  *
- * Mobile diberi optical ceiling
- * supaya judul project panjang:
+ * 1. Oversized project typography
+ *    harus tetap berada di composition.
  *
- * - tidak terpotong
- * - tidak keluar composition
- * - tetap terasa oversized
+ * 2. Wide project media tidak boleh
+ *    dicrop hanya karena mobile gallery
+ *    memakai portrait treatment.
  *
- * overflow: clip pada project page
- * tidak boleh menjadi alasan bug
- * typography tersembunyi.
+ * Existing art direction tetap dijaga:
+ *
+ * - normal gallery item:
+ *   portrait / cover
+ *
+ * - wide gallery item:
+ *   landscape / contain
  */
+
+/* =========================
+   PROJECT TYPOGRAPHY
+========================= */
 
 [data-motion-page="project-detail"]
   [data-motion-project-hero-piece="title"] {
@@ -46,6 +55,65 @@
 
   overflow-wrap: normal;
   word-break: normal;
+}
+
+/* =========================
+   WIDE PROJECT MEDIA
+========================= */
+
+/*
+ * Gallery renderer memakai pola:
+ *
+ * 01 wide
+ * 02 portrait
+ * 03 portrait
+ * 04 wide
+ * ...
+ *
+ * yaitu index:
+ *
+ * 3n + 1
+ *
+ * Existing component juga memakai
+ * pola yang sama untuk menentukan
+ * imageSizes.
+ *
+ * Wide screenshot adalah dokumentasi
+ * UI, bukan decorative photography.
+ * Karena itu tidak boleh dicrop.
+ */
+
+[data-motion-page="project-detail"]
+  [data-motion-scroll="project-gallery"]
+  figure:nth-child(3n + 1)
+  > div {
+  aspect-ratio:
+    16 / 9 !important;
+}
+
+/*
+ * ProjectMedia.module.css memberi
+ * gallery image:
+ *
+ * object-fit: cover !important
+ *
+ * Untuk wide item kita override dengan
+ * specificity lebih tinggi agar seluruh
+ * screenshot tetap terlihat.
+ *
+ * Background project-secondary tetap
+ * menjadi letterbox surface apabila
+ * rasio sumber tidak tepat 16:9.
+ */
+[data-motion-page="project-detail"]
+  [data-motion-scroll="project-gallery"]
+  figure:nth-child(3n + 1)
+  img {
+  object-fit:
+    contain !important;
+
+  object-position:
+    center center !important;
 }
 
 /* =========================
@@ -108,6 +176,38 @@
 
     line-height:
       0.86;
+  }
+
+  /*
+   * ProjectDetail.module.css mobile
+   * saat ini memaksa seluruh gallery
+   * menjadi 4 / 5.
+   *
+   * Kita sengaja mengambil kembali
+   * composition landscape HANYA untuk
+   * item yang memang merupakan wide
+   * gallery slot.
+   */
+  [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    figure:nth-child(3n + 1)
+    > div {
+    aspect-ratio:
+      16 / 9 !important;
+  }
+
+  [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    figure:nth-child(3n + 1)
+    img {
+    min-height:
+      0 !important;
+
+    object-fit:
+      contain !important;
+
+    object-position:
+      center center !important;
   }
 }
 

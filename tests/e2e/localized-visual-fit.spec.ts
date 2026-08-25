@@ -19,6 +19,57 @@ test.beforeEach(
   },
 );
 
+async function navigateForVisualFit(
+  page: Page,
+  route: string,
+) {
+  /*
+   * Visual-fit checks only require
+   * rendered DOM + loaded fonts.
+   *
+   * Waiting for the browser's complete
+   * "load" event also waits for media
+   * resources that are irrelevant to
+   * typography/layout assertions.
+   *
+   * That made loop-heavy tests prone
+   * to unrelated 30s navigation
+   * timeouts.
+   */
+  const response =
+    await page.goto(
+      route,
+      {
+        waitUntil:
+          "domcontentloaded",
+      },
+    );
+
+  expect(
+    response,
+    route,
+  ).not.toBeNull();
+
+  expect(
+    response?.status(),
+    route,
+  ).toBeLessThan(
+    400,
+  );
+
+  return response;
+}
+
+async function waitForVisualLayout(
+  page: Page,
+) {
+  await page.evaluate(
+    async () => {
+      await document.fonts.ready;
+    },
+  );
+}
+
 async function getTextFitIssues(
   page: Page,
   selectors:
@@ -279,6 +330,28 @@ test(
   async ({
     page,
   }) => {
+    /*
+     * 5 viewports × 2 locales =
+     * 10 navigations.
+     */
+    test.setTimeout(
+      60_000,
+    );
+
+    /*
+     * Motion is already protected by
+     * creative-integrity tests.
+     *
+     * This test only measures the final
+     * typography composition, so reduced
+     * motion removes animation timing as
+     * an unnecessary variable.
+     */
+    await page.emulateMedia({
+      reducedMotion:
+        "reduce",
+    });
+
     const locales = [
       "/id",
       "/de",
@@ -357,25 +430,13 @@ test(
         const route
         of locales
       ) {
-        const response =
-          await page.goto(
-            route,
-          );
-
-        expect(
-          response,
-        ).not.toBeNull();
-
-        expect(
-          response?.status(),
-        ).toBeLessThan(
-          400,
+        await navigateForVisualFit(
+          page,
+          route,
         );
 
-        await page.evaluate(
-          async () => {
-            await document.fonts.ready;
-          },
+        await waitForVisualLayout(
+          page,
         );
 
         const title =
@@ -498,6 +559,19 @@ test(
   async ({
     page,
   }) => {
+    /*
+     * 3 viewports × 3 locales =
+     * 9 project navigations.
+     */
+    test.setTimeout(
+      60_000,
+    );
+
+    await page.emulateMedia({
+      reducedMotion:
+        "reduce",
+    });
+
     const routes = [
       "/work/bast-management-system",
       "/id/work/bast-management-system",
@@ -542,25 +616,13 @@ test(
         const route
         of routes
       ) {
-        const response =
-          await page.goto(
-            route,
-          );
-
-        expect(
-          response,
-        ).not.toBeNull();
-
-        expect(
-          response?.status(),
-        ).toBeLessThan(
-          400,
+        await navigateForVisualFit(
+          page,
+          route,
         );
 
-        await page.evaluate(
-          async () => {
-            await document.fonts.ready;
-          },
+        await waitForVisualLayout(
+          page,
         );
 
         const heroTitle =
@@ -625,8 +687,15 @@ test(
   async ({
     page,
   }) => {
+    /*
+     * 3 viewports
+     * × 2 locales
+     * × 5 inner pages
+     *
+     * = 30 intentional navigations.
+     */
     test.setTimeout(
-      60_000,
+      90_000,
     );
 
     await page.emulateMedia({
@@ -763,21 +832,9 @@ test(
           const route =
             `/${locale}${target.path}`;
 
-          const response =
-            await page.goto(
-              route,
-            );
-
-          expect(
-            response,
-            `${viewport.width}px:${route}`,
-          ).not.toBeNull();
-
-          expect(
-            response?.status(),
-            `${viewport.width}px:${route}`,
-          ).toBeLessThan(
-            400,
+          await navigateForVisualFit(
+            page,
+            route,
           );
 
           await expect(
@@ -786,10 +843,8 @@ test(
             ),
           ).toBeVisible();
 
-          await page.evaluate(
-            async () => {
-              await document.fonts.ready;
-            },
+          await waitForVisualLayout(
+            page,
           );
 
           const issues =

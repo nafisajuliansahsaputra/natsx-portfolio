@@ -1,0 +1,51 @@
+/*
+ * =========================
+ * NATSX — CONTACT EMAIL FIT
+ * =========================
+ *
+ * Email adalah identity token,
+ * bukan localized editorial copy.
+ *
+ * Karena alamat yang sama tampil
+ * di EN / ID / DE, treatment-nya
+ * harus berlaku untuk seluruh
+ * Contact route.
+ *
+ * Desired mobile composition:
+ *
+ * nafisajuliansahsaputra
+ * @gmail.com
+ *
+ * Component sudah memberi <br />
+ * intentional di antara dua bagian.
+ *
+ * Browser tidak boleh menambah
+ * line break ketiga sendiri.
+ */
+
+@media (max-width: 700px) {
+  [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    min-width: 0;
+    max-width: 100%;
+
+    font-size:
+      clamp(
+        29px,
+        7.9vw,
+        34px
+      );
+
+    line-height: 0.92;
+
+    letter-spacing:
+      -0.055em;
+
+    overflow-wrap: normal;
+    word-break: normal;
+
+    -webkit-hyphens: none;
+    hyphens: none;
+  }
+}

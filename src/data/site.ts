@@ -41,7 +41,7 @@ if (instagramUrl) {
       "Instagram",
 
     username:
-      "@natsx",
+      "@natsx______",
 
     href:
       instagramUrl,

@@ -29,6 +29,7 @@ import "./contact-motion.css";
 import "./project-motion.css";
 import "./project-fit.css";
 import "./localized-fit.css";
+import "./contact-email-fit.css";
 import "./intro-motion.css";
 
 const plusJakartaSans =

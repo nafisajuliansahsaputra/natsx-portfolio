@@ -16,8 +16,8 @@
  * - kalau tidak muat, scale composition
  *
  * UTILITY / LONG TOKEN
- * - email boleh break karena memang
- *   satu token panjang
+ * - email boleh punya treatment sendiri
+ *   karena memang satu token panjang
  *
  * Jadi sistem tidak "menyembunyikan"
  * masalah typography lewat emergency wrap.
@@ -91,11 +91,12 @@
   }
 
   /*
-   * Email berbeda dari editorial title.
+   * Tablet masih boleh punya emergency
+   * wrapping pada email karena column
+   * composition-nya berbeda dari mobile.
    *
-   * Local-part email memang bisa berupa
-   * satu token panjang tanpa whitespace,
-   * jadi breaking diperbolehkan.
+   * Mobile akan mengambil alih dengan
+   * optical sizing khusus di bawah.
    */
   [data-locale="id"]
     [data-motion-page="contact"]
@@ -141,10 +142,6 @@
 ========================= */
 
 @media (min-width: 701px) and (max-width: 960px) {
-  /*
-   * "Projekte" lebih lebar daripada
-   * Work / Karya.
-   */
   [data-locale="de"]
     [data-motion-page="work"]
     [data-motion-work-hero-piece="title"] {
@@ -168,13 +165,6 @@
      WORK
   ========================= */
 
-  /*
-   * Base EN Work hero = 25vw.
-   * Tetap dipertahankan untuk EN.
-   *
-   * "Projekte" perlu optical scale
-   * berbeda, bukan forced wrapping.
-   */
   [data-locale="de"]
     [data-motion-page="work"]
     [data-motion-work-hero-piece="title"] {
@@ -342,6 +332,49 @@
         10.8vw,
         50px
       );
+  }
+
+  /* =========================
+     CONTACT — PRIMARY EMAIL
+  ========================= */
+
+  /*
+   * Email sudah punya explicit <br>
+   * antara local-part dan domain:
+   *
+   * nafisajuliansahsaputra
+   * @gmail.com
+   *
+   * Jadi mobile tidak boleh lagi
+   * memecah local-part sendiri.
+   *
+   * Kita scale typography sampai
+   * local-part muat utuh, daripada
+   * memakai emergency word break.
+   */
+  [data-locale="id"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"],
+  [data-locale="de"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    font-size:
+      clamp(
+        29px,
+        7.9vw,
+        34px
+      );
+
+    line-height: 0.92;
+    letter-spacing: -0.055em;
+
+    overflow-wrap: normal;
+    word-break: normal;
+
+    -webkit-hyphens: none;
+    hyphens: none;
   }
 
   /* =========================

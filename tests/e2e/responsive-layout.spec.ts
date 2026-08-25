@@ -94,6 +94,46 @@ const localizedViewports =
         "tablet",
   );
 
+async function navigateForLayout(
+  page: Page,
+  route: string,
+) {
+  /*
+   * Layout tests do not need the full
+   * window "load" lifecycle.
+   *
+   * Waiting for load also waits on
+   * image/resource delivery and can
+   * unnecessarily block loop-heavy
+   * responsive tests.
+   *
+   * DOMContentLoaded is enough because
+   * every assertion below waits for the
+   * actual rendered page element and
+   * fonts before measuring layout.
+   */
+  const response =
+    await page.goto(
+      route,
+      {
+        waitUntil:
+          "domcontentloaded",
+      },
+    );
+
+  expect(
+    response,
+  ).not.toBeNull();
+
+  expect(
+    response?.status(),
+  ).toBeLessThan(
+    400,
+  );
+
+  return response;
+}
+
 async function assertNoHorizontalOverflow(
   page: Page,
   route: string,
@@ -201,6 +241,19 @@ test.describe(
         async ({
           page,
         }) => {
+          /*
+           * Six routes are intentionally
+           * checked inside one test.
+           *
+           * 60s prevents unrelated local
+           * server scheduling from turning
+           * a valid layout suite into a
+           * 30s false timeout.
+           */
+          test.setTimeout(
+            60_000,
+          );
+
           await page.setViewportSize({
             width:
               viewport.width,
@@ -213,19 +266,9 @@ test.describe(
             const route
             of publicRoutes
           ) {
-            const response =
-              await page.goto(
-                route,
-              );
-
-            expect(
-              response,
-            ).not.toBeNull();
-
-            expect(
-              response?.status(),
-            ).toBeLessThan(
-              400,
+            await navigateForLayout(
+              page,
+              route,
             );
 
             await assertNoHorizontalOverflow(
@@ -251,6 +294,14 @@ test.describe(
         async ({
           page,
         }) => {
+          /*
+           * This test intentionally visits
+           * twelve localized routes.
+           */
+          test.setTimeout(
+            90_000,
+          );
+
           await page.setViewportSize({
             width:
               viewport.width,
@@ -263,19 +314,9 @@ test.describe(
             const route
             of localizedRoutes
           ) {
-            const response =
-              await page.goto(
-                route,
-              );
-
-            expect(
-              response,
-            ).not.toBeNull();
-
-            expect(
-              response?.status(),
-            ).toBeLessThan(
-              400,
+            await navigateForLayout(
+              page,
+              route,
             );
 
             await assertNoHorizontalOverflow(
@@ -294,6 +335,10 @@ test(
   async ({
     page,
   }) => {
+    test.setTimeout(
+      60_000,
+    );
+
     await page.setViewportSize({
       width:
         1440,
@@ -302,7 +347,8 @@ test(
         900,
     });
 
-    await page.goto(
+    await navigateForLayout(
+      page,
       "/work",
     );
 
@@ -340,19 +386,9 @@ test(
           viewport.height,
       });
 
-      const response =
-        await page.goto(
-          href!,
-        );
-
-      expect(
-        response,
-      ).not.toBeNull();
-
-      expect(
-        response?.status(),
-      ).toBeLessThan(
-        400,
+      await navigateForLayout(
+        page,
+        href!,
       );
 
       await assertNoHorizontalOverflow(
@@ -368,6 +404,10 @@ test(
   async ({
     page,
   }) => {
+    test.setTimeout(
+      60_000,
+    );
+
     await page.setViewportSize({
       width:
         375,
@@ -386,7 +426,8 @@ test(
       const route
       of routes
     ) {
-      await page.goto(
+      await navigateForLayout(
+        page,
         route,
       );
 
