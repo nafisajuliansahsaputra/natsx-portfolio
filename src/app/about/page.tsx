@@ -276,7 +276,6 @@ export function AboutPageContent({
 
                 <h2
                   data-motion-piece="title"
-                  data-about-identity-step="0"
                 >
                   {
                     copy.profile
@@ -323,15 +322,10 @@ export function AboutPageContent({
                     .map(
                       (
                         paragraph,
-                        index,
                       ) => (
                         <p
                           key={
                             paragraph
-                          }
-                          data-about-identity-step={
-                            index +
-                            1
                           }
                         >
                           {

@@ -5,13 +5,30 @@ import type {
   ReactNode,
 } from "react";
 
+import {
+  useEffect,
+  useRef,
+} from "react";
+
 import styles from "./ContactMagneticSurface.module.css";
 
 type ContactMagneticSurfaceProps = {
   children: ReactNode;
 };
 
-function shouldReduceMotion() {
+type PointerState = {
+  element:
+    HTMLDivElement |
+    null;
+
+  clientX:
+    number;
+
+  clientY:
+    number;
+};
+
+function shouldDisableMagneticMotion() {
   if (
     typeof window ===
     "undefined"
@@ -20,6 +37,8 @@ function shouldReduceMotion() {
   }
 
   return (
+    window.innerWidth <=
+      960 ||
     window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches ||
@@ -32,26 +51,63 @@ function shouldReduceMotion() {
 export default function ContactMagneticSurface({
   children,
 }: ContactMagneticSurfaceProps) {
-  function handlePointerMove(
-    event: ReactPointerEvent<HTMLDivElement>,
-  ) {
+  const frameRef =
+    useRef<number | null>(
+      null,
+    );
+
+  const pointerRef =
+    useRef<PointerState>({
+      element:
+        null,
+
+      clientX:
+        0,
+
+      clientY:
+        0,
+    });
+
+  useEffect(
+    () => () => {
+      if (
+        frameRef.current !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          frameRef.current,
+        );
+      }
+    },
+    [],
+  );
+
+  function applyPointerMotion() {
+    frameRef.current =
+      null;
+
+    const {
+      element,
+      clientX,
+      clientY,
+    } =
+      pointerRef.current;
+
     if (
-      shouldReduceMotion() ||
-      event.pointerType ===
-        "touch"
+      !element ||
+      shouldDisableMagneticMotion()
     ) {
       return;
     }
-
-    const element =
-      event.currentTarget;
 
     const rect =
       element.getBoundingClientRect();
 
     if (
-      rect.width === 0 ||
-      rect.height === 0
+      rect.width ===
+        0 ||
+      rect.height ===
+        0
     ) {
       return;
     }
@@ -59,7 +115,7 @@ export default function ContactMagneticSurface({
     const normalizedX =
       (
         (
-          event.clientX -
+          clientX -
           rect.left
         ) /
           rect.width -
@@ -70,7 +126,7 @@ export default function ContactMagneticSurface({
     const normalizedY =
       (
         (
-          event.clientY -
+          clientY -
           rect.top
         ) /
           rect.height -
@@ -89,9 +145,67 @@ export default function ContactMagneticSurface({
     );
   }
 
+  function handlePointerMove(
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) {
+    if (
+      event.pointerType ===
+        "touch" ||
+      shouldDisableMagneticMotion()
+    ) {
+      return;
+    }
+
+    pointerRef.current = {
+      element:
+        event.currentTarget,
+
+      clientX:
+        event.clientX,
+
+      clientY:
+        event.clientY,
+    };
+
+    if (
+      frameRef.current !==
+      null
+    ) {
+      return;
+    }
+
+    frameRef.current =
+      window.requestAnimationFrame(
+        applyPointerMotion,
+      );
+  }
+
   function resetPointer(
     event: ReactPointerEvent<HTMLDivElement>,
   ) {
+    if (
+      frameRef.current !==
+      null
+    ) {
+      window.cancelAnimationFrame(
+        frameRef.current,
+      );
+
+      frameRef.current =
+        null;
+    }
+
+    pointerRef.current = {
+      element:
+        null,
+
+      clientX:
+        0,
+
+      clientY:
+        0,
+    };
+
     event.currentTarget.style.setProperty(
       "--contact-magnetic-x",
       "0px",
@@ -114,6 +228,9 @@ export default function ContactMagneticSurface({
         handlePointerMove
       }
       onPointerLeave={
+        resetPointer
+      }
+      onPointerCancel={
         resetPointer
       }
     >

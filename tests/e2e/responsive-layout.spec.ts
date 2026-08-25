@@ -63,6 +63,37 @@ const publicRoutes = [
   "/cv",
 ] as const;
 
+const localizedRoutes = [
+  "/id",
+  "/de",
+
+  "/id/work",
+  "/de/work",
+
+  "/id/about",
+  "/de/about",
+
+  "/id/playground",
+  "/de/playground",
+
+  "/id/contact",
+  "/de/contact",
+
+  "/id/cv",
+  "/de/cv",
+] as const;
+
+const localizedViewports =
+  viewports.filter(
+    (
+      viewport,
+    ) =>
+      viewport.name ===
+        "mobile" ||
+      viewport.name ===
+        "tablet",
+  );
+
 async function assertNoHorizontalOverflow(
   page: Page,
   route: string,
@@ -208,48 +239,51 @@ test.describe(
   },
 );
 
-test(
-  "localized mobile layouts have no horizontal overflow",
-  async ({
-    page,
-  }) => {
-    await page.setViewportSize({
-      width:
-        375,
-
-      height:
-        812,
-    });
-
-    const localizedRoutes = [
-      "/id",
-      "/de",
-      "/id/work",
-      "/de/work",
-    ] as const;
-
+test.describe(
+  "localized responsive layout",
+  () => {
     for (
-      const route
-      of localizedRoutes
+      const viewport
+      of localizedViewports
     ) {
-      const response =
-        await page.goto(
-          route,
-        );
+      test(
+        `${viewport.name} localized public routes have no horizontal overflow`,
+        async ({
+          page,
+        }) => {
+          await page.setViewportSize({
+            width:
+              viewport.width,
 
-      expect(
-        response,
-      ).not.toBeNull();
+            height:
+              viewport.height,
+          });
 
-      expect(
-        response?.status(),
-      ).toBeLessThan(
-        400,
-      );
+          for (
+            const route
+            of localizedRoutes
+          ) {
+            const response =
+              await page.goto(
+                route,
+              );
 
-      await assertNoHorizontalOverflow(
-        page,
-        route,
+            expect(
+              response,
+            ).not.toBeNull();
+
+            expect(
+              response?.status(),
+            ).toBeLessThan(
+              400,
+            );
+
+            await assertNoHorizontalOverflow(
+              page,
+              `${viewport.name}:${route}`,
+            );
+          }
+        },
       );
     }
   },

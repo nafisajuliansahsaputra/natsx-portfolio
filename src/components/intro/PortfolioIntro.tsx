@@ -76,10 +76,6 @@ export default function PortfolioIntro() {
     );
 
   useEffect(() => {
-    /*
-     * Portfolio intro tidak pernah
-     * dijalankan di area admin.
-     */
     if (isAdminRoute) {
       document.documentElement.dataset.intro =
         "done";
@@ -102,16 +98,6 @@ export default function PortfolioIntro() {
       document.documentElement
         .dataset.intro;
 
-    /*
-     * Bootstrap script menjadi
-     * source of truth untuk first
-     * website entry.
-     *
-     * "running" ikut diterima agar
-     * aman saat React Strict Mode
-     * menjalankan effect dua kali
-     * pada development.
-     */
     const shouldShow =
       forceIntro ||
       introState ===
@@ -134,40 +120,20 @@ export default function PortfolioIntro() {
     /*
      * TITLE SEQUENCE V2
      *
-     * Previous:
-     * 3400ms running
-     * + 760ms exit
-     * = ±4160ms
+     * Running:
+     * 2820ms
      *
-     * Current:
-     * 2820ms running
-     * + 760ms exit
-     * = ±3580ms
+     * Exit:
+     * 760ms
      *
-     * Internal construction tidak
-     * dipercepat secara artifisial.
-     *
-     * Sebaliknya breathing room akhir
-     * dipotong dan statement boleh
-     * overlap sedikit dengan opening
-     * split-panel exit.
-     *
-     * Hasilnya lebih terasa seperti
-     * title sequence daripada loader.
+     * Total:
+     * ±3580ms
      */
     const progressDuration =
       prefersReducedMotion
         ? 220
         : 2820;
 
-    /*
-     * Desktop exit animation di CSS
-     * memang 760ms.
-     *
-     * Jangan unmount intro sebelum
-     * panel selesai meninggalkan
-     * viewport.
-     */
     const exitDuration =
       prefersReducedMotion
         ? 260
@@ -189,10 +155,33 @@ export default function PortfolioIntro() {
     let hasStartedExit =
       false;
 
+    let keyboardAttached =
+      false;
+
     document.documentElement.dataset.intro =
       "running";
 
+    function detachKeyboard() {
+      if (!keyboardAttached) {
+        return;
+      }
+
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown,
+        true,
+      );
+
+      keyboardAttached =
+        false;
+    }
+
     function finishIntro() {
+      detachKeyboard();
+
+      skipIntro.current =
+        null;
+
       document.documentElement.dataset.intro =
         "done";
 
@@ -202,23 +191,22 @@ export default function PortfolioIntro() {
     }
 
     function beginExit() {
-      /*
-       * Pointer, keyboard, dan timer
-       * semuanya masuk melalui satu
-       * exit path.
-       *
-       * Jadi skip tidak pernah
-       * menghilangkan intro secara
-       * mendadak.
-       */
-      if (
-        hasStartedExit
-      ) {
+      if (hasStartedExit) {
         return;
       }
 
       hasStartedExit =
         true;
+
+      /*
+       * Keyboard interception hanya
+       * hidup selama intro benar-benar
+       * running.
+       *
+       * Begitu exit dimulai, listener
+       * langsung dilepas.
+       */
+      detachKeyboard();
 
       if (
         animationFrame.current !==
@@ -252,12 +240,6 @@ export default function PortfolioIntro() {
         "exit",
       );
 
-      /*
-       * Begitu masuk phase exit,
-       * entrance page tujuan mulai
-       * berjalan di belakang split
-       * panels.
-       */
       document.documentElement.dataset.intro =
         "exit";
 
@@ -287,16 +269,15 @@ export default function PortfolioIntro() {
       }
 
       /*
-       * Space biasanya menggulir page.
-       * Selama intro fullscreen,
-       * behavior itu tidak dibutuhkan.
+       * Listener dipasang di capture
+       * phase supaya shortcut intro
+       * tidak sekaligus mengaktifkan
+       * link/button di page yang masih
+       * berada di balik overlay.
        */
-      if (
-        event.key ===
-        " "
-      ) {
-        event.preventDefault();
-      }
+      event.preventDefault();
+
+      event.stopPropagation();
 
       beginExit();
     }
@@ -304,7 +285,11 @@ export default function PortfolioIntro() {
     window.addEventListener(
       "keydown",
       handleKeyDown,
+      true,
     );
+
+    keyboardAttached =
+      true;
 
     function updateProgress(
       currentTime: number,
@@ -354,10 +339,7 @@ export default function PortfolioIntro() {
       skipIntro.current =
         null;
 
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown,
-      );
+      detachKeyboard();
 
       if (
         animationFrame.current !==
