@@ -71,18 +71,28 @@ export async function CvPageContent({
       : params.lang;
 
   /*
-   * Kalau visitor belum memilih
-   * bahasa CV secara eksplisit,
-   * gunakan locale website.
+   * Website locale menjadi
+   * fallback CV language.
    *
-   * /cv     -> English
-   * /id/cv  -> Indonesian
-   * /de/cv  -> German
+   * /cv
+   * -> English
+   *
+   * /id/cv
+   * -> Bahasa Indonesia
+   *
+   * /de/cv
+   * -> Deutsch
+   *
+   * Invalid query juga kembali
+   * ke locale website:
+   *
+   * /de/cv?lang=invalid
+   * -> Deutsch
    */
   const initialVersion =
     getCvVersion(
-      languageParam ??
-        locale,
+      languageParam,
+      locale,
     );
 
   return (
