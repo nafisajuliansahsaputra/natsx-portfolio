@@ -18,6 +18,8 @@ import {
   createPageMetadata,
 } from "@/lib/page-metadata";
 
+import ContactMagneticSurface from "./ContactMagneticSurface";
+
 import styles from "./Contact.module.css";
 
 const description =
@@ -334,45 +336,45 @@ export function ContactPageContent({
               </span>
             </div>
 
-            {primaryIsInternal ? (
-              <LocaleLink
-                href={
-                  primaryContact.href
-                }
-                className={
-                  styles.emailLink
-                }
-                data-motion-scroll="contact-email"
-              >
-                {
-                  primaryContent
-                }
-              </LocaleLink>
-            ) : (
-              <a
-                href={
-                  primaryContact.href
-                }
-                className={
-                  styles.emailLink
-                }
-                data-motion-scroll="contact-email"
-                target={
-                  primaryIsExternal
-                    ? "_blank"
-                    : undefined
-                }
-                rel={
-                  primaryIsExternal
-                    ? "noreferrer"
-                    : undefined
-                }
-              >
-                {
-                  primaryContent
-                }
-              </a>
-            )}
+            <ContactMagneticSurface>
+              {primaryIsInternal ? (
+                <LocaleLink
+                  href={
+                    primaryContact.href
+                  }
+                  className={
+                    styles.emailLink
+                  }
+                >
+                  {
+                    primaryContent
+                  }
+                </LocaleLink>
+              ) : (
+                <a
+                  href={
+                    primaryContact.href
+                  }
+                  className={
+                    styles.emailLink
+                  }
+                  target={
+                    primaryIsExternal
+                      ? "_blank"
+                      : undefined
+                  }
+                  rel={
+                    primaryIsExternal
+                      ? "noreferrer"
+                      : undefined
+                  }
+                >
+                  {
+                    primaryContent
+                  }
+                </a>
+              )}
+            </ContactMagneticSurface>
           </div>
         </section>
 

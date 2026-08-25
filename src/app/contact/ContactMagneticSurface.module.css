@@ -1,0 +1,78 @@
+.surface {
+  --contact-magnetic-x:
+    0px;
+
+  --contact-magnetic-y:
+    0px;
+
+  position: relative;
+
+  width: 100%;
+
+  /*
+   * Magnet boleh bergerak sedikit
+   * tetapi tidak boleh membuat
+   * document overflow.
+   */
+  overflow: clip;
+}
+
+.surface > * {
+  transform:
+    translate3d(
+      var(
+        --contact-magnetic-x
+      ),
+      var(
+        --contact-magnetic-y
+      ),
+      0
+    );
+
+  transition:
+    transform
+      520ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+
+  will-change:
+    transform;
+}
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .surface:hover
+    > * {
+    transition-duration:
+      180ms;
+  }
+}
+
+@media (
+  max-width: 960px
+) {
+  .surface > * {
+    transform:
+      none !important;
+  }
+}
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .surface > * {
+    transform:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}

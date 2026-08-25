@@ -24,6 +24,8 @@ import {
 
 import "./globals.css";
 import "./motion.css";
+import "./about-motion.css";
+import "./contact-motion.css";
 import "./project-motion.css";
 import "./intro-motion.css";
 
@@ -83,15 +85,6 @@ const introBootstrapScript = `
           ? "pending"
           : "done";
 
-      /*
-       * Tandai session sebagai
-       * sudah melihat intro sejak
-       * first entry dimulai.
-       *
-       * Jadi kalau user refresh
-       * saat intro sedang berjalan,
-       * intro tidak diputar ulang.
-       */
       if (shouldShow) {
         sessionStorage.setItem(
           "natsx:portfolio-intro:v5",
@@ -99,14 +92,6 @@ const introBootstrapScript = `
         );
       }
     } catch {
-      /*
-       * Kalau sessionStorage tidak
-       * tersedia, public route tetap
-       * mendapat intro.
-       *
-       * Admin tidak pernah mendapat
-       * portfolio intro.
-       */
       root.dataset.intro =
         isAdmin
           ? "done"

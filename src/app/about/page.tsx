@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import LocaleLink from "@/components/i18n/LocaleLink";
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -18,6 +16,8 @@ import {
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import AboutIdentityPortrait from "./AboutIdentityPortrait";
 
 import styles from "./About.module.css";
 
@@ -232,115 +232,20 @@ export function AboutPageContent({
                 }
                 data-motion-scroll="about-portrait"
               >
-                <div
-                  className={
-                    styles.portraitFrame
+                <AboutIdentityPortrait
+                  nameLabel={
+                    copy.profile
+                      .name
                   }
-                >
-                  <div
-                    className={
-                      styles.portraitCircle
-                    }
-                  />
-
-                  <div
-                    className={
-                      styles
-                        .portraitLineHorizontal
-                    }
-                  />
-
-                  <div
-                    className={
-                      styles
-                        .portraitLineVertical
-                    }
-                  />
-
-                  <Image
-                    src="/images/natsx-portrait-hero.png"
-                    alt={
-                      site.person
-                    }
-                    fill
-                    sizes="(max-width: 700px) 100vw, 45vw"
-                    className={
-                      styles.portrait
-                    }
-                  />
-
-                  <span
-                    className={
-                      styles.signaturePlus
-                    }
-                    aria-hidden="true"
-                  >
-                    +
-                  </span>
-                </div>
-
-                <div
-                  className={
-                    styles.profileMeta
+                  identityLabel={
+                    copy.profile
+                      .identity
                   }
-                >
-                  <div>
-                    <span
-                      className={
-                        styles.metaLabel
-                      }
-                    >
-                      {
-                        copy.profile
-                          .name
-                      }
-                    </span>
-
-                    <span>
-                      {
-                        site.person
-                      }
-                    </span>
-                  </div>
-
-                  <div>
-                    <span
-                      className={
-                        styles.metaLabel
-                      }
-                    >
-                      {
-                        copy.profile
-                          .identity
-                      }
-                    </span>
-
-                    <span>
-                      {
-                        site.name
-                      }
-                    </span>
-                  </div>
-
-                  <div>
-                    <span
-                      className={
-                        styles.metaLabel
-                      }
-                    >
-                      {
-                        copy.profile
-                          .basedIn
-                      }
-                    </span>
-
-                    <span>
-                      {
-                        site.location
-                      }
-                    </span>
-                  </div>
-                </div>
+                  basedInLabel={
+                    copy.profile
+                      .basedIn
+                  }
+                />
               </div>
 
               <div
@@ -371,23 +276,27 @@ export function AboutPageContent({
 
                 <h2
                   data-motion-piece="title"
+                  data-about-identity-step="0"
                 >
                   {
                     copy.profile
                       .headingLine1
                   }
+
                   <br />
 
                   {
                     copy.profile
                       .headingLine2
                   }
+
                   <br />
 
                   {
                     copy.profile
                       .headingLine3
                   }
+
                   <br />
 
                   {
@@ -414,10 +323,15 @@ export function AboutPageContent({
                     .map(
                       (
                         paragraph,
+                        index,
                       ) => (
                         <p
                           key={
                             paragraph
+                          }
+                          data-about-identity-step={
+                            index +
+                            1
                           }
                         >
                           {

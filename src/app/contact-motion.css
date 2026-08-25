@@ -1,0 +1,840 @@
+/*
+ * =========================
+ * NATSX — CONTACT MOTION DIALECT
+ * =========================
+ *
+ * Contact memakai bahasa
+ * "attraction".
+ *
+ * Bukan editorial cross-motion
+ * seperti About.
+ *
+ * Elemen terasa:
+ * - tertarik menuju posisi final
+ * - membuka dari compression
+ * - mendekat ke viewer
+ *
+ * Tidak ada scroll-jacking.
+ */
+
+html[data-motion="enabled"]
+  [data-motion-page="contact"] {
+  overflow-x: clip;
+}
+
+/* =========================
+   MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO TOP
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="top"] {
+    animation:
+      natsx-contact-meta-in
+      720ms
+      var(--motion-ease-out)
+      40ms
+      both;
+  }
+
+  /* =========================
+     HERO TITLE
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="title"] {
+    animation:
+      natsx-contact-title-in
+      1080ms
+      var(--motion-ease-out)
+      110ms
+      both;
+  }
+
+  /* =========================
+     HERO INTRO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="intro"] {
+    animation:
+      natsx-contact-intro-in
+      900ms
+      var(--motion-ease-out)
+      240ms
+      both;
+  }
+
+  /* =========================
+     PRIMARY HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-primary-header"] {
+    opacity: 0;
+
+    clip-path:
+      inset(
+        0
+        48%
+        0
+        48%
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      clip-path
+        1000ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-primary-header"][data-motion-visible="true"] {
+    opacity: 1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+  }
+
+  /* =========================
+     PRIMARY CONTACT
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"] {
+    opacity: 0;
+
+    clip-path:
+      inset(
+        7%
+        0
+        7%
+        0
+      );
+
+    transform:
+      scale(
+        0.975
+      );
+
+    transform-origin:
+      center center;
+
+    transition:
+      opacity
+        680ms
+        var(--motion-ease-soft),
+      clip-path
+        1040ms
+        var(--motion-ease-out),
+      transform
+        1040ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"][data-motion-visible="true"] {
+    opacity: 1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    transform:
+      scale(
+        1
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        900ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="label"] {
+    transform:
+      translate3d(
+        -14px,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    transform:
+      scale(
+        0.985
+      );
+
+    transform-origin:
+      left center;
+
+    transition-delay:
+      80ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="arrow"] {
+    transform:
+      scale(
+        0.72
+      )
+      rotate(
+        -20deg
+      );
+
+    transition-delay:
+      150ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      )
+      rotate(
+        0deg
+      );
+  }
+
+  /* =========================
+     DETAILS — AVAILABILITY
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        -20px,
+        0,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        920ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"]
+    [data-motion-piece="content"] {
+    transition-delay:
+      90ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     DETAILS — COLLABORATION
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        20px,
+        0,
+        0
+      );
+
+    transition:
+      opacity
+        620ms
+        var(--motion-ease-soft),
+      transform
+        920ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(
+      1
+    ) {
+    transition-delay:
+      60ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(
+      2
+    ) {
+    transition-delay:
+      110ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(
+      3
+    ) {
+    transition-delay:
+      160ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece="item"]:nth-child(
+      n + 4
+    ) {
+    transition-delay:
+      210ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+
+  /* =========================
+     SOCIAL HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece="label"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        -18px,
+        0,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        860ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece="title"] {
+    opacity: 0;
+
+    transform:
+      scale(
+        0.965
+      );
+
+    transform-origin:
+      left center;
+
+    transition:
+      opacity
+        680ms
+        var(--motion-ease-soft)
+        80ms,
+      transform
+        1050ms
+        var(--motion-ease-out)
+        80ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      );
+  }
+
+  /* =========================
+     SOCIAL ROWS
+  ========================= */
+
+  /*
+   * Social rows tetap memiliki
+   * explicit motion hook mereka,
+   * tetapi reveal utamanya sekarang
+   * mengikuti SOCIAL HEADER.
+   *
+   * Alasan:
+   * header dan list merupakan satu
+   * editorial composition.
+   *
+   * Jadi begitu ELSEWHERE masuk,
+   * seluruh list dipastikan hidup.
+   * Observer masing-masing row tetap
+   * berfungsi sebagai fallback.
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"] {
+    opacity: 0;
+
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+
+    transform:
+      scaleX(
+        0.985
+      );
+
+    transform-origin:
+      left center;
+
+    transition:
+      opacity
+        560ms
+        var(--motion-ease-soft),
+      clip-path
+        960ms
+        var(--motion-ease-out),
+      transform
+        960ms
+        var(--motion-ease-out);
+  }
+
+  /*
+   * Primary reveal:
+   * begitu header Elsewhere visible,
+   * semua row setelahnya dibuka.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    ~ *
+    [data-motion-scroll="contact-social-item"] {
+    opacity: 1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    transform:
+      scaleX(
+        1
+      );
+  }
+
+  /*
+   * Stagger berdasarkan posisi row.
+   * Tidak tergantung pada timing
+   * IntersectionObserver tiap item.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    ~ *
+    [data-motion-scroll="contact-social-item"]:nth-child(
+      1
+    ) {
+    transition-delay:
+      140ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    ~ *
+    [data-motion-scroll="contact-social-item"]:nth-child(
+      2
+    ) {
+    transition-delay:
+      220ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    ~ *
+    [data-motion-scroll="contact-social-item"]:nth-child(
+      3
+    ) {
+    transition-delay:
+      300ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    ~ *
+    [data-motion-scroll="contact-social-item"]:nth-child(
+      n + 4
+    ) {
+    transition-delay:
+      380ms;
+  }
+
+  /*
+   * Fallback:
+   * kalau sebuah row ter-observe lebih
+   * dulu karena ukuran viewport atau
+   * navigasi anchor, dia tetap dapat
+   * tampil secara independen.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"][data-motion-visible="true"] {
+    opacity: 1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    transform:
+      scaleX(
+        1
+      );
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="label"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        -16px,
+        0,
+        0
+      );
+
+    transition:
+      opacity
+        580ms
+        var(--motion-ease-soft),
+      transform
+        860ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="main"] {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        18px,
+        0,
+        0
+      )
+      scale(
+        0.985
+      );
+
+    transform-origin:
+      left center;
+
+    transition:
+      opacity
+        660ms
+        var(--motion-ease-soft)
+        90ms,
+      transform
+        1020ms
+        var(--motion-ease-out)
+        90ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"][data-motion-visible="true"]
+    [data-motion-piece] {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      );
+  }
+}
+
+/* =========================
+   HERO KEYFRAMES
+========================= */
+
+@keyframes
+  natsx-contact-meta-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        0,
+        -8px,
+        0
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+@keyframes
+  natsx-contact-title-in {
+  from {
+    opacity: 0;
+
+    transform:
+      scale(
+        0.955
+      );
+
+    letter-spacing:
+      -0.035em;
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(
+        1
+      );
+
+    letter-spacing:
+      -0.078em;
+  }
+}
+
+@keyframes
+  natsx-contact-intro-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translate3d(
+        22px,
+        0,
+        0
+      );
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"]
+    [data-motion-piece] {
+    transform:
+      translate3d(
+        -12px,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"]
+    [data-motion-piece] {
+    transform:
+      translate3d(
+        12px,
+        0,
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"][data-motion-visible="true"]
+    [data-motion-piece],
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece] {
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-contact-hero-piece],
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll],
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-piece] {
+    opacity: 1 !important;
+
+    clip-path:
+      none !important;
+
+    transform:
+      none !important;
+
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}

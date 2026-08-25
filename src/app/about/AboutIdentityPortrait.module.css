@@ -1,0 +1,234 @@
+.root {
+  --portrait-x:
+    0px;
+
+  --portrait-y:
+    0px;
+
+  --portrait-scale:
+    1;
+
+  --circle-x:
+    0px;
+
+  --circle-y:
+    0px;
+
+  --horizontal-x:
+    0px;
+
+  --vertical-x:
+    0px;
+
+  position: relative;
+
+  width: 100%;
+
+  min-height: 100%;
+  height: 100%;
+}
+
+/* =========================
+   STICKY COMPOSITION
+========================= */
+
+.sticky {
+  position: sticky;
+
+  top:
+    clamp(
+      88px,
+      7vw,
+      112px
+    );
+
+  width: 100%;
+}
+
+/* =========================
+   FRAME
+========================= */
+
+.frame {
+  isolation: isolate;
+}
+
+/*
+ * Satu accent kecil saja.
+ * Cukup sebagai signature,
+ * bukan elemen interface.
+ */
+.frame::after {
+  content: "";
+
+  position: absolute;
+
+  z-index: 5;
+
+  top: 0;
+  right: 0;
+
+  width:
+    clamp(
+      38px,
+      4vw,
+      58px
+    );
+
+  height: 2px;
+
+  background:
+    var(--accent);
+
+  pointer-events:
+    none;
+}
+
+/* =========================
+   GEOMETRY
+========================= */
+
+.circle {
+  opacity: 0.78;
+
+  transform:
+    translate3d(
+      var(
+        --circle-x
+      ),
+      var(
+        --circle-y
+      ),
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+.horizontalAxis {
+  opacity: 0.38;
+
+  transform:
+    translate3d(
+      var(
+        --horizontal-x
+      ),
+      0,
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+.verticalAxis {
+  opacity: 0.38;
+
+  transform:
+    translate3d(
+      var(
+        --vertical-x
+      ),
+      0,
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+/* =========================
+   PORTRAIT
+========================= */
+
+.portrait {
+  z-index: 3;
+
+  transform:
+    translate3d(
+      var(
+        --portrait-x
+      ),
+      var(
+        --portrait-y
+      ),
+      0
+    )
+    scale(
+      var(
+        --portrait-scale
+      )
+    );
+
+  transform-origin:
+    center bottom;
+
+  will-change:
+    transform;
+}
+
+.plus {
+  z-index: 4;
+
+  opacity: 0.72;
+}
+
+/* =========================
+   PROFILE META
+========================= */
+
+.profileMeta {
+  margin-top: 18px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  .root {
+    height: auto;
+  }
+
+  .sticky {
+    position: relative;
+
+    top: auto;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  .frame::after {
+    width: 42px;
+  }
+
+  .profileMeta {
+    margin-top: 16px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .portrait,
+  .circle,
+  .horizontalAxis,
+  .verticalAxis {
+    transform:
+      none !important;
+  }
+}

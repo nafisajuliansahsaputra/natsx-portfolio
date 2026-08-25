@@ -40,7 +40,8 @@ export default function PortfolioIntro() {
     usePathname();
 
   const isAdminRoute =
-    pathname === "/admin" ||
+    pathname ===
+      "/admin" ||
     pathname.startsWith(
       "/admin/",
     );
@@ -57,10 +58,20 @@ export default function PortfolioIntro() {
     progress,
     setProgress,
   ] =
-    useState(0);
+    useState(
+      0,
+    );
 
   const animationFrame =
     useRef<number | null>(
+      null,
+    );
+
+  const skipIntro =
+    useRef<
+      (() => void) |
+        null
+    >(
       null,
     );
 
@@ -82,7 +93,9 @@ export default function PortfolioIntro() {
       );
 
     const forceIntro =
-      params.get("intro") ===
+      params.get(
+        "intro",
+      ) ===
       "1";
 
     const introState =
@@ -119,21 +132,42 @@ export default function PortfolioIntro() {
       ).matches;
 
     /*
-     * Intro sebelumnya:
-     * 3000ms.
+     * TITLE SEQUENCE V2
      *
-     * Quote construction menambah
-     * sekitar 400ms motion aktif.
+     * Previous:
+     * 3400ms running
+     * + 760ms exit
+     * = ±4160ms
      *
-     * Jadi 3400ms mempertahankan
-     * breathing room akhir yang
-     * sudah terasa pas.
+     * Current:
+     * 2820ms running
+     * + 760ms exit
+     * = ±3580ms
+     *
+     * Internal construction tidak
+     * dipercepat secara artifisial.
+     *
+     * Sebaliknya breathing room akhir
+     * dipotong dan statement boleh
+     * overlap sedikit dengan opening
+     * split-panel exit.
+     *
+     * Hasilnya lebih terasa seperti
+     * title sequence daripada loader.
      */
     const progressDuration =
       prefersReducedMotion
         ? 220
-        : 3400;
+        : 2820;
 
+    /*
+     * Desktop exit animation di CSS
+     * memang 760ms.
+     *
+     * Jangan unmount intro sebelum
+     * panel selesai meninggalkan
+     * viewport.
+     */
     const exitDuration =
       prefersReducedMotion
         ? 260
@@ -142,8 +176,135 @@ export default function PortfolioIntro() {
     const startedAt =
       performance.now();
 
+    let exitTimer:
+      number |
+      null =
+      null;
+
+    let finishTimer:
+      number |
+      null =
+      null;
+
+    let hasStartedExit =
+      false;
+
     document.documentElement.dataset.intro =
       "running";
+
+    function finishIntro() {
+      document.documentElement.dataset.intro =
+        "done";
+
+      setPhase(
+        "done",
+      );
+    }
+
+    function beginExit() {
+      /*
+       * Pointer, keyboard, dan timer
+       * semuanya masuk melalui satu
+       * exit path.
+       *
+       * Jadi skip tidak pernah
+       * menghilangkan intro secara
+       * mendadak.
+       */
+      if (
+        hasStartedExit
+      ) {
+        return;
+      }
+
+      hasStartedExit =
+        true;
+
+      if (
+        animationFrame.current !==
+        null
+      ) {
+        cancelAnimationFrame(
+          animationFrame.current,
+        );
+
+        animationFrame.current =
+          null;
+      }
+
+      if (
+        exitTimer !==
+        null
+      ) {
+        window.clearTimeout(
+          exitTimer,
+        );
+
+        exitTimer =
+          null;
+      }
+
+      setProgress(
+        100,
+      );
+
+      setPhase(
+        "exit",
+      );
+
+      /*
+       * Begitu masuk phase exit,
+       * entrance page tujuan mulai
+       * berjalan di belakang split
+       * panels.
+       */
+      document.documentElement.dataset.intro =
+        "exit";
+
+      finishTimer =
+        window.setTimeout(
+          finishIntro,
+          exitDuration,
+        );
+    }
+
+    skipIntro.current =
+      beginExit;
+
+    function handleKeyDown(
+      event: KeyboardEvent,
+    ) {
+      const shouldSkip =
+        event.key ===
+          "Enter" ||
+        event.key ===
+          " " ||
+        event.key ===
+          "Escape";
+
+      if (!shouldSkip) {
+        return;
+      }
+
+      /*
+       * Space biasanya menggulir page.
+       * Selama intro fullscreen,
+       * behavior itu tidak dibutuhkan.
+       */
+      if (
+        event.key ===
+        " "
+      ) {
+        event.preventDefault();
+      }
+
+      beginExit();
+    }
+
+    window.addEventListener(
+      "keydown",
+      handleKeyDown,
+    );
 
     function updateProgress(
       currentTime: number,
@@ -161,13 +322,15 @@ export default function PortfolioIntro() {
 
       setProgress(
         Math.round(
-          normalized * 100,
+          normalized *
+            100,
         ),
       );
 
       if (
         normalized <
-        1
+          1 &&
+        !hasStartedExit
       ) {
         animationFrame.current =
           requestAnimationFrame(
@@ -181,43 +344,21 @@ export default function PortfolioIntro() {
         updateProgress,
       );
 
-    const exitTimer =
+    exitTimer =
       window.setTimeout(
-        () => {
-          setProgress(
-            100,
-          );
-
-          setPhase(
-            "exit",
-          );
-
-          /*
-           * Begitu masuk phase exit,
-           * page entrance di belakang
-           * intro boleh mulai.
-           */
-          document.documentElement.dataset.intro =
-            "exit";
-        },
+        beginExit,
         progressDuration,
       );
 
-    const finishTimer =
-      window.setTimeout(
-        () => {
-          document.documentElement.dataset.intro =
-            "done";
+    return () => {
+      skipIntro.current =
+        null;
 
-          setPhase(
-            "done",
-          );
-        },
-        progressDuration +
-          exitDuration,
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown,
       );
 
-    return () => {
       if (
         animationFrame.current !==
         null
@@ -230,13 +371,23 @@ export default function PortfolioIntro() {
           null;
       }
 
-      window.clearTimeout(
-        exitTimer,
-      );
+      if (
+        exitTimer !==
+        null
+      ) {
+        window.clearTimeout(
+          exitTimer,
+        );
+      }
 
-      window.clearTimeout(
-        finishTimer,
-      );
+      if (
+        finishTimer !==
+        null
+      ) {
+        window.clearTimeout(
+          finishTimer,
+        );
+      }
     };
   }, [
     pathname,
@@ -245,7 +396,8 @@ export default function PortfolioIntro() {
 
   if (
     isAdminRoute ||
-    phase === "done"
+    phase ===
+      "done"
   ) {
     return null;
   }
@@ -276,6 +428,9 @@ export default function PortfolioIntro() {
         progressStyle
       }
       aria-hidden="true"
+      onPointerDown={() => {
+        skipIntro.current?.();
+      }}
     >
       <div
         className={`${styles.panel} ${styles.panelTop}`}
@@ -318,12 +473,16 @@ export default function PortfolioIntro() {
             }
           >
             <span>
-              {site.location} /
-              +62
+              {
+                site.location
+              }{" "}
+              / +62
             </span>
 
             <span>
-              {site.year}
+              {
+                site.year
+              }
             </span>
           </div>
         </header>
