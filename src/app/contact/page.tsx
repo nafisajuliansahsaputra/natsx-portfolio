@@ -61,6 +61,50 @@ export function ContactPageContent({
     emailParts[1] ??
     "";
 
+  /*
+   * =========================
+   * HERO FINAL-WORD CLUSTER
+   * =========================
+   *
+   * Browser boleh wrap sebelum
+   * kata terakhir, tapi tidak boleh
+   * memisahkan punctuation dari kata.
+   *
+   * Contoh:
+   *
+   * exploring?
+   * digali?
+   * ist?
+   *
+   * Cluster sendiri TIDAK punya
+   * ambient animation.
+   *
+   * Hanya nested "?" yang bergerak.
+   */
+  const heroLineTwoWords =
+    copy.hero
+      .headingLine2
+      .trim()
+      .split(
+        /\s+/,
+      );
+
+  const heroFinalWord =
+    heroLineTwoWords.at(
+      -1,
+    ) ??
+    "";
+
+  const heroLineTwoLead =
+    heroLineTwoWords
+      .slice(
+        0,
+        -1,
+      )
+      .join(
+        " ",
+      );
+
   const fallbackSocial =
     site.socials.find(
       (social) =>
@@ -252,13 +296,27 @@ export function ContactPageContent({
 
                 <br />
 
-                {
-                  copy.hero
-                    .headingLine2
-                }
+                {heroLineTwoLead ? (
+                  <>
+                    {
+                      heroLineTwoLead
+                    }
+                    {" "}
+                  </>
+                ) : null}
 
-                <span>
-                  ?
+                <span
+                  data-contact-question-cluster="true"
+                >
+                  {
+                    heroFinalWord
+                  }
+
+                  <span
+                    data-contact-question-mark="true"
+                  >
+                    ?
+                  </span>
                 </span>
               </h1>
 

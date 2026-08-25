@@ -1,35 +1,202 @@
 /*
- * =========================
- * NATSX — CONTACT EMAIL FIT
- * =========================
+ * ==================================
+ * NATSX — CONTACT RESPONSIVE FIT
+ * ==================================
  *
- * Email adalah identity token,
- * bukan localized editorial copy.
+ * Layout / typography guards +
+ * explicit punctuation ownership.
  *
- * Karena alamat yang sama tampil
- * di EN / ID / DE, treatment-nya
- * harus berlaku untuk seluruh
- * Contact route.
+ * Existing whole-H1 entrance remains
+ * owned by contact-motion.css.
  *
- * Desired mobile composition:
- *
- * nafisajuliansahsaputra
- * @gmail.com
- *
- * Component sudah memberi <br />
- * intentional di antara dua bagian.
- *
- * Browser tidak boleh menambah
- * line break ketiga sendiri.
+ * Existing ambient question motion is
+ * recreated specifically on the nested
+ * punctuation element so the final word
+ * never animates with it.
  */
+
+/* =========================
+   HERO PUNCTUATION CLUSTER
+========================= */
+
+[data-motion-page="contact"]
+  [data-contact-question-cluster] {
+  color:
+    inherit !important;
+
+  white-space:
+    nowrap;
+}
+
+/*
+ * Contact.module.css historically uses:
+ *
+ * .heading > span
+ *
+ * for the recurring question animation.
+ *
+ * The direct span is now only a structural
+ * nowrap cluster, so neutralize ambient
+ * animation on the cluster itself.
+ */
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-contact-question-cluster] {
+    animation:
+      none !important;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-contact-question-mark] {
+    display:
+      inline-block;
+
+    color:
+      var(--accent);
+
+    transform-origin:
+      center bottom;
+
+    animation:
+      contact-page-question
+      5.4s
+      ease-in-out
+      1.2s
+      infinite !important;
+  }
+}
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  [data-motion-page="contact"]
+    [data-contact-question-cluster],
+  [data-motion-page="contact"]
+    [data-contact-question-mark] {
+    animation:
+      none !important;
+  }
+}
+
+/* =========================
+   HERO LARGE DESKTOP FIT
+   1200px+
+========================= */
+
+@media (min-width: 1200px) {
+  [data-motion-page="contact"]
+    [data-motion-contact-hero-piece="title"] {
+    font-size:
+      clamp(
+        72px,
+        8.7vw,
+        134px
+      );
+
+    white-space:
+      nowrap;
+  }
+}
+
+/* =========================
+   PRIMARY EMAIL
+========================= */
+
+[data-motion-page="contact"]
+  [data-motion-scroll="contact-email"]
+  [data-motion-piece="address"] {
+  min-width:
+    0;
+
+  max-width:
+    100%;
+
+  overflow-wrap:
+    normal !important;
+
+  word-break:
+    normal !important;
+
+  -webkit-hyphens:
+    none !important;
+
+  hyphens:
+    none !important;
+}
+
+/* =========================
+   DESKTOP EMAIL
+   961px+
+========================= */
+
+@media (min-width: 961px) {
+  [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    grid-column:
+      3 / span 9;
+
+    font-size:
+      clamp(
+        56px,
+        6.8vw,
+        104px
+      );
+
+    line-height:
+      0.84;
+
+    letter-spacing:
+      -0.075em;
+  }
+}
+
+/* =========================
+   TABLET EMAIL
+   701px — 960px
+========================= */
+
+@media (
+  min-width: 701px
+) and (
+  max-width: 960px
+) {
+  [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    grid-column:
+      3 / span 9;
+
+    font-size:
+      clamp(
+        46px,
+        6.2vw,
+        56px
+      );
+
+    line-height:
+      0.86;
+
+    letter-spacing:
+      -0.07em;
+  }
+}
+
+/* =========================
+   MOBILE EMAIL
+   <= 700px
+========================= */
 
 @media (max-width: 700px) {
   [data-motion-page="contact"]
     [data-motion-scroll="contact-email"]
     [data-motion-piece="address"] {
-    min-width: 0;
-    max-width: 100%;
-
     font-size:
       clamp(
         29px,
@@ -37,15 +204,10 @@
         34px
       );
 
-    line-height: 0.92;
+    line-height:
+      0.92;
 
     letter-spacing:
       -0.055em;
-
-    overflow-wrap: normal;
-    word-break: normal;
-
-    -webkit-hyphens: none;
-    hyphens: none;
   }
 }

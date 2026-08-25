@@ -19,10 +19,19 @@ test.beforeEach(
 );
 
 test(
-  "mobile contact email keeps its intentional two-line composition across locales",
+  "contact email keeps its intentional two-line composition across locales and responsive breakpoints",
   async ({
     page,
   }) => {
+    test.setTimeout(
+      90_000,
+    );
+
+    await page.emulateMedia({
+      reducedMotion:
+        "reduce",
+    });
+
     const routes = [
       "/contact",
       "/id/contact",
@@ -30,38 +39,26 @@ test(
     ] as const;
 
     const viewports = [
-      {
-        width:
-          360,
-
-        height:
-          800,
-      },
-
-      {
-        width:
-          375,
-
-        height:
-          812,
-      },
-
-      {
-        width:
-          430,
-
-        height:
-          932,
-      },
+      [360, 800],
+      [375, 812],
+      [430, 932],
+      [768, 1024],
+      [1024, 768],
+      [1280, 800],
+      [1440, 900],
     ] as const;
 
     for (
-      const viewport
+      const [
+        width,
+        height,
+      ]
       of viewports
     ) {
-      await page.setViewportSize(
-        viewport,
-      );
+      await page.setViewportSize({
+        width,
+        height,
+      });
 
       for (
         const route
@@ -70,14 +67,15 @@ test(
         const response =
           await page.goto(
             route,
+            {
+              waitUntil:
+                "domcontentloaded",
+            },
           );
 
         expect(
-          response,
-        ).not.toBeNull();
-
-        expect(
           response?.status(),
+          `${width}px:${route}`,
         ).toBeLessThan(
           400,
         );
@@ -95,7 +93,7 @@ test(
 
         await expect(
           address,
-        ).toBeAttached();
+        ).toBeVisible();
 
         const metrics =
           await address.evaluate(
@@ -105,10 +103,8 @@ test(
               const node =
                 element as HTMLElement;
 
-              const style =
-                window.getComputedStyle(
-                  node,
-                );
+              const addressRect =
+                node.getBoundingClientRect();
 
               const textNodes =
                 Array.from(
@@ -128,114 +124,100 @@ test(
                       0,
                 );
 
-              const lines =
-                textNodes.map(
-                  (
-                    textNode,
-                  ) => {
-                    const range =
-                      document.createRange();
-
-                    range.selectNodeContents(
-                      textNode,
-                    );
-
-                    const rects =
-                      Array.from(
-                        range.getClientRects(),
-                      ).filter(
-                        (
-                          rect,
-                        ) =>
-                          rect.width >
-                            0 &&
-                          rect.height >
-                            0,
-                      );
-
-                    return {
-                      text:
-                        (
-                          textNode.textContent ??
-                          ""
-                        ).trim(),
-
-                      visualLines:
-                        rects.length,
-
-                      left:
-                        rects.length >
-                        0
-                          ? Math.min(
-                              ...rects.map(
-                                (
-                                  rect,
-                                ) =>
-                                  rect.left,
-                              ),
-                            )
-                          : 0,
-
-                      right:
-                        rects.length >
-                        0
-                          ? Math.max(
-                              ...rects.map(
-                                (
-                                  rect,
-                                ) =>
-                                  rect.right,
-                              ),
-                            )
-                          : 0,
-                    };
-                  },
-                );
-
               return {
-                overflowWrap:
-                  style.overflowWrap,
+                addressLeft:
+                  addressRect.left,
 
-                wordBreak:
-                  style.wordBreak,
+                addressRight:
+                  addressRect.right,
 
-                hyphens:
-                  style.hyphens,
-
-                viewport:
+                viewportWidth:
                   window.innerWidth,
 
-                lines,
+                lines:
+                  textNodes.map(
+                    (
+                      textNode,
+                    ) => {
+                      const range =
+                        document.createRange();
+
+                      range.selectNodeContents(
+                        textNode,
+                      );
+
+                      const rects =
+                        Array.from(
+                          range.getClientRects(),
+                        ).filter(
+                          (
+                            rect,
+                          ) =>
+                            rect.width >
+                              0 &&
+                            rect.height >
+                              0,
+                        );
+
+                      return {
+                        text:
+                          (
+                            textNode.textContent ??
+                            ""
+                          ).trim(),
+
+                        visualLines:
+                          rects.length,
+
+                        left:
+                          rects.length
+                            ? Math.min(
+                                ...rects.map(
+                                  (
+                                    rect,
+                                  ) =>
+                                    rect.left,
+                                ),
+                              )
+                            : 0,
+
+                        right:
+                          rects.length
+                            ? Math.max(
+                                ...rects.map(
+                                  (
+                                    rect,
+                                  ) =>
+                                    rect.right,
+                                ),
+                              )
+                            : 0,
+                      };
+                    },
+                  ),
               };
             },
           );
 
         expect(
-          metrics.overflowWrap,
-          `${viewport.width}px:${route} email must not emergency-wrap`,
-        ).toBe(
-          "normal",
-        );
-
-        expect(
-          metrics.wordBreak,
-          `${viewport.width}px:${route} email must preserve designed lines`,
-        ).toBe(
-          "normal",
-        );
-
-        expect(
-          metrics.hyphens,
-          `${viewport.width}px:${route} email must not hyphenate`,
-        ).toBe(
-          "none",
-        );
-
-        expect(
           metrics.lines,
-          `${viewport.width}px:${route} should contain local-part and domain`,
+          `${width}px:${route} email must contain exactly two intentional text lines`,
         ).toHaveLength(
           2,
+        );
+
+        expect(
+          metrics.lines[0]
+            ?.text,
+        ).toBe(
+          "nafisajuliansahsaputra",
+        );
+
+        expect(
+          metrics.lines[1]
+            ?.text,
+        ).toBe(
+          "@gmail.com",
         );
 
         for (
@@ -244,23 +226,35 @@ test(
         ) {
           expect(
             line.visualLines,
-            `${viewport.width}px:${route} "${line.text}" wrapped unexpectedly`,
+            `${width}px:${route} "${line.text}" wrapped unexpectedly`,
           ).toBe(
             1,
           );
 
           expect(
             line.left,
-            `${viewport.width}px:${route} "${line.text}" escapes left`,
+          ).toBeGreaterThanOrEqual(
+            metrics.addressLeft -
+              1,
+          );
+
+          expect(
+            line.right,
+          ).toBeLessThanOrEqual(
+            metrics.addressRight +
+              1,
+          );
+
+          expect(
+            line.left,
           ).toBeGreaterThanOrEqual(
             -1,
           );
 
           expect(
             line.right,
-            `${viewport.width}px:${route} "${line.text}" escapes right`,
           ).toBeLessThanOrEqual(
-            metrics.viewport +
+            metrics.viewportWidth +
               1,
           );
         }
