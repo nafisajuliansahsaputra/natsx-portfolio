@@ -1,0 +1,505 @@
+/*
+ * =========================
+ * NATSX — LOCALIZED FIT SYSTEM
+ * =========================
+ *
+ * English adalah visual baseline.
+ *
+ * Bahasa Indonesia dan German
+ * membawa density kata yang berbeda.
+ *
+ * File ini hanya bekerja pada
+ * localized routes:
+ *
+ * [data-locale="id"]
+ * [data-locale="de"]
+ *
+ * Tujuannya:
+ * - menjaga typography tetap editorial
+ * - mencegah clipping diam-diam
+ * - memberi German hyphenation
+ * - memberi optical scale khusus
+ *   hanya pada composition yang memang
+ *   terlalu agresif di mobile
+ *
+ * English tidak disentuh.
+ */
+
+/* =========================
+   GENERAL FIT
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  [data-locale="id"]
+    #main-content
+    :is(
+      [data-motion-work-hero-piece="title"],
+      [data-motion-scroll="work-project"]
+        h2,
+      [data-motion-scroll="work-closing"]
+        p,
+      [data-motion-about-hero-piece="title"],
+      [data-motion-scroll="about-story"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="about-approach-header"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="about-principle"]
+        h3,
+      [data-motion-scroll="about-disciplines-header"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="about-discipline"]
+        h2,
+      [data-motion-scroll="about-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-playground-hero-piece="title"],
+      [data-motion-scroll="playground-manifesto"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="playground-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-contact-hero-piece="title"],
+      [data-motion-scroll="contact-email"]
+        [data-motion-piece="address"],
+      [data-motion-scroll="contact-availability"]
+        [data-motion-piece="content"],
+      [data-motion-scroll="contact-collaboration"]
+        [data-motion-piece="item"]
+        p,
+      [data-motion-scroll="contact-social-header"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="contact-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-cv-hero-piece="title"],
+      [data-motion-scroll="cv-language-list"]
+        button,
+      [data-motion-scroll="cv-viewer-header"]
+        h2,
+      [data-motion-scroll="cv-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-project-hero-piece="title"]
+        h1,
+      [data-motion-scroll="project-next-link"]
+        h2
+    ),
+  [data-locale="de"]
+    #main-content
+    :is(
+      [data-motion-work-hero-piece="title"],
+      [data-motion-scroll="work-project"]
+        h2,
+      [data-motion-scroll="work-closing"]
+        p,
+      [data-motion-about-hero-piece="title"],
+      [data-motion-scroll="about-story"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="about-approach-header"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="about-principle"]
+        h3,
+      [data-motion-scroll="about-disciplines-header"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="about-discipline"]
+        h2,
+      [data-motion-scroll="about-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-playground-hero-piece="title"],
+      [data-motion-scroll="playground-manifesto"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="playground-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-contact-hero-piece="title"],
+      [data-motion-scroll="contact-email"]
+        [data-motion-piece="address"],
+      [data-motion-scroll="contact-availability"]
+        [data-motion-piece="content"],
+      [data-motion-scroll="contact-collaboration"]
+        [data-motion-piece="item"]
+        p,
+      [data-motion-scroll="contact-social-header"]
+        [data-motion-piece="title"],
+      [data-motion-scroll="contact-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-cv-hero-piece="title"],
+      [data-motion-scroll="cv-language-list"]
+        button,
+      [data-motion-scroll="cv-viewer-header"]
+        h2,
+      [data-motion-scroll="cv-closing"]
+        [data-motion-piece="main"]
+        p,
+      [data-motion-project-hero-piece="title"]
+        h1,
+      [data-motion-scroll="project-next-link"]
+        h2
+    ) {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap:
+      break-word;
+  }
+
+  /*
+   * Wrapper localized memang membawa
+   * lang="de", sehingga browser bisa
+   * melakukan German hyphenation
+   * berdasarkan bahasa sebenarnya.
+   *
+   * Ini cuma menjadi fallback jika
+   * sebuah kata compound benar-benar
+   * tidak cukup ruang.
+   */
+  [data-locale="de"]
+    #main-content
+    :is(
+      h1,
+      h2,
+      h3,
+      [data-motion-piece="address"]
+    ) {
+    -webkit-hyphens:
+      auto;
+
+    hyphens:
+      auto;
+  }
+}
+
+/* =========================
+   TABLET — WORK
+========================= */
+
+@media (
+  min-width: 701px
+) and (
+  max-width: 960px
+) {
+  /*
+   * "Projekte" lebih lebar daripada
+   * Work / Karya, sementara Work hero
+   * tablet hanya memakai sebagian grid.
+   */
+  [data-locale="de"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="title"] {
+    font-size:
+      clamp(
+        72px,
+        10.8vw,
+        86px
+      );
+
+    letter-spacing:
+      -0.08em;
+  }
+}
+
+/* =========================
+   MOBILE — WORK
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  /*
+   * Base Work mobile = 25vw.
+   *
+   * Itu bagus untuk "Work",
+   * tapi terlalu agresif untuk
+   * "Projekte".
+   */
+  [data-locale="de"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="title"] {
+    font-size:
+      clamp(
+        68px,
+        20vw,
+        86px
+      );
+
+    line-height:
+      0.82;
+  }
+
+  /* =========================
+     ABOUT — STORY
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-story"]
+    [data-motion-piece="title"],
+  [data-locale="de"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-story"]
+    [data-motion-piece="title"] {
+    font-size:
+      clamp(
+        38px,
+        10.6vw,
+        48px
+      );
+
+    line-height:
+      0.98;
+  }
+
+  /* =========================
+     ABOUT — APPROACH
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-approach-header"]
+    [data-motion-piece="title"],
+  [data-locale="de"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-approach-header"]
+    [data-motion-piece="title"] {
+    font-size:
+      clamp(
+        44px,
+        12vw,
+        54px
+      );
+  }
+
+  /* =========================
+     ABOUT — DISCIPLINES INTRO
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-disciplines-header"]
+    [data-motion-piece="title"],
+  [data-locale="de"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-disciplines-header"]
+    [data-motion-piece="title"] {
+    font-size:
+      clamp(
+        34px,
+        9.8vw,
+        44px
+      );
+  }
+
+  /* =========================
+     ABOUT — CLOSING
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-closing"]
+    [data-motion-piece="main"]
+    p,
+  [data-locale="de"]
+    [data-motion-page="about"]
+    [data-motion-scroll="about-closing"]
+    [data-motion-piece="main"]
+    p {
+    font-size:
+      clamp(
+        40px,
+        10.8vw,
+        50px
+      );
+  }
+
+  /* =========================
+     PLAYGROUND — HERO
+  ========================= */
+
+  /*
+   * Base mobile Playground = 18vw.
+   *
+   * "bebas menjelajah" membawa
+   * density jauh lebih tinggi daripada
+   * English line aslinya.
+   */
+  [data-locale="id"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="title"] {
+    font-size:
+      clamp(
+        52px,
+        14.5vw,
+        62px
+      );
+
+    line-height:
+      0.85;
+  }
+
+  [data-locale="de"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="title"] {
+    font-size:
+      clamp(
+        52px,
+        15vw,
+        64px
+      );
+
+    line-height:
+      0.85;
+  }
+
+  /* =========================
+     PLAYGROUND — MANIFESTO
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="title"],
+  [data-locale="de"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="title"] {
+    font-size:
+      clamp(
+        42px,
+        11.8vw,
+        52px
+      );
+  }
+
+  /* =========================
+     PLAYGROUND — CLOSING
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="main"]
+    p,
+  [data-locale="de"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="main"]
+    p {
+    font-size:
+      clamp(
+        40px,
+        10.8vw,
+        50px
+      );
+  }
+
+  /* =========================
+     CONTACT — SOCIAL
+  ========================= */
+
+  /*
+   * Indonesian:
+   * "Beberapa tempat lain /
+   * untuk menemukan saya"
+   *
+   * German:
+   * "Weitere Orte, /
+   * an denen du mich findest"
+   *
+   * Keduanya lebih padat daripada
+   * English social statement.
+   */
+  [data-locale="id"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece="title"],
+  [data-locale="de"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece="title"] {
+    font-size:
+      clamp(
+        40px,
+        10.8vw,
+        48px
+      );
+
+    line-height:
+      0.94;
+  }
+
+  /* =========================
+     CONTACT — CLOSING
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="main"]
+    p,
+  [data-locale="de"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="main"]
+    p {
+    font-size:
+      clamp(
+        40px,
+        10.8vw,
+        48px
+      );
+  }
+
+  /* =========================
+     CV — VIEWER TITLE
+  ========================= */
+
+  [data-locale="id"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"]
+    h2,
+  [data-locale="de"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"]
+    h2 {
+    font-size:
+      clamp(
+        36px,
+        9.8vw,
+        44px
+      );
+  }
+
+  /* =========================
+     CV — CLOSING
+  ========================= */
+
+  /*
+   * ID dan DE closing copy jauh lebih
+   * panjang daripada EN:
+   *
+   * "CV hanya menceritakan sebagian..."
+   *
+   * "Ein CV erzählt nur einen Teil..."
+   */
+  [data-locale="id"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="main"]
+    p,
+  [data-locale="de"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="main"]
+    p {
+    font-size:
+      clamp(
+        38px,
+        10.2vw,
+        46px
+      );
+  }
+}

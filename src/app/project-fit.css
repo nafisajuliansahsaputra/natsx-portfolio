@@ -1,0 +1,142 @@
+/*
+ * =========================
+ * NATSX — PROJECT FIT SYSTEM
+ * =========================
+ *
+ * Project detail memakai oversized
+ * editorial typography.
+ *
+ * Desktop tetap untouched.
+ *
+ * Mobile diberi optical ceiling
+ * supaya judul project panjang:
+ *
+ * - tidak terpotong
+ * - tidak keluar composition
+ * - tetap terasa oversized
+ *
+ * overflow: clip pada project page
+ * tidak boleh menjadi alasan bug
+ * typography tersembunyi.
+ */
+
+[data-motion-page="project-detail"]
+  [data-motion-project-hero-piece="title"] {
+  min-width: 0;
+}
+
+[data-motion-page="project-detail"]
+  [data-motion-project-hero-piece="title"]
+  h1 {
+  max-width: 100%;
+
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+[data-motion-page="project-detail"]
+  [data-motion-scroll="project-next-link"] {
+  min-width: 0;
+}
+
+[data-motion-page="project-detail"]
+  [data-motion-scroll="project-next-link"]
+  h2 {
+  max-width: 100%;
+
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  /*
+   * Previous hero:
+   *
+   * clamp(
+   *   64px,
+   *   19vw,
+   *   102px
+   * )
+   *
+   * Di 430px = ±81px.
+   *
+   * Itu terlalu agresif untuk
+   * "Management", German compound
+   * words, dan judul case study
+   * yang lebih panjang.
+   *
+   * New scale:
+   * di 430px = ±58px.
+   *
+   * Masih editorial dan dominant,
+   * tapi tidak merusak composition.
+   */
+  [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="title"]
+    h1 {
+    font-size:
+      clamp(
+        48px,
+        13.6vw,
+        64px
+      );
+
+    line-height:
+      0.84;
+  }
+
+  /*
+   * Next project sebelumnya 17vw.
+   * Masalah yang sama bisa muncul
+   * di bagian paling bawah page.
+   */
+  [data-motion-page="project-detail"]
+    [data-motion-scroll="project-next-link"]
+    h2 {
+    font-size:
+      clamp(
+        50px,
+        14.5vw,
+        72px
+      );
+
+    line-height:
+      0.86;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (
+  max-width: 370px
+) {
+  [data-motion-page="project-detail"]
+    [data-motion-project-hero-piece="title"]
+    h1 {
+    font-size:
+      clamp(
+        46px,
+        13.2vw,
+        52px
+      );
+  }
+
+  [data-motion-page="project-detail"]
+    [data-motion-scroll="project-next-link"]
+    h2 {
+    font-size:
+      clamp(
+        48px,
+        14vw,
+        56px
+      );
+  }
+}

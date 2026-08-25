@@ -20,6 +20,7 @@ import {
 import HeroVisual from "./HeroVisual";
 
 import styles from "./Hero.module.css";
+import localeStyles from "./HeroLocaleFit.module.css";
 
 type HeroProps = {
   locale: Locale;
@@ -40,10 +41,11 @@ export default function Hero({
 
   return (
     <section
-      className={
-        styles.hero
-      }
+      className={`${styles.hero} ${localeStyles.hero}`}
       data-home-hero
+      data-hero-locale={
+        locale
+      }
       data-ambient-active="false"
     >
       <div
@@ -83,15 +85,13 @@ export default function Hero({
             </p>
 
             <h1
-              className={
-                styles.title
-              }
+              className={`${styles.title} ${localeStyles.title}`}
               data-motion-hero-piece="title"
+              data-home-hero-title
             >
               <span
-                className={
-                  styles.titleLine
-                }
+                className={`${styles.titleLine} ${localeStyles.titleLine}`}
+                data-home-hero-title-line
               >
                 <strong>
                   {
@@ -111,9 +111,8 @@ export default function Hero({
               </span>
 
               <span
-                className={
-                  styles.titleLine
-                }
+                className={`${styles.titleLine} ${localeStyles.titleLine}`}
+                data-home-hero-title-line
               >
                 <span
                   className={

@@ -33,14 +33,71 @@ export default function HeroVisual({
   const [
     portraitLoaded,
     setPortraitLoaded,
-  ] = useState(
-    false,
-  );
+  ] =
+    useState(
+      false,
+    );
 
   const visualRef =
     useRef<HTMLDivElement>(
       null,
     );
+
+  const portraitRef =
+    useRef<HTMLImageElement>(
+      null,
+    );
+
+  /*
+   * Next/Image bisa sudah selesai
+   * dari browser cache sebelum React
+   * callback onLoad menjadi sumber
+   * state yang reliable.
+   *
+   * Jadi state portrait tidak hanya
+   * bergantung pada onLoad.
+   *
+   * Kalau image sudah:
+   * - complete
+   * - punya naturalWidth
+   *
+   * portrait langsung dianggap siap.
+   */
+  useEffect(() => {
+    const image =
+      portraitRef.current;
+
+    if (!image) {
+      return;
+    }
+
+    const syncLoadedState =
+      () => {
+        if (
+          image.complete &&
+          image.naturalWidth >
+            0
+        ) {
+          setPortraitLoaded(
+            true,
+          );
+        }
+      };
+
+    syncLoadedState();
+
+    image.addEventListener(
+      "load",
+      syncLoadedState,
+    );
+
+    return () => {
+      image.removeEventListener(
+        "load",
+        syncLoadedState,
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const visual =
@@ -433,6 +490,9 @@ export default function HeroVisual({
         }
       >
         <Image
+          ref={
+            portraitRef
+          }
           src="/images/natsx-portrait-hero.png"
           alt={
             copy

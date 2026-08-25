@@ -27,6 +27,8 @@ import "./motion.css";
 import "./about-motion.css";
 import "./contact-motion.css";
 import "./project-motion.css";
+import "./project-fit.css";
+import "./localized-fit.css";
 import "./intro-motion.css";
 
 const plusJakartaSans =
