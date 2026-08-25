@@ -3,173 +3,136 @@
  * NATSX — LOCALIZED FIT SYSTEM
  * =========================
  *
- * English adalah visual baseline.
+ * English tetap menjadi visual baseline.
  *
- * Bahasa Indonesia dan German
- * membawa density kata yang berbeda.
+ * ID / DE hanya mendapat optical sizing
+ * ketika density copy memang berbeda.
  *
- * File ini hanya bekerja pada
- * localized routes:
+ * Prinsip utama:
  *
- * [data-locale="id"]
- * [data-locale="de"]
+ * EDITORIAL TYPE
+ * - jangan memecah kata secara paksa
+ * - jangan auto-hyphenate headline
+ * - kalau tidak muat, scale composition
  *
- * Tujuannya:
- * - menjaga typography tetap editorial
- * - mencegah clipping diam-diam
- * - memberi German hyphenation
- * - memberi optical scale khusus
- *   hanya pada composition yang memang
- *   terlalu agresif di mobile
+ * UTILITY / LONG TOKEN
+ * - email boleh break karena memang
+ *   satu token panjang
  *
- * English tidak disentuh.
+ * Jadi sistem tidak "menyembunyikan"
+ * masalah typography lewat emergency wrap.
  */
 
 /* =========================
-   GENERAL FIT
+   SAFE EDITORIAL WRAPPING
 ========================= */
 
-@media (
-  max-width: 960px
-) {
+@media (max-width: 960px) {
   [data-locale="id"]
     #main-content
     :is(
       [data-motion-work-hero-piece="title"],
-      [data-motion-scroll="work-project"]
-        h2,
-      [data-motion-scroll="work-closing"]
-        p,
+      [data-motion-scroll="work-project"] h2,
+      [data-motion-scroll="work-closing"] p,
       [data-motion-about-hero-piece="title"],
-      [data-motion-scroll="about-story"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="about-approach-header"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="about-principle"]
-        h3,
-      [data-motion-scroll="about-disciplines-header"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="about-discipline"]
-        h2,
-      [data-motion-scroll="about-closing"]
-        [data-motion-piece="main"]
-        p,
+      [data-motion-scroll="about-story"] [data-motion-piece="title"],
+      [data-motion-scroll="about-approach-header"] [data-motion-piece="title"],
+      [data-motion-scroll="about-principle"] h3,
+      [data-motion-scroll="about-disciplines-header"] [data-motion-piece="title"],
+      [data-motion-scroll="about-discipline"] h2,
+      [data-motion-scroll="about-closing"] [data-motion-piece="main"] p,
       [data-motion-playground-hero-piece="title"],
-      [data-motion-scroll="playground-manifesto"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="playground-closing"]
-        [data-motion-piece="main"]
-        p,
+      [data-motion-scroll="playground-manifesto"] [data-motion-piece="title"],
+      [data-motion-scroll="playground-closing"] [data-motion-piece="main"] p,
       [data-motion-contact-hero-piece="title"],
-      [data-motion-scroll="contact-email"]
-        [data-motion-piece="address"],
-      [data-motion-scroll="contact-availability"]
-        [data-motion-piece="content"],
-      [data-motion-scroll="contact-collaboration"]
-        [data-motion-piece="item"]
-        p,
-      [data-motion-scroll="contact-social-header"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="contact-closing"]
-        [data-motion-piece="main"]
-        p,
+      [data-motion-scroll="contact-collaboration"] [data-motion-piece="item"] p,
+      [data-motion-scroll="contact-social-header"] [data-motion-piece="title"],
+      [data-motion-scroll="contact-closing"] [data-motion-piece="main"] p,
       [data-motion-cv-hero-piece="title"],
-      [data-motion-scroll="cv-language-list"]
-        button,
-      [data-motion-scroll="cv-viewer-header"]
-        h2,
-      [data-motion-scroll="cv-closing"]
-        [data-motion-piece="main"]
-        p,
-      [data-motion-project-hero-piece="title"]
-        h1,
-      [data-motion-scroll="project-next-link"]
-        h2
+      [data-motion-scroll="cv-viewer-header"] h2,
+      [data-motion-scroll="cv-closing"] [data-motion-piece="main"] p,
+      [data-motion-project-hero-piece="title"] h1,
+      [data-motion-scroll="project-next-link"] h2
     ),
   [data-locale="de"]
     #main-content
     :is(
       [data-motion-work-hero-piece="title"],
-      [data-motion-scroll="work-project"]
-        h2,
-      [data-motion-scroll="work-closing"]
-        p,
+      [data-motion-scroll="work-project"] h2,
+      [data-motion-scroll="work-closing"] p,
       [data-motion-about-hero-piece="title"],
-      [data-motion-scroll="about-story"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="about-approach-header"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="about-principle"]
-        h3,
-      [data-motion-scroll="about-disciplines-header"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="about-discipline"]
-        h2,
-      [data-motion-scroll="about-closing"]
-        [data-motion-piece="main"]
-        p,
+      [data-motion-scroll="about-story"] [data-motion-piece="title"],
+      [data-motion-scroll="about-approach-header"] [data-motion-piece="title"],
+      [data-motion-scroll="about-principle"] h3,
+      [data-motion-scroll="about-disciplines-header"] [data-motion-piece="title"],
+      [data-motion-scroll="about-discipline"] h2,
+      [data-motion-scroll="about-closing"] [data-motion-piece="main"] p,
       [data-motion-playground-hero-piece="title"],
-      [data-motion-scroll="playground-manifesto"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="playground-closing"]
-        [data-motion-piece="main"]
-        p,
+      [data-motion-scroll="playground-manifesto"] [data-motion-piece="title"],
+      [data-motion-scroll="playground-closing"] [data-motion-piece="main"] p,
       [data-motion-contact-hero-piece="title"],
-      [data-motion-scroll="contact-email"]
-        [data-motion-piece="address"],
-      [data-motion-scroll="contact-availability"]
-        [data-motion-piece="content"],
-      [data-motion-scroll="contact-collaboration"]
-        [data-motion-piece="item"]
-        p,
-      [data-motion-scroll="contact-social-header"]
-        [data-motion-piece="title"],
-      [data-motion-scroll="contact-closing"]
-        [data-motion-piece="main"]
-        p,
+      [data-motion-scroll="contact-collaboration"] [data-motion-piece="item"] p,
+      [data-motion-scroll="contact-social-header"] [data-motion-piece="title"],
+      [data-motion-scroll="contact-closing"] [data-motion-piece="main"] p,
       [data-motion-cv-hero-piece="title"],
-      [data-motion-scroll="cv-language-list"]
-        button,
-      [data-motion-scroll="cv-viewer-header"]
-        h2,
-      [data-motion-scroll="cv-closing"]
-        [data-motion-piece="main"]
-        p,
-      [data-motion-project-hero-piece="title"]
-        h1,
-      [data-motion-scroll="project-next-link"]
-        h2
+      [data-motion-scroll="cv-viewer-header"] h2,
+      [data-motion-scroll="cv-closing"] [data-motion-piece="main"] p,
+      [data-motion-project-hero-piece="title"] h1,
+      [data-motion-scroll="project-next-link"] h2
     ) {
     min-width: 0;
     max-width: 100%;
 
-    overflow-wrap:
-      break-word;
+    overflow-wrap: normal;
+    word-break: normal;
+
+    -webkit-hyphens: none;
+    hyphens: none;
   }
 
   /*
-   * Wrapper localized memang membawa
-   * lang="de", sehingga browser bisa
-   * melakukan German hyphenation
-   * berdasarkan bahasa sebenarnya.
+   * Email berbeda dari editorial title.
    *
-   * Ini cuma menjadi fallback jika
-   * sebuah kata compound benar-benar
-   * tidak cukup ruang.
+   * Local-part email memang bisa berupa
+   * satu token panjang tanpa whitespace,
+   * jadi breaking diperbolehkan.
    */
+  [data-locale="id"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"],
   [data-locale="de"]
-    #main-content
-    :is(
-      h1,
-      h2,
-      h3,
-      [data-motion-piece="address"]
-    ) {
-    -webkit-hyphens:
-      auto;
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    min-width: 0;
+    max-width: 100%;
 
-    hyphens:
-      auto;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    -webkit-hyphens: none;
+    hyphens: none;
+  }
+
+  /*
+   * Utility controls boleh wrap pada
+   * whitespace normal, tapi tidak perlu
+   * memecah kata.
+   */
+  [data-locale="id"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    button,
+  [data-locale="de"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    button {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: normal;
+    word-break: normal;
   }
 }
 
@@ -177,15 +140,10 @@
    TABLET — WORK
 ========================= */
 
-@media (
-  min-width: 701px
-) and (
-  max-width: 960px
-) {
+@media (min-width: 701px) and (max-width: 960px) {
   /*
    * "Projekte" lebih lebar daripada
-   * Work / Karya, sementara Work hero
-   * tablet hanya memakai sebagian grid.
+   * Work / Karya.
    */
   [data-locale="de"]
     [data-motion-page="work"]
@@ -197,24 +155,25 @@
         86px
       );
 
-    letter-spacing:
-      -0.08em;
+    letter-spacing: -0.08em;
   }
 }
 
 /* =========================
-   MOBILE — WORK
+   MOBILE
 ========================= */
 
-@media (
-  max-width: 700px
-) {
+@media (max-width: 700px) {
+  /* =========================
+     WORK
+  ========================= */
+
   /*
-   * Base Work mobile = 25vw.
+   * Base EN Work hero = 25vw.
+   * Tetap dipertahankan untuk EN.
    *
-   * Itu bagus untuk "Work",
-   * tapi terlalu agresif untuk
-   * "Projekte".
+   * "Projekte" perlu optical scale
+   * berbeda, bukan forced wrapping.
    */
   [data-locale="de"]
     [data-motion-page="work"]
@@ -226,8 +185,7 @@
         86px
       );
 
-    line-height:
-      0.82;
+    line-height: 0.82;
   }
 
   /* =========================
@@ -249,8 +207,7 @@
         48px
       );
 
-    line-height:
-      0.98;
+    line-height: 0.98;
   }
 
   /* =========================
@@ -274,7 +231,7 @@
   }
 
   /* =========================
-     ABOUT — DISCIPLINES INTRO
+     ABOUT — DISCIPLINES
   ========================= */
 
   [data-locale="id"]
@@ -319,13 +276,6 @@
      PLAYGROUND — HERO
   ========================= */
 
-  /*
-   * Base mobile Playground = 18vw.
-   *
-   * "bebas menjelajah" membawa
-   * density jauh lebih tinggi daripada
-   * English line aslinya.
-   */
   [data-locale="id"]
     [data-motion-page="playground"]
     [data-motion-playground-hero-piece="title"] {
@@ -336,8 +286,7 @@
         62px
       );
 
-    line-height:
-      0.85;
+    line-height: 0.85;
   }
 
   [data-locale="de"]
@@ -350,8 +299,7 @@
         64px
       );
 
-    line-height:
-      0.85;
+    line-height: 0.85;
   }
 
   /* =========================
@@ -400,18 +348,6 @@
      CONTACT — SOCIAL
   ========================= */
 
-  /*
-   * Indonesian:
-   * "Beberapa tempat lain /
-   * untuk menemukan saya"
-   *
-   * German:
-   * "Weitere Orte, /
-   * an denen du mich findest"
-   *
-   * Keduanya lebih padat daripada
-   * English social statement.
-   */
   [data-locale="id"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-social-header"]
@@ -427,8 +363,7 @@
         48px
       );
 
-    line-height:
-      0.94;
+    line-height: 0.94;
   }
 
   /* =========================
@@ -477,14 +412,6 @@
      CV — CLOSING
   ========================= */
 
-  /*
-   * ID dan DE closing copy jauh lebih
-   * panjang daripada EN:
-   *
-   * "CV hanya menceritakan sebagian..."
-   *
-   * "Ein CV erzählt nur einen Teil..."
-   */
   [data-locale="id"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-closing"]
