@@ -95,109 +95,149 @@ test(
           address,
         ).toBeVisible();
 
-        const metrics =
-          await address.evaluate(
-            (
-              element,
-            ) => {
-              const node =
-                element as HTMLElement;
+        const readMetrics =
+          async () =>
+            address.evaluate(
+              (
+                element,
+              ) => {
+                const node =
+                  element as HTMLElement;
 
-              const addressRect =
-                node.getBoundingClientRect();
+                const addressRect =
+                  node.getBoundingClientRect();
 
-              const textNodes =
-                Array.from(
-                  node.childNodes,
-                ).filter(
-                  (
-                    child,
-                  ) =>
-                    child.nodeType ===
-                      Node.TEXT_NODE &&
+                const textNodes =
+                  Array.from(
+                    node.childNodes,
+                  ).filter(
                     (
-                      child.textContent ??
-                      ""
-                    )
-                      .trim()
-                      .length >
-                      0,
-                );
+                      child,
+                    ) =>
+                      child.nodeType ===
+                        Node.TEXT_NODE &&
+                      (
+                        child.textContent ??
+                        ""
+                      )
+                        .trim()
+                        .length >
+                        0,
+                  );
 
-              return {
-                addressLeft:
-                  addressRect.left,
+                return {
+                  addressLeft:
+                    addressRect.left,
 
-                addressRight:
-                  addressRect.right,
+                  addressRight:
+                    addressRect.right,
 
-                viewportWidth:
-                  window.innerWidth,
+                  viewportWidth:
+                    window.innerWidth,
 
-                lines:
-                  textNodes.map(
-                    (
-                      textNode,
-                    ) => {
-                      const range =
-                        document.createRange();
-
-                      range.selectNodeContents(
+                  lines:
+                    textNodes.map(
+                      (
                         textNode,
-                      );
+                      ) => {
+                        const range =
+                          document.createRange();
 
-                      const rects =
-                        Array.from(
-                          range.getClientRects(),
-                        ).filter(
-                          (
-                            rect,
-                          ) =>
-                            rect.width >
-                              0 &&
-                            rect.height >
-                              0,
+                        range.selectNodeContents(
+                          textNode,
                         );
 
-                      return {
-                        text:
-                          (
-                            textNode.textContent ??
-                            ""
-                          ).trim(),
+                        const rects =
+                          Array.from(
+                            range.getClientRects(),
+                          ).filter(
+                            (
+                              rect,
+                            ) =>
+                              rect.width >
+                                0 &&
+                              rect.height >
+                                0,
+                          );
 
-                        visualLines:
-                          rects.length,
+                        return {
+                          text:
+                            (
+                              textNode.textContent ??
+                              ""
+                            ).trim(),
 
-                        left:
-                          rects.length
-                            ? Math.min(
-                                ...rects.map(
-                                  (
-                                    rect,
-                                  ) =>
-                                    rect.left,
-                                ),
-                              )
-                            : 0,
+                          visualLines:
+                            rects.length,
 
-                        right:
-                          rects.length
-                            ? Math.max(
-                                ...rects.map(
-                                  (
-                                    rect,
-                                  ) =>
-                                    rect.right,
-                                ),
-                              )
-                            : 0,
-                      };
-                    },
-                  ),
-              };
+                          left:
+                            rects.length
+                              ? Math.min(
+                                  ...rects.map(
+                                    (
+                                      rect,
+                                    ) =>
+                                      rect.left,
+                                  ),
+                                )
+                              : 0,
+
+                          right:
+                            rects.length
+                              ? Math.max(
+                                  ...rects.map(
+                                    (
+                                      rect,
+                                    ) =>
+                                      rect.right,
+                                  ),
+                                )
+                              : 0,
+                        };
+                      },
+                    ),
+                };
+              },
+            );
+
+        /*
+         * Range#getClientRects() can briefly
+         * return an empty rect list while a
+         * full parallel Playwright suite is
+         * under layout / rendering pressure.
+         *
+         * Poll the actual visual condition
+         * instead of treating that transient
+         * browser frame as a layout failure.
+         */
+        await expect
+          .poll(
+            async () => {
+              const metrics =
+                await readMetrics();
+
+              return metrics.lines.map(
+                (
+                  line,
+                ) =>
+                  line.visualLines,
+              );
             },
-          );
+            {
+              message:
+                `${width}px:${route} contact email should settle into exactly two single visual lines`,
+
+              timeout:
+                5_000,
+            },
+          )
+          .toEqual([
+            1,
+            1,
+          ]);
+
+        const metrics =
+          await readMetrics();
 
         expect(
           metrics.lines,
