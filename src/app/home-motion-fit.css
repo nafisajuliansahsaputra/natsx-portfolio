@@ -1,0 +1,247 @@
+/*
+ * =========================
+ * NATSX — HOME MOTION FIT
+ * =========================
+ *
+ * Typography-safe clip bounds for
+ * Home display text.
+ *
+ * IMPORTANT:
+ *
+ * Tidak mengubah:
+ * - duration
+ * - delay
+ * - easing
+ * - opacity
+ * - translate
+ * - scale
+ * - rotation
+ * - choreography
+ *
+ * Hanya memperluas clip bounds
+ * agar oversized / tight display
+ * glyph tidak terpotong.
+ */
+
+/* =========================
+   HERO TITLE
+========================= */
+
+@keyframes
+  home-hero-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        calc(
+          100% +
+          0.35em
+        )
+        0
+      );
+
+    translate:
+      0
+      30px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   HORIZONTAL TEXT REVEAL
+========================= */
+
+@keyframes
+  home-reveal-clip-left {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        100%
+        -0.35em
+        0
+      );
+
+    translate:
+      -16px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   UPWARD TEXT REVEAL
+========================= */
+
+@keyframes
+  home-reveal-clip-up {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        calc(
+          100% +
+          0.35em
+        )
+        0
+      );
+
+    translate:
+      0
+      24px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   DOWNWARD TEXT REVEAL
+========================= */
+
+@keyframes
+  home-reveal-clip-down {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        calc(
+          100% +
+          0.35em
+        )
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      -20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   FINAL BRAND
+========================= */
+
+@keyframes
+  home-brand-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        calc(
+          100% +
+          0.35em
+        )
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      24px;
+
+    scale:
+      0.985;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}

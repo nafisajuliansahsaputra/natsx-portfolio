@@ -160,14 +160,6 @@ html[data-motion="enabled"]
      EXPERIMENT TARGETS
   ========================= */
 
-  /*
-   * IMPORTANT:
-   *
-   * article adalah target
-   * IntersectionObserver.
-   *
-   * Jangan clip target.
-   */
   html[data-motion="enabled"]
     [data-motion-page="playground"]
     [data-motion-scroll="playground-experiment"] {
@@ -207,14 +199,6 @@ html[data-motion="enabled"]
   /* =========================
      EXPERIMENT META PANEL
   ========================= */
-
-  /*
-   * DOM:
-   *
-   * article
-   *   > ExperimentMeta
-   *   > Visual
-   */
 
   html[data-motion="enabled"]
     [data-motion-page="playground"]
@@ -380,14 +364,6 @@ html[data-motion="enabled"]
       both;
   }
 
-  /*
-   * Visual children fade in after
-   * shell has opened.
-   *
-   * Opacity only — no transform,
-   * supaya pointer-driven transform
-   * tetap bebas bekerja.
-   */
   html[data-motion="enabled"]
     [data-motion-page="playground"]
     [data-motion-scroll="playground-experiment"]
@@ -724,6 +700,13 @@ html[data-motion="enabled"]
   }
 }
 
+/*
+ * Same vertical wipe as before,
+ * but with continuous vertical bleed.
+ *
+ * No discrete jump to clip-path:none,
+ * so descenders remain smooth.
+ */
 @keyframes
   playground-title-in {
   from {
@@ -732,9 +715,12 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
+        -0.35em
         0
-        0
-        100%
+        calc(
+          100% +
+          0.35em
+        )
         0
       );
 
@@ -752,9 +738,9 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
+        -0.35em
         0
-        0
-        0
+        -0.35em
         0
       );
 

@@ -630,9 +630,9 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
-        0
+        -0.35em
         100%
-        0
+        -0.35em
         0
       );
 
@@ -647,9 +647,9 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
+        -0.35em
         0
-        0
-        0
+        -0.35em
         0
       );
 

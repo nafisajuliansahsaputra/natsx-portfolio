@@ -172,12 +172,6 @@ html[data-motion="enabled"]
      LANGUAGE LIST TARGET
   ========================= */
 
-  /*
-   * Target observer selalu visible
-   * secara layout.
-   *
-   * Yang dianimasikan cuma button.
-   */
   html[data-motion="enabled"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-language-list"] {
@@ -266,9 +260,6 @@ html[data-motion="enabled"]
       220ms;
   }
 
-  /*
-   * Internal row content.
-   */
   html[data-motion="enabled"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-language-list"]
@@ -441,9 +432,6 @@ html[data-motion="enabled"]
       both;
   }
 
-  /*
-   * Action links stagger internally.
-   */
   html[data-motion="enabled"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-viewer-header"]
@@ -487,10 +475,6 @@ html[data-motion="enabled"]
      PDF VIEWER TARGET
   ========================= */
 
-  /*
-   * Jangan clip observer target.
-   * Frame cuma settle dari scale.
-   */
   html[data-motion="enabled"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-viewer"] {
@@ -521,9 +505,6 @@ html[data-motion="enabled"]
       both;
   }
 
-  /*
-   * Toolbar enters first.
-   */
   html[data-motion="enabled"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-viewer"]
@@ -548,11 +529,6 @@ html[data-motion="enabled"]
       both;
   }
 
-  /*
-   * PDF area comes slightly later.
-   * Opacity only to avoid interfering
-   * with browser PDF plugin rendering.
-   */
   html[data-motion="enabled"]
     [data-motion-page="cv"]
     [data-motion-scroll="cv-viewer"]
@@ -730,6 +706,12 @@ html[data-motion="enabled"]
   }
 }
 
+/*
+ * Vertical wipe tetap sama.
+ * Clip area cuma diberi bleed
+ * vertikal supaya glyph tidak
+ * terpotong.
+ */
 @keyframes
   cv-title-in {
   from {
@@ -738,9 +720,12 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
+        -0.35em
         0
-        0
-        100%
+        calc(
+          100% +
+          0.35em
+        )
         0
       );
 
@@ -755,9 +740,9 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
+        -0.35em
         0
-        0
-        0
+        -0.35em
         0
       );
 

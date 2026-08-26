@@ -624,6 +624,14 @@ html[data-motion="enabled"]
   }
 }
 
+/*
+ * Same original horizontal reveal.
+ *
+ * Only vertical clip bounds get bleed
+ * so tight display glyphs can paint
+ * completely without changing timing,
+ * direction, distance, or easing.
+ */
 @keyframes
   natsx-about-title-in {
   from {
@@ -631,9 +639,9 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
-        0
+        -0.35em
         100%
-        0
+        -0.35em
         0
       );
 
@@ -650,9 +658,9 @@ html[data-motion="enabled"]
 
     clip-path:
       inset(
+        -0.35em
         0
-        0
-        0
+        -0.35em
         0
       );
 

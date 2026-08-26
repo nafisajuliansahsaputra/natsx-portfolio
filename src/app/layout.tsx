@@ -25,6 +25,7 @@ import {
 import "./globals.css";
 import "./motion.css";
 import "./home-motion.css";
+import "./home-motion-fit.css";
 import "./work-motion.css";
 import "./playground-motion.css";
 import "./cv-motion.css";

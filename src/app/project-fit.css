@@ -7,22 +7,19 @@
  * editorial typography dan art-directed
  * media composition.
  *
- * Guard ini menangani dua hal:
+ * Guard ini menangani:
  *
  * 1. Oversized project typography
  *    harus tetap berada di composition.
  *
- * 2. Wide project media tidak boleh
+ * 2. Display typography tidak boleh
+ *    terpotong oleh motion clip-path.
+ *
+ * 3. Wide project media tidak boleh
  *    dicrop hanya karena mobile gallery
  *    memakai portrait treatment.
  *
- * Existing art direction tetap dijaga:
- *
- * - normal gallery item:
- *   portrait / cover
- *
- * - wide gallery item:
- *   landscape / contain
+ * Existing art direction tetap dijaga.
  */
 
 /* =========================
@@ -55,6 +52,183 @@
 
   overflow-wrap: normal;
   word-break: normal;
+}
+
+/* =========================
+   TEXT MOTION CLIP SAFETY
+========================= */
+
+/*
+ * project-fit.css di-load setelah
+ * project-motion.css.
+ *
+ * Karena itu keyframe dengan nama
+ * yang sama di bawah menggantikan
+ * hanya implementasi clip bounds.
+ *
+ * Timing, delay, easing, translate,
+ * scale, opacity dan arah reveal
+ * tetap dimiliki selector asli dari
+ * project-motion.css.
+ */
+
+/* HERO — horizontal wipe */
+
+@keyframes
+  project-hero-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        100%
+        -0.35em
+        0
+      );
+
+    translate:
+      -24px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* STATEMENT — vertical wipe */
+
+@keyframes
+  project-statement-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        calc(
+          100% +
+          0.35em
+        )
+        0
+      );
+
+    translate:
+      0
+      28px;
+
+    scale:
+      0.975;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+/* QUOTE — horizontal wipe */
+
+@keyframes
+  project-quote-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        100%
+        -0.35em
+        0
+      );
+
+    translate:
+      28px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* NEXT PROJECT — horizontal wipe */
+
+@keyframes
+  project-next-title-in {
+  from {
+    clip-path:
+      inset(
+        -0.35em
+        100%
+        -0.35em
+        0
+      );
+
+    translate:
+      -16px
+      0;
+  }
+
+  to {
+    clip-path:
+      inset(
+        -0.35em
+        0
+        -0.35em
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
 }
 
 /* =========================
