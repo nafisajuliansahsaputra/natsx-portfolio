@@ -1,0 +1,1155 @@
+/*
+ * =========================
+ * NATSX — CV MOTION DIALECT
+ * =========================
+ *
+ * CV = PRECISION / DOCUMENT ASSEMBLY
+ *
+ * Motion language:
+ * - precise indexing
+ * - line-by-line assembly
+ * - restrained horizontal movement
+ * - document frame settling
+ *
+ * Dibuat lebih tenang daripada
+ * Playground / Contact, tapi tetap
+ * punya choreography per section.
+ *
+ * Observer targets tidak pernah
+ * di-clip sampai zero area.
+ */
+
+html[data-motion="enabled"]
+  [data-motion-page="cv"] {
+  overflow-x:
+    clip;
+}
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO — TOP
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="top"] {
+    animation:
+      cv-top-in
+      720ms
+      var(--motion-ease-out)
+      40ms
+      both;
+  }
+
+  /* =========================
+     HERO — TITLE
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="title"] {
+    animation:
+      cv-title-in
+      1080ms
+      var(--motion-ease-out)
+      110ms
+      both;
+  }
+
+  /* =========================
+     HERO — INTRO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="intro"] {
+    animation:
+      cv-intro-in
+      880ms
+      var(--motion-ease-out)
+      240ms
+      both;
+  }
+
+  /*
+   * Accent dot hidup sangat subtle.
+   * Tidak se-agresif Playground.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece="title"]
+    > span {
+    display:
+      inline-block;
+
+    transform-origin:
+      center;
+
+    animation:
+      cv-accent-breathe
+      6s
+      ease-in-out
+      1.8s
+      infinite;
+  }
+
+  /* =========================
+     LANGUAGE HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-header"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-header"]
+    [data-motion-piece] {
+    opacity:
+      0;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-header"]
+    [data-motion-piece="label"] {
+    translate:
+      -24px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-header"]
+    [data-motion-piece="meta"] {
+    translate:
+      24px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-header"][data-motion-visible="true"]
+    [data-motion-piece="label"] {
+    animation:
+      cv-left-in
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-header"][data-motion-visible="true"]
+    [data-motion-piece="meta"] {
+    animation:
+      cv-right-in
+      760ms
+      var(--motion-ease-out)
+      80ms
+      both;
+  }
+
+  /* =========================
+     LANGUAGE LIST TARGET
+  ========================= */
+
+  /*
+   * Target observer selalu visible
+   * secara layout.
+   *
+   * Yang dianimasikan cuma button.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  /* =========================
+     LANGUAGE ROWS
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"] {
+    --cv-language-x:
+      -22px;
+
+    opacity:
+      0;
+
+    transform:
+      none;
+
+    translate:
+      var(--cv-language-x)
+      12px;
+
+    transition:
+      background
+        260ms
+        ease,
+      padding-inline
+        420ms
+        var(--motion-ease-out);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]:nth-child(
+      even
+    ) {
+    --cv-language-x:
+      22px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"] {
+    animation:
+      cv-language-row-in
+      780ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(1) {
+    animation-delay:
+      60ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(2) {
+    animation-delay:
+      140ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(3) {
+    animation-delay:
+      220ms;
+  }
+
+  /*
+   * Internal row content.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]
+    > span {
+    opacity:
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]
+    > span:first-child {
+    translate:
+      -12px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]
+    > span:nth-child(2) {
+    translate:
+      0
+      10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]
+    > span:nth-child(3) {
+    translate:
+      14px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]
+    > span:last-child {
+    scale:
+      0.45;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]
+    > span:first-child {
+    animation:
+      cv-left-in
+      560ms
+      var(--motion-ease-out)
+      180ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]
+    > span:nth-child(2) {
+    animation:
+      cv-rise-in
+      620ms
+      var(--motion-ease-out)
+      220ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]
+    > span:nth-child(3) {
+    animation:
+      cv-right-in
+      620ms
+      var(--motion-ease-out)
+      260ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"][data-motion-visible="true"]
+    [data-motion-piece="item"]
+    > span:last-child {
+    animation:
+      cv-indicator-in
+      680ms
+      var(--motion-ease-out)
+      310ms
+      both;
+  }
+
+  /* =========================
+     VIEWER HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"]
+    [data-motion-piece] {
+    opacity:
+      0;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"]
+    [data-motion-piece="title"] {
+    translate:
+      -26px
+      12px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"]
+    [data-motion-piece="actions"] {
+    translate:
+      26px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"][data-motion-visible="true"]
+    [data-motion-piece="title"] {
+    animation:
+      cv-viewer-title-in
+      880ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"][data-motion-visible="true"]
+    [data-motion-piece="actions"] {
+    animation:
+      cv-right-in
+      780ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  /*
+   * Action links stagger internally.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"]
+    [data-motion-piece="actions"]
+    > a {
+    opacity:
+      0;
+
+    translate:
+      0
+      10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"][data-motion-visible="true"]
+    [data-motion-piece="actions"]
+    > a:first-child {
+    animation:
+      cv-rise-in
+      620ms
+      var(--motion-ease-out)
+      240ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer-header"][data-motion-visible="true"]
+    [data-motion-piece="actions"]
+    > a:nth-child(2) {
+    animation:
+      cv-rise-in
+      620ms
+      var(--motion-ease-out)
+      310ms
+      both;
+  }
+
+  /* =========================
+     PDF VIEWER TARGET
+  ========================= */
+
+  /*
+   * Jangan clip observer target.
+   * Frame cuma settle dari scale.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer"] {
+    opacity:
+      0;
+
+    transform:
+      none;
+
+    translate:
+      0
+      22px;
+
+    scale:
+      0.985;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer"][data-motion-visible="true"] {
+    animation:
+      cv-document-frame-in
+      1000ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  /*
+   * Toolbar enters first.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer"]
+    > div:first-child {
+    opacity:
+      0;
+
+    translate:
+      0
+      -12px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer"][data-motion-visible="true"]
+    > div:first-child {
+    animation:
+      cv-toolbar-in
+      680ms
+      var(--motion-ease-out)
+      150ms
+      both;
+  }
+
+  /*
+   * PDF area comes slightly later.
+   * Opacity only to avoid interfering
+   * with browser PDF plugin rendering.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer"]
+    > div:last-child {
+    opacity:
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-viewer"][data-motion-visible="true"]
+    > div:last-child {
+    animation:
+      cv-pdf-in
+      820ms
+      ease
+      250ms
+      both;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece] {
+    opacity:
+      0;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="label"] {
+    translate:
+      -26px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="main"] {
+    translate:
+      28px
+      0;
+
+    scale:
+      0.982;
+
+    transform-origin:
+      left center;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"][data-motion-visible="true"]
+    [data-motion-piece="label"] {
+    animation:
+      cv-left-in
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"] {
+    animation:
+      cv-closing-main-in
+      920ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="main"]
+    > p {
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"]
+    > p {
+    animation:
+      cv-closing-copy-in
+      940ms
+      var(--motion-ease-out)
+      140ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"]
+    [data-motion-piece="main"]
+    > a {
+    opacity:
+      0;
+
+    translate:
+      0
+      12px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"]
+    > a {
+    animation:
+      cv-rise-in
+      680ms
+      var(--motion-ease-out)
+      320ms
+      both;
+  }
+}
+
+/* =========================
+   HERO
+========================= */
+
+@keyframes
+  cv-top-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      -10px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      0
+      28px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-intro-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      28px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-accent-breathe {
+  0%,
+  72%,
+  100% {
+    opacity:
+      1;
+
+    scale:
+      1;
+  }
+
+  82% {
+    opacity:
+      0.6;
+
+    scale:
+      0.86;
+  }
+
+  90% {
+    opacity:
+      1;
+
+    scale:
+      1.12;
+  }
+}
+
+/* =========================
+   LANGUAGE
+========================= */
+
+@keyframes
+  cv-language-row-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      var(--cv-language-x)
+      12px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-indicator-in {
+  from {
+    opacity:
+      0;
+
+    scale:
+      0.45;
+  }
+
+  to {
+    opacity:
+      1;
+
+    scale:
+      1;
+  }
+}
+
+/* =========================
+   VIEWER
+========================= */
+
+@keyframes
+  cv-viewer-title-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      -26px
+      12px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-document-frame-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      22px;
+
+    scale:
+      0.985;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+@keyframes
+  cv-toolbar-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      -12px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-pdf-in {
+  from {
+    opacity:
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+  }
+}
+
+/* =========================
+   CLOSING
+========================= */
+
+@keyframes
+  cv-closing-main-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      28px
+      0;
+
+    scale:
+      0.982;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+@keyframes
+  cv-closing-copy-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      0
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   SHARED
+========================= */
+
+@keyframes
+  cv-left-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      -26px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-right-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      26px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  cv-rise-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      14px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"] {
+    --cv-language-x:
+      -10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll="cv-language-list"]
+    [data-motion-piece="item"]:nth-child(
+      even
+    ) {
+    --cv-language-x:
+      10px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-cv-hero-piece],
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-scroll],
+  html[data-motion="enabled"]
+    [data-motion-page="cv"]
+    [data-motion-piece] {
+    opacity:
+      1 !important;
+
+    clip-path:
+      none !important;
+
+    transform:
+      none !important;
+
+    translate:
+      none !important;
+
+    scale:
+      1 !important;
+
+    rotate:
+      0deg !important;
+
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}

@@ -75,11 +75,13 @@ export default function ContactFooter({
           className={
             styles.top
           }
+          data-motion-scroll="home-contact-top"
         >
           <div
             className={
               styles.label
             }
+            data-motion-piece="label"
           >
             <span
               className={
@@ -98,6 +100,7 @@ export default function ContactFooter({
             className={
               styles.availability
             }
+            data-motion-piece="availability"
           >
             {
               copy.availability
@@ -109,11 +112,13 @@ export default function ContactFooter({
           className={
             styles.main
           }
+          data-motion-scroll="home-contact-main"
         >
           <p
             className={
               styles.eyebrow
             }
+            data-motion-piece="eyebrow"
           >
             {
               copy.eyebrow
@@ -130,6 +135,7 @@ export default function ContactFooter({
               className={
                 styles.heading
               }
+              data-motion-piece="title"
             >
               <span
                 className={
@@ -175,6 +181,7 @@ export default function ContactFooter({
                 styles.mainArrow
               }
               aria-hidden="true"
+              data-motion-piece="arrow"
             >
               ↗
             </span>
@@ -185,11 +192,13 @@ export default function ContactFooter({
           className={
             styles.contactRow
           }
+          data-motion-scroll="home-contact-row"
         >
           <p
             className={
               styles.contactIntro
             }
+            data-motion-piece="intro"
           >
             {
               copy.intro
@@ -200,6 +209,7 @@ export default function ContactFooter({
             className={
               styles.socials
             }
+            data-motion-piece="socials"
           >
             {contactLinks.map(
               (
@@ -251,11 +261,13 @@ export default function ContactFooter({
           className={
             styles.footer
           }
+          data-motion-scroll="home-contact-footer"
         >
           <div
             className={
               styles.brand
             }
+            data-motion-piece="brand"
           >
             <Image
               src="/images/branding/natsx-logo-black.png"
@@ -272,6 +284,7 @@ export default function ContactFooter({
             className={
               styles.footerMeta
             }
+            data-motion-piece="meta"
           >
             <div>
               <span

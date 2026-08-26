@@ -1,0 +1,929 @@
+/*
+ * =========================
+ * NATSX — WORK MOTION DIALECT
+ * =========================
+ *
+ * WORK = EDITORIAL ARCHIVE / INDEXING
+ *
+ * Important:
+ * elemen [data-motion-scroll]
+ * TIDAK boleh di-clip sampai 0 area,
+ * karena elemen tersebut menjadi target
+ * IntersectionObserver.
+ *
+ * Reveal mask hanya diterapkan ke child.
+ */
+
+html[data-motion="enabled"]
+  [data-motion-page="work"] {
+  overflow-x:
+    clip;
+}
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="top"] {
+    animation:
+      work-meta-in
+      760ms
+      var(--motion-ease-out)
+      40ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="title"] {
+    animation:
+      work-title-in
+      1120ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="intro"] {
+    animation:
+      work-intro-in
+      900ms
+      var(--motion-ease-out)
+      210ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="meta"] {
+    animation:
+      work-hero-meta-in
+      900ms
+      var(--motion-ease-out)
+      310ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="meta"]
+    > div {
+    opacity:
+      0;
+
+    translate:
+      0
+      10px;
+
+    animation:
+      work-small-item-in
+      700ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="meta"]
+    > div:first-child {
+    animation-delay:
+      390ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-work-hero-piece="meta"]
+    > div:nth-child(2) {
+    animation-delay:
+      460ms;
+  }
+
+  /* =========================
+     ARCHIVE HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-archive-header"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-archive-header"]
+    > span {
+    opacity:
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-archive-header"]
+    > span:first-child {
+    translate:
+      -22px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-archive-header"]
+    > span:last-child {
+    translate:
+      22px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-archive-header"][data-motion-visible="true"]
+    > span:first-child {
+    animation:
+      work-reveal-left
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-archive-header"][data-motion-visible="true"]
+    > span:last-child {
+    animation:
+      work-reveal-right
+      760ms
+      var(--motion-ease-out)
+      90ms
+      both;
+  }
+
+  /* =========================
+     PROJECT ROW — TARGET
+  ========================= */
+
+  /*
+   * Target IntersectionObserver hanya
+   * memakai opacity + translate.
+   *
+   * Tidak ada clip-path di target.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"] {
+    --work-row-x:
+      -26px;
+
+    opacity:
+      0;
+
+    transform:
+      none;
+
+    translate:
+      var(--work-row-x)
+      18px;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:nth-child(
+      even
+    ) {
+    --work-row-x:
+      26px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"] {
+    animation:
+      work-row-in
+      820ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  /* =========================
+     ROW — NUMBER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > span:first-child {
+    opacity:
+      0;
+
+    translate:
+      -14px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > span:first-child {
+    animation:
+      work-reveal-left
+      620ms
+      var(--motion-ease-out)
+      80ms
+      both;
+  }
+
+  /* =========================
+     ROW — MAIN
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type {
+    opacity:
+      0;
+
+    translate:
+      0
+      18px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type {
+    animation:
+      work-main-in
+      780ms
+      var(--motion-ease-out)
+      120ms
+      both;
+  }
+
+  /*
+   * Graphic slice diterapkan ke TITLE,
+   * bukan ke observer target.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type
+    > h2 {
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > h2 {
+    animation:
+      work-title-slice-in
+      880ms
+      var(--motion-ease-out)
+      160ms
+      both;
+  }
+
+  /* =========================
+     ROW — DISCIPLINES
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type
+    > div {
+    opacity:
+      0;
+
+    translate:
+      16px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div {
+    animation:
+      work-reveal-right
+      700ms
+      var(--motion-ease-out)
+      250ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type
+    > div
+    > span {
+    opacity:
+      0;
+
+    translate:
+      0
+      7px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div
+    > span {
+    animation:
+      work-small-item-in
+      560ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div
+    > span:nth-child(1) {
+    animation-delay:
+      300ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div
+    > span:nth-child(2) {
+    animation-delay:
+      350ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div
+    > span:nth-child(3) {
+    animation-delay:
+      400ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div
+    > span:nth-child(4) {
+    animation-delay:
+      450ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > div:first-of-type
+    > div
+    > span:nth-child(5) {
+    animation-delay:
+      500ms;
+  }
+
+  /* =========================
+     ROW — YEAR
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div:nth-of-type(3),
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="false"]
+    > div:nth-of-type(2) {
+    opacity:
+      0;
+
+    translate:
+      18px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"][data-motion-visible="true"]
+    > div:nth-of-type(3),
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="false"][data-motion-visible="true"]
+    > div:nth-of-type(2) {
+    animation:
+      work-reveal-right
+      680ms
+      var(--motion-ease-out)
+      270ms
+      both;
+  }
+
+  /* =========================
+     ROW — ARROW
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > span:last-child {
+    opacity:
+      0;
+
+    translate:
+      14px
+      -10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-motion-visible="true"]
+    > span:last-child {
+    animation:
+      work-arrow-in
+      720ms
+      var(--motion-ease-out)
+      320ms
+      both;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"]
+    > div:first-child {
+    opacity:
+      0;
+
+    translate:
+      -24px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"]
+    > div:last-child {
+    opacity:
+      0;
+
+    translate:
+      28px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"][data-motion-visible="true"]
+    > div:first-child {
+    animation:
+      work-reveal-left
+      760ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"][data-motion-visible="true"]
+    > div:last-child {
+    animation:
+      work-reveal-right
+      920ms
+      var(--motion-ease-out)
+      110ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"]
+    > div:last-child
+    > p {
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"][data-motion-visible="true"]
+    > div:last-child
+    > p {
+    animation:
+      work-closing-copy-in
+      1000ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"]
+    > div:last-child
+    > a {
+    opacity:
+      0;
+
+    translate:
+      0
+      14px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-closing"][data-motion-visible="true"]
+    > div:last-child
+    > a {
+    animation:
+      work-small-item-in
+      720ms
+      var(--motion-ease-out)
+      330ms
+      both;
+  }
+}
+
+/* =========================
+   KEYFRAMES — HERO
+========================= */
+
+@keyframes
+  work-meta-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      -12px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+
+    translate:
+      -28px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-intro-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      30px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-hero-meta-in {
+  from {
+    opacity:
+      0;
+
+    scale:
+      0.985;
+
+    translate:
+      0
+      10px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    scale:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   KEYFRAMES — ROW
+========================= */
+
+@keyframes
+  work-row-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      var(--work-row-x)
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-main-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-title-slice-in {
+  from {
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+  }
+
+  to {
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+  }
+}
+
+/* =========================
+   KEYFRAMES — SHARED
+========================= */
+
+@keyframes
+  work-reveal-left {
+  from {
+    opacity:
+      0;
+
+    translate:
+      -24px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-reveal-right {
+  from {
+    opacity:
+      0;
+
+    translate:
+      26px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-small-item-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      10px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-arrow-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      14px
+      -10px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  work-closing-copy-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      0
+      20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"] {
+    --work-row-x:
+      -12px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:nth-child(
+      even
+    ) {
+    --work-row-x:
+      12px;
+  }
+}

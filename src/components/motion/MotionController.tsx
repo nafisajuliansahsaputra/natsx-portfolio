@@ -39,18 +39,17 @@ export default function MotionController() {
     const isHomepage =
       basePath === "/";
 
+    const isProjectDetail =
+      basePath.startsWith(
+        "/work/",
+      );
+
     /*
-     * Homepage memakai
-     * auto-generated motion hooks
-     * untuk section generik.
-     *
-     * Locale prefix seperti
-     * /id dan /de dinormalisasi
-     * menjadi homepage yang sama.
-     *
-     * Inner pages memakai explicit
-     * data-motion-scroll hooks.
+     * =========================
+     * GENERATED HOMEPAGE HOOKS
+     * =========================
      */
+
     const generatedSections:
       HTMLElement[] = [];
 
@@ -97,12 +96,85 @@ export default function MotionController() {
       );
     }
 
+    /*
+     * =========================
+     * PROJECT MEDIA HOOKS
+     * =========================
+     *
+     * Project screenshots need their
+     * OWN observer lifecycle.
+     *
+     * Section-level visibility is not
+     * enough because one section can
+     * contain multiple screenshots.
+     *
+     * We generate explicit motion
+     * targets for:
+     *
+     * - single image media
+     * - every gallery screenshot
+     * - finale media
+     *
+     * No JSX modification required.
+     */
+
+    const generatedProjectMedia:
+      HTMLElement[] = [];
+
+    if (isProjectDetail) {
+      const projectMedia =
+        Array.from(
+          main.querySelectorAll<HTMLElement>(
+            [
+              '[data-motion-piece="media"]',
+              '[data-motion-scroll="project-gallery"] [data-motion-piece="item"]',
+            ].join(","),
+          ),
+        );
+
+      projectMedia.forEach(
+        (
+          target,
+        ) => {
+          if (
+            target.hasAttribute(
+              "data-motion-scroll",
+            )
+          ) {
+            return;
+          }
+
+          target.dataset.motionScroll =
+            "project-media-item";
+
+          target.dataset.motionMediaGenerated =
+            "true";
+
+          generatedProjectMedia.push(
+            target,
+          );
+        },
+      );
+    }
+
+    /*
+     * =========================
+     * ALL MOTION TARGETS
+     * =========================
+     */
+
     const targets =
       Array.from(
         document.querySelectorAll<HTMLElement>(
           "[data-motion-scroll]",
         ),
       );
+
+    /*
+     * =========================
+     * REDUCED MOTION
+     * =========================
+     */
 
     if (
       prefersReducedMotion
@@ -134,8 +206,30 @@ export default function MotionController() {
               .motionVisible;
           },
         );
+
+        generatedProjectMedia.forEach(
+          (
+            target,
+          ) => {
+            delete target
+              .dataset
+              .motionScroll;
+
+            delete target
+              .dataset
+              .motionMediaGenerated;
+
+            delete target
+              .dataset
+              .motionVisible;
+          },
+        );
       };
     }
+
+    /*
+     * Reset before observing.
+     */
 
     targets.forEach(
       (
@@ -146,6 +240,12 @@ export default function MotionController() {
         );
       },
     );
+
+    /*
+     * =========================
+     * FALLBACK
+     * =========================
+     */
 
     if (
       !(
@@ -165,7 +265,30 @@ export default function MotionController() {
       return;
     }
 
-    const observer =
+    /*
+     * =========================
+     * STANDARD PAGE OBSERVER
+     * =========================
+     *
+     * Existing behavior remains.
+     */
+
+    const projectMediaSet =
+      new Set(
+        generatedProjectMedia,
+      );
+
+    const standardTargets =
+      targets.filter(
+        (
+          target,
+        ) =>
+          !projectMediaSet.has(
+            target,
+          ),
+      );
+
+    const standardObserver =
       new IntersectionObserver(
         (
           entries,
@@ -186,7 +309,7 @@ export default function MotionController() {
               target.dataset.motionVisible =
                 "true";
 
-              observer.unobserve(
+              standardObserver.unobserve(
                 target,
               );
             },
@@ -201,18 +324,96 @@ export default function MotionController() {
         },
       );
 
-    targets.forEach(
+    standardTargets.forEach(
       (
         target,
       ) => {
-        observer.observe(
+        standardObserver.observe(
           target,
         );
       },
     );
 
+    /*
+     * =========================
+     * PROJECT MEDIA OBSERVER
+     * =========================
+     *
+     * IMPORTANT:
+     *
+     * Positive bottom rootMargin means
+     * media reveal starts BEFORE the
+     * screenshot actually enters the
+     * visible viewport.
+     *
+     * Result:
+     *
+     * approaching viewport
+     * -> animation starts
+     *
+     * screenshot enters
+     * -> animation almost complete
+     *
+     * screenshot reaches reading area
+     * -> 100% settled
+     */
+
+    const mediaObserver =
+      new IntersectionObserver(
+        (
+          entries,
+        ) => {
+          entries.forEach(
+            (
+              entry,
+            ) => {
+              if (
+                !entry.isIntersecting
+              ) {
+                return;
+              }
+
+              const target =
+                entry.target as HTMLElement;
+
+              target.dataset.motionVisible =
+                "true";
+
+              mediaObserver.unobserve(
+                target,
+              );
+            },
+          );
+        },
+        {
+          threshold:
+            0.01,
+
+          rootMargin:
+            "0px 0px 18% 0px",
+        },
+      );
+
+    generatedProjectMedia.forEach(
+      (
+        target,
+      ) => {
+        mediaObserver.observe(
+          target,
+        );
+      },
+    );
+
+    /*
+     * =========================
+     * CLEANUP
+     * =========================
+     */
+
     return () => {
-      observer.disconnect();
+      standardObserver.disconnect();
+
+      mediaObserver.disconnect();
 
       generatedSections.forEach(
         (
@@ -227,6 +428,24 @@ export default function MotionController() {
             .motionGenerated;
 
           delete section
+            .dataset
+            .motionVisible;
+        },
+      );
+
+      generatedProjectMedia.forEach(
+        (
+          target,
+        ) => {
+          delete target
+            .dataset
+            .motionScroll;
+
+          delete target
+            .dataset
+            .motionMediaGenerated;
+
+          delete target
             .dataset
             .motionVisible;
         },

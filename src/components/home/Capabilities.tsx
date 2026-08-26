@@ -95,11 +95,13 @@ export default function Capabilities({
           className={
             styles.top
           }
+          data-motion-scroll="home-capabilities-top"
         >
           <div
             className={
               styles.sectionLabel
             }
+            data-motion-piece="label"
           >
             <span
               className={
@@ -118,6 +120,7 @@ export default function Capabilities({
             className={
               styles.index
             }
+            data-motion-piece="index"
           >
             04 / DISCIPLINES
           </span>
@@ -132,11 +135,13 @@ export default function Capabilities({
             className={
               styles.intro
             }
+            data-motion-scroll="home-capabilities-intro"
           >
             <h2
               className={
                 styles.heading
               }
+              data-motion-piece="title"
             >
               {
                 copy.headingLine1
@@ -157,6 +162,7 @@ export default function Capabilities({
               className={
                 styles.introText
               }
+              data-motion-piece="copy"
             >
               {
                 copy.intro
@@ -186,11 +192,13 @@ export default function Capabilities({
                     key={
                       capability.number
                     }
+                    data-motion-scroll="home-capability-item"
                   >
                     <span
                       className={
                         styles.number
                       }
+                      data-motion-piece="number"
                     >
                       {
                         capability.number
@@ -201,6 +209,7 @@ export default function Capabilities({
                       className={
                         styles.identity
                       }
+                      data-motion-piece="identity"
                     >
                       <h3
                         className={
@@ -228,6 +237,7 @@ export default function Capabilities({
                         styles.skills
                       }
                       aria-label={`${content.title} ${copy.skillsLabel}`}
+                      data-motion-piece="skills"
                     >
                       {capability.skills.map(
                         (
@@ -251,6 +261,7 @@ export default function Capabilities({
                         styles.marker
                       }
                       aria-hidden="true"
+                      data-motion-piece="marker"
                     >
                       +
                     </span>

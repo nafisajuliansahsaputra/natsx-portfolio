@@ -47,11 +47,13 @@ export default function AboutPreview({
           className={
             styles.top
           }
+          data-motion-scroll="home-about-top"
         >
           <div
             className={
               styles.sectionLabel
             }
+            data-motion-piece="label"
           >
             <span
               className={
@@ -71,11 +73,13 @@ export default function AboutPreview({
           className={
             styles.main
           }
+          data-motion-scroll="home-about-main"
         >
           <h2
             className={
               styles.heading
             }
+            data-motion-piece="title"
           >
             {
               copy.headingPrefix
@@ -111,6 +115,7 @@ export default function AboutPreview({
               className={
                 styles.lead
               }
+              data-motion-piece="lead"
             >
               {
                 copy.lead
@@ -121,6 +126,7 @@ export default function AboutPreview({
               className={
                 styles.body
               }
+              data-motion-piece="body"
             >
               {
                 copy.body
@@ -131,6 +137,7 @@ export default function AboutPreview({
               className={
                 styles.actions
               }
+              data-motion-piece="actions"
             >
               <LocaleLink
                 href="/about"
@@ -181,11 +188,13 @@ export default function AboutPreview({
           className={
             styles.footer
           }
+          data-motion-scroll="home-about-footer"
         >
           <div
             className={
               styles.meta
             }
+            data-motion-piece="meta"
           >
             <span
               className={
@@ -208,6 +217,7 @@ export default function AboutPreview({
             className={
               styles.meta
             }
+            data-motion-piece="meta"
           >
             <span
               className={
@@ -232,6 +242,7 @@ export default function AboutPreview({
             className={
               styles.meta
             }
+            data-motion-piece="meta"
           >
             <span
               className={
@@ -255,6 +266,7 @@ export default function AboutPreview({
               styles.mark
             }
             aria-hidden="true"
+            data-motion-piece="mark"
           >
             <span />
             <span />

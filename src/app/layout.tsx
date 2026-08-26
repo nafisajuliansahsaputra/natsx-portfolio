@@ -24,9 +24,14 @@ import {
 
 import "./globals.css";
 import "./motion.css";
+import "./home-motion.css";
+import "./work-motion.css";
+import "./playground-motion.css";
+import "./cv-motion.css";
 import "./about-motion.css";
 import "./contact-motion.css";
 import "./project-motion.css";
+import "./project-media-motion.css";
 import "./project-fit.css";
 import "./localized-fit.css";
 import "./contact-email-fit.css";

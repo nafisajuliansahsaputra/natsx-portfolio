@@ -25,6 +25,7 @@ export default function HomePage({
       <main
         id="main-content"
         tabIndex={-1}
+        data-motion-page="home"
       >
         <Hero
           locale={locale}

@@ -1,0 +1,1141 @@
+/*
+ * =========================
+ * NATSX — PLAYGROUND MOTION DIALECT
+ * =========================
+ *
+ * PLAYGROUND = CONTROLLED CHAOS
+ *
+ * Bahasa motion:
+ * - opposing directions
+ * - panel interruption
+ * - graphic clipping
+ * - slight rotation
+ * - deliberate imbalance
+ *
+ * Pointer interactions existing
+ * tetap dimiliki PlaygroundLab.
+ *
+ * Tidak ada scroll-jacking.
+ *
+ * Observer target TIDAK pernah
+ * di-clip sampai zero area.
+ */
+
+html[data-motion="enabled"]
+  [data-motion-page="playground"] {
+  overflow-x:
+    clip;
+}
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* =========================
+     HERO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="top"] {
+    animation:
+      playground-top-in
+      760ms
+      var(--motion-ease-out)
+      40ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="title"] {
+    animation:
+      playground-title-in
+      1120ms
+      var(--motion-ease-out)
+      110ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="intro"] {
+    animation:
+      playground-intro-in
+      920ms
+      var(--motion-ease-out)
+      250ms
+      both;
+  }
+
+  /*
+   * Tiny ambient punctuation glitch.
+   * Hanya "." biru yang hidup berkala.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-playground-hero-piece="title"]
+    > span {
+    display:
+      inline-block;
+
+    transform-origin:
+      center;
+
+    animation:
+      playground-dot-pulse
+      4.8s
+      ease-in-out
+      1.6s
+      infinite;
+  }
+
+  /* =========================
+     LAB HEADER
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-lab-header"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-lab-header"]
+    > * {
+    opacity:
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-lab-header"]
+    > *:first-child {
+    translate:
+      -26px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-lab-header"]
+    > *:last-child {
+    translate:
+      26px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-lab-header"][data-motion-visible="true"]
+    > *:first-child {
+    animation:
+      playground-left-in
+      760ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-lab-header"][data-motion-visible="true"]
+    > *:last-child {
+    animation:
+      playground-right-in
+      780ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  /* =========================
+     EXPERIMENT TARGETS
+  ========================= */
+
+  /*
+   * IMPORTANT:
+   *
+   * article adalah target
+   * IntersectionObserver.
+   *
+   * Jangan clip target.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"] {
+    --playground-panel-x:
+      -22px;
+
+    opacity:
+      0;
+
+    translate:
+      var(--playground-panel-x)
+      18px;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]:nth-child(
+      even
+    ) {
+    --playground-panel-x:
+      22px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"] {
+    animation:
+      playground-panel-in
+      860ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  /* =========================
+     EXPERIMENT META PANEL
+  ========================= */
+
+  /*
+   * DOM:
+   *
+   * article
+   *   > ExperimentMeta
+   *   > Visual
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]
+    > div:first-child {
+    --playground-meta-x:
+      -36px;
+
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+
+    translate:
+      var(--playground-meta-x)
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]:nth-child(
+      even
+    )
+    > div:first-child {
+    --playground-meta-x:
+      36px;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        100%
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:first-child {
+    animation:
+      playground-meta-open
+      1000ms
+      var(--motion-ease-out)
+      70ms
+      both;
+  }
+
+  /* =========================
+     EXPERIMENT META — IDENTITY
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]
+    > div:first-child
+    > div:first-child {
+    opacity:
+      0;
+
+    translate:
+      0
+      18px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:first-child
+    > div:first-child {
+    animation:
+      playground-rise-in
+      760ms
+      var(--motion-ease-out)
+      190ms
+      both;
+  }
+
+  /* =========================
+     EXPERIMENT META — COPY
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]
+    > div:first-child
+    > div:last-child {
+    opacity:
+      0;
+
+    translate:
+      0
+      22px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:first-child
+    > div:last-child {
+    animation:
+      playground-rise-in
+      820ms
+      var(--motion-ease-out)
+      300ms
+      both;
+  }
+
+  /* =========================
+     EXPERIMENT VISUAL
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]
+    > div:last-child {
+    --playground-visual-rotate:
+      -0.7deg;
+
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        5%
+        7%
+        5%
+        7%
+      );
+
+    scale:
+      0.965;
+
+    rotate:
+      var(--playground-visual-rotate);
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]:nth-child(
+      even
+    )
+    > div:last-child {
+    --playground-visual-rotate:
+      0.7deg;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:last-child {
+    animation:
+      playground-visual-open
+      1120ms
+      var(--motion-ease-out)
+      150ms
+      both;
+  }
+
+  /*
+   * Visual children fade in after
+   * shell has opened.
+   *
+   * Opacity only — no transform,
+   * supaya pointer-driven transform
+   * tetap bebas bekerja.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]
+    > div:last-child
+    > * {
+    opacity:
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:last-child
+    > * {
+    animation:
+      playground-content-in
+      760ms
+      ease
+      360ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:last-child
+    > *:nth-child(2) {
+    animation-delay:
+      420ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:last-child
+    > *:nth-child(3) {
+    animation-delay:
+      480ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:last-child
+    > *:nth-child(4) {
+    animation-delay:
+      540ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"][data-motion-visible="true"]
+    > div:last-child
+    > *:nth-child(5) {
+    animation-delay:
+      600ms;
+  }
+
+  /* =========================
+     MANIFESTO
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="label"] {
+    opacity:
+      0;
+
+    translate:
+      -28px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="title"] {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        100%
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      -26px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="copy"] {
+    opacity:
+      0;
+
+    translate:
+      32px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"][data-motion-visible="true"]
+    [data-motion-piece="label"] {
+    animation:
+      playground-left-in
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"][data-motion-visible="true"]
+    [data-motion-piece="title"] {
+    animation:
+      playground-title-drop
+      1080ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"][data-motion-visible="true"]
+    [data-motion-piece="copy"] {
+    animation:
+      playground-right-in
+      900ms
+      var(--motion-ease-out)
+      240ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"]
+    [data-motion-piece="copy"]
+    > p {
+    opacity:
+      0;
+
+    translate:
+      0
+      12px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"][data-motion-visible="true"]
+    [data-motion-piece="copy"]
+    > p:first-child {
+    animation:
+      playground-rise-in
+      660ms
+      var(--motion-ease-out)
+      330ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-manifesto"][data-motion-visible="true"]
+    [data-motion-piece="copy"]
+    > p:nth-child(2) {
+    animation:
+      playground-rise-in
+      660ms
+      var(--motion-ease-out)
+      410ms
+      both;
+  }
+
+  /* =========================
+     CLOSING
+  ========================= */
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"] {
+    opacity:
+      1;
+
+    transform:
+      none;
+
+    transition:
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="label"] {
+    opacity:
+      0;
+
+    translate:
+      -24px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="main"] {
+    opacity:
+      0;
+
+    translate:
+      28px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"][data-motion-visible="true"]
+    [data-motion-piece="label"] {
+    animation:
+      playground-left-in
+      760ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"] {
+    animation:
+      playground-right-in
+      900ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="main"]
+    > p {
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"]
+    > p {
+    animation:
+      playground-closing-copy
+      980ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"]
+    [data-motion-piece="main"]
+    > a {
+    opacity:
+      0;
+
+    translate:
+      0
+      14px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"]
+    > a {
+    animation:
+      playground-rise-in
+      700ms
+      var(--motion-ease-out)
+      330ms
+      both;
+  }
+}
+
+/* =========================
+   HERO KEYFRAMES
+========================= */
+
+@keyframes
+  playground-top-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      -14px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      -18px
+      30px;
+
+    rotate:
+      -0.8deg;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+
+    rotate:
+      0deg;
+  }
+}
+
+@keyframes
+  playground-intro-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      30px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-dot-pulse {
+  0%,
+  72%,
+  100% {
+    opacity:
+      1;
+
+    scale:
+      1;
+
+    translate:
+      0
+      0;
+  }
+
+  78% {
+    opacity:
+      0.45;
+
+    scale:
+      0.72;
+
+    translate:
+      -2px
+      1px;
+  }
+
+  85% {
+    opacity:
+      1;
+
+    scale:
+      1.28;
+
+    translate:
+      2px
+      -2px;
+  }
+
+  91% {
+    scale:
+      0.94;
+
+    translate:
+      0
+      1px;
+  }
+}
+
+/* =========================
+   EXPERIMENT
+========================= */
+
+@keyframes
+  playground-panel-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      var(--playground-panel-x)
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-meta-open {
+  from {
+    opacity:
+      0;
+
+    translate:
+      var(--playground-meta-x)
+      0;
+
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+  }
+}
+
+@keyframes
+  playground-visual-open {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        5%
+        7%
+        5%
+        7%
+      );
+
+    scale:
+      0.965;
+
+    rotate:
+      var(--playground-visual-rotate);
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    scale:
+      1;
+
+    rotate:
+      0deg;
+  }
+}
+
+@keyframes
+  playground-content-in {
+  from {
+    opacity:
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+  }
+}
+
+/* =========================
+   SHARED
+========================= */
+
+@keyframes
+  playground-left-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      -28px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-right-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      30px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-rise-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-title-drop {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        100%
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      -26px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  playground-closing-copy {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      0
+      20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   MOBILE TUNING
+========================= */
+
+@media (
+  max-width: 700px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"] {
+    --playground-panel-x:
+      -10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]:nth-child(
+      even
+    ) {
+    --playground-panel-x:
+      10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]
+    > div:last-child {
+    --playground-visual-rotate:
+      -0.35deg;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="playground"]
+    [data-motion-scroll="playground-experiment"]:nth-child(
+      even
+    )
+    > div:last-child {
+    --playground-visual-rotate:
+      0.35deg;
+  }
+}

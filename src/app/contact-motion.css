@@ -3,35 +3,34 @@
  * NATSX — CONTACT MOTION DIALECT
  * =========================
  *
- * Contact memakai bahasa
- * "attraction".
- *
- * Bukan editorial cross-motion
- * seperti About.
+ * CONTACT = ATTRACTION / PULL
  *
  * Elemen terasa:
- * - tertarik menuju posisi final
- * - membuka dari compression
- * - mendekat ke viewer
+ * - saling tertarik
+ * - mendekat dari sisi berlawanan
+ * - membesar menuju posisi final
+ * - berhenti dengan controlled tension
  *
- * Tidak ada scroll-jacking.
+ * IMPORTANT:
+ * - hero animation contract dipertahankan
+ * - question-mark ambient contract dipertahankan
+ * - contact email fit tidak disentuh
+ * - magnetic pointer behavior tidak disentuh
+ * - observer target tidak pernah di-clip ke 0 area
  */
 
 html[data-motion="enabled"]
   [data-motion-page="contact"] {
-  overflow-x: clip;
+  overflow-x:
+    clip;
 }
-
-/* =========================
-   MOTION
-========================= */
 
 @media (
   prefers-reduced-motion:
     no-preference
 ) {
   /* =========================
-     HERO TOP
+     HERO — PRESERVE CONTRACT
   ========================= */
 
   html[data-motion="enabled"]
@@ -45,10 +44,6 @@ html[data-motion="enabled"]
       both;
   }
 
-  /* =========================
-     HERO TITLE
-  ========================= */
-
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-contact-hero-piece="title"] {
@@ -59,10 +54,6 @@ html[data-motion="enabled"]
       110ms
       both;
   }
-
-  /* =========================
-     HERO INTRO
-  ========================= */
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
@@ -82,300 +73,384 @@ html[data-motion="enabled"]
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-primary-header"] {
-    opacity: 0;
+    opacity:
+      1;
 
-    clip-path:
-      inset(
-        0
-        48%
-        0
-        48%
-      );
+    transform:
+      none;
 
     transition:
-      opacity
-        580ms
-        var(--motion-ease-soft),
-      clip-path
-        1000ms
-        var(--motion-ease-out);
+      none;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-primary-header"][data-motion-visible="true"] {
-    opacity: 1;
+    [data-motion-scroll="contact-primary-header"]
+    > * {
+    opacity:
+      0;
+  }
 
-    clip-path:
-      inset(
-        0
-        0
-        0
-        0
-      );
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-primary-header"]
+    > *:first-child {
+    translate:
+      -32px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-primary-header"]
+    > *:last-child {
+    translate:
+      32px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-primary-header"][data-motion-visible="true"]
+    > *:first-child {
+    animation:
+      contact-pull-left
+      760ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-primary-header"][data-motion-visible="true"]
+    > *:last-child {
+    animation:
+      contact-pull-right
+      780ms
+      var(--motion-ease-out)
+      90ms
+      both;
   }
 
   /* =========================
-     PRIMARY CONTACT
+     PRIMARY EMAIL SURFACE
   ========================= */
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-email"] {
-    opacity: 0;
+    opacity:
+      0;
 
-    clip-path:
-      inset(
-        7%
-        0
-        7%
-        0
-      );
+    scale:
+      0.972;
 
-    transform:
-      scale(
-        0.975
-      );
-
-    transform-origin:
-      center center;
+    translate:
+      0
+      18px;
 
     transition:
-      opacity
-        680ms
-        var(--motion-ease-soft),
-      clip-path
-        1040ms
-        var(--motion-ease-out),
-      transform
-        1040ms
-        var(--motion-ease-out);
+      none;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-email"][data-motion-visible="true"] {
-    opacity: 1;
-
-    clip-path:
-      inset(
-        0
-        0
-        0
-        0
-      );
-
-    transform:
-      scale(
-        1
-      );
+    animation:
+      contact-surface-in
+      1080ms
+      var(--motion-ease-out)
+      both;
   }
 
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-email"]
-    [data-motion-piece] {
-    opacity: 0;
-
-    transition:
-      opacity
-        620ms
-        var(--motion-ease-soft),
-      transform
-        900ms
-        var(--motion-ease-out);
-  }
+  /* LABEL */
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-email"]
     [data-motion-piece="label"] {
-    transform:
-      translate3d(
-        -14px,
-        0,
-        0
-      );
-  }
+    opacity:
+      0;
 
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-email"]
-    [data-motion-piece="address"] {
-    transform:
-      scale(
-        0.985
-      );
-
-    transform-origin:
-      left center;
-
-    transition-delay:
-      80ms;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-email"]
-    [data-motion-piece="arrow"] {
-    transform:
-      scale(
-        0.72
-      )
-      rotate(
-        -20deg
-      );
-
-    transition-delay:
-      150ms;
+    translate:
+      -22px
+      0;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-email"][data-motion-visible="true"]
-    [data-motion-piece] {
-    opacity: 1;
+    [data-motion-piece="label"] {
+    animation:
+      contact-pull-left
+      680ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
 
-    transform:
-      translate3d(
-        0,
-        0,
+  /* EMAIL ADDRESS */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="address"] {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        8%
         0
-      )
-      scale(
-        1
-      )
-      rotate(
-        0deg
+        8%
+        0
       );
+
+    scale:
+      0.965;
+
+    transform-origin:
+      left center;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"][data-motion-visible="true"]
+    [data-motion-piece="address"] {
+    animation:
+      contact-address-in
+      1080ms
+      var(--motion-ease-out)
+      130ms
+      both;
+  }
+
+  /* ARROW */
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"]
+    [data-motion-piece="arrow"] {
+    opacity:
+      0;
+
+    scale:
+      0.55;
+
+    rotate:
+      -36deg;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-email"][data-motion-visible="true"]
+    [data-motion-piece="arrow"] {
+    animation:
+      contact-arrow-in
+      820ms
+      var(--motion-ease-out)
+      270ms
+      both;
   }
 
   /* =========================
-     DETAILS — AVAILABILITY
+     AVAILABILITY
   ========================= */
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-availability"]
-    [data-motion-piece] {
-    opacity: 0;
+    [data-motion-scroll="contact-availability"] {
+    opacity:
+      1;
 
     transform:
-      translate3d(
-        -20px,
-        0,
-        0
-      );
+      none;
 
     transition:
-      opacity
-        620ms
-        var(--motion-ease-soft),
-      transform
-        920ms
-        var(--motion-ease-out);
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"]
+    [data-motion-piece="label"] {
+    opacity:
+      0;
+
+    translate:
+      -28px
+      0;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-availability"]
     [data-motion-piece="content"] {
-    transition-delay:
-      90ms;
+    opacity:
+      0;
+
+    translate:
+      -18px
+      18px;
+  }
+
+  /*
+   * Third direct div = CV row.
+   */
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"]
+    > div:last-child {
+    opacity:
+      0;
+
+    translate:
+      0
+      16px;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-availability"][data-motion-visible="true"]
-    [data-motion-piece] {
-    opacity: 1;
+    [data-motion-piece="label"] {
+    animation:
+      contact-pull-left
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
 
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"][data-motion-visible="true"]
+    [data-motion-piece="content"] {
+    animation:
+      contact-detail-left
+      880ms
+      var(--motion-ease-out)
+      110ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-availability"][data-motion-visible="true"]
+    > div:last-child {
+    animation:
+      contact-rise-in
+      720ms
+      var(--motion-ease-out)
+      260ms
+      both;
   }
 
   /* =========================
-     DETAILS — COLLABORATION
+     COLLABORATION
   ========================= */
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-collaboration"]
-    [data-motion-piece] {
-    opacity: 0;
+    [data-motion-scroll="contact-collaboration"] {
+    opacity:
+      1;
 
     transform:
-      translate3d(
-        20px,
-        0,
-        0
-      );
+      none;
 
     transition:
-      opacity
-        620ms
-        var(--motion-ease-soft),
-      transform
-        920ms
-        var(--motion-ease-out);
+      none;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-collaboration"]
-    [data-motion-piece="item"]:nth-child(
-      1
-    ) {
-    transition-delay:
-      60ms;
+    [data-motion-piece="label"] {
+    opacity:
+      0;
+
+    translate:
+      28px
+      0;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-collaboration"]
-    [data-motion-piece="item"]:nth-child(
-      2
-    ) {
-    transition-delay:
-      110ms;
-  }
+    [data-motion-piece="item"] {
+    opacity:
+      0;
 
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-collaboration"]
-    [data-motion-piece="item"]:nth-child(
-      3
-    ) {
-    transition-delay:
-      160ms;
-  }
+    translate:
+      24px
+      12px;
 
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-collaboration"]
-    [data-motion-piece="item"]:nth-child(
-      n + 4
-    ) {
-    transition-delay:
-      210ms;
+    scale:
+      0.99;
+
+    transform-origin:
+      right center;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
-    [data-motion-piece] {
-    opacity: 1;
+    [data-motion-piece="label"] {
+    animation:
+      contact-pull-right
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
 
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece="item"] {
+    animation:
+      contact-collab-item-in
+      780ms
+      var(--motion-ease-out)
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(1) {
+    animation-delay:
+      100ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(2) {
+    animation-delay:
+      170ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(3) {
+    animation-delay:
+      240ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(4) {
+    animation-delay:
+      310ms;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
+    [data-motion-piece="item"]:nth-child(n + 5) {
+    animation-delay:
+      380ms;
   }
 
   /* =========================
@@ -384,66 +459,76 @@ html[data-motion="enabled"]
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-social-header"]
-    [data-motion-piece="label"] {
-    opacity: 0;
+    [data-motion-scroll="contact-social-header"] {
+    opacity:
+      1;
 
     transform:
-      translate3d(
-        -18px,
-        0,
-        0
-      );
+      none;
 
     transition:
-      opacity
-        580ms
-        var(--motion-ease-soft),
-      transform
-        860ms
-        var(--motion-ease-out);
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"]
+    [data-motion-piece="label"] {
+    opacity:
+      0;
+
+    translate:
+      -30px
+      0;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-social-header"]
     [data-motion-piece="title"] {
-    opacity: 0;
+    opacity:
+      0;
 
-    transform:
-      scale(
-        0.965
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
       );
 
-    transform-origin:
-      left center;
+    translate:
+      22px
+      18px;
 
-    transition:
-      opacity
-        680ms
-        var(--motion-ease-soft)
-        80ms,
-      transform
-        1050ms
-        var(--motion-ease-out)
-        80ms;
+    scale:
+      0.97;
+
+    transform-origin:
+      left bottom;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
-    [data-motion-piece] {
-    opacity: 1;
+    [data-motion-piece="label"] {
+    animation:
+      contact-pull-left
+      720ms
+      var(--motion-ease-out)
+      both;
+  }
 
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      )
-      scale(
-        1
-      );
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
+    [data-motion-piece="title"] {
+    animation:
+      contact-social-title-in
+      1060ms
+      var(--motion-ease-out)
+      100ms
+      both;
   }
 
   /* =========================
@@ -451,153 +536,137 @@ html[data-motion="enabled"]
   ========================= */
 
   /*
-   * Social rows tetap memiliki
-   * explicit motion hook mereka,
-   * tetapi reveal utamanya sekarang
-   * mengikuti SOCIAL HEADER.
-   *
-   * Alasan:
-   * header dan list merupakan satu
-   * editorial composition.
-   *
-   * Jadi begitu ELSEWHERE masuk,
-   * seluruh list dipastikan hidup.
-   * Observer masing-masing row tetap
-   * berfungsi sebagai fallback.
+   * Observer target tidak di-clip.
+   * Hanya opacity + translate.
    */
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-social-item"] {
-    opacity: 0;
+    --contact-social-x:
+      -24px;
 
-    clip-path:
-      inset(
-        0
-        100%
-        0
-        0
-      );
+    opacity:
+      0;
 
-    transform:
-      scaleX(
-        0.985
-      );
-
-    transform-origin:
-      left center;
+    translate:
+      var(--contact-social-x)
+      12px;
 
     transition:
-      opacity
-        560ms
-        var(--motion-ease-soft),
-      clip-path
-        960ms
-        var(--motion-ease-out),
-      transform
-        960ms
-        var(--motion-ease-out);
+      none;
   }
 
-  /*
-   * Primary reveal:
-   * begitu header Elsewhere visible,
-   * semua row setelahnya dibuka.
-   */
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
-    ~ *
-    [data-motion-scroll="contact-social-item"] {
-    opacity: 1;
-
-    clip-path:
-      inset(
-        0
-        0
-        0
-        0
-      );
-
-    transform:
-      scaleX(
-        1
-      );
-  }
-
-  /*
-   * Stagger berdasarkan posisi row.
-   * Tidak tergantung pada timing
-   * IntersectionObserver tiap item.
-   */
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
-    ~ *
     [data-motion-scroll="contact-social-item"]:nth-child(
-      1
+      even
     ) {
-    transition-delay:
-      140ms;
+    --contact-social-x:
+      24px;
   }
 
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
-    ~ *
-    [data-motion-scroll="contact-social-item"]:nth-child(
-      2
-    ) {
-    transition-delay:
-      220ms;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
-    ~ *
-    [data-motion-scroll="contact-social-item"]:nth-child(
-      3
-    ) {
-    transition-delay:
-      300ms;
-  }
-
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
-    [data-motion-scroll="contact-social-header"][data-motion-visible="true"]
-    ~ *
-    [data-motion-scroll="contact-social-item"]:nth-child(
-      n + 4
-    ) {
-    transition-delay:
-      380ms;
-  }
-
-  /*
-   * Fallback:
-   * kalau sebuah row ter-observe lebih
-   * dulu karena ukuran viewport atau
-   * navigasi anchor, dia tetap dapat
-   * tampil secara independen.
-   */
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-social-item"][data-motion-visible="true"] {
-    opacity: 1;
+    animation:
+      contact-social-row-in
+      780ms
+      var(--motion-ease-out)
+      both;
+  }
 
-    clip-path:
-      inset(
-        0
-        0
-        0
-        0
-      );
+  /*
+   * Internal row choreography.
+   */
 
-    transform:
-      scaleX(
-        1
-      );
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"]
+    > span {
+    opacity:
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"]
+    > span:first-child {
+    translate:
+      -12px
+      0;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"]
+    > span:nth-child(2),
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"]
+    > span:nth-child(3) {
+    translate:
+      0
+      10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"]
+    > span:last-child {
+    scale:
+      0.6;
+
+    rotate:
+      -28deg;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"][data-motion-visible="true"]
+    > span:first-child {
+    animation:
+      contact-pull-left
+      560ms
+      var(--motion-ease-out)
+      80ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"][data-motion-visible="true"]
+    > span:nth-child(2) {
+    animation:
+      contact-rise-in
+      620ms
+      var(--motion-ease-out)
+      120ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"][data-motion-visible="true"]
+    > span:nth-child(3) {
+    animation:
+      contact-rise-in
+      620ms
+      var(--motion-ease-out)
+      180ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"][data-motion-visible="true"]
+    > span:last-child {
+    animation:
+      contact-arrow-in
+      680ms
+      var(--motion-ease-out)
+      230ms
+      both;
   }
 
   /* =========================
@@ -606,82 +675,134 @@ html[data-motion="enabled"]
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-closing"]
-    [data-motion-piece="label"] {
-    opacity: 0;
+    [data-motion-scroll="contact-closing"] {
+    opacity:
+      1;
 
     transform:
-      translate3d(
-        -16px,
-        0,
-        0
-      );
+      none;
 
     transition:
-      opacity
-        580ms
-        var(--motion-ease-soft),
-      transform
-        860ms
-        var(--motion-ease-out);
+      none;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="label"] {
+    opacity:
+      0;
+
+    translate:
+      -28px
+      0;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-closing"]
     [data-motion-piece="main"] {
-    opacity: 0;
+    opacity:
+      0;
 
-    transform:
-      translate3d(
-        18px,
-        0,
-        0
-      )
-      scale(
-        0.985
-      );
+    translate:
+      30px
+      0;
+
+    scale:
+      0.975;
 
     transform-origin:
       left center;
-
-    transition:
-      opacity
-        660ms
-        var(--motion-ease-soft)
-        90ms,
-      transform
-        1020ms
-        var(--motion-ease-out)
-        90ms;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-closing"][data-motion-visible="true"]
-    [data-motion-piece] {
-    opacity: 1;
+    [data-motion-piece="label"] {
+    animation:
+      contact-pull-left
+      740ms
+      var(--motion-ease-out)
+      both;
+  }
 
-    transform:
-      translate3d(
-        0,
-        0,
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"] {
+    animation:
+      contact-closing-main-in
+      980ms
+      var(--motion-ease-out)
+      100ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="main"]
+    > p {
+    clip-path:
+      inset(
         0
-      )
-      scale(
-        1
+        0
+        100%
+        0
       );
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"]
+    > p {
+    animation:
+      contact-closing-copy-in
+      1000ms
+      var(--motion-ease-out)
+      150ms
+      both;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"]
+    [data-motion-piece="main"]
+    > a {
+    opacity:
+      0;
+
+    translate:
+      0
+      14px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-closing"][data-motion-visible="true"]
+    [data-motion-piece="main"]
+    > a {
+    animation:
+      contact-rise-in
+      700ms
+      var(--motion-ease-out)
+      350ms
+      both;
   }
 }
 
 /* =========================
    HERO KEYFRAMES
+   DO NOT RENAME
 ========================= */
 
 @keyframes
   natsx-contact-meta-in {
   from {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
       translate3d(
@@ -692,7 +813,8 @@ html[data-motion="enabled"]
   }
 
   to {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
       translate3d(
@@ -706,7 +828,8 @@ html[data-motion="enabled"]
 @keyframes
   natsx-contact-title-in {
   from {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
       scale(
@@ -718,7 +841,8 @@ html[data-motion="enabled"]
   }
 
   to {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
       scale(
@@ -733,7 +857,8 @@ html[data-motion="enabled"]
 @keyframes
   natsx-contact-intro-in {
   from {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
       translate3d(
@@ -744,7 +869,8 @@ html[data-motion="enabled"]
   }
 
   to {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
       translate3d(
@@ -756,7 +882,353 @@ html[data-motion="enabled"]
 }
 
 /* =========================
-   MOBILE
+   PRIMARY
+========================= */
+
+@keyframes
+  contact-surface-in {
+  from {
+    opacity:
+      0;
+
+    scale:
+      0.972;
+
+    translate:
+      0
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    scale:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  contact-address-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        8%
+        0
+        8%
+        0
+      );
+
+    scale:
+      0.965;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    scale:
+      1;
+  }
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+@keyframes
+  contact-detail-left {
+  from {
+    opacity:
+      0;
+
+    translate:
+      -18px
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  contact-collab-item-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      24px
+      12px;
+
+    scale:
+      0.99;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+/* =========================
+   SOCIAL
+========================= */
+
+@keyframes
+  contact-social-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      22px
+      18px;
+
+    scale:
+      0.97;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+@keyframes
+  contact-social-row-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      var(--contact-social-x)
+      12px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   CLOSING
+========================= */
+
+@keyframes
+  contact-closing-main-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      30px
+      0;
+
+    scale:
+      0.975;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+@keyframes
+  contact-closing-copy-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        0
+        0
+        100%
+        0
+      );
+
+    translate:
+      0
+      20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   SHARED CONTACT MOTION
+========================= */
+
+@keyframes
+  contact-pull-left {
+  from {
+    opacity:
+      0;
+
+    translate:
+      -28px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  contact-pull-right {
+  from {
+    opacity:
+      0;
+
+    translate:
+      30px
+      0;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  contact-rise-in {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      16px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+@keyframes
+  contact-arrow-in {
+  from {
+    opacity:
+      0;
+
+    scale:
+      0.55;
+
+    rotate:
+      -36deg;
+  }
+
+  to {
+    opacity:
+      1;
+
+    scale:
+      1;
+
+    rotate:
+      0deg;
+  }
+}
+
+/* =========================
+   MOBILE TUNING
 ========================= */
 
 @media (
@@ -767,42 +1239,62 @@ html[data-motion="enabled"]
 ) {
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-availability"]
-    [data-motion-piece] {
-    transform:
-      translate3d(
-        -12px,
-        0,
-        0
-      );
+    [data-motion-scroll="contact-social-item"] {
+    --contact-social-x:
+      -12px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="contact"]
+    [data-motion-scroll="contact-social-item"]:nth-child(
+      even
+    ) {
+    --contact-social-x:
+      12px;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-collaboration"]
-    [data-motion-piece] {
-    transform:
-      translate3d(
-        12px,
-        0,
-        0
-      );
+    [data-motion-piece="item"] {
+    translate:
+      12px
+      10px;
   }
 
   html[data-motion="enabled"]
     [data-motion-page="contact"]
-    [data-motion-scroll="contact-availability"][data-motion-visible="true"]
-    [data-motion-piece],
-  html[data-motion="enabled"]
-    [data-motion-page="contact"]
     [data-motion-scroll="contact-collaboration"][data-motion-visible="true"]
-    [data-motion-piece] {
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
+    [data-motion-piece="item"] {
+    animation-name:
+      contact-collab-item-in-mobile;
+  }
+}
+
+@keyframes
+  contact-collab-item-in-mobile {
+  from {
+    opacity:
+      0;
+
+    translate:
+      12px
+      10px;
+
+    scale:
+      0.995;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
   }
 }
 
@@ -823,13 +1315,23 @@ html[data-motion="enabled"]
   html[data-motion="enabled"]
     [data-motion-page="contact"]
     [data-motion-piece] {
-    opacity: 1 !important;
+    opacity:
+      1 !important;
 
     clip-path:
       none !important;
 
     transform:
       none !important;
+
+    translate:
+      none !important;
+
+    scale:
+      1 !important;
+
+    rotate:
+      0deg !important;
 
     animation:
       none !important;

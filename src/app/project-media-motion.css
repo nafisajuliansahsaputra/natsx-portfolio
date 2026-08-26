@@ -1,0 +1,543 @@
+/*
+ * ==================================
+ * NATSX — PROJECT MEDIA MOTION
+ * ==================================
+ *
+ * NO SCROLL SCRUBBING.
+ *
+ * Media uses IntersectionObserver +
+ * normal time-based animation.
+ *
+ * Desired sequence:
+ *
+ * approaching viewport
+ * ↓
+ * reveal starts early
+ * ↓
+ * screenshot enters viewport
+ * ↓
+ * animation finishes
+ * ↓
+ * screenshot remains 100% stable
+ *
+ * This works correctly even when
+ * screenshots are taller than viewport.
+ *
+ * Existing dimensions / object-fit /
+ * aspect ratios are untouched.
+ */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /*
+   * ==================================
+   * GENERATED MEDIA TARGET
+   * ==================================
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated] {
+    --project-media-enter-x:
+      0px;
+
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        4%
+        3%
+        4%
+        3%
+      );
+
+    translate:
+      var(
+        --project-media-enter-x
+      )
+      42px;
+
+    scale:
+      0.975;
+
+    transform:
+      none !important;
+
+    transition:
+      none !important;
+
+    animation:
+      none !important;
+  }
+
+  /*
+   * =========================
+   * GALLERY DIRECTION
+   * =========================
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    [data-motion-media-generated] {
+    --project-media-enter-x:
+      -24px;
+
+    --project-media-inner-x:
+      -10px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    [data-motion-media-generated]:nth-child(
+      even
+    ) {
+    --project-media-enter-x:
+      24px;
+
+    --project-media-inner-x:
+      10px;
+  }
+
+  /*
+   * Wide gallery screenshots use
+   * vertical movement only.
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    [data-motion-media-generated]:nth-child(
+      3n + 1
+    ) {
+    --project-media-enter-x:
+      0px;
+
+    --project-media-inner-x:
+      0px;
+  }
+
+  /*
+   * Finale comes slightly from right.
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-finale"]
+    [data-motion-media-generated] {
+    --project-media-enter-x:
+      24px;
+
+    --project-media-inner-x:
+      10px;
+  }
+
+  /*
+   * ==================================
+   * TARGET BECOMES VISIBLE
+   * ==================================
+   *
+   * Normal timed animation.
+   *
+   * Once completed, it stays at
+   * final state forever.
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"] {
+    animation:
+      project-media-enter
+      680ms
+      var(--motion-ease-out)
+      both !important;
+  }
+
+  /*
+   * ==================================
+   * INNER SCREENSHOT
+   * ==================================
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated]
+    img {
+    transform:
+      translate3d(
+        var(
+          --project-media-inner-x,
+          0px
+        ),
+        14px,
+        0
+      )
+      scale(
+        1.025
+      );
+
+    transform-origin:
+      center center;
+
+    will-change:
+      transform;
+
+    animation:
+      none !important;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"]
+    img {
+    animation:
+      project-media-inner-enter
+      760ms
+      var(--motion-ease-out)
+      20ms
+      both !important;
+  }
+
+  /*
+   * Video finale.
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated]
+    video {
+    transform:
+      translate3d(
+        var(
+          --project-media-inner-x,
+          0px
+        ),
+        14px,
+        0
+      )
+      scale(
+        1.025
+      );
+
+    transform-origin:
+      center;
+
+    animation:
+      none !important;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"]
+    video {
+    animation:
+      project-media-inner-enter
+      760ms
+      var(--motion-ease-out)
+      20ms
+      both !important;
+  }
+
+  /*
+   * ==================================
+   * CAPTION
+   * ==================================
+   */
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated]
+    figcaption {
+    opacity:
+      0 !important;
+
+    translate:
+      0
+      10px;
+
+    animation:
+      none !important;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"]
+    figcaption {
+    animation:
+      project-media-caption-enter
+      520ms
+      var(--motion-ease-out)
+      190ms
+      both !important;
+  }
+}
+
+/* ==================================
+   FRAME ENTRANCE
+================================== */
+
+@keyframes
+  project-media-enter {
+  0% {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        4%
+        3%
+        4%
+        3%
+      );
+
+    translate:
+      var(
+        --project-media-enter-x
+      )
+      42px;
+
+    scale:
+      0.975;
+  }
+
+  45% {
+    opacity:
+      1;
+  }
+
+  78% {
+    clip-path:
+      inset(
+        0.5%
+        0.5%
+        0.5%
+        0.5%
+      );
+
+    translate:
+      0
+      4px;
+
+    scale:
+      0.997;
+  }
+
+  100% {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+/* ==================================
+   INNER SCREENSHOT SETTLE
+================================== */
+
+@keyframes
+  project-media-inner-enter {
+  0% {
+    transform:
+      translate3d(
+        var(
+          --project-media-inner-x,
+          0px
+        ),
+        14px,
+        0
+      )
+      scale(
+        1.025
+      );
+  }
+
+  76% {
+    transform:
+      translate3d(
+        0,
+        2px,
+        0
+      )
+      scale(
+        1.003
+      );
+  }
+
+  100% {
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      );
+  }
+}
+
+/* ==================================
+   CAPTION
+================================== */
+
+@keyframes
+  project-media-caption-enter {
+  from {
+    opacity:
+      0;
+
+    translate:
+      0
+      10px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* ==================================
+   MOBILE
+================================== */
+
+@media (
+  max-width:
+    700px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated] {
+    translate:
+      var(
+        --project-media-enter-x
+      )
+      24px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    [data-motion-media-generated] {
+    --project-media-enter-x:
+      -10px;
+
+    --project-media-inner-x:
+      -5px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    [data-motion-media-generated]:nth-child(
+      even
+    ) {
+    --project-media-enter-x:
+      10px;
+
+    --project-media-inner-x:
+      5px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-scroll="project-gallery"]
+    [data-motion-media-generated]:nth-child(
+      3n + 1
+    ) {
+    --project-media-enter-x:
+      0px;
+
+    --project-media-inner-x:
+      0px;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"] {
+    animation-duration:
+      600ms !important;
+  }
+
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"]
+    img,
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated][data-motion-visible="true"]
+    video {
+    animation-duration:
+      680ms !important;
+  }
+}
+
+/* ==================================
+   REDUCED MOTION
+================================== */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated],
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated]
+    img,
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated]
+    video,
+  html[data-motion="enabled"]
+    [data-motion-page="project-detail"]
+    [data-motion-media-generated]
+    figcaption {
+    opacity:
+      1 !important;
+
+    clip-path:
+      none !important;
+
+    translate:
+      none !important;
+
+    scale:
+      1 !important;
+
+    transform:
+      none !important;
+
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}

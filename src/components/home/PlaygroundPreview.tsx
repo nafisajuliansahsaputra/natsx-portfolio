@@ -192,11 +192,13 @@ export default function PlaygroundPreview({
           className={
             styles.header
           }
+          data-motion-scroll="home-playground-header"
         >
           <div
             className={
               styles.label
             }
+            data-motion-piece="label"
           >
             <span
               className={
@@ -220,6 +222,7 @@ export default function PlaygroundPreview({
               className={
                 styles.heading
               }
+              data-motion-piece="title"
             >
               {
                 copy.headingLine1
@@ -240,6 +243,7 @@ export default function PlaygroundPreview({
               className={
                 styles.headerRight
               }
+              data-motion-piece="copy"
             >
               <p>
                 {
@@ -287,11 +291,13 @@ export default function PlaygroundPreview({
             onPointerLeave={
               resetPointer
             }
+            data-motion-scroll="home-playground-lab"
           >
             <div
               className={
                 styles.labTop
               }
+              data-motion-piece="top"
             >
               <span>
                 NATSX / LIVE LAB
@@ -307,6 +313,7 @@ export default function PlaygroundPreview({
                 styles.labType
               }
               aria-hidden="true"
+              data-motion-piece="type"
             >
               <span
                 className={
@@ -338,6 +345,7 @@ export default function PlaygroundPreview({
                 styles.labField
               }
               aria-hidden="true"
+              data-motion-piece="field"
             >
               {Array.from(
                 {
@@ -367,6 +375,7 @@ export default function PlaygroundPreview({
               className={
                 styles.labBottom
               }
+              data-motion-piece="bottom"
             >
               <span>
                 MOVE / HOVER / INTERRUPT
@@ -396,11 +405,13 @@ export default function PlaygroundPreview({
                 key={
                   experiment.number
                 }
+                data-motion-scroll="home-playground-item"
               >
                 <span
                   className={
                     styles.number
                   }
+                  data-motion-piece="number"
                 >
                   {
                     experiment.number
@@ -411,6 +422,7 @@ export default function PlaygroundPreview({
                   className={
                     styles.experimentTitle
                   }
+                  data-motion-piece="title"
                 >
                   {
                     experiment.title
@@ -422,6 +434,7 @@ export default function PlaygroundPreview({
                     styles.arrow
                   }
                   aria-hidden="true"
+                  data-motion-piece="arrow"
                 >
                   ↗
                 </span>
