@@ -1,0 +1,47 @@
+/*
+ * =========================
+ * NATSX ROUTE TRANSITION SYNC
+ * =========================
+ *
+ * Route cover and destination page
+ * entrance must read as one motion beat.
+ *
+ * While the editorial shutters are
+ * covering the previous route, the
+ * destination hero entrance timeline is
+ * intentionally paused at frame zero.
+ *
+ * The RouteTransitionController removes
+ * data-route-transition-hold exactly when
+ * the shutters begin revealing, allowing
+ * each page's existing motion dialect to
+ * continue unchanged from that point.
+ */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-route-transition-hold="true"]
+    .site-header__inner,
+  html[data-route-transition-hold="true"]
+    [data-motion-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-about-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-work-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-playground-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-cv-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-contact-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-project-hero-piece],
+  html[data-route-transition-hold="true"]
+    [data-motion-project-hero-piece]
+    * {
+    animation-play-state:
+      paused !important;
+  }
+}
