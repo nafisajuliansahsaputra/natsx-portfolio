@@ -20,7 +20,7 @@ test.describe(
   "editorial route transition",
   () => {
     test(
-      "covers an internal page navigation and settles after route change",
+      "covers navigation, holds destination motion, then releases it with the shutters",
       async ({
         page,
       }) => {
@@ -35,6 +35,11 @@ test.describe(
         const transition =
           page.locator(
             "[data-route-transition-layer]",
+          );
+
+        const root =
+          page.locator(
+            "html",
           );
 
         await expect(
@@ -61,8 +66,22 @@ test.describe(
         await expect(
           transition,
         ).toHaveAttribute(
+          "data-route-transition-direction",
+          "forward",
+        );
+
+        await expect(
+          transition,
+        ).toHaveAttribute(
           "data-route-transition-label",
           "About",
+        );
+
+        await expect(
+          root,
+        ).toHaveAttribute(
+          "data-route-transition-hold",
+          "true",
         );
 
         await expect(
@@ -75,11 +94,69 @@ test.describe(
           transition,
         ).toHaveAttribute(
           "data-route-transition-phase",
+          "revealing",
+          {
+            timeout:
+              2500,
+          },
+        );
+
+        await expect(
+          root,
+        ).not.toHaveAttribute(
+          "data-route-transition-hold",
+          "true",
+        );
+
+        await expect(
+          transition,
+        ).toHaveAttribute(
+          "data-route-transition-phase",
           "idle",
           {
             timeout:
-              3000,
+              3500,
           },
+        );
+      },
+    );
+
+    test(
+      "reverses shutter order when navigating backward through the editorial sequence",
+      async ({
+        page,
+      }) => {
+        await markIntroSeen(
+          page,
+        );
+
+        await page.goto(
+          "/about",
+        );
+
+        const transition =
+          page.locator(
+            "[data-route-transition-layer]",
+          );
+
+        await page
+          .locator(
+            'a[href="/work"]',
+          )
+          .first()
+          .click();
+
+        await expect(
+          transition,
+        ).toHaveAttribute(
+          "data-route-transition-direction",
+          "backward",
+        );
+
+        await expect(
+          page,
+        ).toHaveURL(
+          /\/work$/,
         );
       },
     );
