@@ -13,6 +13,7 @@ import {
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import InnerFooter from "@/components/layout/InnerFooter";
 import MotionController from "@/components/motion/MotionController";
+import RouteTransitionController from "@/components/motion/RouteTransitionController";
 
 import {
   site,
@@ -242,6 +243,8 @@ export default function RootLayout({
         <PortfolioIntro />
 
         <MotionController />
+
+        <RouteTransitionController />
 
         {children}
 
