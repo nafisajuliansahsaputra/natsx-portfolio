@@ -27,6 +27,7 @@ import {
 import "./globals.css";
 import "./motion.css";
 import "./route-transition-sync.css";
+import "./route-transition-title-consistency.css";
 import "./home-motion.css";
 import "./home-motion-fit.css";
 import "./work-motion.css";
