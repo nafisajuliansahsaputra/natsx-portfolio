@@ -67,8 +67,8 @@
   }
 
   /*
-   * Reveal — title leaves vertically as the shutters open.
-   * Delay is preserved so the content still rides the exit.
+   * Reveal fallback. V3.5 below overrides
+   * this with the shutter-attached split.
    */
   [data-route-transition-layer][data-route-transition-phase="revealing"]
     > div:nth-child(3)
@@ -160,6 +160,329 @@
           230ms
           cubic-bezier(0.76, 0, 0.24, 1)
           102ms !important;
+    }
+  }
+}
+
+/* =========================
+   V3.5 — CONTENT SPLITS WITH SHUTTERS
+========================= */
+
+@property --rt-mask-y1 {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --rt-mask-y2 {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --rt-mask-y3 {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --rt-mask-y4 {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes rt-content-piece-1-out {
+  to {
+    --rt-mask-y1: -106vh;
+  }
+}
+
+@keyframes rt-content-piece-2-out {
+  to {
+    --rt-mask-y2: -106vh;
+  }
+}
+
+@keyframes rt-content-piece-3-out {
+  to {
+    --rt-mask-y3: -106vh;
+  }
+}
+
+@keyframes rt-content-piece-4-out {
+  to {
+    --rt-mask-y4: -106vh;
+  }
+}
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /*
+   * Keep the editorial composition fully
+   * alive during exit. Nothing fades first.
+   * The mask below is the only thing that
+   * removes it from view.
+   */
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3) {
+    opacity:
+      1 !important;
+
+    transition:
+      none !important;
+
+    -webkit-mask-image:
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0);
+
+    mask-image:
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0),
+      linear-gradient(#000 0 0);
+
+    -webkit-mask-repeat:
+      no-repeat;
+
+    mask-repeat:
+      no-repeat;
+
+    -webkit-mask-size:
+      19vw 100vh,
+      31vw 100vh,
+      27vw 100vh,
+      23vw 100vh;
+
+    mask-size:
+      19vw 100vh,
+      31vw 100vh,
+      27vw 100vh,
+      23vw 100vh;
+
+    -webkit-mask-position:
+      0 var(--rt-mask-y1),
+      19vw var(--rt-mask-y2),
+      50vw var(--rt-mask-y3),
+      77vw var(--rt-mask-y4);
+
+    mask-position:
+      0 var(--rt-mask-y1),
+      19vw var(--rt-mask-y2),
+      50vw var(--rt-mask-y3),
+      77vw var(--rt-mask-y4);
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="forward"]
+    > div:nth-child(3) {
+    animation:
+      rt-content-piece-1-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        0ms
+        both,
+      rt-content-piece-2-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        22ms
+        both,
+      rt-content-piece-3-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        78ms
+        both,
+      rt-content-piece-4-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        118ms
+        both;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="backward"]
+    > div:nth-child(3) {
+    animation:
+      rt-content-piece-1-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        118ms
+        both,
+      rt-content-piece-2-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        70ms
+        both,
+      rt-content-piece-3-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        24ms
+        both,
+      rt-content-piece-4-out
+        435ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        0ms
+        both;
+  }
+
+  /* Freeze every editorial piece at its fully-revealed state. */
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:first-child,
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(3) {
+    opacity:
+      1 !important;
+
+    transform:
+      translate3d(0, 0, 0) !important;
+
+    transition:
+      none !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:first-child::after,
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(3)::before {
+    transform:
+      scaleX(1) !important;
+
+    transition:
+      none !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > span:first-child {
+    opacity:
+      0.68 !important;
+
+    transition:
+      none !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    opacity:
+      1 !important;
+
+    clip-path:
+      inset(0 0 0 0) !important;
+
+    transform:
+      translate3d(0, 0, 0) !important;
+
+    transition:
+      none !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > span:nth-child(3) {
+    transform:
+      scaleX(1) !important;
+
+    transition:
+      none !important;
+  }
+
+  @media (
+    max-width:
+      700px
+  ) {
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3) {
+      -webkit-mask-size:
+        23vw 100vh,
+        28vw 100vh,
+        27vw 100vh,
+        22vw 100vh;
+
+      mask-size:
+        23vw 100vh,
+        28vw 100vh,
+        27vw 100vh,
+        22vw 100vh;
+
+      -webkit-mask-position:
+        0 var(--rt-mask-y1),
+        23vw var(--rt-mask-y2),
+        51vw var(--rt-mask-y3),
+        78vw var(--rt-mask-y4);
+
+      mask-position:
+        0 var(--rt-mask-y1),
+        23vw var(--rt-mask-y2),
+        51vw var(--rt-mask-y3),
+        78vw var(--rt-mask-y4);
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="forward"]
+      > div:nth-child(3) {
+      animation:
+        rt-content-piece-1-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          0ms
+          both,
+        rt-content-piece-2-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          18ms
+          both,
+        rt-content-piece-3-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          58ms
+          both,
+        rt-content-piece-4-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          90ms
+          both;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="backward"]
+      > div:nth-child(3) {
+      animation:
+        rt-content-piece-1-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          90ms
+          both,
+        rt-content-piece-2-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          54ms
+          both,
+        rt-content-piece-3-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          18ms
+          both,
+        rt-content-piece-4-out
+          365ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          0ms
+          both;
     }
   }
 }
