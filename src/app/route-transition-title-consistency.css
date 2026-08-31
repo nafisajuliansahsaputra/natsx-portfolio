@@ -1,0 +1,165 @@
+/*
+ * =====================================
+ * NATSX — ROUTE TITLE CONSISTENCY
+ * =====================================
+ *
+ * The route title must not feel faster or
+ * slower based on word length. Horizontal
+ * wipes make short labels such as WORK feel
+ * disproportionately quick, while longer
+ * labels such as ABOUT feel heavier.
+ *
+ * Use one vertical reveal distance instead.
+ * Every label now travels the same distance
+ * and uses the same timing window.
+ */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /* Base frame — shared by every route label. */
+  [data-route-transition-layer]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    opacity:
+      0 !important;
+
+    clip-path:
+      inset(100% 0 0 0) !important;
+
+    transform:
+      translate3d(0, 30px, 0) !important;
+  }
+
+  /* Cover — identical perceived tempo for every word length. */
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    opacity:
+      1 !important;
+
+    clip-path:
+      inset(0 0 0 0) !important;
+
+    transform:
+      translate3d(0, 0, 0) !important;
+
+    transition:
+      opacity
+        170ms
+        ease
+        90ms,
+      clip-path
+        430ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        90ms,
+      transform
+        430ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        90ms !important;
+  }
+
+  /*
+   * Reveal — title leaves vertically as the shutters open.
+   * Delay is preserved so the content still rides the exit.
+   */
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    opacity:
+      0 !important;
+
+    clip-path:
+      inset(0 0 100% 0) !important;
+
+    transform:
+      translate3d(0, -26px, 0) !important;
+
+    transition:
+      opacity
+        105ms
+        ease
+        135ms,
+      clip-path
+        270ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        135ms,
+      transform
+        270ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        135ms !important;
+  }
+
+  @media (
+    max-width:
+      700px
+  ) {
+    [data-route-transition-layer]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > div:nth-child(2)
+      > span {
+      transform:
+        translate3d(0, 24px, 0) !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > div:nth-child(2)
+      > span {
+      transform:
+        translate3d(0, 0, 0) !important;
+
+      transition:
+        opacity
+          145ms
+          ease
+          72ms,
+        clip-path
+          350ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          72ms,
+        transform
+          350ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          72ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > div:nth-child(2)
+      > span {
+      transform:
+        translate3d(0, -22px, 0) !important;
+
+      transition:
+        opacity
+          95ms
+          ease
+          102ms,
+        clip-path
+          230ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          102ms,
+        transform
+          230ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          102ms !important;
+    }
+  }
+}
