@@ -14,6 +14,7 @@ import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import InnerFooter from "@/components/layout/InnerFooter";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
+import RouteTransitionHandoff from "@/components/motion/RouteTransitionHandoff";
 
 import {
   site,
@@ -246,6 +247,7 @@ export default function RootLayout({
         <MotionController />
 
         <RouteTransitionController />
+        <RouteTransitionHandoff />
 
         {children}
 
