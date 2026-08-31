@@ -49,13 +49,6 @@
      V3.1 — SYMMETRIC SHUTTER FEEL
   ========================= */
 
-  /*
-   * The dark backing rail and the thin
-   * travelling ink edge are intentionally
-   * disabled for this refinement pass.
-   *
-   * Only the accent shutters remain.
-   */
   [data-route-transition-layer]
     > div:first-child {
     display:
@@ -69,19 +62,6 @@
       none !important;
   }
 
-  /*
-   * Covering now uses the same motion
-   * character as revealing:
-   *
-   * - same 435ms desktop shutter travel
-   * - same cubic-bezier
-   * - same non-linear stagger rhythm
-   *
-   * The direction is naturally reversed
-   * by the transform endpoints, so entry
-   * and exit feel related without becoming
-   * visually identical.
-   */
   [data-route-transition-layer][data-route-transition-phase="covering"]
     > div:nth-child(2)
     > span {
@@ -169,16 +149,6 @@
      V3.2 — CONTENT RIDES THE EXIT
   ========================= */
 
-  /*
-   * The module-level reveal previously
-   * faded the entire content layer at
-   * frame zero. That made the typography
-   * disappear before the shutters moved.
-   *
-   * Keep the parent visible and delay the
-   * individual editorial elements instead,
-   * so they visually travel with the exit.
-   */
   [data-route-transition-layer][data-route-transition-phase="revealing"]
     > div:nth-child(3) {
     opacity:
@@ -229,6 +199,112 @@
     > span:nth-child(3) {
     transition-delay:
       115ms !important;
+  }
+
+  /* =========================
+     V3.3 — CONSISTENT EDITORIAL SETTLE
+  ========================= */
+
+  /*
+   * Every route uses the same editorial
+   * settle window before navigation.
+   *
+   * This prevents longer labels from being
+   * interrupted by the route switch while
+   * shorter labels already look complete.
+   */
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:first-child,
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(3) {
+    transition:
+      opacity
+        160ms
+        ease
+        95ms,
+      transform
+        340ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        95ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:first-child::after,
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(3)::before {
+    transition:
+      transform
+        400ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        95ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > span:first-child {
+    transition:
+      opacity
+        175ms
+        ease
+        105ms !important;
+  }
+
+  [data-route-transition-layer]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    padding-inline:
+      0.09em
+      0.04em;
+
+    margin-inline:
+      -0.09em
+      -0.04em;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    transition:
+      opacity
+        150ms
+        ease
+        100ms,
+      clip-path
+        390ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        100ms,
+      transform
+        390ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        100ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > span:nth-child(3) {
+    transition:
+      transform
+        420ms
+        cubic-bezier(0.76, 0, 0.24, 1)
+        105ms !important;
   }
 
   @media (
@@ -296,6 +372,85 @@
       > span:nth-child(4) {
       transition-delay:
         0ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:first-child,
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(3) {
+      transition:
+        opacity
+          140ms
+          ease
+          72ms,
+        transform
+          280ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          72ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:first-child::after,
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(3)::before {
+      transition:
+        transform
+          320ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          72ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > span:first-child {
+      transition:
+        opacity
+          150ms
+          ease
+          78ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > div:nth-child(2)
+      > span {
+      transition:
+        opacity
+          135ms
+          ease
+          78ms,
+        clip-path
+          320ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          78ms,
+        transform
+          320ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          78ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > span:nth-child(3) {
+      transition:
+        transform
+          340ms
+          cubic-bezier(0.76, 0, 0.24, 1)
+          80ms !important;
     }
 
     [data-route-transition-layer][data-route-transition-phase="revealing"]
