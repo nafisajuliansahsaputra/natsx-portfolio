@@ -6,22 +6,163 @@
  * Typography-safe clip bounds for
  * Home display text.
  *
- * IMPORTANT:
- *
- * Tidak mengubah:
- * - duration
- * - delay
- * - easing
- * - opacity
- * - translate
- * - scale
- * - rotation
- * - choreography
- *
- * Hanya memperluas clip bounds
- * agar oversized / tight display
- * glyph tidak terpotong.
+ * Also contains small visual guards
+ * that must not alter layout/motion.
  */
+
+/* =========================
+   STICKY HEADER LINE
+========================= */
+
+/*
+ * Header line memakai satu physical
+ * line saja.
+ *
+ * Initial:
+ * mengikuti lebar site-container.
+ *
+ * Scrolled:
+ * expand smooth sampai full viewport.
+ *
+ * Dengan ini tidak ada lagi:
+ * border + shadow overlap.
+ */
+.site-header {
+  --header-line-inset:
+    max(
+      0px,
+      calc(
+        (
+          100vw -
+          var(--container)
+        ) /
+        2
+      )
+    );
+}
+
+.site-header::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  z-index:
+    3;
+
+  right:
+    var(
+      --header-line-inset
+    );
+
+  bottom:
+    0;
+
+  left:
+    var(
+      --header-line-inset
+    );
+
+  height:
+    1px;
+
+  background:
+    var(--border);
+
+  pointer-events:
+    none;
+
+  transition:
+    left
+      420ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    right
+      420ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    background-color
+      260ms
+      ease;
+}
+
+/*
+ * Existing inner border dimatikan.
+ * Garis sekarang sepenuhnya dimiliki
+ * pseudo-element header di atas.
+ */
+.site-header
+  .site-header__inner {
+  border-bottom-color:
+    transparent !important;
+}
+
+/*
+ * Existing scrolled shadow juga
+ * dimatikan supaya tidak tercipta
+ * line kedua.
+ */
+.site-header.is-scrolled {
+  box-shadow:
+    none;
+}
+
+/*
+ * Begitu navbar masuk sticky/scrolled
+ * state, line melebar dari kedua sisi
+ * sampai full viewport.
+ */
+.site-header.is-scrolled::after {
+  right:
+    0;
+
+  left:
+    0;
+
+  background:
+    rgba(
+      17,
+      17,
+      17,
+      0.1
+    );
+}
+
+/* =========================
+   HERO VISUAL LINES
+========================= */
+
+/*
+ * Remove the main vertical divider
+ * between copy and portrait.
+ */
+[data-home-hero]
+  [data-motion-hero-piece="visual"] {
+  border-left:
+    none;
+}
+
+/*
+ * Remove the decorative vertical +
+ * horizontal guide lines inside
+ * the portrait composition.
+ */
+[data-home-hero]
+  [data-motion-hero-piece="visual"]::before,
+[data-home-hero]
+  [data-motion-hero-piece="visual"]::after {
+  display:
+    none;
+}
 
 /* =========================
    HERO TITLE
@@ -243,5 +384,19 @@
 
     scale:
       1;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .site-header::after {
+    transition:
+      none;
   }
 }
