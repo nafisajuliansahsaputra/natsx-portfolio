@@ -17,6 +17,7 @@ import {
 import PlaygroundLab from "./PlaygroundLab";
 
 import styles from "./Playground.module.css";
+import heroRefinementStyles from "./PlaygroundHeroNoDivider.module.css";
 
 const description =
   "A collection of experiments, visual studies, motion, typography, and creative explorations by NATSX.";
@@ -55,9 +56,11 @@ export function PlaygroundPageContent({
         data-motion-page="playground"
       >
         <section
-          className={
+          className={`${
             styles.hero
-          }
+          } ${
+            heroRefinementStyles.noDivider
+          }`}
         >
           <div className="site-container">
             <div
