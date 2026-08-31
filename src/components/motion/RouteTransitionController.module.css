@@ -9,22 +9,49 @@
 }
 
 .rail,
-.panel {
+.slices,
+.content {
   position: absolute;
   inset: 0;
-  transform: translate3d(0, 100%, 0);
-  will-change: transform;
 }
 
 .rail {
   z-index: 1;
   background: var(--foreground);
+  transform: translate3d(0, 104%, 0);
+  will-change: transform;
 }
 
-.panel {
+.slices {
   z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.slice {
+  position: relative;
+  display: block;
   background: var(--accent);
+  transform: translate3d(0, 106%, 0);
+  will-change: transform;
+}
+
+.slice:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.13);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.content {
+  z-index: 3;
   color: #ffffff;
+  opacity: 0;
 }
 
 .covering,
@@ -37,34 +64,123 @@
   transform: translate3d(0, 0, 0);
   transition:
     transform
-      390ms
+      300ms
       cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.covering .panel {
+.covering .slice {
   transform: translate3d(0, 0, 0);
   transition:
     transform
-      340ms
-      cubic-bezier(0.16, 1, 0.3, 1)
-      35ms;
+      440ms
+      cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.revealing .panel {
-  transform: translate3d(0, -100%, 0);
+.forward.covering .slice:nth-child(1) {
+  transition-delay: 20ms;
+}
+
+.forward.covering .slice:nth-child(2) {
+  transition-delay: 55ms;
+}
+
+.forward.covering .slice:nth-child(3) {
+  transition-delay: 90ms;
+}
+
+.forward.covering .slice:nth-child(4) {
+  transition-delay: 125ms;
+}
+
+.backward.covering .slice:nth-child(1) {
+  transition-delay: 125ms;
+}
+
+.backward.covering .slice:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.backward.covering .slice:nth-child(3) {
+  transition-delay: 55ms;
+}
+
+.backward.covering .slice:nth-child(4) {
+  transition-delay: 20ms;
+}
+
+.covering .slice::before {
+  opacity: 1;
+  transition-delay: 180ms;
+}
+
+.covering .content {
+  opacity: 1;
   transition:
-    transform
-      330ms
-      cubic-bezier(0.76, 0, 0.24, 1);
+    opacity
+      180ms
+      ease
+      180ms;
 }
 
 .revealing .rail {
-  transform: translate3d(0, -100%, 0);
+  transform: translate3d(0, -104%, 0);
   transition:
     transform
-      360ms
-      cubic-bezier(0.76, 0, 0.24, 1)
-      40ms;
+      260ms
+      cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.revealing .slice {
+  transform: translate3d(0, -106%, 0);
+  transition:
+    transform
+      470ms
+      cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.forward.revealing .slice:nth-child(1) {
+  transition-delay: 0ms;
+}
+
+.forward.revealing .slice:nth-child(2) {
+  transition-delay: 45ms;
+}
+
+.forward.revealing .slice:nth-child(3) {
+  transition-delay: 90ms;
+}
+
+.forward.revealing .slice:nth-child(4) {
+  transition-delay: 135ms;
+}
+
+.backward.revealing .slice:nth-child(1) {
+  transition-delay: 135ms;
+}
+
+.backward.revealing .slice:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.backward.revealing .slice:nth-child(3) {
+  transition-delay: 45ms;
+}
+
+.backward.revealing .slice:nth-child(4) {
+  transition-delay: 0ms;
+}
+
+.revealing .slice::before {
+  opacity: 0;
+  transition: opacity 100ms ease;
+}
+
+.revealing .content {
+  opacity: 0;
+  transition:
+    opacity
+      150ms
+      ease;
 }
 
 .inner {
@@ -79,37 +195,79 @@
 
 .top,
 .bottom {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-
   font-size: clamp(10px, 0.78vw, 12px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.085em;
   text-transform: uppercase;
-
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
 }
 
 .top {
   align-self: start;
+  transform: translate3d(0, -14px, 0);
 }
 
 .bottom {
   align-self: end;
+  transform: translate3d(0, 14px, 0);
+}
+
+.top::after,
+.bottom::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.42);
+  transform: scaleX(0);
+}
+
+.top::after {
+  bottom: -18px;
+  transform-origin: left center;
+}
+
+.bottom::before {
+  top: -18px;
+  transform-origin: right center;
 }
 
 .index {
   display: inline-flex;
-  min-width: 4ch;
+  min-width: 7ch;
   justify-content: flex-end;
 }
 
-.titleWrap {
+.titleStage {
   align-self: center;
+  display: grid;
+  grid-template-columns:
+    minmax(44px, 6vw)
+    minmax(0, 1fr);
+  align-items: end;
+  column-gap: clamp(18px, 2.4vw, 42px);
+  row-gap: clamp(16px, 2vh, 26px);
+}
+
+.titleIndex {
+  align-self: start;
+  padding-top: 0.8em;
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.09em;
+  opacity: 0;
+}
+
+.titleWrap {
+  min-width: 0;
   overflow: hidden;
   padding-block: 0.12em;
 }
@@ -117,21 +275,39 @@
 .title {
   display: block;
   max-width: 11ch;
-
-  font-size: clamp(58px, 10.5vw, 168px);
+  font-size: clamp(58px, 9.4vw, 150px);
   font-weight: 700;
   line-height: 0.86;
   letter-spacing: -0.072em;
   text-transform: uppercase;
-
   opacity: 0;
-  transform: translate3d(0, 115%, 0);
-  transform-origin: left bottom;
+  clip-path: inset(0 100% 0 0);
+  transform: translate3d(46px, 0, 0);
+  transform-origin: left center;
+}
+
+.backward .title {
+  clip-path: inset(0 0 0 100%);
+  transform: translate3d(-46px, 0, 0);
+}
+
+.axis {
+  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.64);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.backward .axis {
+  transform-origin: right center;
 }
 
 .project .title {
   max-width: 14ch;
-  font-size: clamp(50px, 8.4vw, 136px);
+  font-size: clamp(50px, 7.8vw, 124px);
   line-height: 0.9;
   overflow-wrap: anywhere;
 }
@@ -142,71 +318,145 @@
   transform: translate3d(0, 0, 0);
   transition:
     opacity
-      280ms
+      250ms
       ease
-      150ms,
+      180ms,
     transform
       520ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      120ms;
+      150ms;
+}
+
+.covering .top::after,
+.covering .bottom::before {
+  transform: scaleX(1);
+  transition:
+    transform
+      620ms
+      cubic-bezier(0.16, 1, 0.3, 1)
+      170ms;
+}
+
+.covering .titleIndex {
+  opacity: 0.78;
+  transition:
+    opacity
+      260ms
+      ease
+      220ms;
 }
 
 .covering .title {
   opacity: 1;
+  clip-path: inset(0 0 0 0);
   transform: translate3d(0, 0, 0);
   transition:
     opacity
-      180ms
+      220ms
       ease
-      120ms,
-    transform
-      620ms
+      190ms,
+    clip-path
+      680ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      105ms;
+      170ms,
+    transform
+      680ms
+      cubic-bezier(0.16, 1, 0.3, 1)
+      170ms;
 }
 
-.revealing .top,
+.covering .axis {
+  transform: scaleX(1);
+  transition:
+    transform
+      720ms
+      cubic-bezier(0.16, 1, 0.3, 1)
+      200ms;
+}
+
+.revealing .top {
+  opacity: 0;
+  transform: translate3d(0, -12px, 0);
+  transition:
+    opacity 120ms ease,
+    transform 220ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
 .revealing .bottom {
   opacity: 0;
-  transform: translate3d(0, -10px, 0);
+  transform: translate3d(0, 12px, 0);
   transition:
-    opacity
-      120ms
-      ease,
-    transform
-      220ms
-      cubic-bezier(0.76, 0, 0.24, 1);
+    opacity 120ms ease,
+    transform 220ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-.revealing .title {
+.revealing .titleIndex {
   opacity: 0;
-  transform: translate3d(0, -34%, 0);
+  transition: opacity 100ms ease;
+}
+
+.forward.revealing .title {
+  opacity: 0;
+  clip-path: inset(0 0 0 100%);
+  transform: translate3d(-48px, 0, 0);
   transition:
-    opacity
-      115ms
-      ease,
+    opacity 130ms ease,
+    clip-path 300ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 300ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.backward.revealing .title {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transform: translate3d(48px, 0, 0);
+  transition:
+    opacity 130ms ease,
+    clip-path 300ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 300ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.revealing .axis {
+  transform: scaleX(0);
+  transition:
     transform
       260ms
       cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 @media (max-width: 700px) {
+  .slices {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .covering .rail {
-    transition-duration: 335ms;
+    transition-duration: 260ms;
   }
 
-  .covering .panel {
-    transition-duration: 295ms;
-    transition-delay: 30ms;
-  }
-
-  .revealing .panel {
-    transition-duration: 290ms;
+  .covering .slice {
+    transition-duration: 370ms;
   }
 
   .revealing .rail {
-    transition-duration: 315ms;
+    transition-duration: 225ms;
+  }
+
+  .revealing .slice {
+    transition-duration: 390ms;
+  }
+
+  .forward.revealing .slice:nth-child(2),
+  .backward.revealing .slice:nth-child(3) {
     transition-delay: 35ms;
+  }
+
+  .forward.revealing .slice:nth-child(3),
+  .backward.revealing .slice:nth-child(2) {
+    transition-delay: 70ms;
+  }
+
+  .forward.revealing .slice:nth-child(4),
+  .backward.revealing .slice:nth-child(1) {
+    transition-delay: 105ms;
   }
 
   .inner {
@@ -223,37 +473,50 @@
     display: none;
   }
 
+  .titleStage {
+    grid-template-columns: 34px minmax(0, 1fr);
+    column-gap: 14px;
+  }
+
+  .titleIndex {
+    padding-top: 0.65em;
+    font-size: 9px;
+  }
+
   .title {
     max-width: 9ch;
-    font-size: clamp(46px, 16vw, 82px);
+    font-size: clamp(44px, 15vw, 78px);
     line-height: 0.9;
     letter-spacing: -0.065em;
   }
 
   .project .title {
     max-width: 10ch;
-    font-size: clamp(40px, 13.5vw, 68px);
+    font-size: clamp(38px, 12.5vw, 64px);
     line-height: 0.94;
   }
 
-  .covering .top,
-  .covering .bottom {
-    transition-delay: 105ms;
+  .covering .title {
+    transition-duration: 540ms;
+    transition-delay: 135ms;
   }
 
-  .covering .title {
-    transition-duration: 500ms;
-    transition-delay: 85ms;
+  .covering .axis {
+    transition-duration: 560ms;
+    transition-delay: 160ms;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .root,
   .rail,
-  .panel,
+  .slice,
+  .content,
   .top,
   .bottom,
-  .title {
+  .titleIndex,
+  .title,
+  .axis {
     transition: none !important;
     animation: none !important;
   }
