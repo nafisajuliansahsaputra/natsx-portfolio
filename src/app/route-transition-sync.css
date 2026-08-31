@@ -44,4 +44,192 @@
     animation-play-state:
       paused !important;
   }
+
+  /* =========================
+     V3.1 — SYMMETRIC SHUTTER FEEL
+  ========================= */
+
+  /*
+   * The dark backing rail and the thin
+   * travelling ink edge are intentionally
+   * disabled for this refinement pass.
+   *
+   * Only the accent shutters remain.
+   */
+  [data-route-transition-layer]
+    > div:first-child {
+    display:
+      none !important;
+  }
+
+  [data-route-transition-layer]
+    > div:nth-child(2)
+    > span::after {
+    display:
+      none !important;
+  }
+
+  /*
+   * Covering now uses the same motion
+   * character as revealing:
+   *
+   * - same 435ms desktop shutter travel
+   * - same cubic-bezier
+   * - same non-linear stagger rhythm
+   *
+   * The direction is naturally reversed
+   * by the transform endpoints, so entry
+   * and exit feel related without becoming
+   * visually identical.
+   */
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(2)
+    > span {
+    transition-duration:
+      435ms !important;
+
+    transition-timing-function:
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      ) !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"]
+    > div:nth-child(3)
+    * {
+    transition-timing-function:
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      ) !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+    > div:nth-child(2)
+    > span:nth-child(1) {
+    transition-delay:
+      0ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+    > div:nth-child(2)
+    > span:nth-child(2) {
+    transition-delay:
+      22ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+    > div:nth-child(2)
+    > span:nth-child(3) {
+    transition-delay:
+      78ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+    > div:nth-child(2)
+    > span:nth-child(4) {
+    transition-delay:
+      118ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+    > div:nth-child(2)
+    > span:nth-child(1) {
+    transition-delay:
+      118ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+    > div:nth-child(2)
+    > span:nth-child(2) {
+    transition-delay:
+      70ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+    > div:nth-child(2)
+    > span:nth-child(3) {
+    transition-delay:
+      24ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+    > div:nth-child(2)
+    > span:nth-child(4) {
+    transition-delay:
+      0ms !important;
+  }
+
+  @media (
+    max-width:
+      700px
+  ) {
+    [data-route-transition-layer][data-route-transition-phase="covering"]
+      > div:nth-child(2)
+      > span {
+      transition-duration:
+        365ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+      > div:nth-child(2)
+      > span:nth-child(1) {
+      transition-delay:
+        0ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+      > div:nth-child(2)
+      > span:nth-child(2) {
+      transition-delay:
+        18ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+      > div:nth-child(2)
+      > span:nth-child(3) {
+      transition-delay:
+        58ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="forward"]
+      > div:nth-child(2)
+      > span:nth-child(4) {
+      transition-delay:
+        90ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+      > div:nth-child(2)
+      > span:nth-child(1) {
+      transition-delay:
+        90ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+      > div:nth-child(2)
+      > span:nth-child(2) {
+      transition-delay:
+        54ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+      > div:nth-child(2)
+      > span:nth-child(3) {
+      transition-delay:
+        18ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="covering"][data-route-transition-direction="backward"]
+      > div:nth-child(2)
+      > span:nth-child(4) {
+      transition-delay:
+        0ms !important;
+    }
+  }
 }
