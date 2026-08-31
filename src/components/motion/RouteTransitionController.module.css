@@ -25,7 +25,11 @@
 .slices {
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns:
+    19fr
+    31fr
+    27fr
+    23fr;
 }
 
 .slice {
@@ -39,13 +43,32 @@
 .slice:not(:first-child)::before {
   content: "";
   position: absolute;
+  z-index: 2;
   top: 0;
   bottom: 0;
   left: 0;
   width: 1px;
-  background: rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.12);
   opacity: 0;
-  transition: opacity 180ms ease;
+  transition: opacity 150ms ease;
+}
+
+/*
+ * Thin ink edge that travels with each
+ * shutter. It keeps the dark layer as a
+ * graphic accent instead of a second
+ * full-screen transition.
+ */
+.slice::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  top: -7px;
+  left: 0;
+  height: 7px;
+  background: var(--foreground);
+  opacity: 0.92;
 }
 
 .content {
@@ -60,11 +83,15 @@
   pointer-events: auto;
 }
 
+/* =========================
+   COVER — V3 RHYTHM
+========================= */
+
 .covering .rail {
   transform: translate3d(0, 0, 0);
   transition:
     transform
-      300ms
+      270ms
       cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -72,61 +99,65 @@
   transform: translate3d(0, 0, 0);
   transition:
     transform
-      440ms
+      420ms
       cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .forward.covering .slice:nth-child(1) {
-  transition-delay: 20ms;
+  transition-delay: 10ms;
 }
 
 .forward.covering .slice:nth-child(2) {
-  transition-delay: 55ms;
+  transition-delay: 28ms;
 }
 
 .forward.covering .slice:nth-child(3) {
-  transition-delay: 90ms;
+  transition-delay: 86ms;
 }
 
 .forward.covering .slice:nth-child(4) {
-  transition-delay: 125ms;
+  transition-delay: 122ms;
 }
 
 .backward.covering .slice:nth-child(1) {
-  transition-delay: 125ms;
+  transition-delay: 118ms;
 }
 
 .backward.covering .slice:nth-child(2) {
-  transition-delay: 90ms;
+  transition-delay: 72ms;
 }
 
 .backward.covering .slice:nth-child(3) {
-  transition-delay: 55ms;
+  transition-delay: 30ms;
 }
 
 .backward.covering .slice:nth-child(4) {
-  transition-delay: 20ms;
+  transition-delay: 8ms;
 }
 
 .covering .slice::before {
   opacity: 1;
-  transition-delay: 180ms;
+  transition-delay: 150ms;
 }
 
 .covering .content {
   opacity: 1;
   transition:
     opacity
-      180ms
+      165ms
       ease
-      180ms;
+      155ms;
 }
+
+/* =========================
+   REVEAL — PAGE FIRST GAP
+========================= */
 
 .revealing .rail {
   transform: translate3d(0, -104%, 0);
   transition:
     transform
-      260ms
+      250ms
       cubic-bezier(0.76, 0, 0.24, 1);
 }
 
@@ -134,7 +165,7 @@
   transform: translate3d(0, -106%, 0);
   transition:
     transform
-      470ms
+      435ms
       cubic-bezier(0.76, 0, 0.24, 1);
 }
 
@@ -143,27 +174,27 @@
 }
 
 .forward.revealing .slice:nth-child(2) {
-  transition-delay: 45ms;
+  transition-delay: 22ms;
 }
 
 .forward.revealing .slice:nth-child(3) {
-  transition-delay: 90ms;
+  transition-delay: 78ms;
 }
 
 .forward.revealing .slice:nth-child(4) {
-  transition-delay: 135ms;
+  transition-delay: 118ms;
 }
 
 .backward.revealing .slice:nth-child(1) {
-  transition-delay: 135ms;
+  transition-delay: 118ms;
 }
 
 .backward.revealing .slice:nth-child(2) {
-  transition-delay: 90ms;
+  transition-delay: 70ms;
 }
 
 .backward.revealing .slice:nth-child(3) {
-  transition-delay: 45ms;
+  transition-delay: 24ms;
 }
 
 .backward.revealing .slice:nth-child(4) {
@@ -172,16 +203,20 @@
 
 .revealing .slice::before {
   opacity: 0;
-  transition: opacity 100ms ease;
+  transition: opacity 90ms ease;
 }
 
 .revealing .content {
   opacity: 0;
   transition:
     opacity
-      150ms
+      115ms
       ease;
 }
+
+/* =========================
+   EDITORIAL CONTENT
+========================= */
 
 .inner {
   position: relative;
@@ -210,12 +245,12 @@
 
 .top {
   align-self: start;
-  transform: translate3d(0, -14px, 0);
+  transform: translate3d(0, -12px, 0);
 }
 
 .bottom {
   align-self: end;
-  transform: translate3d(0, 14px, 0);
+  transform: translate3d(0, 12px, 0);
 }
 
 .top::after,
@@ -225,7 +260,7 @@
   right: 0;
   left: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.38);
   transform: scaleX(0);
 }
 
@@ -249,17 +284,17 @@
   align-self: center;
   display: grid;
   grid-template-columns:
-    minmax(44px, 6vw)
+    minmax(42px, 5.2vw)
     minmax(0, 1fr);
   align-items: end;
-  column-gap: clamp(18px, 2.4vw, 42px);
-  row-gap: clamp(16px, 2vh, 26px);
+  column-gap: clamp(16px, 2.1vw, 36px);
+  row-gap: clamp(15px, 1.8vh, 24px);
 }
 
 .titleIndex {
   align-self: start;
-  padding-top: 0.8em;
-  font-size: clamp(11px, 0.8vw, 13px);
+  padding-top: 0.75em;
+  font-size: clamp(10px, 0.75vw, 12px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.09em;
@@ -269,26 +304,26 @@
 .titleWrap {
   min-width: 0;
   overflow: hidden;
-  padding-block: 0.12em;
+  padding-block: 0.14em;
 }
 
 .title {
   display: block;
-  max-width: 11ch;
-  font-size: clamp(58px, 9.4vw, 150px);
+  max-width: 12ch;
+  font-size: clamp(54px, 8.6vw, 138px);
   font-weight: 700;
-  line-height: 0.86;
-  letter-spacing: -0.072em;
+  line-height: 0.88;
+  letter-spacing: -0.07em;
   text-transform: uppercase;
   opacity: 0;
   clip-path: inset(0 100% 0 0);
-  transform: translate3d(46px, 0, 0);
+  transform: translate3d(40px, 0, 0);
   transform-origin: left center;
 }
 
 .backward .title {
   clip-path: inset(0 0 0 100%);
-  transform: translate3d(-46px, 0, 0);
+  transform: translate3d(-40px, 0, 0);
 }
 
 .axis {
@@ -296,7 +331,7 @@
   display: block;
   width: 100%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.64);
+  background: rgba(255, 255, 255, 0.58);
   transform: scaleX(0);
   transform-origin: left center;
 }
@@ -306,9 +341,9 @@
 }
 
 .project .title {
-  max-width: 14ch;
-  font-size: clamp(50px, 7.8vw, 124px);
-  line-height: 0.9;
+  max-width: 15ch;
+  font-size: clamp(46px, 7.2vw, 116px);
+  line-height: 0.92;
   overflow-wrap: anywhere;
 }
 
@@ -318,13 +353,13 @@
   transform: translate3d(0, 0, 0);
   transition:
     opacity
-      250ms
+      220ms
       ease
-      180ms,
+      155ms,
     transform
-      520ms
+      470ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      150ms;
+      128ms;
 }
 
 .covering .top::after,
@@ -332,18 +367,18 @@
   transform: scaleX(1);
   transition:
     transform
-      620ms
+      560ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      170ms;
+      145ms;
 }
 
 .covering .titleIndex {
-  opacity: 0.78;
+  opacity: 0.68;
   transition:
     opacity
-      260ms
+      230ms
       ease
-      220ms;
+      188ms;
 }
 
 .covering .title {
@@ -352,111 +387,161 @@
   transform: translate3d(0, 0, 0);
   transition:
     opacity
-      220ms
+      190ms
       ease
-      190ms,
+      162ms,
     clip-path
-      680ms
+      620ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      170ms,
+      145ms,
     transform
-      680ms
+      620ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      170ms;
+      145ms;
 }
 
 .covering .axis {
   transform: scaleX(1);
   transition:
     transform
-      720ms
+      650ms
       cubic-bezier(0.16, 1, 0.3, 1)
-      200ms;
+      165ms;
 }
 
 .revealing .top {
   opacity: 0;
-  transform: translate3d(0, -12px, 0);
+  transform: translate3d(0, -10px, 0);
   transition:
-    opacity 120ms ease,
-    transform 220ms cubic-bezier(0.76, 0, 0.24, 1);
+    opacity 95ms ease,
+    transform 190ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .revealing .bottom {
   opacity: 0;
-  transform: translate3d(0, 12px, 0);
+  transform: translate3d(0, 10px, 0);
   transition:
-    opacity 120ms ease,
-    transform 220ms cubic-bezier(0.76, 0, 0.24, 1);
+    opacity 95ms ease,
+    transform 190ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .revealing .titleIndex {
   opacity: 0;
-  transition: opacity 100ms ease;
+  transition: opacity 85ms ease;
 }
 
 .forward.revealing .title {
   opacity: 0;
   clip-path: inset(0 0 0 100%);
-  transform: translate3d(-48px, 0, 0);
+  transform: translate3d(-42px, 0, 0);
   transition:
-    opacity 130ms ease,
-    clip-path 300ms cubic-bezier(0.76, 0, 0.24, 1),
-    transform 300ms cubic-bezier(0.76, 0, 0.24, 1);
+    opacity 105ms ease,
+    clip-path 260ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 260ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .backward.revealing .title {
   opacity: 0;
   clip-path: inset(0 100% 0 0);
-  transform: translate3d(48px, 0, 0);
+  transform: translate3d(42px, 0, 0);
   transition:
-    opacity 130ms ease,
-    clip-path 300ms cubic-bezier(0.76, 0, 0.24, 1),
-    transform 300ms cubic-bezier(0.76, 0, 0.24, 1);
+    opacity 105ms ease,
+    clip-path 260ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 260ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .revealing .axis {
   transform: scaleX(0);
   transition:
     transform
-      260ms
+      225ms
       cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 @media (max-width: 700px) {
   .slices {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns:
+      23fr
+      28fr
+      27fr
+      22fr;
+  }
+
+  .slice::after {
+    top: -5px;
+    height: 5px;
   }
 
   .covering .rail {
-    transition-duration: 260ms;
+    transition-duration: 235ms;
   }
 
   .covering .slice {
-    transition-duration: 370ms;
+    transition-duration: 350ms;
+  }
+
+  .forward.covering .slice:nth-child(1) {
+    transition-delay: 8ms;
+  }
+
+  .forward.covering .slice:nth-child(2) {
+    transition-delay: 22ms;
+  }
+
+  .forward.covering .slice:nth-child(3) {
+    transition-delay: 68ms;
+  }
+
+  .forward.covering .slice:nth-child(4) {
+    transition-delay: 98ms;
+  }
+
+  .backward.covering .slice:nth-child(1) {
+    transition-delay: 96ms;
+  }
+
+  .backward.covering .slice:nth-child(2) {
+    transition-delay: 58ms;
+  }
+
+  .backward.covering .slice:nth-child(3) {
+    transition-delay: 24ms;
+  }
+
+  .backward.covering .slice:nth-child(4) {
+    transition-delay: 7ms;
   }
 
   .revealing .rail {
-    transition-duration: 225ms;
+    transition-duration: 215ms;
   }
 
   .revealing .slice {
-    transition-duration: 390ms;
+    transition-duration: 365ms;
   }
 
-  .forward.revealing .slice:nth-child(2),
-  .backward.revealing .slice:nth-child(3) {
-    transition-delay: 35ms;
+  .forward.revealing .slice:nth-child(2) {
+    transition-delay: 18ms;
   }
 
-  .forward.revealing .slice:nth-child(3),
-  .backward.revealing .slice:nth-child(2) {
-    transition-delay: 70ms;
+  .forward.revealing .slice:nth-child(3) {
+    transition-delay: 58ms;
   }
 
-  .forward.revealing .slice:nth-child(4),
+  .forward.revealing .slice:nth-child(4) {
+    transition-delay: 90ms;
+  }
+
   .backward.revealing .slice:nth-child(1) {
-    transition-delay: 105ms;
+    transition-delay: 90ms;
+  }
+
+  .backward.revealing .slice:nth-child(2) {
+    transition-delay: 54ms;
+  }
+
+  .backward.revealing .slice:nth-child(3) {
+    transition-delay: 18ms;
   }
 
   .inner {
@@ -474,36 +559,36 @@
   }
 
   .titleStage {
-    grid-template-columns: 34px minmax(0, 1fr);
-    column-gap: 14px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    column-gap: 13px;
   }
 
   .titleIndex {
-    padding-top: 0.65em;
+    padding-top: 0.62em;
     font-size: 9px;
   }
 
   .title {
-    max-width: 9ch;
-    font-size: clamp(44px, 15vw, 78px);
-    line-height: 0.9;
-    letter-spacing: -0.065em;
+    max-width: 10ch;
+    font-size: clamp(42px, 14.4vw, 74px);
+    line-height: 0.92;
+    letter-spacing: -0.064em;
   }
 
   .project .title {
-    max-width: 10ch;
-    font-size: clamp(38px, 12.5vw, 64px);
-    line-height: 0.94;
+    max-width: 11ch;
+    font-size: clamp(36px, 12vw, 60px);
+    line-height: 0.96;
   }
 
   .covering .title {
-    transition-duration: 540ms;
-    transition-delay: 135ms;
+    transition-duration: 500ms;
+    transition-delay: 118ms;
   }
 
   .covering .axis {
-    transition-duration: 560ms;
-    transition-delay: 160ms;
+    transition-duration: 510ms;
+    transition-delay: 138ms;
   }
 }
 
