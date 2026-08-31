@@ -20,7 +20,7 @@ test.describe(
   "editorial route transition",
   () => {
     test(
-      "covers navigation, holds destination motion, then releases it with the shutters",
+      "covers navigation, holds destination motion into reveal, then releases it",
       async ({
         page,
       }) => {
@@ -101,11 +101,28 @@ test.describe(
           },
         );
 
+        /*
+         * V3 intentionally keeps the
+         * destination hero paused for a
+         * short beat after the shutters
+         * start opening.
+         */
+        await expect(
+          root,
+        ).toHaveAttribute(
+          "data-route-transition-hold",
+          "true",
+        );
+
         await expect(
           root,
         ).not.toHaveAttribute(
           "data-route-transition-hold",
           "true",
+          {
+            timeout:
+              1000,
+          },
         );
 
         await expect(
