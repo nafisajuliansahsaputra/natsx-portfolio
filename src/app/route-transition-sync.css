@@ -165,6 +165,72 @@
       0ms !important;
   }
 
+  /* =========================
+     V3.2 — CONTENT RIDES THE EXIT
+  ========================= */
+
+  /*
+   * The module-level reveal previously
+   * faded the entire content layer at
+   * frame zero. That made the typography
+   * disappear before the shutters moved.
+   *
+   * Keep the parent visible and delay the
+   * individual editorial elements instead,
+   * so they visually travel with the exit.
+   */
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3) {
+    opacity:
+      1 !important;
+
+    transition:
+      none !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:first-child,
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(3) {
+    transition-delay:
+      125ms,
+      125ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > span:first-child {
+    transition-delay:
+      120ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > div:nth-child(2)
+    > span {
+    transition-delay:
+      135ms,
+      135ms,
+      135ms !important;
+  }
+
+  [data-route-transition-layer][data-route-transition-phase="revealing"]
+    > div:nth-child(3)
+    > div
+    > div:nth-child(2)
+    > span:nth-child(3) {
+    transition-delay:
+      115ms !important;
+  }
+
   @media (
     max-width:
       700px
@@ -230,6 +296,49 @@
       > span:nth-child(4) {
       transition-delay:
         0ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3)
+      > div
+      > div:first-child,
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(3) {
+      transition-delay:
+        92ms,
+        92ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > span:first-child {
+      transition-delay:
+        88ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > div:nth-child(2)
+      > span {
+      transition-delay:
+        102ms,
+        102ms,
+        102ms !important;
+    }
+
+    [data-route-transition-layer][data-route-transition-phase="revealing"]
+      > div:nth-child(3)
+      > div
+      > div:nth-child(2)
+      > span:nth-child(3) {
+      transition-delay:
+        84ms !important;
     }
   }
 }
