@@ -37,6 +37,10 @@ type TransitionKind =
   | "page"
   | "project";
 
+type TransitionDirection =
+  | "forward"
+  | "backward";
+
 type TransitionMeta = {
   index: string;
   label: string;
@@ -50,22 +54,32 @@ const initialMeta: TransitionMeta = {
 };
 
 const desktopCoverDelay =
-  400;
+  560;
 
 const mobileCoverDelay =
-  345;
+  470;
 
 const desktopRevealDuration =
-  430;
+  660;
 
 const mobileRevealDuration =
-  380;
+  560;
 
 const routeSettleDelay =
-  35;
+  24;
 
 const navigationSafetyTimeout =
   5000;
+
+const routeOrder =
+  new Map<string, number>([
+    ["/", 0],
+    ["/work", 1],
+    ["/about", 2],
+    ["/playground", 3],
+    ["/contact", 4],
+    ["/cv", 5],
+  ]);
 
 function normalizePathname(
   pathname: string,
@@ -120,6 +134,43 @@ function isTransitionRoute(
   );
 }
 
+function getRoutePosition(
+  pathname: string,
+) {
+  const cleanPath =
+    stripLocaleFromPathname(
+      pathname,
+    );
+
+  if (
+    cleanPath.startsWith(
+      "/work/",
+    )
+  ) {
+    return 1.5;
+  }
+
+  return (
+    routeOrder.get(
+      cleanPath,
+    ) ?? 0
+  );
+}
+
+function getTransitionDirection(
+  currentPathname: string,
+  destinationPathname: string,
+): TransitionDirection {
+  return getRoutePosition(
+    destinationPathname,
+  ) >=
+    getRoutePosition(
+      currentPathname,
+    )
+    ? "forward"
+    : "backward";
+}
+
 function getProjectLabel(
   pathname: string,
 ) {
@@ -171,14 +222,9 @@ function getTransitionMeta(
     cleanPath === "/"
   ) {
     return {
-      index:
-        "00",
-
-      label:
-        site.name,
-
-      kind:
-        "home",
+      index: "00",
+      label: site.name,
+      kind: "home",
     };
   }
 
@@ -186,15 +232,10 @@ function getTransitionMeta(
     cleanPath === "/work"
   ) {
     return {
-      index:
-        "01",
-
+      index: "01",
       label:
-        copy.navigation
-          .work,
-
-      kind:
-        "page",
+        copy.navigation.work,
+      kind: "page",
     };
   }
 
@@ -202,15 +243,10 @@ function getTransitionMeta(
     cleanPath === "/about"
   ) {
     return {
-      index:
-        "02",
-
+      index: "02",
       label:
-        copy.navigation
-          .about,
-
-      kind:
-        "page",
+        copy.navigation.about,
+      kind: "page",
     };
   }
 
@@ -219,15 +255,11 @@ function getTransitionMeta(
       "/playground"
   ) {
     return {
-      index:
-        "03",
-
+      index: "03",
       label:
         copy.navigation
           .playground,
-
-      kind:
-        "page",
+      kind: "page",
     };
   }
 
@@ -235,15 +267,10 @@ function getTransitionMeta(
     cleanPath === "/contact"
   ) {
     return {
-      index:
-        "04",
-
+      index: "04",
       label:
-        copy.navigation
-          .contact,
-
-      kind:
-        "page",
+        copy.navigation.contact,
+      kind: "page",
     };
   }
 
@@ -251,14 +278,10 @@ function getTransitionMeta(
     cleanPath === "/cv"
   ) {
     return {
-      index:
-        "CV",
-
+      index: "CV",
       label:
         "Curriculum Vitae",
-
-      kind:
-        "page",
+      kind: "page",
     };
   }
 
@@ -268,16 +291,12 @@ function getTransitionMeta(
     )
   ) {
     return {
-      index:
-        "PROJECT",
-
+      index: "PROJECT",
       label:
         getProjectLabel(
           cleanPath,
         ),
-
-      kind:
-        "project",
+      kind: "project",
     };
   }
 
@@ -312,6 +331,13 @@ export default function RouteTransitionController() {
     setPhase,
   ] = useState<TransitionPhase>(
     "idle",
+  );
+
+  const [
+    direction,
+    setDirection,
+  ] = useState<TransitionDirection>(
+    "forward",
   );
 
   const [
@@ -371,9 +397,25 @@ export default function RouteTransitionController() {
       );
     }, []);
 
+  const clearDocumentState =
+    useCallback(() => {
+      const root =
+        document.documentElement;
+
+      delete root.dataset
+        .routeTransitionActive;
+
+      delete root.dataset
+        .routeTransitionPhase;
+
+      delete root.dataset
+        .routeTransitionHold;
+    }, []);
+
   const resetTransition =
     useCallback(() => {
       clearTimers();
+      clearDocumentState();
 
       expectedPathRef.current =
         null;
@@ -385,6 +427,7 @@ export default function RouteTransitionController() {
         "idle",
       );
     }, [
+      clearDocumentState,
       clearTimers,
     ]);
 
@@ -392,22 +435,28 @@ export default function RouteTransitionController() {
     phaseRef.current =
       phase;
 
+    const root =
+      document.documentElement;
+
     if (
       phase === "idle"
     ) {
-      delete document
-        .documentElement
-        .dataset
+      delete root.dataset
         .routeTransitionActive;
+
+      delete root.dataset
+        .routeTransitionPhase;
 
       return;
     }
 
-    document
-      .documentElement
-      .dataset
+    root.dataset
       .routeTransitionActive =
       "true";
+
+    root.dataset
+      .routeTransitionPhase =
+      phase;
   }, [
     phase,
   ]);
@@ -429,8 +478,7 @@ export default function RouteTransitionController() {
       "wheel",
       preventScroll,
       {
-        passive:
-          false,
+        passive: false,
       },
     );
 
@@ -438,8 +486,7 @@ export default function RouteTransitionController() {
       "touchmove",
       preventScroll,
       {
-        passive:
-          false,
+        passive: false,
       },
     );
 
@@ -587,12 +634,6 @@ export default function RouteTransitionController() {
           destinationPath,
         );
 
-      /*
-       * Language switches keep the
-       * current editorial context and
-       * should stay immediate instead of
-       * replaying a full page transition.
-       */
       if (
         currentBasePath ===
           destinationBasePath
@@ -631,11 +672,28 @@ export default function RouteTransitionController() {
         ),
       );
 
+      setDirection(
+        getTransitionDirection(
+          currentPath,
+          destinationPath,
+        ),
+      );
+
+      document
+        .documentElement
+        .dataset
+        .routeTransitionHold =
+        "true";
+
       phaseRef.current =
         "covering";
 
       setPhase(
         "covering",
+      );
+
+      router.prefetch(
+        destinationHref,
       );
 
       navigationTimerRef.current =
@@ -705,6 +763,11 @@ export default function RouteTransitionController() {
     revealTimerRef.current =
       window.setTimeout(
         () => {
+          delete document
+            .documentElement
+            .dataset
+            .routeTransitionHold;
+
           phaseRef.current =
             "revealing";
 
@@ -728,13 +791,10 @@ export default function RouteTransitionController() {
   useEffect(() => {
     return () => {
       clearTimers();
-
-      delete document
-        .documentElement
-        .dataset
-        .routeTransitionActive;
+      clearDocumentState();
     };
   }, [
+    clearDocumentState,
     clearTimers,
   ]);
 
@@ -750,6 +810,7 @@ export default function RouteTransitionController() {
     [
       styles.root,
       styles[phase],
+      styles[direction],
       meta.kind ===
       "project"
         ? styles.project
@@ -767,6 +828,9 @@ export default function RouteTransitionController() {
       data-route-transition-phase={
         phase
       }
+      data-route-transition-direction={
+        direction
+      }
       data-route-transition-label={
         meta.label
       }
@@ -780,7 +844,26 @@ export default function RouteTransitionController() {
 
       <div
         className={
-          styles.panel
+          styles.slices
+        }
+      >
+        {[0, 1, 2, 3].map(
+          (
+            slice,
+          ) => (
+            <span
+              key={slice}
+              className={
+                styles.slice
+              }
+            />
+          ),
+        )}
+      </div>
+
+      <div
+        className={
+          styles.content
         }
       >
         <div
@@ -811,18 +894,40 @@ export default function RouteTransitionController() {
 
           <div
             className={
-              styles.titleWrap
+              styles.titleStage
             }
           >
             <span
               className={
-                styles.title
+                styles.titleIndex
               }
             >
               {
-                meta.label
+                meta.index
               }
             </span>
+
+            <div
+              className={
+                styles.titleWrap
+              }
+            >
+              <span
+                className={
+                  styles.title
+                }
+              >
+                {
+                  meta.label
+                }
+              </span>
+            </div>
+
+            <span
+              className={
+                styles.axis
+              }
+            />
           </div>
 
           <div
