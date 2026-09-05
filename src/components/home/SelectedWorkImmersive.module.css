@@ -1,0 +1,284 @@
+.mount {
+  display: none;
+}
+
+/*
+ * =====================================
+ * NATSX — SELECTED WORK IMMERSIVE LAYER
+ * =====================================
+ *
+ * Layer ini sengaja tidak mengambil alih
+ * entrance animation yang sudah dimiliki
+ * home-motion.css.
+ *
+ * Existing motion memakai individual
+ * translate / scale properties.
+ *
+ * Layer ini memakai transform pada parent
+ * / artwork wrapper sehingga keduanya bisa
+ * hidup bersamaan tanpa rewrite sistem lama.
+ */
+
+/* =========================
+   PROJECT STATE
+========================= */
+
+:global(
+  #work
+  [data-selected-work-immersive="true"]
+) {
+  --sw-scroll-y: 0px;
+
+  --sw-header-y: 0px;
+  --sw-footer-y: 0px;
+
+  --sw-pointer-x: 0px;
+  --sw-pointer-y: 0px;
+
+  --sw-pointer-rotate:
+    0deg;
+
+  --sw-visual-scale:
+    1;
+
+  --sw-frame-opacity:
+    0;
+
+  --sw-meta-opacity:
+    1;
+}
+
+/* =========================
+   LAYERED SCROLL DEPTH
+========================= */
+
+:global(
+  #work
+  [data-selected-work-layer="header"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(--sw-header-y),
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+:global(
+  #work
+  [data-selected-work-layer="footer"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(--sw-footer-y),
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+/*
+ * ProjectArtwork sudah memiliki root
+ * absolute sendiri.
+ *
+ * Controller hanya memberi attribute ke
+ * root tersebut supaya seluruh artwork
+ * bisa punya satu movement layer tanpa
+ * mengganggu motion internalnya.
+ */
+
+:global(
+  #work
+  [data-selected-work-visual-inner="true"]
+) {
+  transform:
+    translate3d(
+      var(--sw-pointer-x),
+      calc(
+        var(--sw-scroll-y) +
+        var(--sw-pointer-y)
+      ),
+      0
+    )
+    rotate(
+      var(--sw-pointer-rotate)
+    )
+    scale(
+      var(--sw-visual-scale)
+    );
+
+  transform-origin:
+    center center;
+
+  will-change:
+    transform;
+
+  backface-visibility:
+    hidden;
+}
+
+/* =========================
+   ACTIVE PROJECT FRAME
+========================= */
+
+:global(
+  #work
+  [data-selected-work-visual="true"]
+) {
+  /*
+   * Existing SelectedWork.module.css
+   * sudah position: relative + overflow.
+   * Kita tinggal overlay satu hairline.
+   */
+  isolation: isolate;
+}
+
+:global(
+  #work
+  [data-selected-work-visual="true"]
+)::after {
+  content: "";
+
+  position: absolute;
+
+  z-index: 40;
+
+  inset: 0;
+
+  border:
+    1px solid
+    var(--accent);
+
+  opacity:
+    var(--sw-frame-opacity);
+
+  pointer-events:
+    none;
+
+  transition:
+    opacity
+    180ms
+    linear;
+}
+
+/* =========================
+   PROJECT META EMPHASIS
+========================= */
+
+:global(
+  #work
+  [data-selected-work-number="true"]
+),
+:global(
+  #work
+  [data-selected-work-year="true"]
+) {
+  opacity:
+    var(--sw-meta-opacity);
+
+  transition:
+    opacity
+    240ms
+    ease;
+}
+
+/* =========================
+   FOCUS FEEDBACK
+========================= */
+
+:global(
+  #work
+  [data-selected-work-immersive="true"]:focus-within
+  [data-selected-work-visual="true"]
+)::after {
+  opacity: 0.24;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  /*
+   * Controller otomatis memakai travel
+   * distance jauh lebih kecil di mobile.
+   *
+   * Tidak ada pointer depth karena coarse
+   * pointer tidak pernah mengaktifkannya.
+   */
+
+  :global(
+    #work
+    [data-selected-work-visual-inner="true"]
+  ) {
+    will-change:
+      auto;
+  }
+
+  :global(
+    #work
+    [data-selected-work-layer="header"]
+  ),
+  :global(
+    #work
+    [data-selected-work-layer="footer"]
+  ) {
+    will-change:
+      auto;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  :global(
+    #work
+    [data-selected-work-layer="header"]
+  ),
+  :global(
+    #work
+    [data-selected-work-layer="footer"]
+  ),
+  :global(
+    #work
+    [data-selected-work-visual-inner="true"]
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+
+  :global(
+    #work
+    [data-selected-work-number="true"]
+  ),
+  :global(
+    #work
+    [data-selected-work-year="true"]
+  ) {
+    opacity:
+      1 !important;
+  }
+
+  :global(
+    #work
+    [data-selected-work-visual="true"]
+  )::after {
+    display:
+      none !important;
+  }
+}

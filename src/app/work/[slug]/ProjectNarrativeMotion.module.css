@@ -1,0 +1,523 @@
+/*
+ * ==================================
+ * NATSX — PROJECT NARRATIVE MOTION
+ * ==================================
+ *
+ * Continuous storytelling layer.
+ *
+ * Existing project-detail-motion.css
+ * still owns all entrance animations.
+ *
+ * This file only adds subtle depth
+ * AFTER / WHILE sections move through
+ * the viewport.
+ */
+
+/* =========================
+   DEFAULT VARIABLES
+========================= */
+
+:global(
+  [data-narrative-section="true"]
+) {
+  --pd-media-y: 0px;
+  --pd-media-scale: 1;
+
+  --pd-content-y: 0px;
+
+  --pd-gallery-a-y: 0px;
+  --pd-gallery-b-y: 0px;
+
+  --pd-metric-y: 0px;
+
+  --pd-statement-y: 0px;
+  --pd-statement-scale: 1;
+
+  --pd-quote-y: 0px;
+  --pd-quote-mark-y: 0px;
+
+  --pd-finale-y: 0px;
+
+  --pd-section-strength: 0;
+}
+
+/* =========================
+   DESKTOP / TABLET DEPTH
+========================= */
+
+@media (
+  min-width: 701px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /*
+   * =========================
+   * GENERAL NARRATIVE COPY
+   * =========================
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-project-story]
+    [data-narrative-section="true"]
+    [data-motion-piece="content"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-content-y),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * =========================
+   * SINGLE IMAGE
+   * =========================
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-image"]
+    [data-motion-piece="media"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-media-y),
+        0
+      )
+      scale(
+        var(--pd-media-scale)
+      );
+
+    transform-origin:
+      center center;
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * =========================
+   * GALLERY
+   * =========================
+   *
+   * Same direction, different speeds.
+   *
+   * This avoids the cheap "cards flying
+   * opposite ways" effect.
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-gallery"]
+    [data-motion-piece="item"]:nth-child(odd)
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-gallery-a-y),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-gallery"]
+    [data-motion-piece="item"]:nth-child(even)
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-gallery-b-y),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * =========================
+   * METRICS
+   * =========================
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-metrics"]
+    [data-motion-piece="item"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-metric-y),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-metrics"]
+    [data-motion-piece="item"]:nth-child(2n)
+  ) {
+    transform:
+      translate3d(
+        0,
+        calc(
+          var(--pd-metric-y) *
+          0.55
+        ),
+        0
+      );
+  }
+
+  /*
+   * =========================
+   * STATEMENT
+   * =========================
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-statement"]
+    [data-motion-piece="content"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-statement-y),
+        0
+      )
+      scale(
+        var(--pd-statement-scale)
+      );
+
+    transform-origin:
+      left center;
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * =========================
+   * QUOTE
+   * =========================
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-quote"]
+    [data-motion-piece="quote"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-quote-y),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-quote"]
+    [data-motion-piece="label"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-quote-mark-y),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * =========================
+   * FINALE
+   * =========================
+   */
+
+  :global(
+    html[data-motion="enabled"]
+    [data-narrative-type="project-finale"]
+    [data-motion-piece="media"]
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(--pd-finale-y),
+        0
+      )
+      scale(
+        var(--pd-media-scale)
+      );
+
+    transform-origin:
+      center center;
+
+    will-change:
+      transform;
+  }
+}
+
+/* =========================
+   CHAPTER PROGRESS
+========================= */
+
+.progress {
+  --project-story-progress:
+    0;
+
+  position: fixed;
+
+  z-index: 60;
+
+  top: 50%;
+  right: 22px;
+
+  display: flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  gap: 13px;
+
+  opacity: 0;
+
+  transform:
+    translate3d(
+      8px,
+      -50%,
+      0
+    );
+
+  transition:
+    opacity
+      260ms
+      ease,
+    transform
+      420ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+
+  pointer-events:
+    none;
+
+  /*
+   * Keeps the rail readable through
+   * light, dark, and accent sections.
+   */
+  color: #ffffff;
+
+  mix-blend-mode:
+    difference;
+}
+
+.progress[
+  data-story-visible="true"
+] {
+  opacity: 0.78;
+
+  transform:
+    translate3d(
+      0,
+      -50%,
+      0
+    );
+}
+
+/* =========================
+   COUNTER
+========================= */
+
+.counter {
+  display: flex;
+
+  align-items: center;
+
+  gap: 3px;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  letter-spacing:
+    0.08em;
+
+  writing-mode:
+    vertical-rl;
+
+  transform:
+    rotate(180deg);
+}
+
+.counter
+  span:nth-child(2) {
+  opacity: 0.4;
+}
+
+/* =========================
+   PROGRESS TRACK
+========================= */
+
+.track {
+  position: relative;
+
+  width: 1px;
+
+  height:
+    clamp(
+      68px,
+      10vh,
+      110px
+    );
+
+  overflow: hidden;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.24
+    );
+}
+
+.fill {
+  position: absolute;
+
+  inset:
+    0;
+
+  background:
+    currentColor;
+
+  transform:
+    scaleY(
+      var(
+        --project-story-progress
+      )
+    );
+
+  transform-origin:
+    center top;
+
+  will-change:
+    transform;
+}
+
+/* =========================
+   CAPTION
+========================= */
+
+.caption {
+  font-size: 7px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  letter-spacing:
+    0.13em;
+
+  white-space: nowrap;
+
+  writing-mode:
+    vertical-rl;
+
+  transform:
+    rotate(180deg);
+
+  opacity: 0.7;
+}
+
+/* =========================
+   COMPACT DESKTOP
+========================= */
+
+/*
+ * On smaller laptops the indicator
+ * would sit too close to content.
+ */
+
+@media (
+  max-width: 1200px
+) {
+  .progress {
+    display: none;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  .progress {
+    display: none;
+  }
+
+  :global(
+    [data-narrative-section="true"]
+    [data-motion-piece]
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .progress {
+    display: none;
+  }
+
+  :global(
+    [data-narrative-section="true"]
+    [data-motion-piece]
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+}

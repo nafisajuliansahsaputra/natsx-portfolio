@@ -1,0 +1,454 @@
+/*
+ * ==================================
+ * NATSX — PLAYGROUND EXPERIENCE
+ * ==================================
+ *
+ * Existing PlaygroundLab owns all
+ * interactive experiments.
+ *
+ * Existing playground-motion.css owns
+ * entrance choreography.
+ *
+ * This layer only connects experiments
+ * into one continuous live exhibition.
+ */
+
+:global(
+  [data-playground-lab-item="true"]
+) {
+  --playground-depth-meta-y:
+    0px;
+
+  --playground-depth-visual-y:
+    0px;
+
+  --playground-depth-visual-scale:
+    1;
+
+  --playground-focus-strength:
+    0;
+
+  --playground-focus-line:
+    0;
+}
+
+/* =========================
+   DESKTOP LAB DEPTH
+========================= */
+
+@media (
+  min-width: 961px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  :global(
+    [data-playground-lab-item="true"]
+  ) {
+    position: relative;
+
+    isolation: isolate;
+  }
+
+  /*
+   * Accent scan at the boundary of
+   * each experiment.
+   *
+   * Only strong near viewport focus.
+   */
+  :global(
+    [data-playground-lab-item="true"]
+  )::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: 30;
+
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 1px;
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent
+        0%,
+        var(--accent)
+        18%,
+        var(--accent)
+        82%,
+        transparent
+        100%
+      );
+
+    opacity:
+      calc(
+        var(
+          --playground-focus-line
+        ) *
+        0.7
+      );
+
+    transform:
+      scaleX(
+        var(
+          --playground-focus-line
+        )
+      );
+
+    transform-origin:
+      center;
+
+    pointer-events:
+      none;
+
+    will-change:
+      transform,
+      opacity;
+  }
+
+  /*
+   * =========================
+   * META PANEL DEPTH
+   * =========================
+   *
+   * playground-motion.css currently
+   * animates the panel through the
+   * individual `translate` property.
+   *
+   * We therefore use `transform`
+   * here so both systems can coexist.
+   */
+
+  :global(
+    [data-playground-lab-item="true"]
+    > div:first-child
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(
+          --playground-depth-meta-y
+        ),
+        0
+      );
+
+    will-change:
+      transform,
+      translate;
+  }
+
+  /*
+   * =========================
+   * VISUAL DEPTH
+   * =========================
+   *
+   * Visual's own Kinetic / Magnetic /
+   * Spatial / Cursor transforms all live
+   * inside this wrapper.
+   *
+   * Moving the wrapper is therefore safe.
+   */
+
+  :global(
+    [data-playground-lab-item="true"]
+    > div:last-child
+  ) {
+    transform:
+      translate3d(
+        0,
+        var(
+          --playground-depth-visual-y
+        ),
+        0
+      )
+      scale(
+        var(
+          --playground-depth-visual-scale
+        )
+      );
+
+    transform-origin:
+      center center;
+
+    will-change:
+      transform,
+      scale,
+      rotate,
+      clip-path;
+  }
+}
+
+/* =========================
+   LAB NAVIGATOR
+========================= */
+
+.navigator {
+  --playground-lab-progress:
+    0;
+
+  position: fixed;
+
+  z-index: 90;
+
+  top: 50%;
+  right: 20px;
+
+  display: flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  gap: 13px;
+
+  color:
+    #ffffff;
+
+  opacity: 0;
+
+  transform:
+    translate3d(
+      8px,
+      -50%,
+      0
+    );
+
+  transition:
+    opacity
+      240ms
+      ease,
+    transform
+      420ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+
+  mix-blend-mode:
+    difference;
+
+  pointer-events:
+    none;
+}
+
+.navigator[
+  data-lab-visible="true"
+] {
+  opacity: 0.78;
+
+  transform:
+    translate3d(
+      0,
+      -50%,
+      0
+    );
+}
+
+/* =========================
+   COUNTER
+========================= */
+
+.counter {
+  display: flex;
+
+  align-items: center;
+
+  gap: 3px;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  letter-spacing:
+    0.08em;
+
+  writing-mode:
+    vertical-rl;
+
+  transform:
+    rotate(
+      180deg
+    );
+}
+
+.counter
+  span:nth-child(2) {
+  opacity: 0.36;
+}
+
+/* =========================
+   TRACK
+========================= */
+
+.track {
+  position: relative;
+
+  width: 1px;
+
+  height:
+    clamp(
+      82px,
+      12vh,
+      132px
+    );
+
+  overflow: hidden;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.24
+    );
+}
+
+.fill {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    currentColor;
+
+  transform:
+    scaleY(
+      var(
+        --playground-lab-progress
+      )
+    );
+
+  transform-origin:
+    center top;
+
+  will-change:
+    transform;
+}
+
+/* =========================
+   ACTIVE TITLE
+========================= */
+
+.title {
+  max-width:
+    150px;
+
+  overflow: hidden;
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  letter-spacing:
+    0.12em;
+
+  text-transform:
+    uppercase;
+
+  white-space:
+    nowrap;
+
+  writing-mode:
+    vertical-rl;
+
+  transform:
+    rotate(
+      180deg
+    );
+
+  text-overflow:
+    ellipsis;
+
+  opacity: 0.7;
+}
+
+/* =========================
+   SMALLER DESKTOP
+========================= */
+
+@media (
+  max-width: 1200px
+) {
+  .navigator {
+    display: none;
+  }
+}
+
+/* =========================
+   TABLET + MOBILE
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  .navigator {
+    display: none;
+  }
+
+  :global(
+    [data-playground-lab-item="true"]
+  )::after {
+    display: none;
+  }
+
+  :global(
+    [data-playground-lab-item="true"]
+    > div:first-child
+  ),
+  :global(
+    [data-playground-lab-item="true"]
+    > div:last-child
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .navigator {
+    display: none;
+  }
+
+  :global(
+    [data-playground-lab-item="true"]
+  )::after {
+    display: none !important;
+  }
+
+  :global(
+    [data-playground-lab-item="true"]
+    > div:first-child
+  ),
+  :global(
+    [data-playground-lab-item="true"]
+    > div:last-child
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+}

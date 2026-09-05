@@ -14,6 +14,7 @@ import {
   createPageMetadata,
 } from "@/lib/page-metadata";
 
+import PlaygroundExperiencePolish from "./PlaygroundExperiencePolish";
 import PlaygroundLab from "./PlaygroundLab";
 
 import styles from "./Playground.module.css";
@@ -56,11 +57,7 @@ export function PlaygroundPageContent({
         data-motion-page="playground"
       >
         <section
-          className={`${
-            styles.hero
-          } ${
-            heroRefinementStyles.noDivider
-          }`}
+          className={`${styles.hero} ${heroRefinementStyles.noDivider}`}
         >
           <div className="site-container">
             <div
@@ -179,6 +176,8 @@ export function PlaygroundPageContent({
             locale
           }
         />
+
+        <PlaygroundExperiencePolish />
 
         <section
           className={

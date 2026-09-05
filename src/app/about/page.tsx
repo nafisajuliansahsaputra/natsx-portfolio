@@ -18,6 +18,7 @@ import {
 } from "@/lib/page-metadata";
 
 import AboutIdentityPortrait from "./AboutIdentityPortrait";
+import AboutInteractionPolish from "./AboutInteractionPolish";
 
 import styles from "./About.module.css";
 
@@ -118,6 +119,7 @@ export function AboutPageContent({
           styles.page
         }
         data-motion-page="about"
+        data-about-interaction-root
       >
         <section
           className={
@@ -353,6 +355,7 @@ export function AboutPageContent({
                     className={
                       styles.cvLink
                     }
+                    data-about-magnetic-link="compact"
                   >
                     {
                       copy.profile
@@ -361,6 +364,7 @@ export function AboutPageContent({
 
                     <span
                       aria-hidden="true"
+                      data-about-magnetic-arrow
                     >
                       ↗
                     </span>
@@ -443,25 +447,32 @@ export function AboutPageContent({
                         principle.number
                       }
                       data-motion-scroll="about-principle"
+                      data-about-interactive-row="principle"
+                      data-about-row-active="false"
                     >
                       <span
                         className={
                           styles
                             .principleNumber
                         }
+                        data-about-row-number
                       >
                         {
                           principle.number
                         }
                       </span>
 
-                      <h3>
+                      <h3
+                        data-about-row-title
+                      >
                         {
                           principle.title
                         }
                       </h3>
 
-                      <p>
+                      <p
+                        data-about-row-copy
+                      >
                         {
                           principle.description
                         }
@@ -548,12 +559,15 @@ export function AboutPageContent({
                         discipline.number
                       }
                       data-motion-scroll="about-discipline"
+                      data-about-interactive-row="discipline"
+                      data-about-row-active="false"
                     >
                       <span
                         className={
                           styles
                             .disciplineNumber
                         }
+                        data-about-row-number
                       >
                         {
                           discipline.number
@@ -565,6 +579,7 @@ export function AboutPageContent({
                           styles
                             .disciplineMain
                         }
+                        data-about-row-title
                       >
                         <h2>
                           {
@@ -572,7 +587,9 @@ export function AboutPageContent({
                           }
                         </h2>
 
-                        <p>
+                        <p
+                          data-about-row-copy
+                        >
                           {
                             content.description
                           }
@@ -584,6 +601,7 @@ export function AboutPageContent({
                           styles
                             .disciplineItems
                         }
+                        data-about-row-items
                       >
                         {discipline.items.map(
                           (
@@ -670,13 +688,16 @@ export function AboutPageContent({
                   className={
                     styles.closingLink
                   }
+                  data-about-magnetic-link="closing"
                 >
                   {
                     copy.closing
                       .action
                   }
 
-                  <span>
+                  <span
+                    data-about-magnetic-arrow
+                  >
                     ↗
                   </span>
                 </LocaleLink>
@@ -684,6 +705,8 @@ export function AboutPageContent({
             </div>
           </div>
         </section>
+
+        <AboutInteractionPolish />
       </main>
     </>
   );

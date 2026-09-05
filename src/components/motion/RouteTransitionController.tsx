@@ -1,5 +1,9 @@
 "use client";
 
+import type {
+  CSSProperties,
+} from "react";
+
 import {
   useCallback,
   useEffect,
@@ -45,6 +49,11 @@ type TransitionMeta = {
   index: string;
   label: string;
   kind: TransitionKind;
+};
+
+type ArchiveProjectHint = {
+  meta: TransitionMeta;
+  accent: string | null;
 };
 
 const initialMeta: TransitionMeta = {
@@ -252,7 +261,7 @@ function getTransitionMeta(
 
   if (
     cleanPath ===
-      "/playground"
+    "/playground"
   ) {
     return {
       index: "03",
@@ -319,6 +328,310 @@ function getRevealDuration() {
     : desktopRevealDuration;
 }
 
+/*
+ * =========================
+ * PROJECT COLOR UTILITIES
+ * =========================
+ *
+ * Project colors can be anything.
+ *
+ * Route transition typography is white,
+ * therefore very light project colors
+ * need a slightly darker transition
+ * treatment to preserve readability.
+ */
+
+function getRelativeLuminance(
+  red: number,
+  green: number,
+  blue: number,
+) {
+  const toLinear = (
+    channel: number,
+  ) => {
+    const value =
+      channel / 255;
+
+    return value <=
+      0.04045
+      ? value / 12.92
+      : Math.pow(
+          (
+            value +
+            0.055
+          ) /
+            1.055,
+          2.4,
+        );
+  };
+
+  return (
+    0.2126 *
+      toLinear(
+        red,
+      ) +
+    0.7152 *
+      toLinear(
+        green,
+      ) +
+    0.0722 *
+      toLinear(
+        blue,
+      )
+  );
+}
+
+function getWhiteContrast(
+  red: number,
+  green: number,
+  blue: number,
+) {
+  const luminance =
+    getRelativeLuminance(
+      red,
+      green,
+      blue,
+    );
+
+  return (
+    1.05 /
+    (
+      luminance +
+      0.05
+    )
+  );
+}
+
+function getReadableTransitionAccent(
+  rawColor: string,
+) {
+  const color =
+    rawColor.trim();
+
+  const match =
+    color.match(
+      /^#([0-9a-f]{6})$/i,
+    );
+
+  /*
+   * If a project ever uses another
+   * valid CSS color format, don't
+   * destroy it.
+   */
+  if (!match) {
+    return (
+      color ||
+      null
+    );
+  }
+
+  const hex =
+    match[1];
+
+  const red =
+    Number.parseInt(
+      hex.slice(
+        0,
+        2,
+      ),
+      16,
+    );
+
+  const green =
+    Number.parseInt(
+      hex.slice(
+        2,
+        4,
+      ),
+      16,
+    );
+
+  const blue =
+    Number.parseInt(
+      hex.slice(
+        4,
+        6,
+      ),
+      16,
+    );
+
+  /*
+   * Already safe with white content.
+   */
+  if (
+    getWhiteContrast(
+      red,
+      green,
+      blue,
+    ) >=
+    4.5
+  ) {
+    return color;
+  }
+
+  /*
+   * Preserve hue as much as possible,
+   * then gradually mix it toward the
+   * portfolio foreground until white
+   * content has enough contrast.
+   */
+  const targetRed =
+    17;
+
+  const targetGreen =
+    17;
+
+  const targetBlue =
+    17;
+
+  let mix =
+    0.12;
+
+  let outputRed =
+    red;
+
+  let outputGreen =
+    green;
+
+  let outputBlue =
+    blue;
+
+  while (
+    mix <=
+      0.72 &&
+    getWhiteContrast(
+      outputRed,
+      outputGreen,
+      outputBlue,
+    ) <
+      4.5
+  ) {
+    outputRed =
+      Math.round(
+        red *
+          (
+            1 -
+            mix
+          ) +
+        targetRed *
+          mix,
+      );
+
+    outputGreen =
+      Math.round(
+        green *
+          (
+            1 -
+            mix
+          ) +
+        targetGreen *
+          mix,
+      );
+
+    outputBlue =
+      Math.round(
+        blue *
+          (
+            1 -
+            mix
+          ) +
+        targetBlue *
+          mix,
+      );
+
+    mix +=
+      0.06;
+  }
+
+  return `rgb(${outputRed} ${outputGreen} ${outputBlue})`;
+}
+
+/*
+ * =========================
+ * WORK ARCHIVE → PROJECT HINT
+ * =========================
+ *
+ * No new markup is required.
+ *
+ * Existing Work row already contains:
+ * - project number
+ * - h2 title
+ * - --row-accent
+ *
+ * We read those values directly from
+ * the clicked anchor so transition
+ * content matches the exact project.
+ */
+
+function getArchiveProjectHint(
+  anchor: HTMLAnchorElement,
+  fallbackMeta: TransitionMeta,
+): ArchiveProjectHint {
+  const title =
+    anchor
+      .querySelector(
+        "h2",
+      )
+      ?.textContent
+      ?.trim();
+
+  /*
+   * First direct span in the current
+   * Work row is the project number.
+   */
+  const number =
+    anchor
+      .querySelector(
+        ":scope > span",
+      )
+      ?.textContent
+      ?.trim();
+
+  /*
+   * Work.module.css defines --row-accent,
+   * with the actual value passed inline
+   * from project.accentColor.
+   */
+  const inlineAccent =
+    anchor.style
+      .getPropertyValue(
+        "--row-accent",
+      )
+      .trim();
+
+  const computedAccent =
+    window
+      .getComputedStyle(
+        anchor,
+      )
+      .getPropertyValue(
+        "--row-accent",
+      )
+      .trim();
+
+  const accent =
+    getReadableTransitionAccent(
+      inlineAccent ||
+        computedAccent,
+    );
+
+  return {
+    meta: {
+      ...fallbackMeta,
+
+      index:
+        number ||
+        fallbackMeta.index,
+
+      label:
+        title ||
+        fallbackMeta.label,
+    },
+
+    accent,
+  };
+}
+
 export default function RouteTransitionController() {
   const pathname =
     usePathname();
@@ -329,23 +642,41 @@ export default function RouteTransitionController() {
   const [
     phase,
     setPhase,
-  ] = useState<TransitionPhase>(
-    "idle",
-  );
+  ] =
+    useState<TransitionPhase>(
+      "idle",
+    );
 
   const [
     direction,
     setDirection,
-  ] = useState<TransitionDirection>(
-    "forward",
-  );
+  ] =
+    useState<TransitionDirection>(
+      "forward",
+    );
 
   const [
     meta,
     setMeta,
-  ] = useState<TransitionMeta>(
-    initialMeta,
-  );
+  ] =
+    useState<TransitionMeta>(
+      initialMeta,
+    );
+
+  /*
+   * Scoped transition accent.
+   *
+   * Null means normal NATSX violet.
+   * Project archive navigation can
+   * temporarily override it.
+   */
+  const [
+    transitionAccent,
+    setTransitionAccent,
+  ] =
+    useState<string | null>(
+      null,
+    );
 
   const phaseRef =
     useRef<TransitionPhase>(
@@ -425,6 +756,15 @@ export default function RouteTransitionController() {
 
       setPhase(
         "idle",
+      );
+
+      /*
+       * Return overlay to the normal
+       * NATSX accent after project
+       * transition is fully finished.
+       */
+      setTransitionAccent(
+        null,
       );
     }, [
       clearDocumentState,
@@ -521,7 +861,8 @@ export default function RouteTransitionController() {
         phaseRef.current !==
           "idle" ||
         event.defaultPrevented ||
-        event.button !== 0 ||
+        event.button !==
+          0 ||
         event.metaKey ||
         event.ctrlKey ||
         event.shiftKey ||
@@ -534,7 +875,10 @@ export default function RouteTransitionController() {
         event.target;
 
       if (
-        !(target instanceof Element)
+        !(
+          target instanceof
+          Element
+        )
       ) {
         return;
       }
@@ -619,7 +963,7 @@ export default function RouteTransitionController() {
 
       if (
         currentPath ===
-          destinationPath
+        destinationPath
       ) {
         return;
       }
@@ -636,7 +980,7 @@ export default function RouteTransitionController() {
 
       if (
         currentBasePath ===
-          destinationBasePath
+        destinationBasePath
       ) {
         return;
       }
@@ -666,11 +1010,52 @@ export default function RouteTransitionController() {
       expectedPathRef.current =
         destinationPath;
 
-      setMeta(
+      /*
+       * =========================
+       * DESTINATION META
+       * =========================
+       */
+
+      const fallbackMeta =
         getTransitionMeta(
           destination.pathname,
-        ),
-      );
+        );
+
+      const isWorkArchiveProject =
+        currentBasePath ===
+          "/work" &&
+        destinationBasePath.startsWith(
+          "/work/",
+        ) &&
+        anchor.matches(
+          '[data-motion-scroll="work-project"]',
+        );
+
+      if (
+        isWorkArchiveProject
+      ) {
+        const hint =
+          getArchiveProjectHint(
+            anchor,
+            fallbackMeta,
+          );
+
+        setMeta(
+          hint.meta,
+        );
+
+        setTransitionAccent(
+          hint.accent,
+        );
+      } else {
+        setMeta(
+          fallbackMeta,
+        );
+
+        setTransitionAccent(
+          null,
+        );
+      }
 
       setDirection(
         getTransitionDirection(
@@ -811,18 +1196,42 @@ export default function RouteTransitionController() {
       styles.root,
       styles[phase],
       styles[direction],
+
       meta.kind ===
       "project"
         ? styles.project
         : "",
     ]
-      .filter(Boolean)
-      .join(" ");
+      .filter(
+        Boolean,
+      )
+      .join(
+        " ",
+      );
+
+  /*
+   * Existing transition CSS uses
+   * var(--accent).
+   *
+   * Scoping the custom property to
+   * this overlay means the page itself
+   * never changes accent color.
+   */
+  const rootStyle =
+    transitionAccent
+      ? ({
+          "--accent":
+            transitionAccent,
+        } as CSSProperties)
+      : undefined;
 
   return (
     <div
       className={
         rootClassName
+      }
+      style={
+        rootStyle
       }
       data-route-transition-layer
       data-route-transition-phase={
@@ -852,7 +1261,9 @@ export default function RouteTransitionController() {
             slice,
           ) => (
             <span
-              key={slice}
+              key={
+                slice
+              }
               className={
                 styles.slice
               }

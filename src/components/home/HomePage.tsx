@@ -2,8 +2,10 @@ import AboutPreview from "@/components/home/AboutPreview";
 import Capabilities from "@/components/home/Capabilities";
 import ContactFooter from "@/components/home/ContactFooter";
 import Hero from "@/components/home/Hero";
+import HomeSectionChoreography from "@/components/home/HomeSectionChoreography";
 import PlaygroundPreview from "@/components/home/PlaygroundPreview";
 import SelectedWork from "@/components/home/SelectedWork";
+import SelectedWorkImmersive from "@/components/home/SelectedWorkImmersive";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -35,6 +37,8 @@ export default function HomePage({
           locale={locale}
         />
 
+        <SelectedWorkImmersive />
+
         <Capabilities
           locale={locale}
         />
@@ -50,6 +54,8 @@ export default function HomePage({
         <ContactFooter
           locale={locale}
         />
+
+        <HomeSectionChoreography />
       </main>
     </>
   );

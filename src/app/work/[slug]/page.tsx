@@ -37,6 +37,8 @@ import {
   getAbsoluteUrl,
 } from "@/lib/site-url";
 
+import NextProjectHandoff from "./NextProjectHandoff";
+import ProjectNarrativeMotion from "./ProjectNarrativeMotion";
 import ProjectSectionRenderer from "./ProjectSectionRenderer";
 
 import styles from "./ProjectDetail.module.css";
@@ -392,6 +394,19 @@ export async function ProjectPageContent({
       "#dedede",
   } as CSSProperties;
 
+  const nextProjectStyle =
+    nextProject
+      ? ({
+          "--next-project-accent":
+            nextProject.accentColor,
+
+          "--next-project-on-accent":
+            getAccessibleContrastColor(
+              nextProject.accentColor,
+            ),
+        } as CSSProperties)
+      : undefined;
+
   return (
     <>
       <SiteHeader />
@@ -645,6 +660,7 @@ export async function ProjectPageContent({
           className={
             styles.story
           }
+          data-project-story
         >
           {sections.length >
           0 ? (
@@ -701,98 +717,121 @@ export async function ProjectPageContent({
           )}
         </div>
 
+        <ProjectNarrativeMotion />
+
         {nextProject ? (
-          <section
-            className={
-              styles.nextProject
-            }
-          >
-            <div className="site-container">
-              <div
-                className={
-                  styles.nextHeader
-                }
-                data-motion-scroll="project-next-header"
-              >
+          <>
+            <section
+              className={
+                styles.nextProject
+              }
+              style={
+                nextProjectStyle
+              }
+              data-next-project-handoff
+              data-next-project-number={
+                nextProject.number
+              }
+            >
+              <div className="site-container">
                 <div
                   className={
-                    styles.nextLabel
+                    styles.nextHeader
                   }
+                  data-motion-scroll="project-next-header"
+                  data-next-project-header
                 >
-                  <span
+                  <div
                     className={
-                      styles.dot
+                      styles.nextLabel
                     }
-                  />
+                  >
+                    <span
+                      className={
+                        styles.dot
+                      }
+                      data-next-project-dot
+                    />
 
-                  <span>
-                    {
-                      copy.next
-                    }
-                  </span>
-                </div>
-
-                <span>
-                  {
-                    nextProject.number
-                  }{" "}
-                  /{" "}
-                  {String(
-                    totalProjects,
-                  ).padStart(
-                    2,
-                    "0",
-                  )}
-                </span>
-              </div>
-
-              <LocaleLink
-                href={`/work/${nextProject.slug}`}
-                className={
-                  styles.nextLink
-                }
-                data-motion-scroll="project-next-link"
-              >
-                <h2>
-                  {
-                    nextProject.title
-                  }
-                </h2>
-
-                <div
-                  className={
-                    styles.nextMeta
-                  }
-                >
-                  <div>
-                    {nextProject.disciplines.map(
-                      (
-                        discipline,
-                      ) => (
-                        <span
-                          key={
-                            discipline
-                          }
-                        >
-                          {
-                            discipline
-                          }
-                        </span>
-                      ),
-                    )}
+                    <span>
+                      {
+                        copy.next
+                      }
+                    </span>
                   </div>
 
                   <span
-                    className={
-                      styles.nextArrow
-                    }
+                    data-next-project-counter
                   >
-                    ↗
+                    {
+                      nextProject.number
+                    }{" "}
+                    /{" "}
+                    {String(
+                      totalProjects,
+                    ).padStart(
+                      2,
+                      "0",
+                    )}
                   </span>
                 </div>
-              </LocaleLink>
-            </div>
-          </section>
+
+                <LocaleLink
+                  href={`/work/${nextProject.slug}`}
+                  className={
+                    styles.nextLink
+                  }
+                  data-motion-scroll="project-next-link"
+                  data-next-project-link
+                >
+                  <h2
+                    data-next-project-title
+                  >
+                    {
+                      nextProject.title
+                    }
+                  </h2>
+
+                  <div
+                    className={
+                      styles.nextMeta
+                    }
+                    data-next-project-meta
+                  >
+                    <div>
+                      {nextProject.disciplines.map(
+                        (
+                          discipline,
+                        ) => (
+                          <span
+                            key={
+                              discipline
+                            }
+                          >
+                            {
+                              discipline
+                            }
+                          </span>
+                        ),
+                      )}
+                    </div>
+
+                    <span
+                      className={
+                        styles.nextArrow
+                      }
+                      data-next-project-arrow
+                      aria-hidden="true"
+                    >
+                      ↗
+                    </span>
+                  </div>
+                </LocaleLink>
+              </div>
+            </section>
+
+            <NextProjectHandoff />
+          </>
         ) : null}
       </main>
     </>

@@ -1,0 +1,523 @@
+.mount {
+  display: none;
+}
+
+/*
+ * ==================================
+ * NATSX — ABOUT INTERACTION POLISH
+ * ==================================
+ *
+ * Existing about-motion.css remains
+ * responsible for reveal choreography.
+ *
+ * This layer only adds post-reveal
+ * tactile interaction.
+ */
+
+/* =========================
+   ROW VARIABLES
+========================= */
+
+:global(
+  [data-about-interactive-row]
+) {
+  --about-row-title-x:
+    0px;
+
+  --about-row-title-y:
+    0px;
+
+  --about-row-copy-x:
+    0px;
+
+  --about-row-copy-y:
+    0px;
+
+  --about-row-number-x:
+    0px;
+
+  --about-row-number-y:
+    0px;
+
+  --about-row-items-x:
+    0px;
+
+  --about-row-items-y:
+    0px;
+
+  --about-row-glow-x:
+    50%;
+
+  --about-row-hover:
+    0;
+
+  --about-row-rule-scale:
+    0;
+}
+
+/* =========================
+   DESKTOP ROW SYSTEM
+========================= */
+
+@media (
+  min-width: 961px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  :global(
+    [data-about-interactive-row]
+  ) {
+    position: relative;
+
+    isolation: isolate;
+
+    overflow: hidden;
+  }
+
+  /*
+   * Interactive field.
+   *
+   * Not a bright cursor spotlight.
+   * It behaves more like a subtle
+   * editorial wash moving through
+   * the row.
+   */
+
+  :global(
+    [data-about-interactive-row]
+  )::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: 0;
+
+    inset: 0;
+
+    opacity:
+      var(
+        --about-row-hover
+      );
+
+    pointer-events:
+      none;
+
+    transition:
+      opacity
+      180ms
+      linear;
+
+    will-change:
+      opacity;
+
+    background:
+      radial-gradient(
+        circle
+        at
+        var(
+          --about-row-glow-x
+        )
+        50%,
+        color-mix(
+          in srgb,
+          var(--accent)
+            10%,
+          transparent
+        )
+        0%,
+        color-mix(
+          in srgb,
+          var(--accent)
+            4%,
+          transparent
+        )
+        28%,
+        transparent
+        58%
+      );
+  }
+
+  /*
+   * Accent underline travels across
+   * the existing row boundary.
+   */
+
+  :global(
+    [data-about-interactive-row]
+  )::after {
+    content: "";
+
+    position: absolute;
+
+    z-index: 2;
+
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 1px;
+
+    background:
+      var(--accent);
+
+    transform:
+      scaleX(
+        var(
+          --about-row-rule-scale
+        )
+      );
+
+    transform-origin:
+      left center;
+
+    pointer-events:
+      none;
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * Make actual row content sit
+   * over the ambient field.
+   */
+
+  :global(
+    [data-about-interactive-row]
+  )
+    > * {
+    position: relative;
+
+    z-index: 1;
+  }
+
+  /* =========================
+     NUMBER
+  ========================= */
+
+  :global(
+    [data-about-row-number]
+  ) {
+    translate:
+      var(
+        --about-row-number-x
+      )
+      var(
+        --about-row-number-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  /* =========================
+     TITLE
+  ========================= */
+
+  :global(
+    [data-about-row-title]
+  ) {
+    translate:
+      var(
+        --about-row-title-x
+      )
+      var(
+        --about-row-title-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  /* =========================
+     COPY
+  ========================= */
+
+  :global(
+    [data-about-row-copy]
+  ) {
+    translate:
+      var(
+        --about-row-copy-x
+      )
+      var(
+        --about-row-copy-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  /* =========================
+     DISCIPLINE ITEMS
+  ========================= */
+
+  :global(
+    [data-about-row-items]
+  ) {
+    translate:
+      var(
+        --about-row-items-x
+      )
+      var(
+        --about-row-items-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  :global(
+    [data-about-row-items]
+    > span
+  ) {
+    transition:
+      border-color
+        240ms
+        ease,
+      color
+        240ms
+        ease;
+  }
+
+  :global(
+    [data-about-interactive-row="discipline"][
+      data-about-row-active="true"
+    ]
+    [data-about-row-items]
+    > span
+  ) {
+    border-color:
+      color-mix(
+        in srgb,
+        var(--accent)
+          42%,
+        var(--border)
+      );
+  }
+
+  /*
+   * Dark principle section needs a
+   * slightly stronger but still
+   * restrained field.
+   */
+
+  :global(
+    [data-about-interactive-row="principle"]
+  )::before {
+    background:
+      radial-gradient(
+        circle
+        at
+        var(
+          --about-row-glow-x
+        )
+        50%,
+        color-mix(
+          in srgb,
+          var(--accent)
+            14%,
+          transparent
+        )
+        0%,
+        color-mix(
+          in srgb,
+          var(--accent)
+            5%,
+          transparent
+        )
+        30%,
+        transparent
+        62%
+      );
+  }
+
+  /* =========================
+     MAGNETIC LINKS
+  ========================= */
+
+  :global(
+    [data-about-magnetic-link]
+  ) {
+    --about-link-x:
+      0px;
+
+    --about-link-y:
+      0px;
+
+    --about-link-arrow-x:
+      0px;
+
+    --about-link-arrow-y:
+      0px;
+
+    --about-link-hover:
+      0;
+
+    translate:
+      var(
+        --about-link-x
+      )
+      var(
+        --about-link-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  :global(
+    [data-about-magnetic-arrow]
+  ) {
+    display:
+      inline-block;
+
+    translate:
+      var(
+        --about-link-arrow-x
+      )
+      var(
+        --about-link-arrow-y
+      );
+
+    will-change:
+      translate,
+      transform;
+  }
+
+  /*
+   * Closing CTA gets a small ambient
+   * underline treatment when active.
+   */
+
+  :global(
+    [data-about-magnetic-link="closing"]
+  ) {
+    position: relative;
+  }
+
+  :global(
+    [data-about-magnetic-link="closing"]
+  )::after {
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+    bottom: -7px;
+    left: 0;
+
+    height: 1px;
+
+    background:
+      currentColor;
+
+    opacity:
+      calc(
+        0.25 +
+        var(
+          --about-link-hover
+        ) *
+        0.75
+      );
+
+    transform:
+      scaleX(
+        var(
+          --about-link-hover
+        )
+      );
+
+    transform-origin:
+      left center;
+
+    pointer-events:
+      none;
+  }
+}
+
+/* =========================
+   TABLET + MOBILE
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  :global(
+    [data-about-interactive-row]
+  )::before,
+  :global(
+    [data-about-interactive-row]
+  )::after {
+    display: none;
+  }
+
+  :global(
+    [data-about-row-number]
+  ),
+  :global(
+    [data-about-row-title]
+  ),
+  :global(
+    [data-about-row-copy]
+  ),
+  :global(
+    [data-about-row-items]
+  ),
+  :global(
+    [data-about-magnetic-link]
+  ),
+  :global(
+    [data-about-magnetic-arrow]
+  ) {
+    translate:
+      none !important;
+
+    will-change:
+      auto;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  :global(
+    [data-about-interactive-row]
+  )::before,
+  :global(
+    [data-about-interactive-row]
+  )::after {
+    display: none !important;
+  }
+
+  :global(
+    [data-about-row-number]
+  ),
+  :global(
+    [data-about-row-title]
+  ),
+  :global(
+    [data-about-row-copy]
+  ),
+  :global(
+    [data-about-row-items]
+  ),
+  :global(
+    [data-about-magnetic-link]
+  ),
+  :global(
+    [data-about-magnetic-arrow]
+  ) {
+    translate:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+}

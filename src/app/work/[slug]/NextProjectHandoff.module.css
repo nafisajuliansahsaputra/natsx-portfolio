@@ -1,0 +1,593 @@
+.mount {
+  display: none;
+}
+
+/*
+ * ==================================
+ * NATSX — NEXT PROJECT HANDOFF
+ * ==================================
+ *
+ * Turns the existing next-project CTA
+ * into a closing editorial scene.
+ *
+ * No page morph.
+ * No sticky.
+ * No scroll-jacking.
+ */
+
+:global(
+  [data-next-project-handoff]
+) {
+  --next-project-accent:
+    var(--project-accent);
+
+  --next-project-on-accent:
+    #ffffff;
+
+  --next-handoff-title-y:
+    0px;
+
+  --next-handoff-title-x:
+    0px;
+
+  --next-handoff-title-pointer-y:
+    0px;
+
+  --next-handoff-title-scale:
+    1;
+
+  --next-handoff-header-y:
+    0px;
+
+  --next-handoff-meta-y:
+    0px;
+
+  --next-handoff-meta-x:
+    0px;
+
+  --next-handoff-meta-pointer-y:
+    0px;
+
+  --next-handoff-index-y:
+    0px;
+
+  --next-handoff-wash-opacity:
+    0;
+
+  --next-handoff-index-opacity:
+    0;
+
+  --next-handoff-line-scale:
+    0;
+
+  --next-handoff-arrow-x:
+    0px;
+
+  --next-handoff-arrow-y:
+    0px;
+
+  --next-handoff-arrow-rotate:
+    0deg;
+}
+
+/* =========================
+   DESKTOP SCENE
+========================= */
+
+@media (
+  min-width: 961px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  :global(
+    [data-next-project-handoff]
+  ) {
+    position: relative;
+
+    isolation: isolate;
+
+    overflow: hidden;
+  }
+
+  /*
+   * =========================
+   * NEXT PROJECT COLOR WASH
+   * =========================
+   *
+   * Next project's own accent subtly
+   * enters before the page transition.
+   */
+
+  :global(
+    [data-next-project-handoff]
+  )::before {
+    content: "";
+
+    position: absolute;
+
+    z-index: 0;
+
+    inset: 0;
+
+    background:
+      var(
+        --next-project-accent
+      );
+
+    opacity:
+      var(
+        --next-handoff-wash-opacity
+      );
+
+    pointer-events:
+      none;
+
+    will-change:
+      opacity;
+  }
+
+  /*
+   * =========================
+   * GIANT PROJECT NUMBER
+   * =========================
+   */
+
+  :global(
+    [data-next-project-handoff]
+  )::after {
+    content:
+      attr(
+        data-next-project-number
+      );
+
+    position: absolute;
+
+    z-index: 0;
+
+    right:
+      clamp(
+        -28px,
+        -1vw,
+        -8px
+      );
+
+    bottom:
+      clamp(
+        -86px,
+        -5vw,
+        -32px
+      );
+
+    color:
+      var(
+        --next-project-accent
+      );
+
+    opacity:
+      var(
+        --next-handoff-index-opacity
+      );
+
+    font-size:
+      clamp(
+        260px,
+        28vw,
+        520px
+      );
+
+    font-weight: 600;
+
+    line-height: 0.72;
+
+    letter-spacing:
+      -0.1em;
+
+    transform:
+      translate3d(
+        0,
+        var(
+          --next-handoff-index-y
+        ),
+        0
+      );
+
+    transform-origin:
+      right bottom;
+
+    pointer-events:
+      none;
+
+    user-select:
+      none;
+
+    will-change:
+      transform,
+      opacity;
+  }
+
+  /*
+   * Keep actual content above the
+   * wash + giant index.
+   */
+
+  :global(
+    [data-next-project-handoff]
+  )
+    > :global(.site-container) {
+    position: relative;
+
+    z-index: 2;
+  }
+
+  /* =========================
+     HEADER
+  ========================= */
+
+  :global(
+    [data-next-project-header]
+  ) {
+    position: relative;
+
+    transform:
+      translate3d(
+        0,
+        var(
+          --next-handoff-header-y
+        ),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  /*
+   * Next project's color slowly
+   * takes over the original gray rule.
+   */
+
+  :global(
+    [data-next-project-header]
+  )::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: -1px;
+
+    height: 1px;
+
+    background:
+      var(
+        --next-project-accent
+      );
+
+    transform:
+      scaleX(
+        var(
+          --next-handoff-line-scale
+        )
+      );
+
+    transform-origin:
+      left center;
+
+    will-change:
+      transform;
+
+    pointer-events:
+      none;
+  }
+
+  :global(
+    [data-next-project-dot]
+  ) {
+    background:
+      var(
+        --next-project-accent
+      ) !important;
+  }
+
+  :global(
+    [data-next-project-counter]
+  ) {
+    transition:
+      color
+      220ms
+      ease;
+  }
+
+  :global(
+    [data-next-project-handoff][
+      data-next-handoff-active="true"
+    ]
+    [data-next-project-counter]
+  ) {
+    color:
+      var(
+        --next-project-accent
+      );
+  }
+
+  /* =========================
+     LINK
+  ========================= */
+
+  :global(
+    [data-next-project-link]
+  ) {
+    position: relative;
+
+    z-index: 2;
+
+    isolation: isolate;
+  }
+
+  /*
+   * Tiny accent mark at beginning
+   * of the giant title stage.
+   */
+
+  :global(
+    [data-next-project-link]
+  )::before {
+    content: "";
+
+    position: absolute;
+
+    top:
+      clamp(
+        24px,
+        3vw,
+        44px
+      );
+
+    left: 0;
+
+    width:
+      clamp(
+        28px,
+        2.6vw,
+        44px
+      );
+
+    height: 3px;
+
+    background:
+      var(
+        --next-project-accent
+      );
+
+    transform:
+      scaleX(
+        var(
+          --next-handoff-line-scale
+        )
+      );
+
+    transform-origin:
+      left center;
+
+    pointer-events:
+      none;
+  }
+
+  /* =========================
+     TITLE
+  ========================= */
+
+  :global(
+    [data-next-project-title]
+  ) {
+    transform:
+      translate3d(
+        var(
+          --next-handoff-title-x
+        ),
+        calc(
+          var(
+            --next-handoff-title-y
+          ) +
+          var(
+            --next-handoff-title-pointer-y
+          )
+        ),
+        0
+      )
+      scale(
+        var(
+          --next-handoff-title-scale
+        )
+      );
+
+    transform-origin:
+      left center;
+
+    will-change:
+      transform,
+      color;
+  }
+
+  /*
+   * Existing ProjectDetail CSS uses
+   * CURRENT project accent on hover.
+   *
+   * Override it here:
+   * this CTA belongs to NEXT project.
+   */
+
+  :global(
+    [data-next-project-link]:hover
+    [data-next-project-title]
+  ) {
+    color:
+      var(
+        --next-project-accent
+      ) !important;
+  }
+
+  /* =========================
+     META
+  ========================= */
+
+  :global(
+    [data-next-project-meta]
+  ) {
+    transform:
+      translate3d(
+        var(
+          --next-handoff-meta-x
+        ),
+        calc(
+          var(
+            --next-handoff-meta-y
+          ) +
+          var(
+            --next-handoff-meta-pointer-y
+          )
+        ),
+        0
+      );
+
+    will-change:
+      transform;
+  }
+
+  /* =========================
+     ARROW
+  ========================= */
+
+  :global(
+    [data-next-project-arrow]
+  ) {
+    color:
+      var(
+        --next-project-accent
+      );
+
+    translate:
+      var(
+        --next-handoff-arrow-x
+      )
+      var(
+        --next-handoff-arrow-y
+      );
+
+    rotate:
+      var(
+        --next-handoff-arrow-rotate
+      );
+
+    will-change:
+      translate,
+      rotate,
+      transform,
+      color;
+  }
+
+  :global(
+    [data-next-project-link]:hover
+    [data-next-project-arrow]
+  ) {
+    color:
+      var(
+        --next-project-accent
+      ) !important;
+  }
+}
+
+/* =========================
+   TABLET + MOBILE
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  :global(
+    [data-next-project-handoff]
+  )::before {
+    opacity: 0;
+  }
+
+  :global(
+    [data-next-project-handoff]
+  )::after {
+    display: none;
+  }
+
+  :global(
+    [data-next-project-title]
+  ),
+  :global(
+    [data-next-project-header]
+  ),
+  :global(
+    [data-next-project-meta]
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto;
+  }
+
+  :global(
+    [data-next-project-arrow]
+  ) {
+    translate:
+      none !important;
+
+    rotate:
+      none !important;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  :global(
+    [data-next-project-handoff]
+  )::before {
+    opacity: 0;
+  }
+
+  :global(
+    [data-next-project-handoff]
+  )::after {
+    display: none;
+  }
+
+  :global(
+    [data-next-project-title]
+  ),
+  :global(
+    [data-next-project-header]
+  ),
+  :global(
+    [data-next-project-meta]
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+
+  :global(
+    [data-next-project-arrow]
+  ) {
+    translate:
+      none !important;
+
+    rotate:
+      none !important;
+  }
+}

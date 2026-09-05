@@ -1,0 +1,366 @@
+.mount {
+  display: none;
+}
+
+/*
+ * ==================================
+ * NATSX — WORK ARCHIVE IMMERSIVE
+ * ==================================
+ *
+ * Enhancement layer only.
+ *
+ * Existing row entrance motion,
+ * accent background, typography,
+ * floating image, and project layout
+ * remain untouched.
+ */
+
+/* =========================
+   VARIABLES
+========================= */
+
+:global(
+  [data-work-project-row]
+) {
+  --work-preview-x:
+    0px;
+
+  --work-preview-y:
+    0px;
+
+  --work-preview-rotate:
+    0deg;
+
+  --work-preview-scale:
+    0.94;
+
+  --work-preview-tilt-x:
+    0deg;
+
+  --work-preview-tilt-y:
+    0deg;
+
+  --work-title-x:
+    0px;
+
+  --work-title-y:
+    0px;
+
+  --work-year-x:
+    0px;
+
+  --work-year-y:
+    0px;
+
+  --work-preview-base-rotate:
+    -1.2deg;
+}
+
+/* =========================
+   DESKTOP INTERACTION
+========================= */
+
+@media (
+  min-width: 961px
+) and (
+  hover: hover
+) and (
+  pointer: fine
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  /*
+   * =========================
+   * TITLE TENSION
+   * =========================
+   *
+   * Existing :hover moves title
+   * approximately 8px right.
+   *
+   * Individual translate adds a
+   * smaller cursor-responsive layer
+   * without replacing that transform.
+   */
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-project-title]
+  ) {
+    translate:
+      var(
+        --work-title-x
+      )
+      var(
+        --work-title-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  /*
+   * Year counters title movement.
+   */
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-project-year]
+  ) {
+    display:
+      inline-block;
+
+    translate:
+      var(
+        --work-year-x
+      )
+      var(
+        --work-year-y
+      );
+
+    will-change:
+      translate;
+  }
+
+  /*
+   * =========================
+   * PREVIEW
+   * =========================
+   */
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-preview]
+  ) {
+    perspective:
+      1000px;
+
+    will-change:
+      transform,
+      opacity;
+  }
+
+  /*
+   * Preview variant keeps the visual
+   * rhythm that already exists.
+   */
+
+  :global(
+    [data-work-project-row][
+      data-preview-variant="rise"
+    ]
+  ) {
+    --work-preview-base-rotate:
+      -1.2deg;
+  }
+
+  :global(
+    [data-work-project-row][
+      data-preview-variant="drop"
+    ]
+  ) {
+    --work-preview-base-rotate:
+      1.4deg;
+  }
+
+  :global(
+    [data-work-project-row][
+      data-preview-variant="center"
+    ]
+  ) {
+    --work-preview-base-rotate:
+      -0.4deg;
+  }
+
+  /*
+   * Higher specificity than existing
+   * .project:hover .previewStage rules.
+   *
+   * Once immersive state is active,
+   * JS spring controls transform.
+   */
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-project-row][
+      data-work-active="true"
+    ][data-has-preview="true"]
+    [data-work-preview]
+  ) {
+    opacity: 1;
+
+    transform:
+      translate3d(
+        calc(
+          -50% +
+          var(
+            --work-preview-x
+          )
+        ),
+        calc(
+          -50% +
+          var(
+            --work-preview-y
+          )
+        ),
+        0
+      )
+      rotate(
+        calc(
+          var(
+            --work-preview-base-rotate
+          ) +
+          var(
+            --work-preview-rotate
+          )
+        )
+      )
+      scale(
+        var(
+          --work-preview-scale
+        )
+      );
+
+    transition:
+      opacity
+      220ms
+      ease;
+  }
+
+  /*
+   * =========================
+   * PREVIEW CARD DEPTH
+   * =========================
+   */
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-preview-frame]
+  ) {
+    transform:
+      perspective(
+        1000px
+      )
+      rotateX(
+        var(
+          --work-preview-tilt-x
+        )
+      )
+      rotateY(
+        var(
+          --work-preview-tilt-y
+        )
+      );
+
+    transform-origin:
+      center center;
+
+    will-change:
+      transform;
+  }
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-project-row][
+      data-work-active="true"
+    ]
+    [data-work-preview-frame]
+  ) {
+    box-shadow:
+      0
+      34px
+      82px
+      rgba(
+        17,
+        17,
+        17,
+        0.16
+      );
+  }
+
+  /*
+   * =========================
+   * ARROW
+   * =========================
+   *
+   * Existing hover already rotates
+   * arrow 45deg.
+   *
+   * Add only a tiny scale bump.
+   */
+
+  :global(
+    [data-work-archive-immersive-root]
+    [data-work-project-row][
+      data-work-active="true"
+    ]
+    [data-work-project-arrow]
+  ) {
+    transform:
+      rotate(
+        45deg
+      )
+      scale(
+        1.055
+      );
+  }
+}
+
+/* =========================
+   MOBILE / TABLET
+========================= */
+
+/*
+ * No custom cursor interaction.
+ *
+ * Existing Work archive stays exactly
+ * as it is below desktop breakpoint.
+ */
+
+@media (
+  max-width: 960px
+) {
+  :global(
+    [data-work-project-title]
+  ),
+  :global(
+    [data-work-project-year]
+  ),
+  :global(
+    [data-work-preview-frame]
+  ) {
+    translate:
+      none;
+
+    transform:
+      none;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  :global(
+    [data-work-project-title]
+  ),
+  :global(
+    [data-work-project-year]
+  ),
+  :global(
+    [data-work-preview-frame]
+  ) {
+    translate:
+      none !important;
+
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+}

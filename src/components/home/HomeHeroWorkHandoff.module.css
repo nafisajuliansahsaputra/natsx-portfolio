@@ -1,0 +1,304 @@
+.mount {
+  display: none;
+}
+
+/*
+ * ==================================
+ * NATSX — HERO → WORK HANDOFF
+ * ==================================
+ *
+ * Existing Hero entrance animation
+ * tetap milik home-motion.css.
+ *
+ * Existing Hero magnetic system
+ * tetap milik HeroVisual.tsx.
+ *
+ * Handoff ini hanya menambahkan
+ * transform layer pada elemen luar.
+ */
+
+/* =========================
+   DEFAULT VARIABLES
+========================= */
+
+:global(
+  [data-home-handoff-hero="true"]
+) {
+  --home-handoff-eyebrow-y:
+    0px;
+
+  --home-handoff-title-y:
+    0px;
+
+  --home-handoff-intro-y:
+    0px;
+
+  --home-handoff-visual-y:
+    0px;
+
+  --home-handoff-visual-scale:
+    1;
+}
+
+:global(
+  #work[data-home-handoff-work="true"]
+) {
+  --home-handoff-work-y:
+    28px;
+
+  --home-handoff-work-scale:
+    0.993;
+
+  --home-handoff-rule-opacity:
+    0;
+
+  --home-handoff-rule-scale:
+    0;
+}
+
+/* =========================
+   HERO COPY
+========================= */
+
+:global(
+  [data-home-handoff-hero="true"]
+  [data-motion-hero-piece="eyebrow"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(
+        --home-handoff-eyebrow-y
+      ),
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+:global(
+  [data-home-handoff-hero="true"]
+  [data-motion-hero-piece="title"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(
+        --home-handoff-title-y
+      ),
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+:global(
+  [data-home-handoff-hero="true"]
+  [data-motion-hero-piece="intro"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(
+        --home-handoff-intro-y
+      ),
+      0
+    );
+
+  will-change:
+    transform;
+}
+
+/* =========================
+   HERO VISUAL
+========================= */
+
+/*
+ * Important:
+ *
+ * Magnetic movement terjadi di portrait,
+ * circle, dan arch di dalam visual.
+ *
+ * Handoff bekerja pada visual wrapper,
+ * sehingga transform magnetic tidak
+ * tertimpa.
+ */
+
+:global(
+  [data-home-handoff-hero="true"]
+  [data-motion-hero-piece="visual"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(
+        --home-handoff-visual-y
+      ),
+      0
+    )
+    scale(
+      var(
+        --home-handoff-visual-scale
+      )
+    );
+
+  transform-origin:
+    center bottom;
+
+  will-change:
+    transform;
+}
+
+/* =========================
+   SELECTED WORK PULL
+========================= */
+
+:global(
+  #work[data-home-handoff-work="true"]
+  [data-motion-scroll="selected-header"]
+) {
+  transform:
+    translate3d(
+      0,
+      var(
+        --home-handoff-work-y
+      ),
+      0
+    )
+    scale(
+      var(
+        --home-handoff-work-scale
+      )
+    );
+
+  transform-origin:
+    center top;
+
+  will-change:
+    transform;
+}
+
+/* =========================
+   TRANSIENT ACCENT RULE
+========================= */
+
+/*
+ * Existing Selected Work punya
+ * border-top abu-abu.
+ *
+ * Rule ini hanya lewat di atasnya
+ * ketika Hero menyerahkan viewport.
+ *
+ * Setelah progress selesai,
+ * opacity kembali 0.
+ */
+
+:global(
+  #work[data-home-handoff-work="true"]
+)::before {
+  content: "";
+
+  position: absolute;
+
+  z-index: 4;
+
+  top: -1px;
+  left: 0;
+
+  width:
+    clamp(
+      150px,
+      24vw,
+      380px
+    );
+
+  height: 1px;
+
+  background:
+    var(--accent);
+
+  opacity:
+    var(
+      --home-handoff-rule-opacity
+    );
+
+  transform:
+    scaleX(
+      var(
+        --home-handoff-rule-scale
+      )
+    );
+
+  transform-origin:
+    left center;
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform,
+    opacity;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  :global(
+    #work[data-home-handoff-work="true"]
+  )::before {
+    width:
+      min(
+        42vw,
+        180px
+      );
+  }
+
+  :global(
+    [data-home-handoff-hero="true"]
+    [data-motion-hero-piece]
+  ),
+  :global(
+    #work[data-home-handoff-work="true"]
+    [data-motion-scroll="selected-header"]
+  ) {
+    will-change:
+      auto;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  :global(
+    [data-home-handoff-hero="true"]
+    [data-motion-hero-piece]
+  ),
+  :global(
+    #work[data-home-handoff-work="true"]
+    [data-motion-scroll="selected-header"]
+  ) {
+    transform:
+      none !important;
+
+    will-change:
+      auto !important;
+  }
+
+  :global(
+    #work[data-home-handoff-work="true"]
+  )::before {
+    display:
+      none !important;
+  }
+}

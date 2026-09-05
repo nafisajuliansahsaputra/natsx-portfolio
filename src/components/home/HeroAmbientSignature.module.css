@@ -1,0 +1,279 @@
+/*
+ * ==================================
+ * NATSX — ORGANIC MAGNETIC GRID
+ * ==================================
+ *
+ * Dense SVG mesh with smooth cubic
+ * interpolation between displaced
+ * control vertices.
+ */
+
+.signature {
+  position: absolute;
+
+  z-index: 0;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  user-select: none;
+}
+
+:global(
+  [data-home-hero]
+) {
+  position: relative;
+
+  isolation: isolate;
+}
+
+:global(
+  [data-home-hero]
+  >
+  [data-home-hero-inner]
+) {
+  position: relative;
+
+  z-index: 1;
+}
+
+/* =========================
+   GRID STAGE
+========================= */
+
+.gridStage {
+  position: absolute;
+
+  overflow: hidden;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    opacity
+    520ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse
+      at 54% 48%,
+      #000000 0%,
+      #000000 58%,
+      rgba(
+        0,
+        0,
+        0,
+        0.82
+      ) 74%,
+      rgba(
+        0,
+        0,
+        0,
+        0.3
+      ) 91%,
+      transparent 100%
+    );
+
+  mask-image:
+    radial-gradient(
+      ellipse
+      at 54% 48%,
+      #000000 0%,
+      #000000 58%,
+      rgba(
+        0,
+        0,
+        0,
+        0.82
+      ) 74%,
+      rgba(
+        0,
+        0,
+        0,
+        0.3
+      ) 91%,
+      transparent 100%
+    );
+}
+
+.gridStage[
+  data-grid-ready="true"
+] {
+  opacity: 0.58;
+}
+
+.gridStage[
+  data-field-active="true"
+] {
+  opacity: 0.72;
+}
+
+/* =========================
+   SVG
+========================= */
+
+.gridSvg {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+}
+
+.gridGroup {
+  pointer-events:
+    none;
+}
+
+/* =========================
+   LINES
+========================= */
+
+.gridLine {
+  fill: none;
+
+  stroke:
+    rgba(
+      26,
+      26,
+      26,
+      0.068
+    );
+
+  stroke-width:
+    0.82;
+
+  vector-effect:
+    non-scaling-stroke;
+
+  stroke-linecap:
+    round;
+
+  stroke-linejoin:
+    round;
+
+  shape-rendering:
+    geometricPrecision;
+
+  transition:
+    stroke
+    360ms
+    ease;
+}
+
+.majorLine {
+  stroke:
+    rgba(
+      88,
+      98,
+      236,
+      0.09
+    );
+}
+
+.gridStage[
+  data-field-active="true"
+]
+  .gridLine {
+  stroke:
+    rgba(
+      26,
+      26,
+      26,
+      0.092
+    );
+}
+
+.gridStage[
+  data-field-active="true"
+]
+  .majorLine {
+  stroke:
+    rgba(
+      88,
+      98,
+      236,
+      0.14
+    );
+}
+
+/* =========================
+   DEPTH FALLOFF
+========================= */
+
+.gridStage::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events:
+    none;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 72%,
+      rgba(
+        245,
+        245,
+        245,
+        0.025
+      ) 82%,
+      rgba(
+        245,
+        245,
+        245,
+        0.1
+      ) 100%
+    );
+}
+
+/* =========================
+   TABLET / MOBILE
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  .signature {
+    display: none;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .gridStage {
+    transition: none;
+  }
+
+  .gridStage[
+    data-grid-ready="true"
+  ] {
+    opacity: 0.46;
+  }
+
+  .gridLine,
+  .majorLine {
+    transition: none;
+  }
+}

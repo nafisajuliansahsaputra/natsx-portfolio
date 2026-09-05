@@ -18,6 +18,7 @@ import {
   createPageMetadata,
 } from "@/lib/page-metadata";
 
+import ContactConversionPolish from "./ContactConversionPolish";
 import ContactMagneticSurface from "./ContactMagneticSurface";
 
 import styles from "./Contact.module.css";
@@ -61,26 +62,6 @@ export function ContactPageContent({
     emailParts[1] ??
     "";
 
-  /*
-   * =========================
-   * HERO FINAL-WORD CLUSTER
-   * =========================
-   *
-   * Browser boleh wrap sebelum
-   * kata terakhir, tapi tidak boleh
-   * memisahkan punctuation dari kata.
-   *
-   * Contoh:
-   *
-   * exploring?
-   * digali?
-   * ist?
-   *
-   * Cluster sendiri TIDAK punya
-   * ambient animation.
-   *
-   * Hanya nested "?" yang bergerak.
-   */
   const heroLineTwoWords =
     copy.hero
       .headingLine2
@@ -107,7 +88,9 @@ export function ContactPageContent({
 
   const fallbackSocial =
     site.socials.find(
-      (social) =>
+      (
+        social,
+      ) =>
         social.label ===
         "LinkedIn",
     ) ??
@@ -227,6 +210,7 @@ export function ContactPageContent({
           styles.page
         }
         data-motion-page="contact"
+        data-contact-conversion-root
       >
         <section
           className={
@@ -355,6 +339,7 @@ export function ContactPageContent({
           className={
             styles.primaryContact
           }
+          data-contact-primary-stage
         >
           <div className="site-container">
             <div
@@ -488,6 +473,7 @@ export function ContactPageContent({
                       className={
                         styles.statusDot
                       }
+                      data-contact-status-dot
                     />
 
                     <span>
@@ -547,6 +533,7 @@ export function ContactPageContent({
                     className={
                       styles.contactCvLink
                     }
+                    data-contact-interactive-link
                   >
                     {
                       copy.availability
@@ -555,6 +542,7 @@ export function ContactPageContent({
 
                     <span
                       aria-hidden="true"
+                      data-contact-link-arrow
                     >
                       ↗
                     </span>
@@ -609,8 +597,12 @@ export function ContactPageContent({
                             item
                           }
                           data-motion-piece="item"
+                          data-contact-interactive-row="collaboration"
+                          data-contact-row-active="false"
                         >
-                          <span>
+                          <span
+                            data-contact-row-number
+                          >
                             {String(
                               index +
                                 1,
@@ -620,7 +612,9 @@ export function ContactPageContent({
                             )}
                           </span>
 
-                          <p>
+                          <p
+                            data-contact-row-title
+                          >
                             {
                               item
                             }
@@ -710,11 +704,14 @@ export function ContactPageContent({
                     target="_blank"
                     rel="noreferrer"
                     data-motion-scroll="contact-social-item"
+                    data-contact-interactive-row="social"
+                    data-contact-row-active="false"
                   >
                     <span
                       className={
                         styles.socialNumber
                       }
+                      data-contact-row-number
                     >
                       {String(
                         index +
@@ -729,6 +726,7 @@ export function ContactPageContent({
                       className={
                         styles.socialName
                       }
+                      data-contact-row-title
                     >
                       {
                         social.label
@@ -739,6 +737,7 @@ export function ContactPageContent({
                       className={
                         styles.socialUsername
                       }
+                      data-contact-row-meta
                     >
                       {
                         social.username
@@ -750,6 +749,7 @@ export function ContactPageContent({
                         styles.socialArrow
                       }
                       aria-hidden="true"
+                      data-contact-row-arrow
                     >
                       ↗
                     </span>
@@ -821,13 +821,16 @@ export function ContactPageContent({
                   className={
                     styles.closingLink
                   }
+                  data-contact-interactive-link
                 >
                   {
                     copy.closing
                       .action
                   }
 
-                  <span>
+                  <span
+                    data-contact-link-arrow
+                  >
                     ↗
                   </span>
                 </LocaleLink>
@@ -835,6 +838,8 @@ export function ContactPageContent({
             </div>
           </div>
         </section>
+
+        <ContactConversionPolish />
       </main>
     </>
   );
