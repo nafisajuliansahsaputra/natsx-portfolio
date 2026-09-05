@@ -1,0 +1,341 @@
+/* =========================
+   NATSX
+   HERO PORTRAIT TRANSITION
+========================= */
+
+/*
+ * IMPORTANT
+ *
+ * BASE dan ALT memakai:
+ *
+ * - stage yang sama
+ * - inset yang sama
+ * - object-fit yang sama
+ * - object-position yang sama
+ * - transform yang sama
+ *
+ * Jadi tidak ada offset portrait
+ * ketika reveal terjadi.
+ */
+
+.stage {
+  --portrait-pointer-x:
+    50%;
+
+  --portrait-pointer-y:
+    50%;
+
+  --portrait-trail-x:
+    50%;
+
+  --portrait-trail-y:
+    50%;
+
+  --portrait-focus:
+    0;
+
+  /*
+   * Main reveal size
+   */
+
+  --portrait-core-radius-x:
+    clamp(
+      125px,
+      11vw,
+      180px
+    );
+
+  --portrait-core-radius-y:
+    clamp(
+      165px,
+      15vw,
+      235px
+    );
+
+  /*
+   * Slower trailing reveal
+   */
+
+  --portrait-trail-radius-x:
+    clamp(
+      185px,
+      16vw,
+      255px
+    );
+
+  --portrait-trail-radius-y:
+    clamp(
+      225px,
+      20vw,
+      310px
+    );
+
+  isolation:
+    isolate;
+}
+
+/* =========================
+   SHARED LAYER
+========================= */
+
+.layer {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  pointer-events:
+    none;
+}
+
+/* =========================
+   BASE
+========================= */
+
+.baseLayer {
+  z-index:
+    1;
+}
+
+/*
+ * BASE image geometry.
+ */
+
+.baseImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center bottom;
+
+  filter:
+    grayscale(100%);
+
+  transform:
+    scale(1.006);
+
+  transform-origin:
+    center bottom;
+
+  user-select:
+    none;
+
+  -webkit-user-drag:
+    none;
+}
+
+/* =========================
+   ALT
+========================= */
+
+/*
+ * CRITICAL:
+ *
+ * Geometry ALT dibuat SAMA PERSIS
+ * dengan BASE.
+ *
+ * Tidak ada:
+ *
+ * translate
+ * custom scale
+ * alignment compensation
+ * cursor transform
+ *
+ * Jadi kedua canvas berada
+ * di koordinat yang sama.
+ */
+
+.altImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center bottom;
+
+  transform:
+    scale(1.006);
+
+  transform-origin:
+    center bottom;
+
+  user-select:
+    none;
+
+  -webkit-user-drag:
+    none;
+}
+
+/* =========================
+   TRAIL REVEAL
+========================= */
+
+.altTrail {
+  z-index:
+    2;
+
+  opacity:
+    calc(
+      var(--portrait-focus) *
+      0.46
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse
+        var(--portrait-trail-radius-x)
+        var(--portrait-trail-radius-y)
+        at
+        var(--portrait-trail-x)
+        var(--portrait-trail-y),
+      rgb(0 0 0 / 0.84)
+        0%,
+      rgb(0 0 0 / 0.7)
+        24%,
+      rgb(0 0 0 / 0.45)
+        48%,
+      rgb(0 0 0 / 0.18)
+        72%,
+      transparent
+        100%
+    );
+
+  mask-image:
+    radial-gradient(
+      ellipse
+        var(--portrait-trail-radius-x)
+        var(--portrait-trail-radius-y)
+        at
+        var(--portrait-trail-x)
+        var(--portrait-trail-y),
+      rgb(0 0 0 / 0.84)
+        0%,
+      rgb(0 0 0 / 0.7)
+        24%,
+      rgb(0 0 0 / 0.45)
+        48%,
+      rgb(0 0 0 / 0.18)
+        72%,
+      transparent
+        100%
+    );
+
+  -webkit-mask-repeat:
+    no-repeat;
+
+  mask-repeat:
+    no-repeat;
+
+  will-change:
+    opacity;
+}
+
+/* =========================
+   CORE REVEAL
+========================= */
+
+.altCore {
+  z-index:
+    3;
+
+  opacity:
+    var(--portrait-focus);
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse
+        var(--portrait-core-radius-x)
+        var(--portrait-core-radius-y)
+        at
+        var(--portrait-pointer-x)
+        var(--portrait-pointer-y),
+      #000
+        0%,
+      #000
+        30%,
+      rgb(0 0 0 / 0.96)
+        42%,
+      rgb(0 0 0 / 0.76)
+        60%,
+      rgb(0 0 0 / 0.38)
+        77%,
+      rgb(0 0 0 / 0.12)
+        90%,
+      transparent
+        100%
+    );
+
+  mask-image:
+    radial-gradient(
+      ellipse
+        var(--portrait-core-radius-x)
+        var(--portrait-core-radius-y)
+        at
+        var(--portrait-pointer-x)
+        var(--portrait-pointer-y),
+      #000
+        0%,
+      #000
+        30%,
+      rgb(0 0 0 / 0.96)
+        42%,
+      rgb(0 0 0 / 0.76)
+        60%,
+      rgb(0 0 0 / 0.38)
+        77%,
+      rgb(0 0 0 / 0.12)
+        90%,
+      transparent
+        100%
+    );
+
+  -webkit-mask-repeat:
+    no-repeat;
+
+  mask-repeat:
+    no-repeat;
+
+  will-change:
+    opacity;
+}
+
+/* =========================
+   TABLET + MOBILE
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  .altTrail,
+  .altCore {
+    display:
+      none;
+  }
+
+  .baseImage,
+  .altImage {
+    transform:
+      scale(1.003);
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .altTrail,
+  .altCore {
+    display:
+      none;
+  }
+
+  .baseImage,
+  .altImage {
+    transform:
+      none;
+  }
+}
