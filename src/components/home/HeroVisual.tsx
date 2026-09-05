@@ -825,7 +825,7 @@ export default function HeroVisual({
           className={`${portraitStyles.layer} ${portraitStyles.baseLayer}`}
         >
           <Image
-            src="/images/natsx-portrait-hero-bfr.png"
+            src="/images/natsx-portrait-hero-before.png"
             alt={
               copy
                 .accessibility
