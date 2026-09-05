@@ -1,0 +1,470 @@
+/*
+ * ==================================
+ * NATSX — TWO PORTRAIT TRANSITION
+ * ==================================
+ *
+ * Only TWO unique assets:
+ *
+ * 01 base
+ * 02 alt
+ *
+ * Multiple ALT layers are simply
+ * different masks of the SAME photo.
+ */
+
+.stage {
+  --portrait-pointer-x:
+    0%;
+
+  --portrait-pointer-y:
+    50%;
+
+  --portrait-reveal:
+    0;
+
+  --portrait-cut:
+    0%;
+
+  --portrait-focus:
+    0;
+
+  --portrait-local-opacity:
+    0;
+
+  /*
+   * ALT alignment tuning.
+   *
+   * Generated alternative doesn't have
+   * exactly the same canvas/framing as
+   * the original portrait, so correct it
+   * statically here.
+   *
+   * This is NOT cursor movement.
+   */
+  --portrait-alt-x:
+    1.5%;
+
+  --portrait-alt-y:
+    2.5%;
+
+  --portrait-alt-scale:
+    1.075;
+
+  isolation:
+    isolate;
+
+  pointer-events:
+    none;
+}
+
+/* =========================
+   SHARED LAYERS
+========================= */
+
+.layer {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  pointer-events:
+    none;
+}
+
+/* =========================
+   BASE
+========================= */
+
+.baseLayer {
+  z-index:
+    1;
+}
+
+.baseImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center bottom;
+
+  filter:
+    grayscale(100%);
+
+  transform:
+    scale(1.006);
+
+  transform-origin:
+    center bottom;
+
+  pointer-events:
+    none;
+
+  user-select:
+    none;
+}
+
+/* =========================
+   ALT SHARED IMAGE
+========================= */
+
+.altImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center bottom;
+
+  /*
+   * Color stays intact.
+   *
+   * Cursor does NOT influence this.
+   */
+  filter:
+    none;
+
+  transform:
+    translate3d(
+      var(
+        --portrait-alt-x
+      ),
+      var(
+        --portrait-alt-y
+      ),
+      0
+    )
+    scale(
+      var(
+        --portrait-alt-scale
+      )
+    );
+
+  transform-origin:
+    center bottom;
+
+  pointer-events:
+    none;
+
+  user-select:
+    none;
+}
+
+/* =========================
+   MAIN SWEEP
+========================= */
+
+/*
+ * ALT gradually occupies more
+ * of the portrait from left → right.
+ */
+
+.altSweep {
+  z-index:
+    2;
+
+  opacity:
+    calc(
+      0.12 +
+      var(
+        --portrait-focus
+      ) *
+      0.88
+    );
+
+  clip-path:
+    inset(
+      0
+      calc(
+        100% -
+        var(
+          --portrait-cut
+        )
+      )
+      0
+      0
+    );
+
+  will-change:
+    clip-path,
+    opacity;
+}
+
+/* =========================
+   LOCAL CURSOR REVEAL
+========================= */
+
+/*
+ * ALT may appear around cursor before
+ * the whole sweep reaches that area.
+ *
+ * This creates hybrid compositions.
+ */
+
+.altLocal {
+  z-index:
+    3;
+
+  opacity:
+    var(
+      --portrait-local-opacity
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      circle
+        clamp(
+          112px,
+          9.5vw,
+          168px
+        )
+      at
+        var(
+          --portrait-pointer-x
+        )
+        var(
+          --portrait-pointer-y
+        ),
+      #000000
+        0%,
+      #000000
+        26%,
+      rgba(
+        0,
+        0,
+        0,
+        0.94
+      )
+        40%,
+      rgba(
+        0,
+        0,
+        0,
+        0.62
+      )
+        57%,
+      rgba(
+        0,
+        0,
+        0,
+        0.22
+      )
+        76%,
+      transparent
+        100%
+    );
+
+  mask-image:
+    radial-gradient(
+      circle
+        clamp(
+          112px,
+          9.5vw,
+          168px
+        )
+      at
+        var(
+          --portrait-pointer-x
+        )
+        var(
+          --portrait-pointer-y
+        ),
+      #000000
+        0%,
+      #000000
+        26%,
+      rgba(
+        0,
+        0,
+        0,
+        0.94
+      )
+        40%,
+      rgba(
+        0,
+        0,
+        0,
+        0.62
+      )
+        57%,
+      rgba(
+        0,
+        0,
+        0,
+        0.22
+      )
+        76%,
+      transparent
+        100%
+    );
+
+  will-change:
+    opacity,
+    mask-image,
+    -webkit-mask-image;
+}
+
+/* =========================
+   TRANSITION SEAM
+========================= */
+
+/*
+ * A thin soft area follows cursor X.
+ * It hides the harsh clip boundary.
+ */
+
+.altEdge {
+  z-index:
+    4;
+
+  opacity:
+    calc(
+      var(
+        --portrait-focus
+      ) *
+      0.28
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      90deg,
+      transparent
+        calc(
+          var(
+            --portrait-pointer-x
+          ) -
+          11%
+        ),
+
+      rgba(
+        0,
+        0,
+        0,
+        0.2
+      )
+        calc(
+          var(
+            --portrait-pointer-x
+          ) -
+          7%
+        ),
+
+      #000000
+        var(
+          --portrait-pointer-x
+        ),
+
+      rgba(
+        0,
+        0,
+        0,
+        0.2
+      )
+        calc(
+          var(
+            --portrait-pointer-x
+          ) +
+          7%
+        ),
+
+      transparent
+        calc(
+          var(
+            --portrait-pointer-x
+          ) +
+          11%
+        )
+    );
+
+  mask-image:
+    linear-gradient(
+      90deg,
+      transparent
+        calc(
+          var(
+            --portrait-pointer-x
+          ) -
+          11%
+        ),
+
+      rgba(
+        0,
+        0,
+        0,
+        0.2
+      )
+        calc(
+          var(
+            --portrait-pointer-x
+          ) -
+          7%
+        ),
+
+      #000000
+        var(
+          --portrait-pointer-x
+        ),
+
+      rgba(
+        0,
+        0,
+        0,
+        0.2
+      )
+        calc(
+          var(
+            --portrait-pointer-x
+          ) +
+          7%
+        ),
+
+      transparent
+        calc(
+          var(
+            --portrait-pointer-x
+          ) +
+          11%
+        )
+    );
+
+  will-change:
+    opacity,
+    mask-image,
+    -webkit-mask-image;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width:
+    960px
+) {
+  .altSweep,
+  .altLocal,
+  .altEdge {
+    display:
+      none;
+  }
+
+  .baseImage {
+    transform:
+      scale(1.006);
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .altSweep,
+  .altLocal,
+  .altEdge {
+    display:
+      none !important;
+  }
+}

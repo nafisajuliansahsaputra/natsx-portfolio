@@ -1,26 +1,39 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+} from "react";
 
-import styles from "./HeroVisual.module.css";
+import Image from "next/image";
+
+import type {
+  Locale,
+} from "@/i18n/config";
+
+import {
+  getMessages,
+} from "@/i18n/messages";
+
+import styles from "./Hero.module.css";
+import portraitStyles from "./HeroPortraitTransition.module.css";
 
 type HeroVisualProps = {
-  className?: string;
-  portraitSrc?: string;
-  portraitAlt?: string;
-  imageSrc?: string;
-  imageAlt?: string;
-  src?: string;
-  alt?: string;
-  priority?: boolean;
+  locale: Locale;
 };
 
-const DEFAULT_PORTRAIT_SRC = "/images/home/hero-portrait-profile.png";
-const DEFAULT_PORTRAIT_ALT = "NATSX hero portrait";
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
+function clamp(
+  value: number,
+  minimum: number,
+  maximum: number,
+) {
+  return Math.min(
+    Math.max(
+      value,
+      minimum,
+    ),
+    maximum,
+  );
 }
 
 function damp(
@@ -29,343 +42,847 @@ function damp(
   lambda: number,
   deltaTime: number,
 ) {
-  return current + (target - current) * (1 - Math.exp(-lambda * deltaTime));
+  return (
+    current +
+    (
+      target -
+      current
+    ) *
+      (
+        1 -
+        Math.exp(
+          -lambda *
+            deltaTime,
+        )
+      )
+  );
+}
+
+function smoothstep(
+  value: number,
+) {
+  const t =
+    clamp(
+      value,
+      0,
+      1,
+    );
+
+  return (
+    t *
+    t *
+    (
+      3 -
+      2 *
+        t
+    )
+  );
 }
 
 export default function HeroVisual({
-  className,
-  portraitSrc,
-  portraitAlt,
-  imageSrc,
-  imageAlt,
-  src,
-  alt,
-  priority = true,
+  locale,
 }: HeroVisualProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  const resolvedSrc =
-    portraitSrc ??
-    imageSrc ??
-    src ??
-    DEFAULT_PORTRAIT_SRC;
-
-  const resolvedAlt =
-    portraitAlt ??
-    imageAlt ??
-    alt ??
-    DEFAULT_PORTRAIT_ALT;
-
-  useEffect(() => {
-    const root = rootRef.current;
-
-    if (!root) {
-      return;
-    }
-
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+  const copy =
+    getMessages(
+      locale,
     );
 
-    if (reducedMotion.matches) {
-      root.style.setProperty("--hero-portrait-pointer-x", "50%");
-      root.style.setProperty("--hero-portrait-pointer-y", "50%");
-      root.style.setProperty("--hero-portrait-nx", "0");
-      root.style.setProperty("--hero-portrait-ny", "0");
-      root.style.setProperty("--hero-portrait-focus", "0");
-      root.style.setProperty("--hero-portrait-layer-a", "0");
-      root.style.setProperty("--hero-portrait-layer-b", "0");
-      root.style.setProperty("--hero-portrait-layer-c", "0");
-      root.style.setProperty("--hero-portrait-layer-d", "0");
+  const visualRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  /*
+   * =========================
+   * HERO AMBIENT STATE
+   * =========================
+   *
+   * Keep all original Hero ambience:
+   *
+   * - plus rotation
+   * - title ambience
+   * - eyebrow pulse
+   * - CTA arrows
+   *
+   * This does NOT move the portrait.
+   */
+
+  useEffect(() => {
+    const visual =
+      visualRef.current;
+
+    if (!visual) {
       return;
     }
 
-    let frameId = 0;
-    let destroyed = false;
-    let previousTime = performance.now();
-
-    let targetX = 0;
-    let targetY = 0;
-    let targetFocus = 0;
-
-    let currentX = 0;
-    let currentY = 0;
-    let currentFocus = 0;
-
-    function apply() {
-      const pointerX = 50 + currentX * 24;
-      const pointerY = 50 + currentY * 18;
-      const intensity = clamp(
-        Math.sqrt(currentX * currentX + currentY * currentY),
-        0,
-        1,
+    const hero =
+      visual.closest<HTMLElement>(
+        "[data-home-hero]",
       );
 
-      const layerA = clamp(
-        (1 - Math.abs(currentX + 0.46)) * 0.92 * currentFocus,
-        0,
-        1,
-      );
-
-      const layerB = clamp(
-        (1 - Math.abs(currentX - 0.04)) *
-          (1 - Math.abs(currentY) * 0.68) *
-          currentFocus,
-        0,
-        1,
-      );
-
-      const layerC = clamp(
-        ((currentX + 1) / 2) * (0.42 + currentFocus * 0.58),
-        0,
-        1,
-      );
-
-      const layerD = clamp(
-        (1 - Math.abs(currentY + 0.18)) * (0.22 + intensity * 0.78) * currentFocus,
-        0,
-        1,
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-pointer-x",
-        `${pointerX.toFixed(3)}%`,
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-pointer-y",
-        `${pointerY.toFixed(3)}%`,
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-nx",
-        currentX.toFixed(4),
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-ny",
-        currentY.toFixed(4),
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-focus",
-        currentFocus.toFixed(4),
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-layer-a",
-        layerA.toFixed(4),
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-layer-b",
-        layerB.toFixed(4),
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-layer-c",
-        layerC.toFixed(4),
-      );
-
-      root.style.setProperty(
-        "--hero-portrait-layer-d",
-        layerD.toFixed(4),
-      );
+    if (!hero) {
+      return;
     }
 
-    function renderFrame(timestamp: number) {
-      frameId = 0;
+    const heroElement =
+      hero;
 
-      if (destroyed) {
-        return;
-      }
-
-      const deltaTime = Math.min((timestamp - previousTime) / 1000, 0.064);
-      previousTime = timestamp;
-
-      currentX = damp(currentX, targetX, targetFocus > 0 ? 12 : 8, deltaTime);
-      currentY = damp(currentY, targetY, targetFocus > 0 ? 12 : 8, deltaTime);
-      currentFocus = damp(
-        currentFocus,
-        targetFocus,
-        targetFocus > 0 ? 10 : 7,
-        deltaTime,
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
       );
 
-      apply();
+    let isInView =
+      true;
 
-      const stillMoving =
-        Math.abs(currentX - targetX) > 0.0005 ||
-        Math.abs(currentY - targetY) > 0.0005 ||
-        Math.abs(currentFocus - targetFocus) > 0.0005;
+    function syncAmbientState() {
+      const active =
+        isInView &&
+        !document.hidden &&
+        !reducedMotion.matches;
 
-      if (stillMoving) {
-        requestFrame();
-      }
+      heroElement.dataset.ambientActive =
+        active
+          ? "true"
+          : "false";
+    }
+
+    const observer =
+      typeof IntersectionObserver !==
+      "undefined"
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              isInView =
+                entry.isIntersecting;
+
+              syncAmbientState();
+            },
+            {
+              threshold:
+                0.1,
+            },
+          )
+        : null;
+
+    observer?.observe(
+      heroElement,
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      syncAmbientState,
+    );
+
+    reducedMotion.addEventListener(
+      "change",
+      syncAmbientState,
+    );
+
+    syncAmbientState();
+
+    return () => {
+      observer?.disconnect();
+
+      document.removeEventListener(
+        "visibilitychange",
+        syncAmbientState,
+      );
+
+      reducedMotion.removeEventListener(
+        "change",
+        syncAmbientState,
+      );
+    };
+  }, []);
+
+  /*
+   * =========================
+   * TWO-PORTRAIT ENGINE
+   * =========================
+   *
+   * IMPORTANT:
+   *
+   * Grid:
+   *    still reacts spatially.
+   *
+   * Portrait:
+   *    NEVER translates / rotates
+   *    toward cursor.
+   *
+   * Cursor only changes which
+   * portrait state is visible.
+   */
+
+  useEffect(() => {
+    const visual =
+      visualRef.current;
+
+    if (!visual) {
+      return;
+    }
+
+    const visualElement =
+      visual;
+
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
+    const finePointer =
+      window.matchMedia(
+        "(hover: hover) and (pointer: fine)",
+      );
+
+    const desktop =
+      window.matchMedia(
+        "(min-width: 961px)",
+      );
+
+    let destroyed =
+      false;
+
+    let frameId:
+      | number
+      | null =
+      null;
+
+    let previousTime =
+      performance.now();
+
+    /*
+     * Pointer position.
+     *
+     * 0 → 1
+     */
+    let targetX =
+      0;
+
+    let targetY =
+      0.5;
+
+    let currentX =
+      0;
+
+    let currentY =
+      0.5;
+
+    /*
+     * Interaction intensity.
+     */
+    let targetFocus =
+      0;
+
+    let currentFocus =
+      0;
+
+    /*
+     * Global transformation progress:
+     *
+     * 0 = base portrait
+     * 1 = alt portrait
+     */
+    let targetReveal =
+      0;
+
+    let currentReveal =
+      0;
+
+    function apply() {
+      const pointerX =
+        currentX *
+        100;
+
+      const pointerY =
+        currentY *
+        100;
+
+      const reveal =
+        smoothstep(
+          currentReveal,
+        );
+
+      /*
+       * Global sweep boundary.
+       */
+      const cut =
+        reveal *
+        100;
+
+      /*
+       * Local cursor reveal stays visible
+       * even slightly ahead of the sweep.
+       *
+       * This produces the hybrid frame:
+       *
+       * face = ALT
+       * body = BASE
+       */
+      const localOpacity =
+        currentFocus *
+        (
+          0.48 +
+          reveal *
+            0.4
+        );
+
+      visualElement.style.setProperty(
+        "--portrait-pointer-x",
+        `${pointerX.toFixed(
+          3,
+        )}%`,
+      );
+
+      visualElement.style.setProperty(
+        "--portrait-pointer-y",
+        `${pointerY.toFixed(
+          3,
+        )}%`,
+      );
+
+      visualElement.style.setProperty(
+        "--portrait-reveal",
+        reveal.toFixed(
+          5,
+        ),
+      );
+
+      visualElement.style.setProperty(
+        "--portrait-cut",
+        `${cut.toFixed(
+          3,
+        )}%`,
+      );
+
+      visualElement.style.setProperty(
+        "--portrait-focus",
+        currentFocus.toFixed(
+          4,
+        ),
+      );
+
+      visualElement.style.setProperty(
+        "--portrait-local-opacity",
+        localOpacity.toFixed(
+          4,
+        ),
+      );
+
+      visualElement.dataset.portraitState =
+        reveal >
+        0.5
+          ? "alt"
+          : "base";
     }
 
     function requestFrame() {
-      if (frameId !== 0) {
+      if (
+        frameId !==
+        null
+      ) {
         return;
       }
 
-      previousTime = performance.now();
-      frameId = window.requestAnimationFrame(renderFrame);
+      previousTime =
+        performance.now();
+
+      frameId =
+        window.requestAnimationFrame(
+          renderFrame,
+        );
     }
 
-    function handlePointerMove(event: PointerEvent) {
-      const rect = root.getBoundingClientRect();
+    function renderFrame(
+      timestamp: number,
+    ) {
+      frameId =
+        null;
 
-      if (rect.width <= 0 || rect.height <= 0) {
+      if (
+        destroyed
+      ) {
         return;
       }
 
-      const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
+      const deltaTime =
+        Math.min(
+          (
+            timestamp -
+            previousTime
+          ) /
+            1000,
+          0.064,
+        );
 
-      if (!inside) {
-        targetX = 0;
-        targetY = 0;
-        targetFocus = 0;
+      previousTime =
+        timestamp;
+
+      const active =
+        targetFocus >
+        0;
+
+      /*
+       * Cursor mask reacts quickly.
+       */
+      currentX =
+        damp(
+          currentX,
+          targetX,
+          active
+            ? 15
+            : 8,
+          deltaTime,
+        );
+
+      currentY =
+        damp(
+          currentY,
+          targetY,
+          active
+            ? 15
+            : 8,
+          deltaTime,
+        );
+
+      /*
+       * Focus slightly softer.
+       */
+      currentFocus =
+        damp(
+          currentFocus,
+          targetFocus,
+          active
+            ? 10
+            : 6,
+          deltaTime,
+        );
+
+      /*
+       * Main portrait transition trails
+       * cursor intentionally.
+       *
+       * This is the important "liquid"
+       * feeling from the reference.
+       */
+      currentReveal =
+        damp(
+          currentReveal,
+          targetReveal,
+          active
+            ? 6.2
+            : 4.8,
+          deltaTime,
+        );
+
+      apply();
+
+      const moving =
+        Math.abs(
+          currentX -
+            targetX,
+        ) >
+          0.0005 ||
+        Math.abs(
+          currentY -
+            targetY,
+        ) >
+          0.0005 ||
+        Math.abs(
+          currentFocus -
+            targetFocus,
+        ) >
+          0.0005 ||
+        Math.abs(
+          currentReveal -
+            targetReveal,
+        ) >
+          0.0005;
+
+      if (
+        moving
+      ) {
         requestFrame();
+      }
+    }
+
+    function updatePointer(
+      event: PointerEvent,
+    ) {
+      if (
+        reducedMotion.matches ||
+        !finePointer.matches ||
+        !desktop.matches
+      ) {
         return;
       }
 
-      const normalizedX = clamp(
-        ((event.clientX - rect.left) / rect.width - 0.5) * 2,
-        -1,
-        1,
-      );
+      const rect =
+        visualElement.getBoundingClientRect();
 
-      const normalizedY = clamp(
-        ((event.clientY - rect.top) / rect.height - 0.5) * 2,
-        -1,
-        1,
-      );
+      if (
+        rect.width <=
+          0 ||
+        rect.height <=
+          0
+      ) {
+        return;
+      }
 
-      targetX = normalizedX;
-      targetY = normalizedY;
-      targetFocus = 1;
+      const x =
+        clamp(
+          (
+            event.clientX -
+            rect.left
+          ) /
+            rect.width,
+          0,
+          1,
+        );
+
+      const y =
+        clamp(
+          (
+            event.clientY -
+            rect.top
+          ) /
+            rect.height,
+          0,
+          1,
+        );
+
+      targetX =
+        x;
+
+      targetY =
+        y;
+
+      targetFocus =
+        1;
+
+      /*
+       * Transformation controlled mainly
+       * by horizontal cursor position.
+       *
+       * Slight deadzone on left/right
+       * keeps states stable.
+       */
+      targetReveal =
+        clamp(
+          (
+            x -
+            0.08
+          ) /
+            0.84,
+          0,
+          1,
+        );
 
       requestFrame();
     }
 
-    function handleWindowLeave() {
-      targetX = 0;
-      targetY = 0;
-      targetFocus = 0;
+    function handlePointerEnter(
+      event: PointerEvent,
+    ) {
+      updatePointer(
+        event,
+      );
+    }
+
+    function handlePointerMove(
+      event: PointerEvent,
+    ) {
+      updatePointer(
+        event,
+      );
+    }
+
+    function handlePointerLeave() {
+      /*
+       * Return smoothly to base.
+       */
+      targetX =
+        0;
+
+      targetY =
+        0.5;
+
+      targetFocus =
+        0;
+
+      targetReveal =
+        0;
+
       requestFrame();
     }
 
-    window.addEventListener("pointermove", handlePointerMove, {
-      passive: true,
-    });
+    function reset() {
+      targetX =
+        0;
 
-    window.addEventListener("pointerleave", handleWindowLeave);
-    window.addEventListener("blur", handleWindowLeave);
+      targetY =
+        0.5;
+
+      targetFocus =
+        0;
+
+      targetReveal =
+        0;
+
+      requestFrame();
+    }
+
+    /*
+     * Attach events to ORIGINAL
+     * visual wrapper.
+     *
+     * HeroAmbientSignature also listens
+     * here, so both systems receive the
+     * exact same pointer.
+     */
+
+    visualElement.addEventListener(
+      "pointerenter",
+      handlePointerEnter,
+    );
+
+    visualElement.addEventListener(
+      "pointermove",
+      handlePointerMove,
+      {
+        passive: true,
+      },
+    );
+
+    visualElement.addEventListener(
+      "pointerleave",
+      handlePointerLeave,
+    );
+
+    visualElement.addEventListener(
+      "pointercancel",
+      handlePointerLeave,
+    );
+
+    reducedMotion.addEventListener(
+      "change",
+      reset,
+    );
+
+    finePointer.addEventListener(
+      "change",
+      reset,
+    );
+
+    desktop.addEventListener(
+      "change",
+      reset,
+    );
 
     apply();
 
     return () => {
-      destroyed = true;
+      destroyed =
+        true;
 
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", handleWindowLeave);
-      window.removeEventListener("blur", handleWindowLeave);
+      visualElement.removeEventListener(
+        "pointerenter",
+        handlePointerEnter,
+      );
 
-      if (frameId !== 0) {
-        window.cancelAnimationFrame(frameId);
+      visualElement.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
+
+      visualElement.removeEventListener(
+        "pointerleave",
+        handlePointerLeave,
+      );
+
+      visualElement.removeEventListener(
+        "pointercancel",
+        handlePointerLeave,
+      );
+
+      reducedMotion.removeEventListener(
+        "change",
+        reset,
+      );
+
+      finePointer.removeEventListener(
+        "change",
+        reset,
+      );
+
+      desktop.removeEventListener(
+        "change",
+        reset,
+      );
+
+      if (
+        frameId !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          frameId,
+        );
       }
 
+      delete visualElement.dataset
+        .portraitState;
+
       [
-        "--hero-portrait-pointer-x",
-        "--hero-portrait-pointer-y",
-        "--hero-portrait-nx",
-        "--hero-portrait-ny",
-        "--hero-portrait-focus",
-        "--hero-portrait-layer-a",
-        "--hero-portrait-layer-b",
-        "--hero-portrait-layer-c",
-        "--hero-portrait-layer-d",
-      ].forEach((property) => {
-        root.style.removeProperty(property);
-      });
+        "--portrait-pointer-x",
+        "--portrait-pointer-y",
+        "--portrait-reveal",
+        "--portrait-cut",
+        "--portrait-focus",
+        "--portrait-local-opacity",
+      ].forEach(
+        (
+          property,
+        ) => {
+          visualElement.style.removeProperty(
+            property,
+          );
+        },
+      );
     };
   }, []);
 
   return (
     <div
-      ref={rootRef}
-      className={[styles.visual, className].filter(Boolean).join(" ")}
-      aria-hidden="true"
+      ref={
+        visualRef
+      }
+      className={
+        styles.visual
+      }
+      data-motion-hero-piece="visual"
+      data-portrait-state="base"
     >
-      <div className={styles.wordPlane}>
-        <span className={`${styles.word} ${styles.wordIdeas}`}>IDEAS</span>
-        <span className={`${styles.word} ${styles.wordBuild}`}>BUILD</span>
-        <span className={`${styles.word} ${styles.wordMotion}`}>MOTION</span>
+      {/*
+       * ORIGINAL PLUS
+       */}
+      <div
+        className={
+          styles.accentPlus
+        }
+        aria-hidden="true"
+      >
+        <span />
+
+        <span />
       </div>
 
-      <div className={styles.backShapes}>
-        <span className={styles.arch} />
-        <span className={styles.disk} />
-      </div>
+      {/*
+       * ORIGINAL CIRCLE
+       */}
+      <div
+        className={`${styles.shape} ${styles.shapeCircle}`}
+        aria-hidden="true"
+      />
 
-      <div className={styles.portraitStage}>
-        <div className={`${styles.layer} ${styles.layerBase}`}>
+      {/*
+       * ORIGINAL ARCH
+       */}
+      <div
+        className={`${styles.shape} ${styles.shapeArch}`}
+        aria-hidden="true"
+      />
+
+      {/*
+       * =========================
+       * TWO-PORTRAIT STACK
+       * =========================
+       */}
+      <div
+        className={`${styles.portrait} ${portraitStyles.stage}`}
+        data-motion-portrait="loaded"
+      >
+        {/*
+         * BASE
+         */}
+        <div
+          className={`${portraitStyles.layer} ${portraitStyles.baseLayer}`}
+        >
           <Image
-            src={resolvedSrc}
-            alt={resolvedAlt}
+            src="/images/natsx-portrait-hero.png"
+            alt={
+              copy
+                .accessibility
+                .portrait
+            }
             fill
-            priority={priority}
-            sizes="(min-width: 1440px) 520px, (min-width: 1024px) 38vw, 70vw"
-            className={styles.portraitImage}
+            preload
+            sizes="(max-width: 960px) 100vw, 42vw"
+            className={
+              portraitStyles.baseImage
+            }
           />
         </div>
 
-        <div className={`${styles.layer} ${styles.layerReveal}`}>
+        {/*
+         * ALT — MAIN SWEEP
+         */}
+        <div
+          className={`${portraitStyles.layer} ${portraitStyles.altSweep}`}
+          aria-hidden="true"
+        >
           <Image
-            src={resolvedSrc}
+            src="/images/natsx-portrait-hero-alt.png"
             alt=""
             fill
-            priority={false}
-            sizes="(min-width: 1440px) 520px, (min-width: 1024px) 38vw, 70vw"
-            className={styles.portraitImage}
+            loading="eager"
+            sizes="(max-width: 960px) 100vw, 42vw"
+            className={
+              portraitStyles.altImage
+            }
           />
         </div>
 
-        <div className={`${styles.layer} ${styles.layerSoft}`}>
+        {/*
+         * ALT — CURSOR LOCAL REVEAL
+         *
+         * Same second photo.
+         * Not a third state.
+         */}
+        <div
+          className={`${portraitStyles.layer} ${portraitStyles.altLocal}`}
+          aria-hidden="true"
+        >
           <Image
-            src={resolvedSrc}
+            src="/images/natsx-portrait-hero-alt.png"
             alt=""
             fill
-            priority={false}
-            sizes="(min-width: 1440px) 520px, (min-width: 1024px) 38vw, 70vw"
-            className={styles.portraitImage}
+            loading="eager"
+            sizes="(max-width: 960px) 100vw, 42vw"
+            className={
+              portraitStyles.altImage
+            }
           />
         </div>
 
-        <div className={`${styles.layer} ${styles.layerInk}`}>
+        {/*
+         * Soft seam treatment.
+         */}
+        <div
+          className={`${portraitStyles.layer} ${portraitStyles.altEdge}`}
+          aria-hidden="true"
+        >
           <Image
-            src={resolvedSrc}
+            src="/images/natsx-portrait-hero-alt.png"
             alt=""
             fill
-            priority={false}
-            sizes="(min-width: 1440px) 520px, (min-width: 1024px) 38vw, 70vw"
-            className={styles.portraitImage}
-          />
-        </div>
-
-        <div className={`${styles.layer} ${styles.layerGlow}`}>
-          <Image
-            src={resolvedSrc}
-            alt=""
-            fill
-            priority={false}
-            sizes="(min-width: 1440px) 520px, (min-width: 1024px) 38vw, 70vw"
-            className={styles.portraitImage}
+            loading="lazy"
+            sizes="(max-width: 960px) 100vw, 42vw"
+            className={
+              portraitStyles.altImage
+            }
           />
         </div>
       </div>
