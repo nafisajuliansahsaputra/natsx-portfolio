@@ -3,6 +3,7 @@
 import {
   useEffect,
   useRef,
+  useState,
 } from "react";
 
 import Image from "next/image";
@@ -16,68 +17,10 @@ import {
 } from "@/i18n/messages";
 
 import styles from "./Hero.module.css";
-import portraitStyles from "./HeroPortraitTransition.module.css";
 
 type HeroVisualProps = {
   locale: Locale;
 };
-
-function clamp(
-  value: number,
-  minimum: number,
-  maximum: number,
-) {
-  return Math.min(
-    Math.max(
-      value,
-      minimum,
-    ),
-    maximum,
-  );
-}
-
-function damp(
-  current: number,
-  target: number,
-  lambda: number,
-  deltaTime: number,
-) {
-  return (
-    current +
-    (
-      target -
-      current
-    ) *
-      (
-        1 -
-        Math.exp(
-          -lambda *
-            deltaTime,
-        )
-      )
-  );
-}
-
-function smoothstep(
-  value: number,
-) {
-  const t =
-    clamp(
-      value,
-      0,
-      1,
-    );
-
-  return (
-    t *
-    t *
-    (
-      3 -
-      2 *
-        t
-    )
-  );
-}
 
 export default function HeroVisual({
   locale,
@@ -87,146 +30,126 @@ export default function HeroVisual({
       locale,
     );
 
+  const [
+    portraitLoaded,
+    setPortraitLoaded,
+  ] =
+    useState(
+      false,
+    );
+
   const visualRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  const portraitRef =
+    useRef<HTMLImageElement>(
+      null,
+    );
+
+  const circleRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  const archRef =
     useRef<HTMLDivElement>(
       null,
     );
 
   /*
    * =========================
-   * HERO AMBIENT STATE
+   * IMAGE LOAD STATE
    * =========================
-   *
-   * Keep all original Hero ambience:
-   *
-   * - plus rotation
-   * - title ambience
-   * - eyebrow pulse
-   * - CTA arrows
-   *
-   * This does NOT move the portrait.
    */
 
   useEffect(() => {
-    const visual =
-      visualRef.current;
+    const image =
+      portraitRef.current;
 
-    if (!visual) {
+    if (!image) {
       return;
     }
 
-    const hero =
-      visual.closest<HTMLElement>(
-        "[data-home-hero]",
-      );
+    const syncLoadedState =
+      () => {
+        if (
+          image.complete &&
+          image.naturalWidth >
+            0
+        ) {
+          setPortraitLoaded(
+            true,
+          );
+        }
+      };
 
-    if (!hero) {
-      return;
-    }
+    syncLoadedState();
 
-    const heroElement =
-      hero;
-
-    const reducedMotion =
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      );
-
-    let isInView =
-      true;
-
-    function syncAmbientState() {
-      const active =
-        isInView &&
-        !document.hidden &&
-        !reducedMotion.matches;
-
-      heroElement.dataset.ambientActive =
-        active
-          ? "true"
-          : "false";
-    }
-
-    const observer =
-      typeof IntersectionObserver !==
-      "undefined"
-        ? new IntersectionObserver(
-            (
-              [
-                entry,
-              ],
-            ) => {
-              isInView =
-                entry.isIntersecting;
-
-              syncAmbientState();
-            },
-            {
-              threshold:
-                0.1,
-            },
-          )
-        : null;
-
-    observer?.observe(
-      heroElement,
+    image.addEventListener(
+      "load",
+      syncLoadedState,
     );
-
-    document.addEventListener(
-      "visibilitychange",
-      syncAmbientState,
-    );
-
-    reducedMotion.addEventListener(
-      "change",
-      syncAmbientState,
-    );
-
-    syncAmbientState();
 
     return () => {
-      observer?.disconnect();
-
-      document.removeEventListener(
-        "visibilitychange",
-        syncAmbientState,
-      );
-
-      reducedMotion.removeEventListener(
-        "change",
-        syncAmbientState,
+      image.removeEventListener(
+        "load",
+        syncLoadedState,
       );
     };
   }, []);
 
   /*
    * =========================
-   * TWO-PORTRAIT ENGINE
+   * MAGNETIC DEPTH SYSTEM
    * =========================
    *
-   * IMPORTANT:
+   * Physics-based magnetic motion.
    *
-   * Grid:
-   *    still reacts spatially.
+   * Instead of directly interpolating
+   * the portrait toward the cursor,
+   * every layer has:
    *
-   * Portrait:
-   *    NEVER translates / rotates
-   *    toward cursor.
+   * - target
+   * - velocity
+   * - spring force
+   * - damping
    *
-   * Cursor only changes which
-   * portrait state is visible.
+   * This gives the hero visual
+   * actual perceived weight.
    */
 
   useEffect(() => {
     const visual =
       visualRef.current;
 
-    if (!visual) {
+    const portrait =
+      portraitRef.current;
+
+    const circle =
+      circleRef.current;
+
+    const arch =
+      archRef.current;
+
+    if (
+      !visual ||
+      !portrait ||
+      !circle ||
+      !arch
+    ) {
       return;
     }
 
-    const visualElement =
-      visual;
+    const hero =
+      visual.closest(
+        "[data-home-hero]",
+      ) as HTMLElement | null;
+
+    if (!hero) {
+      return;
+    }
 
     const reducedMotion =
       window.matchMedia(
@@ -235,293 +158,466 @@ export default function HeroVisual({
 
     const finePointer =
       window.matchMedia(
-        "(hover: hover) and (pointer: fine)",
+        "(pointer: fine)",
       );
 
-    const desktop =
-      window.matchMedia(
-        "(min-width: 961px)",
-      );
-
-    let destroyed =
-      false;
+    let isInView =
+      true;
 
     let frameId:
       | number
       | null =
       null;
 
-    let previousTime =
-      performance.now();
-
     /*
-     * Pointer position.
+     * Normalized pointer target:
      *
-     * 0 → 1
+     * -1 ... 1
      */
     let targetX =
       0;
 
     let targetY =
-      0.5;
+      0;
 
+    /*
+     * Current spring position.
+     */
     let currentX =
       0;
 
     let currentY =
-      0.5;
+      0;
 
     /*
-     * Interaction intensity.
+     * Spring velocity.
      */
-    let targetFocus =
+    let velocityX =
       0;
 
-    let currentFocus =
+    let velocityY =
       0;
 
     /*
-     * Global transformation progress:
+     * Magnetic tuning.
      *
-     * 0 = base portrait
-     * 1 = alt portrait
+     * Cursor-following and release
+     * intentionally use different
+     * spring profiles.
+     *
+     * While the cursor is inside the
+     * visual, the response is quick and
+     * magnetic. When the cursor leaves,
+     * the return spring becomes softer
+     * and keeps a little more momentum,
+     * creating a smooth rebound instead
+     * of a stiff snap-back.
      */
-    let targetReveal =
-      0;
+    const activeSpring =
+      0.068;
 
-    let currentReveal =
-      0;
+    const activeDamping =
+      0.77;
 
-    function apply() {
-      const pointerX =
-        currentX *
-        100;
+    const returnSpring =
+      0.03;
 
-      const pointerY =
-        currentY *
-        100;
+    const returnDamping =
+      0.84;
 
-      const reveal =
-        smoothstep(
-          currentReveal,
-        );
+    let isPointerActive =
+      false;
 
-      /*
-       * Global sweep boundary.
-       */
-      const cut =
-        reveal *
-        100;
-
-      /*
-       * Local cursor reveal stays visible
-       * even slightly ahead of the sweep.
-       *
-       * This produces the hybrid frame:
-       *
-       * face = ALT
-       * body = BASE
-       */
-      const localOpacity =
-        currentFocus *
-        (
-          0.48 +
-          reveal *
-            0.4
-        );
-
-      visualElement.style.setProperty(
-        "--portrait-pointer-x",
-        `${pointerX.toFixed(
-          3,
-        )}%`,
-      );
-
-      visualElement.style.setProperty(
-        "--portrait-pointer-y",
-        `${pointerY.toFixed(
-          3,
-        )}%`,
-      );
-
-      visualElement.style.setProperty(
-        "--portrait-reveal",
-        reveal.toFixed(
-          5,
-        ),
-      );
-
-      visualElement.style.setProperty(
-        "--portrait-cut",
-        `${cut.toFixed(
-          3,
-        )}%`,
-      );
-
-      visualElement.style.setProperty(
-        "--portrait-focus",
-        currentFocus.toFixed(
-          4,
-        ),
-      );
-
-      visualElement.style.setProperty(
-        "--portrait-local-opacity",
-        localOpacity.toFixed(
-          4,
-        ),
-      );
-
-      visualElement.dataset.portraitState =
-        reveal >
-        0.5
-          ? "alt"
-          : "base";
-    }
-
-    function requestFrame() {
+    /*
+     * Amplifies subtle cursor
+     * movement around the center.
+     *
+     * This avoids the old feeling
+     * where the visual only moves
+     * when the pointer travels far.
+     */
+    const shapeInput = (
+      value: number,
+    ) => {
       if (
-        frameId !==
-        null
+        value ===
+        0
       ) {
-        return;
+        return 0;
       }
 
-      previousTime =
-        performance.now();
+      return (
+        Math.sign(
+          value,
+        ) *
+        Math.pow(
+          Math.abs(
+            value,
+          ),
+          0.78,
+        )
+      );
+    };
 
-      frameId =
-        window.requestAnimationFrame(
-          renderFrame,
+    const applyMagnetic = (
+      x: number,
+      y: number,
+    ) => {
+      const shapedX =
+        shapeInput(
+          x,
         );
-    }
 
-    function renderFrame(
-      timestamp: number,
-    ) {
-      frameId =
-        null;
+      const shapedY =
+        shapeInput(
+          y,
+        );
 
-      if (
-        destroyed
-      ) {
-        return;
-      }
-
-      const deltaTime =
+      const intensity =
         Math.min(
+          1,
+          Math.hypot(
+            shapedX,
+            shapedY,
+          ),
+        );
+
+      /*
+       * =========================
+       * PORTRAIT
+       * =========================
+       */
+
+      const portraitX =
+        shapedX *
+        32;
+
+      const portraitY =
+        shapedY *
+        21;
+
+      const portraitRotate =
+        shapedX *
+          0.82 -
+        shapedY *
+          0.16;
+
+      const portraitScale =
+        1.006 +
+        intensity *
+          0.008;
+
+      portrait.style.transform = `
+        translate3d(
+          ${portraitX}px,
+          ${portraitY}px,
+          0
+        )
+        rotate(
+          ${portraitRotate}deg
+        )
+        scale(
+          ${portraitScale}
+        )
+      `;
+
+      /*
+       * =========================
+       * LIGHT CIRCLE
+       * =========================
+       */
+
+      const circleX =
+        shapedX *
+        -20;
+
+      const circleY =
+        shapedY *
+        -14;
+
+      circle.style.transform = `
+        translate3d(
+          ${circleX}px,
+          ${circleY}px,
+          0
+        )
+        scale(
+          ${
+            1 +
+            intensity *
+              0.011
+          }
+        )
+      `;
+
+      /*
+       * =========================
+       * DARK ARCH
+       * =========================
+       */
+
+      const archX =
+        shapedX *
+        15;
+
+      const archY =
+        shapedY *
+        10;
+
+      const archRotate =
+        shapedX *
+        0.38;
+
+      arch.style.transform = `
+        translate3d(
+          ${archX}px,
+          ${archY}px,
+          0
+        )
+        rotate(
+          ${archRotate}deg
+        )
+      `;
+    };
+
+    const resetVisual =
+      () => {
+        targetX =
+          0;
+
+        targetY =
+          0;
+
+        currentX =
+          0;
+
+        currentY =
+          0;
+
+        velocityX =
+          0;
+
+        velocityY =
+          0;
+
+        applyMagnetic(
+          0,
+          0,
+        );
+      };
+
+    /*
+     * Ambient animations are
+     * independent from magnetic
+     * portrait movement.
+     */
+
+    const syncAmbientState =
+      () => {
+        const shouldRun =
+          isInView &&
+          !document.hidden &&
+          !reducedMotion.matches;
+
+        hero.dataset.ambientActive =
+          shouldRun
+            ? "true"
+            : "false";
+      };
+
+    /*
+     * =========================
+     * SPRING LOOP
+     * =========================
+     */
+
+    const renderMagnetic =
+      () => {
+        /*
+         * Strong responsive attraction
+         * while cursor is inside.
+         *
+         * Softer spring + more retained
+         * momentum when released.
+         */
+        const spring =
+          isPointerActive
+            ? activeSpring
+            : returnSpring;
+
+        const damping =
+          isPointerActive
+            ? activeDamping
+            : returnDamping;
+
+        /*
+         * Spring acceleration.
+         */
+        velocityX +=
           (
-            timestamp -
-            previousTime
-          ) /
-            1000,
-          0.064,
-        );
+            targetX -
+            currentX
+          ) *
+          spring;
 
-      previousTime =
-        timestamp;
+        velocityY +=
+          (
+            targetY -
+            currentY
+          ) *
+          spring;
 
-      const active =
-        targetFocus >
-        0;
+        /*
+         * Energy loss.
+         */
+        velocityX *=
+          damping;
 
-      /*
-       * Cursor mask reacts quickly.
-       */
-      currentX =
-        damp(
+        velocityY *=
+          damping;
+
+        /*
+         * Integrate position.
+         */
+        currentX +=
+          velocityX;
+
+        currentY +=
+          velocityY;
+
+        applyMagnetic(
           currentX,
-          targetX,
-          active
-            ? 15
-            : 8,
-          deltaTime,
-        );
-
-      currentY =
-        damp(
           currentY,
-          targetY,
-          active
-            ? 15
-            : 8,
-          deltaTime,
         );
 
-      /*
-       * Focus slightly softer.
-       */
-      currentFocus =
-        damp(
-          currentFocus,
-          targetFocus,
-          active
-            ? 10
-            : 6,
-          deltaTime,
+        const distanceX =
+          Math.abs(
+            targetX -
+              currentX,
+          );
+
+        const distanceY =
+          Math.abs(
+            targetY -
+              currentY,
+          );
+
+        const motionEnergy =
+          Math.abs(
+            velocityX,
+          ) +
+          Math.abs(
+            velocityY,
+          );
+
+        const stillMoving =
+          distanceX >
+            0.0004 ||
+          distanceY >
+            0.0004 ||
+          motionEnergy >
+            0.0004;
+
+        if (
+          stillMoving
+        ) {
+          frameId =
+            window.requestAnimationFrame(
+              renderMagnetic,
+            );
+
+          return;
+        }
+
+        currentX =
+          targetX;
+
+        currentY =
+          targetY;
+
+        velocityX =
+          0;
+
+        velocityY =
+          0;
+
+        applyMagnetic(
+          currentX,
+          currentY,
         );
 
-      /*
-       * Main portrait transition trails
-       * cursor intentionally.
-       *
-       * This is the important "liquid"
-       * feeling from the reference.
-       */
-      currentReveal =
-        damp(
-          currentReveal,
-          targetReveal,
-          active
-            ? 6.2
-            : 4.8,
-          deltaTime,
-        );
+        frameId =
+          null;
+      };
 
-      apply();
+    const requestFrame =
+      () => {
+        if (
+          frameId !==
+          null
+        ) {
+          return;
+        }
 
-      const moving =
-        Math.abs(
-          currentX -
-            targetX,
-        ) >
-          0.0005 ||
-        Math.abs(
-          currentY -
-            targetY,
-        ) >
-          0.0005 ||
-        Math.abs(
-          currentFocus -
-            targetFocus,
-        ) >
-          0.0005 ||
-        Math.abs(
-          currentReveal -
-            targetReveal,
-        ) >
-          0.0005;
+        frameId =
+          window.requestAnimationFrame(
+            renderMagnetic,
+          );
+      };
 
-      if (
-        moving
-      ) {
-        requestFrame();
-      }
-    }
+    /*
+     * =========================
+     * POINTER
+     * =========================
+     *
+     * Magnetic field only exists
+     * inside the visual area.
+     *
+     * Moving from the picture toward
+     * the hero text immediately releases
+     * the visual back toward center.
+     */
 
-    function updatePointer(
+    const handlePointerEnter =
+      () => {
+        if (
+          !finePointer.matches ||
+          reducedMotion.matches ||
+          !isInView
+        ) {
+          return;
+        }
+
+        isPointerActive =
+          true;
+      };
+
+    const handlePointerMove = (
       event: PointerEvent,
-    ) {
+    ) => {
       if (
-        reducedMotion.matches ||
         !finePointer.matches ||
-        !desktop.matches
+        reducedMotion.matches ||
+        !isInView
       ) {
         return;
       }
 
+      isPointerActive =
+        true;
+
+      /*
+       * IMPORTANT:
+       *
+       * Calculate cursor position from
+       * VISUAL bounds instead of the
+       * entire hero.
+       *
+       * This gives stronger local
+       * magnetic sensitivity.
+       */
       const rect =
-        visualElement.getBoundingClientRect();
+        visual.getBoundingClientRect();
 
       if (
         rect.width <=
@@ -533,194 +629,217 @@ export default function HeroVisual({
       }
 
       const x =
-        clamp(
+        (
           (
             event.clientX -
             rect.left
           ) /
-            rect.width,
-          0,
-          1,
-        );
+            rect.width -
+          0.5
+        ) *
+        2;
 
       const y =
-        clamp(
+        (
           (
             event.clientY -
             rect.top
           ) /
-            rect.height,
-          0,
-          1,
-        );
+            rect.height -
+          0.5
+        ) *
+        2;
 
       targetX =
-        x;
+        Math.max(
+          -1,
+          Math.min(
+            1,
+            x,
+          ),
+        );
 
       targetY =
-        y;
+        Math.max(
+          -1,
+          Math.min(
+            1,
+            y,
+          ),
+        );
 
-      targetFocus =
-        1;
+      requestFrame();
+    };
 
-      /*
-       * Transformation controlled mainly
-       * by horizontal cursor position.
-       *
-       * Slight deadzone on left/right
-       * keeps states stable.
-       */
-      targetReveal =
-        clamp(
+    const handlePointerLeave =
+      () => {
+        /*
+         * Release magnetic coupling.
+         *
+         * Do NOT reset velocity.
+         *
+         * Existing movement momentum
+         * naturally carries into the
+         * return spring and produces
+         * the soft rebound.
+         */
+        isPointerActive =
+          false;
+
+        targetX =
+          0;
+
+        targetY =
+          0;
+
+        requestFrame();
+      };
+
+    /*
+     * =========================
+     * REDUCED MOTION
+     * =========================
+     */
+
+    const handleReducedMotion =
+      () => {
+        if (
+          reducedMotion.matches
+        ) {
+          isPointerActive =
+            false;
+
+          if (
+            frameId !==
+            null
+          ) {
+            window.cancelAnimationFrame(
+              frameId,
+            );
+
+            frameId =
+              null;
+          }
+
+          resetVisual();
+        }
+
+        syncAmbientState();
+      };
+
+    /*
+     * =========================
+     * HERO VISIBILITY
+     * =========================
+     */
+
+    let observer:
+      | IntersectionObserver
+      | null =
+      null;
+
+    if (
+      "IntersectionObserver" in
+      window
+    ) {
+      observer =
+        new IntersectionObserver(
           (
-            x -
-            0.08
-          ) /
-            0.84,
-          0,
-          1,
+            [
+              entry,
+            ],
+          ) => {
+            isInView =
+              entry.isIntersecting;
+
+            if (
+              !isInView
+            ) {
+              isPointerActive =
+                false;
+
+              targetX =
+                0;
+
+              targetY =
+                0;
+
+              requestFrame();
+            }
+
+            syncAmbientState();
+          },
+          {
+            threshold:
+              0.1,
+          },
         );
 
-      requestFrame();
-    }
-
-    function handlePointerEnter(
-      event: PointerEvent,
-    ) {
-      updatePointer(
-        event,
+      observer.observe(
+        hero,
       );
-    }
-
-    function handlePointerMove(
-      event: PointerEvent,
-    ) {
-      updatePointer(
-        event,
-      );
-    }
-
-    function handlePointerLeave() {
-      /*
-       * Return smoothly to base.
-       */
-      targetX =
-        0;
-
-      targetY =
-        0.5;
-
-      targetFocus =
-        0;
-
-      targetReveal =
-        0;
-
-      requestFrame();
-    }
-
-    function reset() {
-      targetX =
-        0;
-
-      targetY =
-        0.5;
-
-      targetFocus =
-        0;
-
-      targetReveal =
-        0;
-
-      requestFrame();
+    } else {
+      syncAmbientState();
     }
 
     /*
-     * Attach events to ORIGINAL
-     * visual wrapper.
-     *
-     * HeroAmbientSignature also listens
-     * here, so both systems receive the
-     * exact same pointer.
+     * Pointer tracking is attached
+     * ONLY to the right visual.
      */
-
-    visualElement.addEventListener(
+    visual.addEventListener(
       "pointerenter",
       handlePointerEnter,
     );
 
-    visualElement.addEventListener(
+    visual.addEventListener(
       "pointermove",
       handlePointerMove,
-      {
-        passive: true,
-      },
     );
 
-    visualElement.addEventListener(
+    visual.addEventListener(
       "pointerleave",
       handlePointerLeave,
     );
 
-    visualElement.addEventListener(
-      "pointercancel",
-      handlePointerLeave,
+    document.addEventListener(
+      "visibilitychange",
+      syncAmbientState,
     );
 
     reducedMotion.addEventListener(
       "change",
-      reset,
+      handleReducedMotion,
     );
 
-    finePointer.addEventListener(
-      "change",
-      reset,
-    );
-
-    desktop.addEventListener(
-      "change",
-      reset,
-    );
-
-    apply();
+    resetVisual();
+    syncAmbientState();
 
     return () => {
-      destroyed =
-        true;
+      observer?.disconnect();
 
-      visualElement.removeEventListener(
+      visual.removeEventListener(
         "pointerenter",
         handlePointerEnter,
       );
 
-      visualElement.removeEventListener(
+      visual.removeEventListener(
         "pointermove",
         handlePointerMove,
       );
 
-      visualElement.removeEventListener(
+      visual.removeEventListener(
         "pointerleave",
         handlePointerLeave,
       );
 
-      visualElement.removeEventListener(
-        "pointercancel",
-        handlePointerLeave,
+      document.removeEventListener(
+        "visibilitychange",
+        syncAmbientState,
       );
 
       reducedMotion.removeEventListener(
         "change",
-        reset,
-      );
-
-      finePointer.removeEventListener(
-        "change",
-        reset,
-      );
-
-      desktop.removeEventListener(
-        "change",
-        reset,
+        handleReducedMotion,
       );
 
       if (
@@ -732,24 +851,16 @@ export default function HeroVisual({
         );
       }
 
-      delete visualElement.dataset
-        .portraitState;
+      portrait.style.removeProperty(
+        "transform",
+      );
 
-      [
-        "--portrait-pointer-x",
-        "--portrait-pointer-y",
-        "--portrait-reveal",
-        "--portrait-cut",
-        "--portrait-focus",
-        "--portrait-local-opacity",
-      ].forEach(
-        (
-          property,
-        ) => {
-          visualElement.style.removeProperty(
-            property,
-          );
-        },
+      circle.style.removeProperty(
+        "transform",
+      );
+
+      arch.style.removeProperty(
+        "transform",
       );
     };
   }, []);
@@ -763,11 +874,7 @@ export default function HeroVisual({
         styles.visual
       }
       data-motion-hero-piece="visual"
-      data-portrait-state="base"
     >
-      {/*
-       * ORIGINAL PLUS
-       */}
       <div
         className={
           styles.accentPlus
@@ -775,116 +882,57 @@ export default function HeroVisual({
         aria-hidden="true"
       >
         <span />
-
         <span />
       </div>
 
-      {/*
-       * ORIGINAL CIRCLE
-       */}
       <div
+        ref={
+          circleRef
+        }
         className={`${styles.shape} ${styles.shapeCircle}`}
         aria-hidden="true"
       />
 
-      {/*
-       * ORIGINAL ARCH
-       */}
       <div
+        ref={
+          archRef
+        }
         className={`${styles.shape} ${styles.shapeArch}`}
         aria-hidden="true"
       />
 
-      {/*
-       * =========================
-       * TWO-PORTRAIT STACK
-       * =========================
-       */}
       <div
-        className={`${styles.portrait} ${portraitStyles.stage}`}
-        data-motion-portrait="loaded"
+        className={
+          styles.portrait
+        }
+        data-motion-portrait={
+          portraitLoaded
+            ? "loaded"
+            : "loading"
+        }
       >
-        {/*
-         * BASE
-         */}
-        <div
-          className={`${portraitStyles.layer} ${portraitStyles.baseLayer}`}
-        >
-          <Image
-            src="/images/natsx-portrait-hero.png"
-            alt={
-              copy
-                .accessibility
-                .portrait
-            }
-            fill
-            preload
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.baseImage
-            }
-          />
-        </div>
-
-        {/*
-         * ALT — MAIN SWEEP
-         */}
-        <div
-          className={`${portraitStyles.layer} ${portraitStyles.altSweep}`}
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/natsx-portrait-hero-alt.png"
-            alt=""
-            fill
-            loading="eager"
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.altImage
-            }
-          />
-        </div>
-
-        {/*
-         * ALT — CURSOR LOCAL REVEAL
-         *
-         * Same second photo.
-         * Not a third state.
-         */}
-        <div
-          className={`${portraitStyles.layer} ${portraitStyles.altLocal}`}
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/natsx-portrait-hero-alt.png"
-            alt=""
-            fill
-            loading="eager"
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.altImage
-            }
-          />
-        </div>
-
-        {/*
-         * Soft seam treatment.
-         */}
-        <div
-          className={`${portraitStyles.layer} ${portraitStyles.altEdge}`}
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/natsx-portrait-hero-alt.png"
-            alt=""
-            fill
-            loading="lazy"
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.altImage
-            }
-          />
-        </div>
+        <Image
+          ref={
+            portraitRef
+          }
+          src="/images/natsx-portrait-hero.png"
+          alt={
+            copy
+              .accessibility
+              .portrait
+          }
+          fill
+          preload
+          sizes="(max-width: 960px) 100vw, 42vw"
+          className={
+            styles.portraitImage
+          }
+          onLoad={() =>
+            setPortraitLoaded(
+              true,
+            )
+          }
+        />
       </div>
     </div>
   );
