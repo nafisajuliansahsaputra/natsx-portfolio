@@ -2,557 +2,196 @@
    NATSX
    HERO PORTRAIT TRANSITION
 
-   TRUE LOCAL PORTRAIT SWAP
+   TRUE CORE SWAP
+   + SOFT PHOTOSHOP-LIKE FEATHER
 ========================= */
 
-/*
- * Architecture:
- *
- * BASE
- * └── visible everywhere
- *     EXCEPT inside cursor reveal
- *
- * ALT
- * └── visible ONLY inside
- *     cursor reveal
- *
- * Therefore:
- *
- * ALT appears
- * =
- * BASE disappears
- *
- * No portrait stacking.
- * No clothing ghost.
- * No grayscale leakage.
- */
-
 .stage {
-  --portrait-pointer-x:
-    50%;
+  --portrait-pointer-x: 50%;
+  --portrait-pointer-y: 50%;
 
-  --portrait-pointer-y:
-    50%;
+  --portrait-radius: 0.01px;
+  --portrait-cut-radius: 0.01px;
 
-  /*
-   * Still kept because the existing
-   * HeroVisual engine writes these.
-   *
-   * We no longer render a second
-   * trailing ALT image, though.
-   */
+  --portrait-feather-start: 0px;
+  --portrait-feather-1: 0px;
+  --portrait-feather-2: 0px;
+  --portrait-feather-3: 0px;
+  --portrait-feather-4: 0px;
+  --portrait-feather-5: 0px;
+  --portrait-feather-6: 0px;
+  --portrait-feather-7: 0px;
+  --portrait-feather-8: 0px;
 
-  --portrait-trail-x:
-    50%;
-
-  --portrait-trail-y:
-    50%;
-
-  /*
-   * 0 = BASE only
-   * 1 = local ALT swap active
-   */
-
-  --portrait-focus:
-    0;
-
-  /*
-   * Cursor reveal dimensions.
-   *
-   * Elliptical instead of circular
-   * so it works better over a portrait:
-   *
-   * - hair
-   * - face
-   * - neck
-   * - torso
-   */
-
-  --portrait-core-radius-x:
-    clamp(
-      135px,
-      12vw,
-      190px
-    );
-
-  --portrait-core-radius-y:
-    clamp(
-      175px,
-      16vw,
-      245px
-    );
-
-  isolation:
-    isolate;
+  isolation: isolate;
 }
 
 /* =========================
-   SHARED LAYER
+   SHARED
 ========================= */
 
 .layer {
-  position:
-    absolute;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 
-  inset:
-    0;
-
-  pointer-events:
-    none;
+.baseImage,
+.altImage {
+  object-fit: contain;
+  object-position: center bottom;
+  transform: scale(1.006);
+  transform-origin: center bottom;
+  user-select: none;
+  -webkit-user-drag: none;
+  backface-visibility: hidden;
 }
 
 /* =========================
-   BASE PORTRAIT
+   BASE
 ========================= */
-
-/*
- * CRITICAL:
- *
- * This is an INVERSE version
- * of ALT's reveal mask.
- *
- * At the exact place where ALT
- * becomes visible, BASE loses
- * visibility.
- *
- * The alpha formulas are paired
- * with ALT below:
- *
- * ALT 1.00 -> BASE 0.00
- * ALT 0.92 -> BASE 0.08
- * ALT 0.68 -> BASE 0.32
- * ALT 0.36 -> BASE 0.64
- * ALT 0.12 -> BASE 0.88
- * ALT 0.00 -> BASE 1.00
- */
 
 .baseLayer {
-  z-index:
-    1;
+  z-index: 1;
+
+  /*
+   * Base dihilangkan pada core area,
+   * tapi tepi cutout diberi anti-alias
+   * tipis supaya tidak keras.
+   */
 
   -webkit-mask-image:
     radial-gradient(
-      ellipse
-        var(--portrait-core-radius-x)
-        var(--portrait-core-radius-y)
+      circle
+        var(--portrait-cut-radius)
         at
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          var(--portrait-focus)
-        )
-      )
-        0%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            1
-          )
-        )
-      )
-        30%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.92
-          )
-        )
-      )
-        45%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.68
-          )
-        )
-      )
-        62%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.36
-          )
-        )
-      )
-        78%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.12
-          )
-        )
-      )
-        91%,
-
-      #000
-        100%
+      transparent 0,
+      transparent calc(var(--portrait-cut-radius) - 1.35px),
+      rgb(0 0 0 / 0.18) calc(var(--portrait-cut-radius) - 0.8px),
+      rgb(0 0 0 / 0.72) calc(var(--portrait-cut-radius) - 0.35px),
+      #000 var(--portrait-cut-radius)
     );
 
   mask-image:
     radial-gradient(
-      ellipse
-        var(--portrait-core-radius-x)
-        var(--portrait-core-radius-y)
+      circle
+        var(--portrait-cut-radius)
         at
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          var(--portrait-focus)
-        )
-      )
-        0%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            1
-          )
-        )
-      )
-        30%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.92
-          )
-        )
-      )
-        45%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.68
-          )
-        )
-      )
-        62%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.36
-          )
-        )
-      )
-        78%,
-
-      rgb(
-        0 0 0 /
-        calc(
-          1 -
-          (
-            var(--portrait-focus) *
-            0.12
-          )
-        )
-      )
-        91%,
-
-      #000
-        100%
+      transparent 0,
+      transparent calc(var(--portrait-cut-radius) - 1.35px),
+      rgb(0 0 0 / 0.18) calc(var(--portrait-cut-radius) - 0.8px),
+      rgb(0 0 0 / 0.72) calc(var(--portrait-cut-radius) - 0.35px),
+      #000 var(--portrait-cut-radius)
     );
 
-  -webkit-mask-repeat:
-    no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 
-  mask-repeat:
-    no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+
+  transform: translateZ(0);
 }
-
-/* =========================
-   BASE IMAGE
-========================= */
 
 .baseImage {
-  object-fit:
-    contain;
-
-  object-position:
-    center bottom;
-
-  filter:
-    grayscale(100%);
-
-  transform:
-    scale(1.006);
-
-  transform-origin:
-    center bottom;
-
-  user-select:
-    none;
-
-  -webkit-user-drag:
-    none;
+  filter: grayscale(100%);
 }
 
 /* =========================
-   ALT IMAGE
+   ALT
 ========================= */
 
-/*
- * Geometry MUST remain identical
- * to BASE.
- *
- * No translate.
- * No independent scale.
- * No cursor transform.
- */
+.altLayer {
+  z-index: 2;
 
-.altImage {
-  object-fit:
-    contain;
-
-  object-position:
-    center bottom;
-
-  transform:
-    scale(1.006);
-
-  transform-origin:
-    center bottom;
-
-  user-select:
-    none;
-
-  -webkit-user-drag:
-    none;
-}
-
-/* =========================
-   OLD TRAIL LAYER
-========================= */
-
-/*
- * HeroVisual currently still renders
- * an ALT trail element.
- *
- * We intentionally disable it.
- *
- * Reason:
- *
- * two copies of ALT +
- * one copy of BASE
- *
- * makes exact inverse compositing
- * unnecessarily complicated and
- * can create density / ghosting.
- *
- * One ALT is enough.
- */
-
-.altTrail {
-  display:
-    none;
-}
-
-/* =========================
-   ALT REVEAL
-========================= */
-
-/*
- * This is the NORMAL mask.
- *
- * Compare it with .baseLayer:
- *
- * ALT:
- *
- * 1.00
- * 0.92
- * 0.68
- * 0.36
- * 0.12
- * 0.00
- *
- * BASE:
- *
- * 0.00
- * 0.08
- * 0.32
- * 0.64
- * 0.88
- * 1.00
- *
- * They mathematically complement
- * each other.
- */
-
-.altCore {
-  z-index:
-    2;
-
-  opacity:
-    var(--portrait-focus);
+  /*
+   * Core tetap solid.
+   * Feather dibuat lebih halus dengan
+   * lebih banyak stop, supaya feel-nya
+   * lebih mirip feather Photoshop.
+   */
 
   -webkit-mask-image:
     radial-gradient(
-      ellipse
-        var(--portrait-core-radius-x)
-        var(--portrait-core-radius-y)
+      circle
+        var(--portrait-radius)
         at
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
 
-      #000
-        0%,
+      #000 0,
+      #000 var(--portrait-feather-start),
 
-      #000
-        30%,
+      rgb(0 0 0 / 0.998) var(--portrait-feather-1),
+      rgb(0 0 0 / 0.992) var(--portrait-feather-2),
+      rgb(0 0 0 / 0.968) var(--portrait-feather-3),
+      rgb(0 0 0 / 0.9) var(--portrait-feather-4),
+      rgb(0 0 0 / 0.76) var(--portrait-feather-5),
+      rgb(0 0 0 / 0.56) var(--portrait-feather-6),
+      rgb(0 0 0 / 0.31) var(--portrait-feather-7),
+      rgb(0 0 0 / 0.12) var(--portrait-feather-8),
 
-      rgb(
-        0 0 0 /
-        0.92
-      )
-        45%,
-
-      rgb(
-        0 0 0 /
-        0.68
-      )
-        62%,
-
-      rgb(
-        0 0 0 /
-        0.36
-      )
-        78%,
-
-      rgb(
-        0 0 0 /
-        0.12
-      )
-        91%,
-
-      transparent
-        100%
+      transparent var(--portrait-radius)
     );
 
   mask-image:
     radial-gradient(
-      ellipse
-        var(--portrait-core-radius-x)
-        var(--portrait-core-radius-y)
+      circle
+        var(--portrait-radius)
         at
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
 
-      #000
-        0%,
+      #000 0,
+      #000 var(--portrait-feather-start),
 
-      #000
-        30%,
+      rgb(0 0 0 / 0.998) var(--portrait-feather-1),
+      rgb(0 0 0 / 0.992) var(--portrait-feather-2),
+      rgb(0 0 0 / 0.968) var(--portrait-feather-3),
+      rgb(0 0 0 / 0.9) var(--portrait-feather-4),
+      rgb(0 0 0 / 0.76) var(--portrait-feather-5),
+      rgb(0 0 0 / 0.56) var(--portrait-feather-6),
+      rgb(0 0 0 / 0.31) var(--portrait-feather-7),
+      rgb(0 0 0 / 0.12) var(--portrait-feather-8),
 
-      rgb(
-        0 0 0 /
-        0.92
-      )
-        45%,
-
-      rgb(
-        0 0 0 /
-        0.68
-      )
-        62%,
-
-      rgb(
-        0 0 0 /
-        0.36
-      )
-        78%,
-
-      rgb(
-        0 0 0 /
-        0.12
-      )
-        91%,
-
-      transparent
-        100%
+      transparent var(--portrait-radius)
     );
 
-  -webkit-mask-repeat:
-    no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 
-  mask-repeat:
-    no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 
-  will-change:
-    opacity;
+  mask-mode: alpha;
+
+  transform: translateZ(0);
+  backface-visibility: hidden;
+
+  will-change: mask-image, -webkit-mask-image;
 }
 
 /* =========================
-   MOBILE / TABLET
+   MOBILE
 ========================= */
 
-/*
- * Desktop pointer interaction only.
- *
- * Mobile stays clean with BASE.
- */
-
-@media (
-  max-width: 960px
-) {
+@media (max-width: 960px) {
   .baseLayer {
-    -webkit-mask-image:
-      none;
-
-    mask-image:
-      none;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
-  .altTrail,
-  .altCore {
-    display:
-      none;
+  .altLayer {
+    display: none;
   }
 
   .baseImage,
   .altImage {
-    transform:
-      scale(1.003);
+    transform: scale(1.003);
   }
 }
 
@@ -560,27 +199,18 @@
    REDUCED MOTION
 ========================= */
 
-@media (
-  prefers-reduced-motion:
-    reduce
-) {
+@media (prefers-reduced-motion: reduce) {
   .baseLayer {
-    -webkit-mask-image:
-      none;
-
-    mask-image:
-      none;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
-  .altTrail,
-  .altCore {
-    display:
-      none;
+  .altLayer {
+    display: none;
   }
 
   .baseImage,
   .altImage {
-    transform:
-      none;
+    transform: none;
   }
 }
