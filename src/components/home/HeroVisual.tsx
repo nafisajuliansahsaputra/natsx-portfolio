@@ -18,6 +18,7 @@ import {
 
 import styles from "./Hero.module.css";
 import portraitStyles from "./HeroPortraitTransition.module.css";
+import themeStyles from "./HeroThemeTransition.module.css";
 
 type HeroVisualProps = {
   locale: Locale;
@@ -149,6 +150,15 @@ function updateShapeLightPosition(
     return;
   }
 
+  /*
+   * Values are intentionally allowed
+   * outside 0..1.
+   *
+   * That lets the light hit the edge
+   * of a shape even when the cursor
+   * itself is slightly outside it.
+   */
+
   const x =
     clamp(
       (
@@ -227,6 +237,12 @@ export default function HeroVisual({
     useRef<HTMLDivElement>(
       null,
     );
+
+  /*
+   * =========================
+   * HERO AMBIENT
+   * =========================
+   */
 
   useEffect(() => {
     const visual =
@@ -320,6 +336,13 @@ export default function HeroVisual({
     };
   }, []);
 
+  /*
+   * =========================
+   * PORTRAIT + DARK THEME
+   * + HERO LIGHT FIELD
+   * =========================
+   */
+
   useEffect(() => {
     const visual =
       visualRef.current;
@@ -382,6 +405,12 @@ export default function HeroVisual({
     let previousTime =
       performance.now();
 
+    /*
+     * =========================
+     * PORTRAIT REVEAL
+     * =========================
+     */
+
     let targetX =
       0.5;
 
@@ -406,6 +435,22 @@ export default function HeroVisual({
     let currentFocus =
       0;
 
+    /*
+     * =========================
+     * HERO LIGHT FIELD
+     * =========================
+     *
+     * Coordinates are relative
+     * to the WHOLE hero.
+     *
+     * Not relative to .visual.
+     *
+     * This is the key reason
+     * the flashlight can now
+     * spill beyond the visual
+     * column boundary.
+     */
+
     let targetLightX =
       0.74;
 
@@ -423,6 +468,12 @@ export default function HeroVisual({
 
     let currentLightStrength =
       0;
+
+    /*
+     * =========================
+     * THEME STATE
+     * =========================
+     */
 
     let themeActive =
       false;
@@ -444,6 +495,12 @@ export default function HeroVisual({
 
     delete heroElement.dataset
       .heroThemeActive;
+
+    /*
+     * =========================
+     * THEME
+     * =========================
+     */
 
     function activateDarkTheme() {
       if (
@@ -522,6 +579,12 @@ export default function HeroVisual({
         true;
     }
 
+    /*
+     * =========================
+     * APPLY
+     * =========================
+     */
+
     function apply() {
       stageElement.style.setProperty(
         "--portrait-pointer-x",
@@ -570,6 +633,10 @@ export default function HeroVisual({
         ),
       );
 
+      /*
+       * HERO-level light field.
+       */
+
       heroElement.style.setProperty(
         "--flashlight-hero-x",
         `${(
@@ -597,6 +664,12 @@ export default function HeroVisual({
         ),
       );
 
+      /*
+       * Circle + arch use the same
+       * light strength, but each owns
+       * its own local beam position.
+       */
+
       circleElement?.style.setProperty(
         "--shape-light-strength",
         currentLightStrength.toFixed(
@@ -617,6 +690,12 @@ export default function HeroVisual({
           ? "active"
           : "base";
     }
+
+    /*
+     * =========================
+     * RAF
+     * =========================
+     */
 
     function requestFrame() {
       if (
@@ -664,6 +743,10 @@ export default function HeroVisual({
         targetFocus >
         0;
 
+      /*
+       * PORTRAIT CORE
+       */
+
       currentX =
         damp(
           currentX,
@@ -683,6 +766,10 @@ export default function HeroVisual({
             : 9,
           deltaTime,
         );
+
+      /*
+       * PORTRAIT TRAIL
+       */
 
       trailX =
         damp(
@@ -713,6 +800,14 @@ export default function HeroVisual({
             : 5.2,
           deltaTime,
         );
+
+      /*
+       * HERO LIGHT
+       *
+       * Slight lag keeps the beam
+       * feeling physical instead of
+       * a raw CSS cursor circle.
+       */
 
       currentLightX =
         damp(
@@ -792,6 +887,12 @@ export default function HeroVisual({
       }
     }
 
+    /*
+     * =========================
+     * POINTER POSITION
+     * =========================
+     */
+
     function updatePointer(
       event: PointerEvent,
     ) {
@@ -801,6 +902,10 @@ export default function HeroVisual({
       ) {
         return;
       }
+
+      /*
+       * Portrait reveal coordinates.
+       */
 
       const stageRect =
         stageElement.getBoundingClientRect();
@@ -834,6 +939,10 @@ export default function HeroVisual({
           );
       }
 
+      /*
+       * Hero flashlight coordinates.
+       */
+
       const heroRect =
         heroElement.getBoundingClientRect();
 
@@ -866,6 +975,11 @@ export default function HeroVisual({
           );
       }
 
+      /*
+       * Local light response on
+       * geometry.
+       */
+
       updateShapeLightPosition(
         circleElement,
         event.clientX,
@@ -880,6 +994,12 @@ export default function HeroVisual({
 
       requestFrame();
     }
+
+    /*
+     * =========================
+     * PORTRAIT FOCUS ZONE
+     * =========================
+     */
 
     function updateThemeZone(
       event: PointerEvent,
@@ -933,6 +1053,12 @@ export default function HeroVisual({
       }
     }
 
+    /*
+     * =========================
+     * EVENTS
+     * =========================
+     */
+
     function handlePointerEnter(
       event: PointerEvent,
     ) {
@@ -975,6 +1101,12 @@ export default function HeroVisual({
       requestFrame();
     }
 
+    /*
+     * =========================
+     * SCROLL RESET
+     * =========================
+     */
+
     function handleScroll() {
       if (
         !themeActive
@@ -1013,6 +1145,12 @@ export default function HeroVisual({
 
       requestFrame();
     }
+
+    /*
+     * =========================
+     * RESET
+     * =========================
+     */
 
     function resetInteraction() {
       targetX =
@@ -1300,22 +1438,6 @@ export default function HeroVisual({
         data-portrait-state="base"
       >
         <div
-          className={`${portraitStyles.layer} ${portraitStyles.fallbackLayer}`}
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/natsx-portrait-hero-bfr.png"
-            alt=""
-            fill
-            loading="eager"
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.fallbackImage
-            }
-          />
-        </div>
-
-        <div
           className={`${portraitStyles.layer} ${portraitStyles.baseLayer}`}
         >
           <Image
@@ -1346,7 +1468,7 @@ export default function HeroVisual({
           aria-hidden="true"
         >
           <Image
-            src="/images/natsx-portrait-hero-aftr.png"
+            src="/images/natsx-portrait-hero-atr.png"
             alt=""
             fill
             loading="eager"
@@ -1362,7 +1484,7 @@ export default function HeroVisual({
           aria-hidden="true"
         >
           <Image
-            src="/images/natsx-portrait-hero-aftr.png"
+            src="/images/natsx-portrait-hero-atr.png"
             alt=""
             fill
             loading="eager"
