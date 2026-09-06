@@ -18,7 +18,6 @@ import {
 
 import styles from "./Hero.module.css";
 import portraitStyles from "./HeroPortraitTransition.module.css";
-import themeStyles from "./HeroThemeTransition.module.css";
 
 type HeroVisualProps = {
   locale: Locale;
