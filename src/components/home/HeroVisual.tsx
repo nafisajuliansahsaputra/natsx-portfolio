@@ -18,17 +18,10 @@ import {
 
 import styles from "./Hero.module.css";
 import portraitStyles from "./HeroPortraitTransition.module.css";
-import themeStyles from "./HeroThemeTransition.module.css";
 
 type HeroVisualProps = {
   locale: Locale;
 };
-
-const THEME_SCROLL_RESET_THRESHOLD =
-  28;
-
-const THEME_TOP_LIMIT =
-  24;
 
 function clamp(
   value: number,
@@ -129,79 +122,6 @@ function isInsidePortraitZone(
   );
 }
 
-function updateShapeLightPosition(
-  element: HTMLElement | null,
-  clientX: number,
-  clientY: number,
-) {
-  if (!element) {
-    return;
-  }
-
-  const rect =
-    element.getBoundingClientRect();
-
-  if (
-    rect.width <=
-      0 ||
-    rect.height <=
-      0
-  ) {
-    return;
-  }
-
-  /*
-   * Values are intentionally allowed
-   * outside 0..1.
-   *
-   * That lets the light hit the edge
-   * of a shape even when the cursor
-   * itself is slightly outside it.
-   */
-
-  const x =
-    clamp(
-      (
-        clientX -
-        rect.left
-      ) /
-        rect.width,
-      -1,
-      2,
-    );
-
-  const y =
-    clamp(
-      (
-        clientY -
-        rect.top
-      ) /
-        rect.height,
-      -1,
-      2,
-    );
-
-  element.style.setProperty(
-    "--shape-light-x",
-    `${(
-      x *
-      100
-    ).toFixed(
-      3,
-    )}%`,
-  );
-
-  element.style.setProperty(
-    "--shape-light-y",
-    `${(
-      y *
-      100
-    ).toFixed(
-      3,
-    )}%`,
-  );
-}
-
 export default function HeroVisual({
   locale,
 }: HeroVisualProps) {
@@ -224,16 +144,6 @@ export default function HeroVisual({
     );
 
   const portraitStageRef =
-    useRef<HTMLDivElement>(
-      null,
-    );
-
-  const circleRef =
-    useRef<HTMLDivElement>(
-      null,
-    );
-
-  const archRef =
     useRef<HTMLDivElement>(
       null,
     );
@@ -333,13 +243,15 @@ export default function HeroVisual({
         "change",
         syncAmbientState,
       );
+
+      delete heroElement.dataset
+        .ambientActive;
     };
   }, []);
 
   /*
    * =========================
-   * PORTRAIT + DARK THEME
-   * + HERO LIGHT FIELD
+   * PORTRAIT REVEAL
    * =========================
    */
 
@@ -357,32 +269,11 @@ export default function HeroVisual({
       return;
     }
 
-    const hero =
-      visual.closest<HTMLElement>(
-        "[data-home-hero]",
-      );
-
-    if (!hero) {
-      return;
-    }
-
     const visualElement =
       visual;
 
     const stageElement =
       stage;
-
-    const heroElement =
-      hero;
-
-    const rootElement =
-      document.documentElement;
-
-    const circleElement =
-      circleRef.current;
-
-    const archElement =
-      archRef.current;
 
     const reducedMotion =
       window.matchMedia(
@@ -406,9 +297,7 @@ export default function HeroVisual({
       performance.now();
 
     /*
-     * =========================
-     * PORTRAIT REVEAL
-     * =========================
+     * Cursor target.
      */
 
     let targetX =
@@ -417,17 +306,23 @@ export default function HeroVisual({
     let targetY =
       0.5;
 
+    /*
+     * Smoothed cursor position.
+     */
+
     let currentX =
       0.5;
 
     let currentY =
       0.5;
 
-    let trailX =
-      0.5;
-
-    let trailY =
-      0.5;
+    /*
+     * Portrait reveal amount.
+     *
+     * 0 = base portrait
+     * 1 = alternate portrait
+     *     visible inside cursor zone
+     */
 
     let targetFocus =
       0;
@@ -437,151 +332,7 @@ export default function HeroVisual({
 
     /*
      * =========================
-     * HERO LIGHT FIELD
-     * =========================
-     *
-     * Coordinates are relative
-     * to the WHOLE hero.
-     *
-     * Not relative to .visual.
-     *
-     * This is the key reason
-     * the flashlight can now
-     * spill beyond the visual
-     * column boundary.
-     */
-
-    let targetLightX =
-      0.74;
-
-    let targetLightY =
-      0.5;
-
-    let currentLightX =
-      0.74;
-
-    let currentLightY =
-      0.5;
-
-    let targetLightStrength =
-      0;
-
-    let currentLightStrength =
-      0;
-
-    /*
-     * =========================
-     * THEME STATE
-     * =========================
-     */
-
-    let themeActive =
-      false;
-
-    let pointerInsidePortrait =
-      false;
-
-    let themeArmed =
-      true;
-
-    let activationScrollY =
-      Math.max(
-        window.scrollY,
-        0,
-      );
-
-    delete rootElement.dataset
-      .heroTheme;
-
-    delete heroElement.dataset
-      .heroThemeActive;
-
-    /*
-     * =========================
-     * THEME
-     * =========================
-     */
-
-    function activateDarkTheme() {
-      if (
-        themeActive ||
-        !themeArmed ||
-        reducedMotion.matches ||
-        !interactivePointer.matches
-      ) {
-        return;
-      }
-
-      const currentScrollY =
-        Math.max(
-          window.scrollY,
-          0,
-        );
-
-      if (
-        currentScrollY >
-        THEME_TOP_LIMIT
-      ) {
-        return;
-      }
-
-      themeActive =
-        true;
-
-      activationScrollY =
-        currentScrollY;
-
-      rootElement.dataset.heroTheme =
-        "dark";
-
-      heroElement.dataset.heroThemeActive =
-        "true";
-
-      targetLightStrength =
-        1;
-
-      requestFrame();
-    }
-
-    function deactivateDarkTheme(
-      lockUntilPointerLeaves = false,
-    ) {
-      if (
-        rootElement.dataset.heroTheme ===
-        "dark"
-      ) {
-        delete rootElement.dataset
-          .heroTheme;
-      }
-
-      delete heroElement.dataset
-        .heroThemeActive;
-
-      themeActive =
-        false;
-
-      targetLightStrength =
-        0;
-
-      requestFrame();
-
-      if (
-        lockUntilPointerLeaves &&
-        pointerInsidePortrait
-      ) {
-        themeArmed =
-          false;
-
-        return;
-      }
-
-      themeArmed =
-        true;
-    }
-
-    /*
-     * =========================
-     * APPLY
+     * APPLY STATE
      * =========================
      */
 
@@ -607,79 +358,8 @@ export default function HeroVisual({
       );
 
       stageElement.style.setProperty(
-        "--portrait-trail-x",
-        `${(
-          trailX *
-          100
-        ).toFixed(
-          3,
-        )}%`,
-      );
-
-      stageElement.style.setProperty(
-        "--portrait-trail-y",
-        `${(
-          trailY *
-          100
-        ).toFixed(
-          3,
-        )}%`,
-      );
-
-      stageElement.style.setProperty(
         "--portrait-focus",
         currentFocus.toFixed(
-          4,
-        ),
-      );
-
-      /*
-       * HERO-level light field.
-       */
-
-      heroElement.style.setProperty(
-        "--flashlight-hero-x",
-        `${(
-          currentLightX *
-          100
-        ).toFixed(
-          3,
-        )}%`,
-      );
-
-      heroElement.style.setProperty(
-        "--flashlight-hero-y",
-        `${(
-          currentLightY *
-          100
-        ).toFixed(
-          3,
-        )}%`,
-      );
-
-      heroElement.style.setProperty(
-        "--flashlight-strength",
-        currentLightStrength.toFixed(
-          4,
-        ),
-      );
-
-      /*
-       * Circle + arch use the same
-       * light strength, but each owns
-       * its own local beam position.
-       */
-
-      circleElement?.style.setProperty(
-        "--shape-light-strength",
-        currentLightStrength.toFixed(
-          4,
-        ),
-      );
-
-      archElement?.style.setProperty(
-        "--shape-light-strength",
-        currentLightStrength.toFixed(
           4,
         ),
       );
@@ -693,7 +373,7 @@ export default function HeroVisual({
 
     /*
      * =========================
-     * RAF
+     * ANIMATION FRAME
      * =========================
      */
 
@@ -743,10 +423,6 @@ export default function HeroVisual({
         targetFocus >
         0;
 
-      /*
-       * PORTRAIT CORE
-       */
-
       currentX =
         damp(
           currentX,
@@ -767,30 +443,6 @@ export default function HeroVisual({
           deltaTime,
         );
 
-      /*
-       * PORTRAIT TRAIL
-       */
-
-      trailX =
-        damp(
-          trailX,
-          targetX,
-          revealActive
-            ? 6.2
-            : 4.2,
-          deltaTime,
-        );
-
-      trailY =
-        damp(
-          trailY,
-          targetY,
-          revealActive
-            ? 6.2
-            : 4.2,
-          deltaTime,
-        );
-
       currentFocus =
         damp(
           currentFocus,
@@ -798,41 +450,6 @@ export default function HeroVisual({
           revealActive
             ? 9.5
             : 5.2,
-          deltaTime,
-        );
-
-      /*
-       * HERO LIGHT
-       *
-       * Slight lag keeps the beam
-       * feeling physical instead of
-       * a raw CSS cursor circle.
-       */
-
-      currentLightX =
-        damp(
-          currentLightX,
-          targetLightX,
-          16,
-          deltaTime,
-        );
-
-      currentLightY =
-        damp(
-          currentLightY,
-          targetLightY,
-          16,
-          deltaTime,
-        );
-
-      currentLightStrength =
-        damp(
-          currentLightStrength,
-          targetLightStrength,
-          targetLightStrength >
-            currentLightStrength
-            ? 6.2
-            : 5,
           deltaTime,
         );
 
@@ -850,33 +467,8 @@ export default function HeroVisual({
         ) >
           0.0004 ||
         Math.abs(
-          trailX -
-            targetX,
-        ) >
-          0.0004 ||
-        Math.abs(
-          trailY -
-            targetY,
-        ) >
-          0.0004 ||
-        Math.abs(
           currentFocus -
             targetFocus,
-        ) >
-          0.0004 ||
-        Math.abs(
-          currentLightX -
-            targetLightX,
-        ) >
-          0.0004 ||
-        Math.abs(
-          currentLightY -
-            targetLightY,
-        ) >
-          0.0004 ||
-        Math.abs(
-          currentLightStrength -
-            targetLightStrength,
         ) >
           0.0004;
 
@@ -903,94 +495,39 @@ export default function HeroVisual({
         return;
       }
 
-      /*
-       * Portrait reveal coordinates.
-       */
-
-      const stageRect =
+      const rect =
         stageElement.getBoundingClientRect();
 
       if (
-        stageRect.width >
-          0 &&
-        stageRect.height >
+        rect.width <=
+          0 ||
+        rect.height <=
           0
       ) {
-        targetX =
-          clamp(
-            (
-              event.clientX -
-              stageRect.left
-            ) /
-              stageRect.width,
-            0,
-            1,
-          );
-
-        targetY =
-          clamp(
-            (
-              event.clientY -
-              stageRect.top
-            ) /
-              stageRect.height,
-            0,
-            1,
-          );
+        return;
       }
 
-      /*
-       * Hero flashlight coordinates.
-       */
+      targetX =
+        clamp(
+          (
+            event.clientX -
+            rect.left
+          ) /
+            rect.width,
+          0,
+          1,
+        );
 
-      const heroRect =
-        heroElement.getBoundingClientRect();
-
-      if (
-        heroRect.width >
-          0 &&
-        heroRect.height >
-          0
-      ) {
-        targetLightX =
-          clamp(
-            (
-              event.clientX -
-              heroRect.left
-            ) /
-              heroRect.width,
-            0,
-            1,
-          );
-
-        targetLightY =
-          clamp(
-            (
-              event.clientY -
-              heroRect.top
-            ) /
-              heroRect.height,
-            0,
-            1,
-          );
-      }
-
-      /*
-       * Local light response on
-       * geometry.
-       */
-
-      updateShapeLightPosition(
-        circleElement,
-        event.clientX,
-        event.clientY,
-      );
-
-      updateShapeLightPosition(
-        archElement,
-        event.clientX,
-        event.clientY,
-      );
+      targetY =
+        clamp(
+          (
+            event.clientY -
+            rect.top
+          ) /
+            rect.height,
+          0,
+          1,
+        );
 
       requestFrame();
     }
@@ -1001,9 +538,16 @@ export default function HeroVisual({
      * =========================
      */
 
-    function updateThemeZone(
+    function updatePortraitZone(
       event: PointerEvent,
     ) {
+      if (
+        reducedMotion.matches ||
+        !interactivePointer.matches
+      ) {
+        return;
+      }
+
       const rect =
         stageElement.getBoundingClientRect();
 
@@ -1014,48 +558,17 @@ export default function HeroVisual({
           rect,
         );
 
-      if (inside) {
-        targetFocus =
-          1;
-
-        if (
-          !pointerInsidePortrait
-        ) {
-          pointerInsidePortrait =
-            true;
-
-          activateDarkTheme();
-        }
-
-        if (
-          themeActive
-        ) {
-          targetLightStrength =
-            1;
-        }
-
-        return;
-      }
-
       targetFocus =
-        0;
+        inside
+          ? 1
+          : 0;
 
-      if (
-        pointerInsidePortrait
-      ) {
-        pointerInsidePortrait =
-          false;
-
-        themeArmed =
-          true;
-
-        deactivateDarkTheme();
-      }
+      requestFrame();
     }
 
     /*
      * =========================
-     * EVENTS
+     * POINTER EVENTS
      * =========================
      */
 
@@ -1066,7 +579,7 @@ export default function HeroVisual({
         event,
       );
 
-      updateThemeZone(
+      updatePortraitZone(
         event,
       );
     }
@@ -1078,69 +591,13 @@ export default function HeroVisual({
         event,
       );
 
-      updateThemeZone(
+      updatePortraitZone(
         event,
       );
     }
 
     function handlePointerLeave() {
-      pointerInsidePortrait =
-        false;
-
-      themeArmed =
-        true;
-
       targetFocus =
-        0;
-
-      targetLightStrength =
-        0;
-
-      deactivateDarkTheme();
-
-      requestFrame();
-    }
-
-    /*
-     * =========================
-     * SCROLL RESET
-     * =========================
-     */
-
-    function handleScroll() {
-      if (
-        !themeActive
-      ) {
-        return;
-      }
-
-      const currentScrollY =
-        Math.max(
-          window.scrollY,
-          0,
-        );
-
-      const travelled =
-        Math.abs(
-          currentScrollY -
-            activationScrollY,
-        );
-
-      if (
-        travelled <
-        THEME_SCROLL_RESET_THRESHOLD
-      ) {
-        return;
-      }
-
-      deactivateDarkTheme(
-        true,
-      );
-
-      targetFocus =
-        0;
-
-      targetLightStrength =
         0;
 
       requestFrame();
@@ -1165,67 +622,36 @@ export default function HeroVisual({
       currentY =
         0.5;
 
-      trailX =
-        0.5;
-
-      trailY =
-        0.5;
-
       targetFocus =
         0;
 
       currentFocus =
         0;
 
-      targetLightX =
-        0.74;
-
-      targetLightY =
-        0.5;
-
-      currentLightX =
-        0.74;
-
-      currentLightY =
-        0.5;
-
-      targetLightStrength =
-        0;
-
-      currentLightStrength =
-        0;
-
-      pointerInsidePortrait =
-        false;
-
-      themeArmed =
-        true;
-
-      deactivateDarkTheme();
-
       apply();
     }
 
     function handleEnvironmentChange() {
       if (
-        reducedMotion.matches ||
-        !interactivePointer.matches
+        frameId !==
+        null
       ) {
-        if (
-          frameId !==
-          null
-        ) {
-          window.cancelAnimationFrame(
-            frameId,
-          );
+        window.cancelAnimationFrame(
+          frameId,
+        );
 
-          frameId =
-            null;
-        }
-
-        resetInteraction();
+        frameId =
+          null;
       }
+
+      resetInteraction();
     }
+
+    /*
+     * =========================
+     * LISTENERS
+     * =========================
+     */
 
     visualElement.addEventListener(
       "pointerenter",
@@ -1251,15 +677,6 @@ export default function HeroVisual({
       handlePointerLeave,
     );
 
-    window.addEventListener(
-      "scroll",
-      handleScroll,
-      {
-        passive:
-          true,
-      },
-    );
-
     reducedMotion.addEventListener(
       "change",
       handleEnvironmentChange,
@@ -1271,6 +688,12 @@ export default function HeroVisual({
     );
 
     resetInteraction();
+
+    /*
+     * =========================
+     * CLEANUP
+     * =========================
+     */
 
     return () => {
       destroyed =
@@ -1296,11 +719,6 @@ export default function HeroVisual({
         handlePointerLeave,
       );
 
-      window.removeEventListener(
-        "scroll",
-        handleScroll,
-      );
-
       reducedMotion.removeEventListener(
         "change",
         handleEnvironmentChange,
@@ -1323,8 +741,6 @@ export default function HeroVisual({
       [
         "--portrait-pointer-x",
         "--portrait-pointer-y",
-        "--portrait-trail-x",
-        "--portrait-trail-y",
         "--portrait-focus",
       ].forEach(
         (
@@ -1336,53 +752,6 @@ export default function HeroVisual({
         },
       );
 
-      [
-        "--flashlight-hero-x",
-        "--flashlight-hero-y",
-        "--flashlight-strength",
-      ].forEach(
-        (
-          property,
-        ) => {
-          heroElement.style.removeProperty(
-            property,
-          );
-        },
-      );
-
-      [
-        circleElement,
-        archElement,
-      ].forEach(
-        (
-          element,
-        ) => {
-          if (!element) {
-            return;
-          }
-
-          [
-            "--shape-light-x",
-            "--shape-light-y",
-            "--shape-light-strength",
-          ].forEach(
-            (
-              property,
-            ) => {
-              element.style.removeProperty(
-                property,
-              );
-            },
-          );
-        },
-      );
-
-      delete rootElement.dataset
-        .heroTheme;
-
-      delete heroElement.dataset
-        .heroThemeActive;
-
       delete stageElement.dataset
         .portraitState;
     };
@@ -1393,7 +762,9 @@ export default function HeroVisual({
       ref={
         visualRef
       }
-      className={`${styles.visual} ${themeStyles.themeScope}`}
+      className={
+        styles.visual
+      }
       data-motion-hero-piece="visual"
     >
       <div
@@ -1408,18 +779,12 @@ export default function HeroVisual({
       </div>
 
       <div
-        ref={
-          circleRef
-        }
         className={`${styles.shape} ${styles.shapeCircle}`}
         data-hero-shape="circle"
         aria-hidden="true"
       />
 
       <div
-        ref={
-          archRef
-        }
         className={`${styles.shape} ${styles.shapeArch}`}
         data-hero-shape="arch"
         aria-hidden="true"
@@ -1459,22 +824,6 @@ export default function HeroVisual({
                   true,
                 );
               }
-            }
-          />
-        </div>
-
-        <div
-          className={`${portraitStyles.layer} ${portraitStyles.altTrail}`}
-          aria-hidden="true"
-        >
-          <Image
-            src="/images/natsx-portrait-hero-atr.png"
-            alt=""
-            fill
-            loading="eager"
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.altImage
             }
           />
         </div>
