@@ -1,22 +1,10 @@
 /* =========================
    NATSX
    HERO PORTRAIT TRANSITION
-========================= */
 
-/*
- * IMPORTANT
- *
- * BASE dan ALT memakai:
- *
- * - stage yang sama
- * - inset yang sama
- * - object-fit yang sama
- * - object-position yang sama
- * - transform yang sama
- *
- * Jadi tidak ada offset portrait
- * ketika reveal terjadi.
- */
+   CLEAN SWAP
+   NO WHITE HALO
+========================= */
 
 .stage {
   --portrait-pointer-x:
@@ -34,49 +22,23 @@
   --portrait-focus:
     0;
 
-  /*
-   * Main reveal size
-   */
-
   --portrait-core-radius-x:
     clamp(
-      125px,
-      11vw,
-      180px
+      132px,
+      11.8vw,
+      182px
     );
 
   --portrait-core-radius-y:
     clamp(
-      165px,
-      15vw,
-      235px
-    );
-
-  /*
-   * Slower trailing reveal
-   */
-
-  --portrait-trail-radius-x:
-    clamp(
-      185px,
-      16vw,
-      255px
-    );
-
-  --portrait-trail-radius-y:
-    clamp(
-      225px,
-      20vw,
-      310px
+      168px,
+      15.6vw,
+      236px
     );
 
   isolation:
     isolate;
 }
-
-/* =========================
-   SHARED LAYER
-========================= */
 
 .layer {
   position:
@@ -90,17 +52,203 @@
 }
 
 /* =========================
-   BASE
+   ALWAYS-ON FALLBACK
+
+   This layer closes any alpha gap,
+   so background white never leaks
+   through the feather edge.
+========================= */
+
+.fallbackLayer {
+  z-index:
+    0;
+}
+
+.fallbackImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center bottom;
+
+  filter:
+    grayscale(100%);
+
+  transform:
+    scale(1.006);
+
+  transform-origin:
+    center bottom;
+
+  user-select:
+    none;
+
+  -webkit-user-drag:
+    none;
+}
+
+/* =========================
+   ACTIVE BASE COVER
+
+   This is the grayscale layer that
+   locally disappears when reveal
+   happens.
+
+   It sits ABOVE the fallback layer,
+   so outside the reveal you still
+   get the clean original base image.
 ========================= */
 
 .baseLayer {
   z-index:
     1;
-}
 
-/*
- * BASE image geometry.
- */
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse
+        var(--portrait-core-radius-x)
+        var(--portrait-core-radius-y)
+        at
+        var(--portrait-pointer-x)
+        var(--portrait-pointer-y),
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          var(--portrait-focus)
+        )
+      )
+        0%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          var(--portrait-focus)
+        )
+      )
+        72%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          (
+            var(--portrait-focus) *
+            0.92
+          )
+        )
+      )
+        80%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          (
+            var(--portrait-focus) *
+            0.62
+          )
+        )
+      )
+        88%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          (
+            var(--portrait-focus) *
+            0.26
+          )
+        )
+      )
+        94%,
+
+      #000
+        98%,
+
+      #000
+        100%
+    );
+
+  mask-image:
+    radial-gradient(
+      ellipse
+        var(--portrait-core-radius-x)
+        var(--portrait-core-radius-y)
+        at
+        var(--portrait-pointer-x)
+        var(--portrait-pointer-y),
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          var(--portrait-focus)
+        )
+      )
+        0%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          var(--portrait-focus)
+        )
+      )
+        72%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          (
+            var(--portrait-focus) *
+            0.92
+          )
+        )
+      )
+        80%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          (
+            var(--portrait-focus) *
+            0.62
+          )
+        )
+      )
+        88%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          1 -
+          (
+            var(--portrait-focus) *
+            0.26
+          )
+        )
+      )
+        94%,
+
+      #000
+        98%,
+
+      #000
+        100%
+    );
+
+  -webkit-mask-repeat:
+    no-repeat;
+
+  mask-repeat:
+    no-repeat;
+}
 
 .baseImage {
   object-fit:
@@ -126,25 +274,8 @@
 }
 
 /* =========================
-   ALT
+   ALT IMAGE
 ========================= */
-
-/*
- * CRITICAL:
- *
- * Geometry ALT dibuat SAMA PERSIS
- * dengan BASE.
- *
- * Tidak ada:
- *
- * translate
- * custom scale
- * alignment compensation
- * cursor transform
- *
- * Jadi kedua canvas berada
- * di koordinat yang sama.
- */
 
 .altImage {
   object-fit:
@@ -166,80 +297,27 @@
     none;
 }
 
-/* =========================
-   TRAIL REVEAL
-========================= */
-
+/* Old trail disabled */
 .altTrail {
-  z-index:
-    2;
-
-  opacity:
-    calc(
-      var(--portrait-focus) *
-      0.46
-    );
-
-  -webkit-mask-image:
-    radial-gradient(
-      ellipse
-        var(--portrait-trail-radius-x)
-        var(--portrait-trail-radius-y)
-        at
-        var(--portrait-trail-x)
-        var(--portrait-trail-y),
-      rgb(0 0 0 / 0.84)
-        0%,
-      rgb(0 0 0 / 0.7)
-        24%,
-      rgb(0 0 0 / 0.45)
-        48%,
-      rgb(0 0 0 / 0.18)
-        72%,
-      transparent
-        100%
-    );
-
-  mask-image:
-    radial-gradient(
-      ellipse
-        var(--portrait-trail-radius-x)
-        var(--portrait-trail-radius-y)
-        at
-        var(--portrait-trail-x)
-        var(--portrait-trail-y),
-      rgb(0 0 0 / 0.84)
-        0%,
-      rgb(0 0 0 / 0.7)
-        24%,
-      rgb(0 0 0 / 0.45)
-        48%,
-      rgb(0 0 0 / 0.18)
-        72%,
-      transparent
-        100%
-    );
-
-  -webkit-mask-repeat:
-    no-repeat;
-
-  mask-repeat:
-    no-repeat;
-
-  will-change:
-    opacity;
+  display:
+    none;
 }
 
 /* =========================
-   CORE REVEAL
+   ALT REVEAL
+
+   IMPORTANT:
+   no global opacity layer,
+   because that can create a
+   milky outer ring.
+
+   Instead the reveal intensity is
+   driven directly inside the mask.
 ========================= */
 
 .altCore {
   z-index:
-    3;
-
-  opacity:
-    var(--portrait-focus);
+    2;
 
   -webkit-mask-image:
     radial-gradient(
@@ -249,18 +327,61 @@
         at
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
-      #000
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          1
+        )
+      )
         0%,
-      #000
-        30%,
-      rgb(0 0 0 / 0.96)
-        42%,
-      rgb(0 0 0 / 0.76)
-        60%,
-      rgb(0 0 0 / 0.38)
-        77%,
-      rgb(0 0 0 / 0.12)
-        90%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          1
+        )
+      )
+        72%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.98
+        )
+      )
+        80%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.82
+        )
+      )
+        88%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.44
+        )
+      )
+        94%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.14
+        )
+      )
+        98%,
+
       transparent
         100%
     );
@@ -273,18 +394,61 @@
         at
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
-      #000
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          1
+        )
+      )
         0%,
-      #000
-        30%,
-      rgb(0 0 0 / 0.96)
-        42%,
-      rgb(0 0 0 / 0.76)
-        60%,
-      rgb(0 0 0 / 0.38)
-        77%,
-      rgb(0 0 0 / 0.12)
-        90%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          1
+        )
+      )
+        72%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.98
+        )
+      )
+        80%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.82
+        )
+      )
+        88%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.44
+        )
+      )
+        94%,
+
+      rgb(
+        0 0 0 /
+        calc(
+          var(--portrait-focus) *
+          0.14
+        )
+      )
+        98%,
+
       transparent
         100%
     );
@@ -296,16 +460,29 @@
     no-repeat;
 
   will-change:
-    opacity;
+    transform;
 }
 
 /* =========================
-   TABLET + MOBILE
+   MOBILE / TABLET
 ========================= */
 
 @media (
   max-width: 960px
 ) {
+  .fallbackLayer {
+    display:
+      none;
+  }
+
+  .baseLayer {
+    -webkit-mask-image:
+      none;
+
+    mask-image:
+      none;
+  }
+
   .altTrail,
   .altCore {
     display:
@@ -313,7 +490,8 @@
   }
 
   .baseImage,
-  .altImage {
+  .altImage,
+  .fallbackImage {
     transform:
       scale(1.003);
   }
@@ -327,6 +505,19 @@
   prefers-reduced-motion:
     reduce
 ) {
+  .fallbackLayer {
+    display:
+      none;
+  }
+
+  .baseLayer {
+    -webkit-mask-image:
+      none;
+
+    mask-image:
+      none;
+  }
+
   .altTrail,
   .altCore {
     display:
@@ -334,7 +525,8 @@
   }
 
   .baseImage,
-  .altImage {
+  .altImage,
+  .fallbackImage {
     transform:
       none;
   }

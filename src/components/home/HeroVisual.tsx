@@ -18,10 +18,17 @@ import {
 
 import styles from "./Hero.module.css";
 import portraitStyles from "./HeroPortraitTransition.module.css";
+import themeStyles from "./HeroThemeTransition.module.css";
 
 type HeroVisualProps = {
   locale: Locale;
 };
+
+const THEME_SCROLL_RESET_THRESHOLD =
+  28;
+
+const THEME_TOP_LIMIT =
+  24;
 
 function clamp(
   value: number,
@@ -59,6 +66,133 @@ function damp(
   );
 }
 
+function isInsidePortraitZone(
+  clientX: number,
+  clientY: number,
+  rect: DOMRect,
+) {
+  if (
+    rect.width <=
+      0 ||
+    rect.height <=
+      0
+  ) {
+    return false;
+  }
+
+  const x =
+    (
+      clientX -
+      rect.left
+    ) /
+    rect.width;
+
+  const y =
+    (
+      clientY -
+      rect.top
+    ) /
+    rect.height;
+
+  const centerX =
+    0.53;
+
+  const centerY =
+    0.56;
+
+  const radiusX =
+    0.43;
+
+  const radiusY =
+    0.58;
+
+  const dx =
+    (
+      x -
+      centerX
+    ) /
+    radiusX;
+
+  const dy =
+    (
+      y -
+      centerY
+    ) /
+    radiusY;
+
+  return (
+    dx *
+      dx +
+      dy *
+        dy <=
+    1
+  );
+}
+
+function updateShapeLightPosition(
+  element: HTMLElement | null,
+  clientX: number,
+  clientY: number,
+) {
+  if (!element) {
+    return;
+  }
+
+  const rect =
+    element.getBoundingClientRect();
+
+  if (
+    rect.width <=
+      0 ||
+    rect.height <=
+      0
+  ) {
+    return;
+  }
+
+  const x =
+    clamp(
+      (
+        clientX -
+        rect.left
+      ) /
+        rect.width,
+      -1,
+      2,
+    );
+
+  const y =
+    clamp(
+      (
+        clientY -
+        rect.top
+      ) /
+        rect.height,
+      -1,
+      2,
+    );
+
+  element.style.setProperty(
+    "--shape-light-x",
+    `${(
+      x *
+      100
+    ).toFixed(
+      3,
+    )}%`,
+  );
+
+  element.style.setProperty(
+    "--shape-light-y",
+    `${(
+      y *
+      100
+    ).toFixed(
+      3,
+    )}%`,
+  );
+}
+
 export default function HeroVisual({
   locale,
 }: HeroVisualProps) {
@@ -85,11 +219,15 @@ export default function HeroVisual({
       null,
     );
 
-  /*
-   * =========================
-   * HERO AMBIENT STATE
-   * =========================
-   */
+  const circleRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  const archRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
 
   useEffect(() => {
     const visual =
@@ -183,20 +321,6 @@ export default function HeroVisual({
     };
   }, []);
 
-  /*
-   * =========================
-   * PORTRAIT REVEAL ENGINE
-   * =========================
-   *
-   * Portrait itself stays anchored.
-   *
-   * Pointer only controls which
-   * portrait state becomes visible.
-   *
-   * Magnetic grid remains a completely
-   * independent system.
-   */
-
   useEffect(() => {
     const visual =
       visualRef.current;
@@ -211,18 +335,32 @@ export default function HeroVisual({
       return;
     }
 
-    /*
-     * Stable non-null references.
-     *
-     * Necessary because these values
-     * are used from nested callbacks.
-     */
+    const hero =
+      visual.closest<HTMLElement>(
+        "[data-home-hero]",
+      );
+
+    if (!hero) {
+      return;
+    }
 
     const visualElement =
       visual;
 
     const stageElement =
       stage;
+
+    const heroElement =
+      hero;
+
+    const rootElement =
+      document.documentElement;
+
+    const circleElement =
+      circleRef.current;
+
+    const archElement =
+      archRef.current;
 
     const reducedMotion =
       window.matchMedia(
@@ -245,12 +383,6 @@ export default function HeroVisual({
     let previousTime =
       performance.now();
 
-    /*
-     * =========================
-     * MAIN POINTER
-     * =========================
-     */
-
     let targetX =
       0.5;
 
@@ -263,28 +395,11 @@ export default function HeroVisual({
     let currentY =
       0.5;
 
-    /*
-     * =========================
-     * TRAILING POINTER
-     * =========================
-     *
-     * Moves slower than main reveal.
-     */
-
     let trailX =
       0.5;
 
     let trailY =
       0.5;
-
-    /*
-     * =========================
-     * REVEAL INTENSITY
-     * =========================
-     *
-     * 0 = base portrait
-     * 1 = ALT reveal active
-     */
 
     let targetFocus =
       0;
@@ -292,11 +407,121 @@ export default function HeroVisual({
     let currentFocus =
       0;
 
-    /*
-     * =========================
-     * APPLY CSS VARIABLES
-     * =========================
-     */
+    let targetLightX =
+      0.74;
+
+    let targetLightY =
+      0.5;
+
+    let currentLightX =
+      0.74;
+
+    let currentLightY =
+      0.5;
+
+    let targetLightStrength =
+      0;
+
+    let currentLightStrength =
+      0;
+
+    let themeActive =
+      false;
+
+    let pointerInsidePortrait =
+      false;
+
+    let themeArmed =
+      true;
+
+    let activationScrollY =
+      Math.max(
+        window.scrollY,
+        0,
+      );
+
+    delete rootElement.dataset
+      .heroTheme;
+
+    delete heroElement.dataset
+      .heroThemeActive;
+
+    function activateDarkTheme() {
+      if (
+        themeActive ||
+        !themeArmed ||
+        reducedMotion.matches ||
+        !interactivePointer.matches
+      ) {
+        return;
+      }
+
+      const currentScrollY =
+        Math.max(
+          window.scrollY,
+          0,
+        );
+
+      if (
+        currentScrollY >
+        THEME_TOP_LIMIT
+      ) {
+        return;
+      }
+
+      themeActive =
+        true;
+
+      activationScrollY =
+        currentScrollY;
+
+      rootElement.dataset.heroTheme =
+        "dark";
+
+      heroElement.dataset.heroThemeActive =
+        "true";
+
+      targetLightStrength =
+        1;
+
+      requestFrame();
+    }
+
+    function deactivateDarkTheme(
+      lockUntilPointerLeaves = false,
+    ) {
+      if (
+        rootElement.dataset.heroTheme ===
+        "dark"
+      ) {
+        delete rootElement.dataset
+          .heroTheme;
+      }
+
+      delete heroElement.dataset
+        .heroThemeActive;
+
+      themeActive =
+        false;
+
+      targetLightStrength =
+        0;
+
+      requestFrame();
+
+      if (
+        lockUntilPointerLeaves &&
+        pointerInsidePortrait
+      ) {
+        themeArmed =
+          false;
+
+        return;
+      }
+
+      themeArmed =
+        true;
+    }
 
     function apply() {
       stageElement.style.setProperty(
@@ -346,18 +571,53 @@ export default function HeroVisual({
         ),
       );
 
+      heroElement.style.setProperty(
+        "--flashlight-hero-x",
+        `${(
+          currentLightX *
+          100
+        ).toFixed(
+          3,
+        )}%`,
+      );
+
+      heroElement.style.setProperty(
+        "--flashlight-hero-y",
+        `${(
+          currentLightY *
+          100
+        ).toFixed(
+          3,
+        )}%`,
+      );
+
+      heroElement.style.setProperty(
+        "--flashlight-strength",
+        currentLightStrength.toFixed(
+          4,
+        ),
+      );
+
+      circleElement?.style.setProperty(
+        "--shape-light-strength",
+        currentLightStrength.toFixed(
+          4,
+        ),
+      );
+
+      archElement?.style.setProperty(
+        "--shape-light-strength",
+        currentLightStrength.toFixed(
+          4,
+        ),
+      );
+
       stageElement.dataset.portraitState =
         currentFocus >
         0.025
           ? "active"
           : "base";
     }
-
-    /*
-     * =========================
-     * RAF
-     * =========================
-     */
 
     function requestFrame() {
       if (
@@ -401,20 +661,15 @@ export default function HeroVisual({
       previousTime =
         timestamp;
 
-      const active =
+      const revealActive =
         targetFocus >
         0;
-
-      /*
-       * Main reveal follows cursor
-       * relatively quickly.
-       */
 
       currentX =
         damp(
           currentX,
           targetX,
-          active
+          revealActive
             ? 17
             : 9,
           deltaTime,
@@ -424,21 +679,17 @@ export default function HeroVisual({
         damp(
           currentY,
           targetY,
-          active
+          revealActive
             ? 17
             : 9,
           deltaTime,
         );
 
-      /*
-       * Secondary reveal follows slower.
-       */
-
       trailX =
         damp(
           trailX,
           targetX,
-          active
+          revealActive
             ? 6.2
             : 4.2,
           deltaTime,
@@ -448,26 +699,46 @@ export default function HeroVisual({
         damp(
           trailY,
           targetY,
-          active
+          revealActive
             ? 6.2
             : 4.2,
           deltaTime,
         );
 
-      /*
-       * Reveal opacity.
-       *
-       * Faster on entry,
-       * softer on exit.
-       */
-
       currentFocus =
         damp(
           currentFocus,
           targetFocus,
-          active
+          revealActive
             ? 9.5
             : 5.2,
+          deltaTime,
+        );
+
+      currentLightX =
+        damp(
+          currentLightX,
+          targetLightX,
+          16,
+          deltaTime,
+        );
+
+      currentLightY =
+        damp(
+          currentLightY,
+          targetLightY,
+          16,
+          deltaTime,
+        );
+
+      currentLightStrength =
+        damp(
+          currentLightStrength,
+          targetLightStrength,
+          targetLightStrength >
+            currentLightStrength
+            ? 6.2
+            : 5,
           deltaTime,
         );
 
@@ -498,6 +769,21 @@ export default function HeroVisual({
           currentFocus -
             targetFocus,
         ) >
+          0.0004 ||
+        Math.abs(
+          currentLightX -
+            targetLightX,
+        ) >
+          0.0004 ||
+        Math.abs(
+          currentLightY -
+            targetLightY,
+        ) >
+          0.0004 ||
+        Math.abs(
+          currentLightStrength -
+            targetLightStrength,
+        ) >
           0.0004;
 
       if (
@@ -506,12 +792,6 @@ export default function HeroVisual({
         requestFrame();
       }
     }
-
-    /*
-     * =========================
-     * POINTER UPDATE
-     * =========================
-     */
 
     function updatePointer(
       event: PointerEvent,
@@ -523,56 +803,145 @@ export default function HeroVisual({
         return;
       }
 
-      /*
-       * Read coordinates against the
-       * portrait stage itself rather
-       * than the page.
-       */
-
-      const rect =
+      const stageRect =
         stageElement.getBoundingClientRect();
 
       if (
-        rect.width <=
-          0 ||
-        rect.height <=
+        stageRect.width >
+          0 &&
+        stageRect.height >
           0
       ) {
+        targetX =
+          clamp(
+            (
+              event.clientX -
+              stageRect.left
+            ) /
+              stageRect.width,
+            0,
+            1,
+          );
+
+        targetY =
+          clamp(
+            (
+              event.clientY -
+              stageRect.top
+            ) /
+              stageRect.height,
+            0,
+            1,
+          );
+      }
+
+      const heroRect =
+        heroElement.getBoundingClientRect();
+
+      if (
+        heroRect.width >
+          0 &&
+        heroRect.height >
+          0
+      ) {
+        targetLightX =
+          clamp(
+            (
+              event.clientX -
+              heroRect.left
+            ) /
+              heroRect.width,
+            0,
+            1,
+          );
+
+        targetLightY =
+          clamp(
+            (
+              event.clientY -
+              heroRect.top
+            ) /
+              heroRect.height,
+            0,
+            1,
+          );
+      }
+
+      updateShapeLightPosition(
+        circleElement,
+        event.clientX,
+        event.clientY,
+      );
+
+      updateShapeLightPosition(
+        archElement,
+        event.clientX,
+        event.clientY,
+      );
+
+      requestFrame();
+    }
+
+    function updateThemeZone(
+      event: PointerEvent,
+    ) {
+      const rect =
+        stageElement.getBoundingClientRect();
+
+      const inside =
+        isInsidePortraitZone(
+          event.clientX,
+          event.clientY,
+          rect,
+        );
+
+      if (inside) {
+        targetFocus =
+          1;
+
+        if (
+          !pointerInsidePortrait
+        ) {
+          pointerInsidePortrait =
+            true;
+
+          activateDarkTheme();
+        }
+
+        if (
+          themeActive
+        ) {
+          targetLightStrength =
+            1;
+        }
+
         return;
       }
 
-      targetX =
-        clamp(
-          (
-            event.clientX -
-            rect.left
-          ) /
-            rect.width,
-          0,
-          1,
-        );
-
-      targetY =
-        clamp(
-          (
-            event.clientY -
-            rect.top
-          ) /
-            rect.height,
-          0,
-          1,
-        );
-
       targetFocus =
-        1;
+        0;
 
-      requestFrame();
+      if (
+        pointerInsidePortrait
+      ) {
+        pointerInsidePortrait =
+          false;
+
+        themeArmed =
+          true;
+
+        deactivateDarkTheme();
+      }
     }
 
     function handlePointerEnter(
       event: PointerEvent,
     ) {
       updatePointer(
+        event,
+      );
+
+      updateThemeZone(
         event,
       );
     }
@@ -583,27 +952,68 @@ export default function HeroVisual({
       updatePointer(
         event,
       );
+
+      updateThemeZone(
+        event,
+      );
     }
 
     function handlePointerLeave() {
-      /*
-       * Keep reveal position at the
-       * last cursor location.
-       *
-       * Only fade its strength.
-       */
+      pointerInsidePortrait =
+        false;
+
+      themeArmed =
+        true;
 
       targetFocus =
         0;
 
+      targetLightStrength =
+        0;
+
+      deactivateDarkTheme();
+
       requestFrame();
     }
 
-    /*
-     * =========================
-     * RESET
-     * =========================
-     */
+    function handleScroll() {
+      if (
+        !themeActive
+      ) {
+        return;
+      }
+
+      const currentScrollY =
+        Math.max(
+          window.scrollY,
+          0,
+        );
+
+      const travelled =
+        Math.abs(
+          currentScrollY -
+            activationScrollY,
+        );
+
+      if (
+        travelled <
+        THEME_SCROLL_RESET_THRESHOLD
+      ) {
+        return;
+      }
+
+      deactivateDarkTheme(
+        true,
+      );
+
+      targetFocus =
+        0;
+
+      targetLightStrength =
+        0;
+
+      requestFrame();
+    }
 
     function resetInteraction() {
       targetX =
@@ -630,6 +1040,32 @@ export default function HeroVisual({
       currentFocus =
         0;
 
+      targetLightX =
+        0.74;
+
+      targetLightY =
+        0.5;
+
+      currentLightX =
+        0.74;
+
+      currentLightY =
+        0.5;
+
+      targetLightStrength =
+        0;
+
+      currentLightStrength =
+        0;
+
+      pointerInsidePortrait =
+        false;
+
+      themeArmed =
+        true;
+
+      deactivateDarkTheme();
+
       apply();
     }
 
@@ -653,17 +1089,6 @@ export default function HeroVisual({
         resetInteraction();
       }
     }
-
-    /*
-     * =========================
-     * EVENTS
-     * =========================
-     *
-     * Keep listener on original visual.
-     *
-     * HeroAmbientSignature uses the
-     * same area independently.
-     */
 
     visualElement.addEventListener(
       "pointerenter",
@@ -689,6 +1114,15 @@ export default function HeroVisual({
       handlePointerLeave,
     );
 
+    window.addEventListener(
+      "scroll",
+      handleScroll,
+      {
+        passive:
+          true,
+      },
+    );
+
     reducedMotion.addEventListener(
       "change",
       handleEnvironmentChange,
@@ -700,12 +1134,6 @@ export default function HeroVisual({
     );
 
     resetInteraction();
-
-    /*
-     * =========================
-     * CLEANUP
-     * =========================
-     */
 
     return () => {
       destroyed =
@@ -729,6 +1157,11 @@ export default function HeroVisual({
       visualElement.removeEventListener(
         "pointercancel",
         handlePointerLeave,
+      );
+
+      window.removeEventListener(
+        "scroll",
+        handleScroll,
       );
 
       reducedMotion.removeEventListener(
@@ -766,31 +1199,71 @@ export default function HeroVisual({
         },
       );
 
+      [
+        "--flashlight-hero-x",
+        "--flashlight-hero-y",
+        "--flashlight-strength",
+      ].forEach(
+        (
+          property,
+        ) => {
+          heroElement.style.removeProperty(
+            property,
+          );
+        },
+      );
+
+      [
+        circleElement,
+        archElement,
+      ].forEach(
+        (
+          element,
+        ) => {
+          if (!element) {
+            return;
+          }
+
+          [
+            "--shape-light-x",
+            "--shape-light-y",
+            "--shape-light-strength",
+          ].forEach(
+            (
+              property,
+            ) => {
+              element.style.removeProperty(
+                property,
+              );
+            },
+          );
+        },
+      );
+
+      delete rootElement.dataset
+        .heroTheme;
+
+      delete heroElement.dataset
+        .heroThemeActive;
+
       delete stageElement.dataset
         .portraitState;
     };
   }, []);
-
-  /*
-   * =========================
-   * RENDER
-   * =========================
-   */
 
   return (
     <div
       ref={
         visualRef
       }
-      className={
-        styles.visual
-      }
+      className={`${styles.visual} ${themeStyles.themeScope}`}
       data-motion-hero-piece="visual"
     >
       <div
         className={
           styles.accentPlus
         }
+        data-hero-accent-plus
         aria-hidden="true"
       >
         <span />
@@ -798,12 +1271,20 @@ export default function HeroVisual({
       </div>
 
       <div
+        ref={
+          circleRef
+        }
         className={`${styles.shape} ${styles.shapeCircle}`}
+        data-hero-shape="circle"
         aria-hidden="true"
       />
 
       <div
+        ref={
+          archRef
+        }
         className={`${styles.shape} ${styles.shapeArch}`}
+        data-hero-shape="arch"
         aria-hidden="true"
       />
 
@@ -819,13 +1300,27 @@ export default function HeroVisual({
         }
         data-portrait-state="base"
       >
-        {/* BASE PORTRAIT */}
+        <div
+          className={`${portraitStyles.layer} ${portraitStyles.fallbackLayer}`}
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/natsx-portrait-hero-bfr.png"
+            alt=""
+            fill
+            loading="eager"
+            sizes="(max-width: 960px) 100vw, 42vw"
+            className={
+              portraitStyles.fallbackImage
+            }
+          />
+        </div>
 
         <div
           className={`${portraitStyles.layer} ${portraitStyles.baseLayer}`}
         >
           <Image
-            src="/images/natsx-portrait-hero-before.png"
+            src="/images/natsx-portrait-hero-bfr.png"
             alt={
               copy
                 .accessibility
@@ -847,8 +1342,6 @@ export default function HeroVisual({
           />
         </div>
 
-        {/* SLOW TRAILING ALT */}
-
         <div
           className={`${portraitStyles.layer} ${portraitStyles.altTrail}`}
           aria-hidden="true"
@@ -864,8 +1357,6 @@ export default function HeroVisual({
             }
           />
         </div>
-
-        {/* MAIN ALT REVEAL */}
 
         <div
           className={`${portraitStyles.layer} ${portraitStyles.altCore}`}
