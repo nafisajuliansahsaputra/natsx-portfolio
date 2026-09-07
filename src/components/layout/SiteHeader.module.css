@@ -1,138 +1,1683 @@
 /* =========================
-   MOBILE NAVIGATION
+   NATSX — HERO / FLOAT MENU
 ========================= */
 
-.mobilePanel {
-  display: none;
-}
+/*
+ * Main site header is deliberately
+ * NON-STICKY.
+ *
+ * It belongs to the top / hero area and
+ * naturally leaves the viewport while
+ * the visitor scrolls.
+ *
+ * Only the compact menu control becomes
+ * fixed after the hero has completely
+ * left the viewport.
+ */
 
 /* =========================
-   TABLET + MOBILE
+   HEADER RESET
 ========================= */
 
-@media (max-width: 960px) {
-  :global(.site-header__inner) {
-  position: relative;
+:global(.site-header) {
+  position:
+    relative !important;
 
-  z-index: 100;
+  top:
+    auto !important;
 
+  transform:
+    none !important;
+
+  will-change:
+    auto !important;
+}
+
+/*
+ * Important:
+ *
+ * A transformed ancestor creates a
+ * containing block for position: fixed.
+ *
+ * globals.css previously puts transform
+ * on .site-header. Removing it here lets
+ * the compact control truly attach to
+ * the viewport after the header itself
+ * has scrolled away.
+ */
+
+:global(
+  .site-header.is-hero
+) {
   background:
     transparent;
 }
 
 :global(
-  .site-header.is-menu-open
-    .site-header__inner
+  .site-header.is-compact
 ) {
   background:
-    #f7f6f2;
+    transparent;
+
+  -webkit-backdrop-filter:
+    none;
+
+  backdrop-filter:
+    none;
+
+  box-shadow:
+    none;
 }
 
-  /* =========================
-     PANEL
-  ========================= */
+:global(
+  .site-header__inner
+) {
+  position:
+    relative;
 
-  .mobilePanel {
-    position: fixed;
-    z-index: 90;
+  z-index:
+    100;
+}
 
-    inset: 0;
+/* =========================
+   DESKTOP
+========================= */
 
-    display: block;
+@media (
+  min-width: 961px
+) {
+  /*
+   * Original full navbar stays exactly
+   * where it already lived.
+   *
+   * No sticky behavior.
+   * No fake compact morph while hero
+   * is still visible.
+   */
 
-    padding-top: 76px;
+  :global(
+    .site-header.is-hero
+      .site-logo
+  ),
+  :global(
+    .site-header.is-hero
+      .site-header__desktop-actions
+  ) {
+    opacity:
+      1;
 
-    background: #f7f6f2;
-    color: var(--foreground);
+    visibility:
+      visible;
 
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    pointer-events:
+      auto;
 
     transform:
-      translate3d(
-        0,
-        4px,
-        0
-      );
-
-    will-change:
-      opacity,
-      transform;
+      none;
   }
 
   /* =========================
-     PANEL OPEN
+     FLOAT CONTROL
   ========================= */
 
-  .mobilePanelOpen {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+  .compactButton {
+    position:
+      fixed !important;
+
+    z-index:
+      120;
+
+    top:
+      20px;
+
+    right:
+      var(--page-padding);
+
+    width:
+      auto !important;
+
+    min-width:
+      146px;
+
+    height:
+      48px;
+
+    flex:
+      0
+      0
+      auto !important;
+
+    padding:
+      0
+      14px !important;
+
+    display:
+      inline-flex !important;
+
+    align-items:
+      center;
+
+    justify-content:
+      flex-start !important;
+
+    gap:
+      12px;
+
+    border:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.08
+      ) !important;
+
+    border-radius:
+      16px;
+
+    background:
+      var(--foreground) !important;
+
+    color:
+      #ffffff !important;
+
+    box-shadow:
+      0
+      10px
+      30px
+      rgba(
+        17,
+        17,
+        17,
+        0.11
+      );
+
+    opacity:
+      0;
+
+    visibility:
+      hidden;
+
+    pointer-events:
+      none;
 
     transform:
       translate3d(
         0,
-        0,
+        -8px,
         0
+      )
+      scale(
+        0.94
       );
+
+    transform-origin:
+      right top;
 
     transition:
       opacity
-        260ms
+        180ms
+        ease,
+      visibility
+        0ms
+        linear
+        260ms,
+      transform
+        440ms
         cubic-bezier(
           0.16,
           1,
           0.3,
           1
         ),
-      transform
-        420ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        );
+      box-shadow
+        220ms
+        ease;
   }
 
-  /* =========================
-     PANEL CLOSING
-  ========================= */
+  /*
+   * Hero has completely passed.
+   */
+  :global(
+    .site-header.is-compact
+  )
+    .compactButton {
+    opacity:
+      1;
 
-  .mobilePanelClosing {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: none;
+    visibility:
+      visible;
+
+    pointer-events:
+      auto;
 
     transform:
       translate3d(
         0,
         0,
         0
+      )
+      scale(
+        1
       );
 
-    animation:
-      mobile-panel-out
-      210ms
+    transition:
+      opacity
+        220ms
+        ease
+        50ms,
+      visibility
+        0ms
+        linear
+        0ms,
+      transform
+        480ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ),
+      box-shadow
+        220ms
+        ease;
+  }
+
+  /*
+   * Header content itself does NOT need
+   * to animate away here.
+   *
+   * By the time is-compact becomes true,
+   * the original header has naturally
+   * scrolled far outside the viewport.
+   */
+}
+
+/* =========================
+   COMPACT CONTENT
+========================= */
+
+.compactIndex {
+  min-width:
+    24px;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.08em;
+}
+
+.compactIndex::before {
+  content:
+    "";
+
+  width:
+    5px;
+
+  height:
+    5px;
+
+  flex:
+    0
+    0
+    5px;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+}
+
+.compactWord {
+  min-width:
+    41px;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.11em;
+}
+
+/* =========================
+   COMPACT ICON
+========================= */
+
+.compactButton
+  :global(
+    .site-menu-icon
+  ) {
+  position:
+    relative;
+
+  width:
+    23px;
+
+  height:
+    18px;
+
+  margin-left:
+    auto;
+
+  display:
+    block;
+}
+
+.compactButton
+  :global(
+    .site-menu-icon
+  )
+  > span {
+  position:
+    absolute;
+
+  right:
+    0;
+
+  left:
+    auto;
+
+  height:
+    1.5px;
+
+  background:
+    currentColor;
+
+  border-radius:
+    999px;
+
+  transform-origin:
+    center;
+
+  transition:
+    top
+      360ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    width
+      360ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    right
+      360ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    height
+      220ms
+      ease,
+    border-radius
+      220ms
+      ease,
+    opacity
+      180ms
+      ease,
+    transform
+      360ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+.compactButton
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(1) {
+  top:
+    2px;
+
+  width:
+    23px;
+}
+
+.compactButton
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(2) {
+  top:
+    7px;
+
+  right:
+    1px;
+
+  width:
+    5px;
+
+  height:
+    5px;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+}
+
+.compactButton
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(3) {
+  top:
+    14px;
+
+  width:
+    14px;
+}
+
+/* =========================
+   OPEN → X
+========================= */
+
+.compactButton:global(
+  .is-open
+)
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(1) {
+  top:
+    8px;
+
+  width:
+    22px;
+
+  transform:
+    rotate(
+      45deg
+    );
+}
+
+.compactButton:global(
+  .is-open
+)
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(2) {
+  opacity:
+    0;
+
+  transform:
+    scale(
+      0.35
+    );
+}
+
+.compactButton:global(
+  .is-open
+)
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(3) {
+  top:
+    8px;
+
+  width:
+    22px;
+
+  transform:
+    rotate(
+      -45deg
+    );
+}
+
+/* =========================
+   FLOAT BUTTON HOVER
+========================= */
+
+@media (
+  min-width: 961px
+) and (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  :global(
+    .site-header.is-compact
+  )
+    .compactButton:hover {
+    transform:
+      translate3d(
+        0,
+        -2px,
+        0
+      )
+      scale(
+        1
+      );
+
+    box-shadow:
+      0
+      14px
+      36px
+      rgba(
+        17,
+        17,
+        17,
+        0.15
+      );
+  }
+}
+
+/* =========================
+   NAVIGATION PANEL
+========================= */
+
+.mobilePanel {
+  position:
+    fixed;
+
+  z-index:
+    90;
+
+  inset:
+    0;
+
+  display:
+    block;
+
+  padding-top:
+    88px;
+
+  background:
+    #f7f6f2;
+
+  color:
+    var(--foreground);
+
+  opacity:
+    0;
+
+  visibility:
+    hidden;
+
+  pointer-events:
+    none;
+
+  transform:
+    translate3d(
+      0,
+      4px,
+      0
+    );
+
+  will-change:
+    opacity,
+    transform;
+}
+
+.mobilePanelOpen {
+  opacity:
+    1;
+
+  visibility:
+    visible;
+
+  pointer-events:
+    auto;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  transition:
+    opacity
+      260ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    transform
+      420ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+.mobilePanelClosing {
+  opacity:
+    1;
+
+  visibility:
+    visible;
+
+  pointer-events:
+    none;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  animation:
+    mobile-panel-out
+    210ms
+    cubic-bezier(
+      0.4,
+      0,
+      1,
+      1
+    )
+    180ms
+    forwards;
+}
+
+/*
+ * When opened from the floating state,
+ * panel owns the full viewport.
+ */
+:global(
+  .site-header.is-compact
+)
+  + .mobilePanel {
+  padding-top:
+    0;
+}
+
+:global(
+  .site-header.is-compact
+)
+  + .mobilePanel
+  .mobileInner {
+  height:
+    100svh;
+
+  padding-top:
+    clamp(
+      94px,
+      12vh,
+      128px
+    );
+}
+
+/* =========================
+   INNER
+========================= */
+
+.mobileInner {
+  height:
+    calc(
+      100svh -
+      88px
+    );
+
+  padding-top:
+    clamp(
+      30px,
+      5vh,
+      58px
+    );
+
+  padding-bottom:
+    28px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.mobileNav {
+  position:
+    relative;
+
+  border-top:
+    1px solid
+    transparent;
+}
+
+.mobileNav::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  top:
+    -1px;
+
+  right:
+    0;
+
+  left:
+    0;
+
+  height:
+    1px;
+
+  background:
+    var(--foreground);
+
+  transform:
+    scaleX(
+      0
+    );
+
+  transform-origin:
+    right center;
+
+  transition:
+    transform
+      240ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+}
+
+.mobilePanelOpen
+  .mobileNav::before {
+  transform:
+    scaleX(
+      1
+    );
+
+  transform-origin:
+    left center;
+
+  transition:
+    transform
+      480ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      40ms;
+}
+
+.mobilePanelClosing
+  .mobileNav::before {
+  transform:
+    scaleX(
+      0
+    );
+
+  transform-origin:
+    right center;
+
+  transition:
+    transform
+      240ms
       cubic-bezier(
         0.4,
         0,
         1,
         1
       )
-      180ms
-      forwards;
+      40ms;
+}
+
+/* =========================
+   LINK ROW
+========================= */
+
+.mobileLink {
+  min-height:
+    clamp(
+      92px,
+      13vh,
+      132px
+    );
+
+  display:
+    grid;
+
+  grid-template-columns:
+    48px
+    minmax(
+      0,
+      1fr
+    )
+    18px;
+
+  column-gap:
+    14px;
+
+  align-items:
+    center;
+
+  border-bottom:
+    1px solid
+    var(--border);
+
+  overflow:
+    hidden;
+}
+
+/* =========================
+   NUMBER
+========================= */
+
+.mobileNumber {
+  align-self:
+    start;
+
+  padding-top:
+    25px;
+
+  color:
+    var(--accent);
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.04em;
+
+  opacity:
+    0;
+
+  transform:
+    translate3d(
+      0,
+      6px,
+      0
+    );
+
+  transition:
+    opacity
+      340ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    transform
+      520ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+/* =========================
+   LABEL
+========================= */
+
+.mobileLabel {
+  font-size:
+    clamp(
+      48px,
+      6vw,
+      82px
+    );
+
+  font-weight:
+    500;
+
+  line-height:
+    0.9;
+
+  letter-spacing:
+    -0.065em;
+
+  opacity:
+    0;
+
+  transform:
+    translate3d(
+      0,
+      14px,
+      0
+    );
+
+  transition:
+    opacity
+      420ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    transform
+      620ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    color
+      220ms
+      ease;
+}
+
+/* =========================
+   ACTIVE INDICATOR
+========================= */
+
+.mobileIndicator {
+  justify-self:
+    end;
+
+  width:
+    7px;
+
+  height:
+    7px;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+
+  opacity:
+    0;
+
+  transform:
+    scale(
+      0.4
+    );
+
+  transition:
+    opacity
+      320ms
+      ease,
+    transform
+      520ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+.mobileIndicatorActive {
+  opacity:
+    0;
+}
+
+/* =========================
+   OPEN STATE
+========================= */
+
+.mobilePanelOpen
+  .mobileNumber,
+.mobilePanelOpen
+  .mobileLabel {
+  opacity:
+    1;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+}
+
+.mobilePanelOpen
+  .mobileIndicatorActive {
+  opacity:
+    1;
+
+  transform:
+    scale(
+      1
+    );
+}
+
+/* =========================
+   OPEN STAGGER
+========================= */
+
+.mobilePanelOpen
+  .mobileLink:nth-child(1)
+  .mobileNumber,
+.mobilePanelOpen
+  .mobileLink:nth-child(1)
+  .mobileLabel,
+.mobilePanelOpen
+  .mobileLink:nth-child(1)
+  .mobileIndicator {
+  transition-delay:
+    90ms;
+}
+
+.mobilePanelOpen
+  .mobileLink:nth-child(2)
+  .mobileNumber,
+.mobilePanelOpen
+  .mobileLink:nth-child(2)
+  .mobileLabel,
+.mobilePanelOpen
+  .mobileLink:nth-child(2)
+  .mobileIndicator {
+  transition-delay:
+    135ms;
+}
+
+.mobilePanelOpen
+  .mobileLink:nth-child(3)
+  .mobileNumber,
+.mobilePanelOpen
+  .mobileLink:nth-child(3)
+  .mobileLabel,
+.mobilePanelOpen
+  .mobileLink:nth-child(3)
+  .mobileIndicator {
+  transition-delay:
+    180ms;
+}
+
+.mobilePanelOpen
+  .mobileLink:nth-child(4)
+  .mobileNumber,
+.mobilePanelOpen
+  .mobileLink:nth-child(4)
+  .mobileLabel,
+.mobilePanelOpen
+  .mobileLink:nth-child(4)
+  .mobileIndicator {
+  transition-delay:
+    225ms;
+}
+
+/* =========================
+   CLOSE
+========================= */
+
+.mobilePanelClosing
+  .mobileNumber,
+.mobilePanelClosing
+  .mobileLabel {
+  opacity:
+    1;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  animation:
+    mobile-item-out
+    230ms
+    cubic-bezier(
+      0.4,
+      0,
+      1,
+      1
+    )
+    forwards;
+}
+
+.mobilePanelClosing
+  .mobileLink:nth-child(1)
+  .mobileNumber,
+.mobilePanelClosing
+  .mobileLink:nth-child(1)
+  .mobileLabel {
+  animation-delay:
+    45ms;
+}
+
+.mobilePanelClosing
+  .mobileLink:nth-child(2)
+  .mobileNumber,
+.mobilePanelClosing
+  .mobileLink:nth-child(2)
+  .mobileLabel {
+  animation-delay:
+    30ms;
+}
+
+.mobilePanelClosing
+  .mobileLink:nth-child(3)
+  .mobileNumber,
+.mobilePanelClosing
+  .mobileLink:nth-child(3)
+  .mobileLabel {
+  animation-delay:
+    15ms;
+}
+
+.mobilePanelClosing
+  .mobileLink:nth-child(4)
+  .mobileNumber,
+.mobilePanelClosing
+  .mobileLink:nth-child(4)
+  .mobileLabel {
+  animation-delay:
+    0ms;
+}
+
+.mobilePanelClosing
+  .mobileIndicatorActive {
+  opacity:
+    1;
+
+  transform:
+    scale(
+      1
+    );
+
+  animation:
+    mobile-indicator-out
+    180ms
+    ease
+    forwards;
+}
+
+/* =========================
+   NAV HOVER
+========================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .mobileLink:hover
+    .mobileLabel {
+    color:
+      var(--accent);
+
+    transform:
+      translate3d(
+        6px,
+        0,
+        0
+      );
+  }
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.mobileFooter {
+  margin-top:
+    auto;
+
+  padding-top:
+    22px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  gap:
+    30px;
+
+  border-top:
+    1px solid
+    var(--border);
+
+  color:
+    #333330;
+
+  font-size:
+    10px;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.6;
+
+  opacity:
+    0;
+
+  transform:
+    translate3d(
+      0,
+      6px,
+      0
+    );
+
+  transition:
+    opacity
+      220ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    transform
+      320ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+}
+
+.mobilePanelOpen
+  .mobileFooter {
+  opacity:
+    1;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  transition-delay:
+    280ms;
+}
+
+.mobilePanelClosing
+  .mobileFooter {
+  opacity:
+    1;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  animation:
+    mobile-footer-out
+    190ms
+    cubic-bezier(
+      0.4,
+      0,
+      1,
+      1
+    )
+    forwards;
+}
+
+.mobileFooter
+  > div {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    4px;
+}
+
+.mobileMetaLabel {
+  color:
+    var(--muted);
+
+  font-size:
+    8px;
+
+  letter-spacing:
+    0.065em;
+
+  text-transform:
+    uppercase;
+}
+
+.mobileFooterRight {
+  align-items:
+    flex-end;
+
+  text-align:
+    right;
+}
+
+/* =========================
+   TABLET + MOBILE
+========================= */
+
+@media (
+  max-width: 960px
+) {
+  /*
+   * Mobile top navigation stays in its
+   * original inline form while visitor
+   * is still inside hero.
+   */
+
+  .compactButton {
+    position:
+      relative !important;
+
+    z-index:
+      120;
+
+    display:
+      inline-flex !important;
+
+    width:
+      48px !important;
+
+    min-width:
+      48px;
+
+    height:
+      48px;
+
+    flex:
+      0
+      0
+      48px !important;
+
+    padding:
+      0 !important;
+
+    border:
+      0 !important;
+
+    border-radius:
+      0;
+
+    background:
+      transparent !important;
+
+    color:
+      var(--foreground) !important;
+
+    box-shadow:
+      none;
+
+    opacity:
+      1;
+
+    visibility:
+      visible;
+
+    pointer-events:
+      auto;
+
+    transform:
+      none;
+
+    align-items:
+      center;
+
+    justify-content:
+      center !important;
   }
 
-  /* =========================
-     INNER
-  ========================= */
+  .compactIndex,
+  .compactWord {
+    display:
+      none;
+  }
+
+  .compactButton
+    :global(
+      .site-menu-icon
+    ) {
+    width:
+      26px;
+
+    height:
+      18px;
+
+    margin:
+      0;
+  }
+
+  .compactButton
+    :global(
+      .site-menu-icon
+    )
+    > span {
+    left:
+      0;
+
+    right:
+      auto;
+
+    width:
+      100%;
+
+    height:
+      1.5px;
+
+    border-radius:
+      0;
+
+    background:
+      currentColor;
+  }
+
+  .compactButton
+    :global(
+      .site-menu-icon
+    )
+    > span:nth-child(1) {
+    top:
+      1px;
+
+    width:
+      100%;
+  }
+
+  .compactButton
+    :global(
+      .site-menu-icon
+    )
+    > span:nth-child(2) {
+    top:
+      8px;
+
+    width:
+      100%;
+
+    height:
+      1.5px;
+
+    border-radius:
+      0;
+
+    background:
+      currentColor;
+  }
+
+  .compactButton
+    :global(
+      .site-menu-icon
+    )
+    > span:nth-child(3) {
+    top:
+      15px;
+
+    width:
+      100%;
+  }
+
+  /*
+   * Once hero disappears, turn the same
+   * button into a floating viewport
+   * control.
+   */
+  :global(
+    .site-header.is-compact
+  )
+    .compactButton {
+    position:
+      fixed !important;
+
+    top:
+      16px;
+
+    right:
+      18px;
+
+    width:
+      48px !important;
+
+    height:
+      48px;
+
+    border:
+      1px solid
+      rgba(
+        17,
+        17,
+        17,
+        0.08
+      ) !important;
+
+    border-radius:
+      15px;
+
+    background:
+      rgba(
+        247,
+        246,
+        242,
+        0.92
+      ) !important;
+
+    -webkit-backdrop-filter:
+      blur(
+        14px
+      );
+
+    backdrop-filter:
+      blur(
+        14px
+      );
+
+    box-shadow:
+      0
+      10px
+      28px
+      rgba(
+        17,
+        17,
+        17,
+        0.1
+      );
+  }
+
+  .compactButton:global(
+    .is-open
+  )
+    :global(
+      .site-menu-icon
+    )
+    > span:nth-child(1) {
+    top:
+      8px;
+
+    transform:
+      rotate(
+        45deg
+      );
+  }
+
+  .compactButton:global(
+    .is-open
+  )
+    :global(
+      .site-menu-icon
+    )
+    > span:nth-child(2) {
+    opacity:
+      0;
+
+    transform:
+      scaleX(
+        0.4
+      );
+  }
+
+  .compactButton:global(
+    .is-open
+  )
+    :global(
+      .site-menu-icon
+    )
+    > span:nth-child(3) {
+    top:
+      8px;
+
+    transform:
+      rotate(
+        -45deg
+      );
+  }
+
+  .mobilePanel {
+    padding-top:
+      76px;
+  }
 
   .mobileInner {
     height:
       calc(
-        100svh - 76px
+        100svh -
+        76px
       );
 
     padding-top:
@@ -141,99 +1686,33 @@
         6vh,
         64px
       );
-
-    padding-bottom: 28px;
-
-    display: flex;
-    flex-direction: column;
   }
 
-  /* =========================
-     NAV
-  ========================= */
-
-  .mobileNav {
-    position: relative;
-
-    border-top:
-      1px solid
-      transparent;
+  /*
+   * Floating-state navigation can cover
+   * the complete viewport because the
+   * original header has already scrolled
+   * away.
+   */
+  :global(
+    .site-header.is-compact
+  )
+    + .mobilePanel {
+    padding-top:
+      0;
   }
 
-  .mobileNav::before {
-    content: "";
+  :global(
+    .site-header.is-compact
+  )
+    + .mobilePanel
+    .mobileInner {
+    height:
+      100svh;
 
-    position: absolute;
-
-    top: -1px;
-    right: 0;
-    left: 0;
-
-    height: 1px;
-
-    background:
-      var(--foreground);
-
-    transform:
-      scaleX(0);
-
-    transform-origin:
-      right center;
-
-    transition:
-      transform
-        240ms
-        cubic-bezier(
-          0.22,
-          1,
-          0.36,
-          1
-        );
+    padding-top:
+      88px;
   }
-
-  .mobilePanelOpen
-    .mobileNav::before {
-    transform:
-      scaleX(1);
-
-    transform-origin:
-      left center;
-
-    transition:
-      transform
-        480ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        )
-        40ms;
-  }
-
-  .mobilePanelClosing
-    .mobileNav::before {
-    transform:
-      scaleX(0);
-
-    transform-origin:
-      right center;
-
-    transition:
-      transform
-        240ms
-        cubic-bezier(
-          0.4,
-          0,
-          1,
-          1
-        )
-        40ms;
-  }
-
-  /* =========================
-     LINK ROW
-  ========================= */
 
   .mobileLink {
     min-height:
@@ -243,71 +1722,17 @@
         132px
       );
 
-    display: grid;
-
     grid-template-columns:
       46px
-      minmax(0, 1fr)
+      minmax(
+        0,
+        1fr
+      )
       18px;
 
-    column-gap: 14px;
-
-    align-items: center;
-
-    border-bottom:
-      1px solid
-      var(--border);
-
-    overflow: hidden;
+    column-gap:
+      14px;
   }
-
-  /* =========================
-     NUMBER
-  ========================= */
-
-  .mobileNumber {
-    align-self: start;
-
-    padding-top: 25px;
-
-    color: var(--accent);
-
-    font-size: 10px;
-    font-weight: 700;
-
-    letter-spacing: 0.04em;
-
-    opacity: 0;
-
-    transform:
-      translate3d(
-        0,
-        6px,
-        0
-      );
-
-    transition:
-      opacity
-        340ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        ),
-      transform
-        520ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        );
-  }
-
-  /* =========================
-     LABEL
-  ========================= */
 
   .mobileLabel {
     font-size:
@@ -316,437 +1741,6 @@
         8vw,
         68px
       );
-
-    font-weight: 500;
-
-    line-height: 0.9;
-
-    letter-spacing:
-      -0.065em;
-
-    opacity: 0;
-
-    transform:
-      translate3d(
-        0,
-        14px,
-        0
-      );
-
-    transition:
-      opacity
-        420ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        ),
-      transform
-        620ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        );
-  }
-
-  /* =========================
-     ACTIVE INDICATOR
-  ========================= */
-
-  .mobileIndicator {
-    justify-self: end;
-
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background:
-      var(--accent);
-
-    opacity: 0;
-
-    transform:
-      scale(0.4);
-
-    transition:
-      opacity
-        320ms
-        ease,
-      transform
-        520ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        );
-  }
-
-  .mobileIndicatorActive {
-    opacity: 0;
-  }
-
-  /* =========================
-     OPEN CONTENT STATE
-  ========================= */
-
-  .mobilePanelOpen
-    .mobileNumber,
-  .mobilePanelOpen
-    .mobileLabel {
-    opacity: 1;
-
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
-  }
-
-  .mobilePanelOpen
-    .mobileIndicatorActive {
-    opacity: 1;
-
-    transform:
-      scale(1);
-  }
-
-  /* =========================
-     OPEN STAGGER
-  ========================= */
-
-  .mobilePanelOpen
-    .mobileLink:nth-child(1)
-    .mobileNumber,
-  .mobilePanelOpen
-    .mobileLink:nth-child(1)
-    .mobileLabel,
-  .mobilePanelOpen
-    .mobileLink:nth-child(1)
-    .mobileIndicator {
-    transition-delay:
-      90ms;
-  }
-
-  .mobilePanelOpen
-    .mobileLink:nth-child(2)
-    .mobileNumber,
-  .mobilePanelOpen
-    .mobileLink:nth-child(2)
-    .mobileLabel,
-  .mobilePanelOpen
-    .mobileLink:nth-child(2)
-    .mobileIndicator {
-    transition-delay:
-      135ms;
-  }
-
-  .mobilePanelOpen
-    .mobileLink:nth-child(3)
-    .mobileNumber,
-  .mobilePanelOpen
-    .mobileLink:nth-child(3)
-    .mobileLabel,
-  .mobilePanelOpen
-    .mobileLink:nth-child(3)
-    .mobileIndicator {
-    transition-delay:
-      180ms;
-  }
-
-  .mobilePanelOpen
-    .mobileLink:nth-child(4)
-    .mobileNumber,
-  .mobilePanelOpen
-    .mobileLink:nth-child(4)
-    .mobileLabel,
-  .mobilePanelOpen
-    .mobileLink:nth-child(4)
-    .mobileIndicator {
-    transition-delay:
-      225ms;
-  }
-
-  /* =========================
-     CLOSE ITEM STATE
-  ========================= */
-
-  .mobilePanelClosing
-    .mobileNumber,
-  .mobilePanelClosing
-    .mobileLabel {
-    opacity: 1;
-
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
-
-    animation:
-      mobile-item-out
-      230ms
-      cubic-bezier(
-        0.4,
-        0,
-        1,
-        1
-      )
-      forwards;
-  }
-
-  .mobilePanelClosing
-    .mobileLink:nth-child(1)
-    .mobileNumber,
-  .mobilePanelClosing
-    .mobileLink:nth-child(1)
-    .mobileLabel {
-    animation-delay:
-      45ms;
-  }
-
-  .mobilePanelClosing
-    .mobileLink:nth-child(2)
-    .mobileNumber,
-  .mobilePanelClosing
-    .mobileLink:nth-child(2)
-    .mobileLabel {
-    animation-delay:
-      30ms;
-  }
-
-  .mobilePanelClosing
-    .mobileLink:nth-child(3)
-    .mobileNumber,
-  .mobilePanelClosing
-    .mobileLink:nth-child(3)
-    .mobileLabel {
-    animation-delay:
-      15ms;
-  }
-
-  .mobilePanelClosing
-    .mobileLink:nth-child(4)
-    .mobileNumber,
-  .mobilePanelClosing
-    .mobileLink:nth-child(4)
-    .mobileLabel {
-    animation-delay:
-      0ms;
-  }
-
-  /* =========================
-     CLOSE INDICATOR
-  ========================= */
-
-  .mobilePanelClosing
-    .mobileIndicatorActive {
-    opacity: 1;
-
-    transform:
-      scale(1);
-
-    animation:
-      mobile-indicator-out
-      180ms
-      ease
-      forwards;
-  }
-
-  /* =========================
-     NAV HOVER
-  ========================= */
-
-  @media (
-    hover: hover
-  ) and (
-    pointer: fine
-  ) {
-    .mobileLabel {
-      transition:
-        opacity
-          420ms
-          cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-          ),
-        transform
-          620ms
-          cubic-bezier(
-            0.16,
-            1,
-            0.3,
-            1
-          ),
-        color
-          220ms
-          ease;
-    }
-
-    .mobileLink:hover
-      .mobileLabel {
-      color:
-        var(--accent);
-
-      transform:
-        translate3d(
-          6px,
-          0,
-          0
-        );
-    }
-  }
-
-  /* =========================
-     FOOTER
-  ========================= */
-
-  .mobileFooter {
-    margin-top: auto;
-
-    padding-top: 22px;
-
-    display: flex;
-    justify-content:
-      space-between;
-
-    gap: 30px;
-
-    border-top:
-      1px solid
-      var(--border);
-
-    color: #333330;
-
-    font-size: 10px;
-    font-weight: 600;
-
-    line-height: 1.6;
-
-    opacity: 0;
-
-    transform:
-      translate3d(
-        0,
-        6px,
-        0
-      );
-
-    transition:
-      opacity
-        220ms
-        cubic-bezier(
-          0.22,
-          1,
-          0.36,
-          1
-        ),
-      transform
-        320ms
-        cubic-bezier(
-          0.22,
-          1,
-          0.36,
-          1
-        );
-  }
-
-  .mobilePanelOpen
-    .mobileFooter {
-    opacity: 1;
-
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
-
-    transition-delay:
-      280ms;
-  }
-
-  .mobilePanelClosing
-    .mobileFooter {
-    opacity: 1;
-
-    transform:
-      translate3d(
-        0,
-        0,
-        0
-      );
-
-    animation:
-      mobile-footer-out
-      190ms
-      cubic-bezier(
-        0.4,
-        0,
-        1,
-        1
-      )
-      forwards;
-  }
-
-  .mobileFooter > div {
-    display: flex;
-    flex-direction: column;
-
-    gap: 4px;
-  }
-
-  .mobileMetaLabel {
-    color:
-      var(--muted);
-
-    font-size: 8px;
-
-    letter-spacing:
-      0.065em;
-
-    text-transform:
-      uppercase;
-  }
-
-  .mobileFooterRight {
-    align-items: flex-end;
-
-    text-align: right;
-  }
-
-  /* =========================
-     MENU BUTTON
-  ========================= */
-
-  :global(.site-menu-label) {
-    transition:
-      color
-        220ms
-        ease,
-      transform
-        320ms
-        cubic-bezier(
-          0.16,
-          1,
-          0.3,
-          1
-        );
-  }
-
-  :global(
-    .site-menu-label:active
-  ) {
-    transform:
-      scale(0.94);
   }
 }
 
@@ -754,10 +1748,38 @@
    MOBILE
 ========================= */
 
-@media (max-width: 700px) {
+@media (
+  max-width: 700px
+) {
+  :global(
+    .site-header.is-compact
+  )
+    .compactButton {
+    top:
+      14px;
+
+    right:
+      14px;
+
+    width:
+      46px !important;
+
+    height:
+      46px;
+
+    min-width:
+      46px;
+
+    flex-basis:
+      46px !important;
+  }
+
   .mobileInner {
-    padding-top: 28px;
-    padding-bottom: 24px;
+    padding-top:
+      28px;
+
+    padding-bottom:
+      24px;
   }
 
   .mobileLink {
@@ -770,16 +1792,22 @@
 
     grid-template-columns:
       34px
-      minmax(0, 1fr)
+      minmax(
+        0,
+        1fr
+      )
       14px;
 
-    column-gap: 10px;
+    column-gap:
+      10px;
   }
 
   .mobileNumber {
-    padding-top: 20px;
+    padding-top:
+      20px;
 
-    font-size: 9px;
+    font-size:
+      9px;
   }
 
   .mobileLabel {
@@ -792,14 +1820,19 @@
   }
 
   .mobileIndicator {
-    width: 6px;
-    height: 6px;
+    width:
+      6px;
+
+    height:
+      6px;
   }
 
   .mobileFooter {
-    padding-top: 18px;
+    padding-top:
+      18px;
 
-    font-size: 9px;
+    font-size:
+      9px;
   }
 }
 
@@ -813,12 +1846,16 @@
   max-height: 720px
 ) {
   .mobileInner {
-    padding-top: 18px;
-    padding-bottom: 18px;
+    padding-top:
+      18px;
+
+    padding-bottom:
+      18px;
   }
 
   .mobileLink {
-    min-height: 74px;
+    min-height:
+      74px;
   }
 
   .mobileLabel {
@@ -831,7 +1868,8 @@
   }
 
   .mobileFooter {
-    margin-top: 22px;
+    margin-top:
+      22px;
   }
 }
 
@@ -839,9 +1877,11 @@
    KEYFRAMES
 ========================= */
 
-@keyframes mobile-item-out {
+@keyframes
+  mobile-item-out {
   from {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
       translate3d(
@@ -852,7 +1892,8 @@
   }
 
   to {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
       translate3d(
@@ -863,9 +1904,11 @@
   }
 }
 
-@keyframes mobile-footer-out {
+@keyframes
+  mobile-footer-out {
   from {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
       translate3d(
@@ -876,7 +1919,8 @@
   }
 
   to {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
       translate3d(
@@ -887,25 +1931,34 @@
   }
 }
 
-@keyframes mobile-indicator-out {
+@keyframes
+  mobile-indicator-out {
   from {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
-      scale(1);
+      scale(
+        1
+      );
   }
 
   to {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
-      scale(0.5);
+      scale(
+        0.5
+      );
   }
 }
 
-@keyframes mobile-panel-out {
+@keyframes
+  mobile-panel-out {
   from {
-    opacity: 1;
+    opacity:
+      1;
 
     transform:
       translate3d(
@@ -916,7 +1969,8 @@
   }
 
   to {
-    opacity: 0;
+    opacity:
+      0;
 
     transform:
       translate3d(
@@ -940,7 +1994,8 @@
   .mobileNumber,
   .mobileLabel,
   .mobileIndicator,
-  .mobileFooter {
+  .mobileFooter,
+  .compactButton {
     animation-duration:
       0.001ms !important;
 

@@ -8,16 +8,10 @@ import {
 } from "react";
 
 import Link from "next/link";
-
-import {
-  usePathname,
-} from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
-
-import {
-  site,
-} from "@/data/site";
+import { site } from "@/data/site";
 
 import {
   getLocaleFromPathname,
@@ -25,55 +19,32 @@ import {
   stripLocaleFromPathname,
 } from "@/i18n/config";
 
-import {
-  getMessages,
-} from "@/i18n/messages";
+import { getMessages } from "@/i18n/messages";
 
+import floatStyles from "./SiteHeaderFloating.module.css";
+import menuStyles from "./SiteHeaderMenuReveal.module.css";
 import styles from "./SiteHeader.module.css";
 
 const navigation = [
   {
-    number:
-      "01",
-
-    key:
-      "work",
-
-    href:
-      "/work",
+    number: "01",
+    key: "work",
+    href: "/work",
   },
-
   {
-    number:
-      "02",
-
-    key:
-      "about",
-
-    href:
-      "/about",
+    number: "02",
+    key: "about",
+    href: "/about",
   },
-
   {
-    number:
-      "03",
-
-    key:
-      "playground",
-
-    href:
-      "/playground",
+    number: "03",
+    key: "playground",
+    href: "/playground",
   },
-
   {
-    number:
-      "04",
-
-    key:
-      "contact",
-
-    href:
-      "/contact",
+    number: "04",
+    key: "contact",
+    href: "/contact",
   },
 ] as const;
 
@@ -99,29 +70,49 @@ export default function SiteHeader() {
   const [
     menuOpen,
     setMenuOpen,
-  ] = useState(false);
+  ] =
+    useState(false);
 
   const [
     menuClosing,
     setMenuClosing,
-  ] = useState(false);
+  ] =
+    useState(false);
 
   const [
-    headerScrolled,
-    setHeaderScrolled,
-  ] = useState(false);
+    headerCompact,
+    setHeaderCompact,
+  ] =
+    useState(false);
 
   const [
-    headerVisible,
-    setHeaderVisible,
-  ] = useState(true);
+    floatingLeaving,
+    setFloatingLeaving,
+  ] =
+    useState(false);
 
   const closingTimerRef =
     useRef<number | null>(
       null,
     );
 
-  const menuButtonRef =
+  const floatingExitTimerRef =
+    useRef<number | null>(
+      null,
+    );
+
+  const headerCompactRef =
+    useRef(false);
+
+  const floatingLeavingRef =
+    useRef(false);
+
+  const headerMenuButtonRef =
+    useRef<HTMLButtonElement>(
+      null,
+    );
+
+  const floatingMenuButtonRef =
     useRef<HTMLButtonElement>(
       null,
     );
@@ -130,9 +121,6 @@ export default function SiteHeader() {
     useRef<HTMLDivElement>(
       null,
     );
-
-  const lastScrollYRef =
-    useRef(0);
 
   const scrollFrameRef =
     useRef<number | null>(
@@ -143,8 +131,7 @@ export default function SiteHeader() {
     href: string,
   ) {
     if (
-      href ===
-      "/work"
+      href === "/work"
     ) {
       return (
         basePath ===
@@ -156,10 +143,41 @@ export default function SiteHeader() {
     }
 
     return (
-      basePath ===
-      href
+      basePath === href
     );
   }
+
+  const activeNavigationItem =
+    navigation.find(
+      (item) =>
+        isActive(
+          item.href,
+        ),
+    );
+
+  const currentIndex =
+    basePath === "/cv"
+      ? "CV"
+      : activeNavigationItem
+          ?.number ??
+        "00";
+
+  const getActiveMenuButton =
+    useCallback(() => {
+      if (
+        headerCompactRef.current
+      ) {
+        return (
+          floatingMenuButtonRef
+            .current
+        );
+      }
+
+      return (
+        headerMenuButtonRef
+          .current
+      );
+    }, []);
 
   const closeMenu =
     useCallback(() => {
@@ -190,7 +208,7 @@ export default function SiteHeader() {
       const closeDuration =
         prefersReducedMotion
           ? 0
-          : 430;
+          : 650;
 
       closingTimerRef.current =
         window.setTimeout(
@@ -235,10 +253,6 @@ export default function SiteHeader() {
       false,
     );
 
-    setHeaderVisible(
-      true,
-    );
-
     setMenuOpen(
       true,
     );
@@ -256,76 +270,149 @@ export default function SiteHeader() {
     openMenu();
   }
 
+  /* =========================
+     HERO EXIT / RETURN
+  ========================= */
+
   useEffect(() => {
-    lastScrollYRef.current =
-      Math.max(
-        window.scrollY,
-        0,
+    const main =
+      document.querySelector(
+        "main",
       );
 
-    const updateHeader =
+    const hero =
+      document.querySelector<HTMLElement>(
+        "[data-home-hero]",
+      ) ??
+      main?.querySelector<HTMLElement>(
+        "section",
+      ) ??
+      null;
+
+    const clearFloatingExitTimer =
       () => {
-        const currentY =
-          Math.max(
-            window.scrollY,
-            0,
+        if (
+          floatingExitTimerRef.current !==
+          null
+        ) {
+          window.clearTimeout(
+            floatingExitTimerRef.current,
           );
 
-        const previousY =
-          lastScrollYRef.current;
+          floatingExitTimerRef.current =
+            null;
+        }
+      };
 
-        const delta =
-          currentY -
-          previousY;
+    const showFloating =
+      () => {
+        clearFloatingExitTimer();
 
-        const isAtTop =
-          currentY <=
-          16;
+        floatingLeavingRef.current =
+          false;
 
-        setHeaderScrolled(
-          currentY >
-            24,
+        setFloatingLeaving(
+          false,
         );
 
         if (
-          menuOpen ||
-          isAtTop
+          !headerCompactRef.current
         ) {
-          setHeaderVisible(
+          headerCompactRef.current =
+            true;
+
+          setHeaderCompact(
             true,
           );
-        } else if (
-          Math.abs(
-            delta,
-          ) >= 5
-        ) {
-          if (
-            delta > 0 &&
-            currentY >
-              120
-          ) {
-            setHeaderVisible(
-              false,
-            );
-          }
+        }
+      };
 
-          if (
-            delta < 0
-          ) {
-            setHeaderVisible(
-              true,
-            );
-          }
+    const hideFloating =
+      () => {
+        if (
+          !headerCompactRef.current ||
+          floatingLeavingRef.current
+        ) {
+          return;
         }
 
-        lastScrollYRef.current =
-          currentY;
+        const prefersReducedMotion =
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+
+        const exitDuration =
+          prefersReducedMotion
+            ? 0
+            : 760;
+
+        floatingLeavingRef.current =
+          true;
+
+        setFloatingLeaving(
+          true,
+        );
+
+        clearFloatingExitTimer();
+
+        floatingExitTimerRef.current =
+          window.setTimeout(
+            () => {
+              headerCompactRef.current =
+                false;
+
+              floatingLeavingRef.current =
+                false;
+
+              setHeaderCompact(
+                false,
+              );
+
+              setFloatingLeaving(
+                false,
+              );
+
+              floatingExitTimerRef.current =
+                null;
+            },
+            exitDuration,
+          );
+      };
+
+    const updateCompactState =
+      () => {
+        let shouldCompact =
+          false;
+
+        if (
+          hero
+        ) {
+          const heroRect =
+            hero.getBoundingClientRect();
+
+          shouldCompact =
+            heroRect.bottom <=
+            0;
+        } else {
+          shouldCompact =
+            window.scrollY >=
+            window.innerHeight *
+              0.8;
+        }
+
+        if (
+          shouldCompact
+        ) {
+          showFloating();
+        } else {
+          hideFloating();
+        }
 
         scrollFrameRef.current =
           null;
       };
 
-    const handleScroll =
+    const requestUpdate =
       () => {
         if (
           scrollFrameRef.current !==
@@ -336,26 +423,59 @@ export default function SiteHeader() {
 
         scrollFrameRef.current =
           window.requestAnimationFrame(
-            updateHeader,
+            updateCompactState,
           );
       };
 
+    updateCompactState();
+
     window.addEventListener(
       "scroll",
-      handleScroll,
+      requestUpdate,
       {
-        passive:
-          true,
+        passive: true,
       },
     );
 
-    updateHeader();
+    window.addEventListener(
+      "resize",
+      requestUpdate,
+    );
+
+    let resizeObserver:
+      ResizeObserver |
+      null =
+      null;
+
+    if (
+      hero &&
+      typeof ResizeObserver !==
+        "undefined"
+    ) {
+      resizeObserver =
+        new ResizeObserver(
+          requestUpdate,
+        );
+
+      resizeObserver.observe(
+        hero,
+      );
+    }
 
     return () => {
       window.removeEventListener(
         "scroll",
-        handleScroll,
+        requestUpdate,
       );
+
+      window.removeEventListener(
+        "resize",
+        requestUpdate,
+      );
+
+      resizeObserver?.disconnect();
+
+      clearFloatingExitTimer();
 
       if (
         scrollFrameRef.current !==
@@ -370,8 +490,12 @@ export default function SiteHeader() {
       }
     };
   }, [
-    menuOpen,
+    pathname,
   ]);
+
+  /* =========================
+     SCROLL LOCK
+  ========================= */
 
   useEffect(() => {
     if (
@@ -393,11 +517,8 @@ export default function SiteHeader() {
 
     const previousInertStates =
       backgroundRegions.map(
-        (
+        (element) => ({
           element,
-        ) => ({
-          element,
-
           inert:
             element.inert,
         }),
@@ -424,14 +545,17 @@ export default function SiteHeader() {
           element,
           inert,
         }) => {
-          element.inert =
-            inert;
-        },
-      );
+        element.inert =
+          inert;
+      });
     };
   }, [
     menuOpen,
   ]);
+
+  /* =========================
+     INITIAL FOCUS
+  ========================= */
 
   useEffect(() => {
     if (
@@ -441,8 +565,8 @@ export default function SiteHeader() {
       return;
     }
 
-    const frame =
-      window.requestAnimationFrame(
+    const timer =
+      window.setTimeout(
         () => {
           const firstLink =
             mobilePanelRef.current
@@ -452,17 +576,22 @@ export default function SiteHeader() {
 
           firstLink?.focus();
         },
+        310,
       );
 
     return () => {
-      window.cancelAnimationFrame(
-        frame,
+      window.clearTimeout(
+        timer,
       );
     };
   }, [
     menuOpen,
     menuClosing,
   ]);
+
+  /* =========================
+     FOCUS TRAP
+  ========================= */
 
   useEffect(() => {
     if (
@@ -476,8 +605,7 @@ export default function SiteHeader() {
       event: KeyboardEvent,
     ) {
       if (
-        event.key !==
-        "Tab"
+        event.key !== "Tab"
       ) {
         return;
       }
@@ -486,7 +614,7 @@ export default function SiteHeader() {
         mobilePanelRef.current;
 
       const button =
-        menuButtonRef.current;
+        getActiveMenuButton();
 
       if (
         !panel ||
@@ -502,17 +630,14 @@ export default function SiteHeader() {
               'a[href]:not([tabindex="-1"])',
               'button:not([disabled]):not([tabindex="-1"])',
               '[tabindex]:not([tabindex="-1"])',
-            ].join(
-              ",",
-            ),
+            ].join(","),
           ),
         );
 
-      const focusable =
-        [
-          button,
-          ...panelFocusable,
-        ];
+      const focusable = [
+        button,
+        ...panelFocusable,
+      ];
 
       if (
         focusable.length <=
@@ -524,14 +649,14 @@ export default function SiteHeader() {
       const activeElement =
         document.activeElement;
 
-      const currentIndex =
+      const currentFocusIndex =
         focusable.indexOf(
           activeElement as HTMLElement,
         );
 
       if (
         event.shiftKey &&
-        currentIndex ===
+        currentFocusIndex ===
           0
       ) {
         event.preventDefault();
@@ -546,7 +671,7 @@ export default function SiteHeader() {
 
       if (
         !event.shiftKey &&
-        currentIndex ===
+        currentFocusIndex ===
           focusable.length -
             1
       ) {
@@ -570,7 +695,12 @@ export default function SiteHeader() {
   }, [
     menuOpen,
     menuClosing,
+    getActiveMenuButton,
   ]);
+
+  /* =========================
+     ESCAPE
+  ========================= */
 
   useEffect(() => {
     function handleKeyDown(
@@ -583,7 +713,7 @@ export default function SiteHeader() {
       ) {
         event.preventDefault();
 
-        menuButtonRef.current
+        getActiveMenuButton()
           ?.focus();
 
         closeMenu();
@@ -603,6 +733,7 @@ export default function SiteHeader() {
     };
   }, [
     closeMenu,
+    getActiveMenuButton,
     menuOpen,
   ]);
 
@@ -613,6 +744,15 @@ export default function SiteHeader() {
       ) {
         window.clearTimeout(
           closingTimerRef.current,
+        );
+      }
+
+      if (
+        floatingExitTimerRef.current !==
+        null
+      ) {
+        window.clearTimeout(
+          floatingExitTimerRef.current,
         );
       }
 
@@ -630,43 +770,62 @@ export default function SiteHeader() {
   const mobilePanelClassName =
     [
       styles.mobilePanel,
+      menuStyles.panel,
+
+      headerCompact
+        ? styles.mobilePanelCompact
+        : "",
 
       menuClosing
         ? styles.mobilePanelClosing
         : menuOpen
           ? styles.mobilePanelOpen
           : "",
+
+      menuClosing
+        ? menuStyles.closing
+        : menuOpen
+          ? menuStyles.open
+          : "",
     ]
-      .filter(
-        Boolean,
-      )
-      .join(
-        " ",
-      );
+      .filter(Boolean)
+      .join(" ");
 
   const headerClassName =
     [
       "site-header",
 
-      headerScrolled
-        ? "is-scrolled"
-        : "is-top",
-
-      headerVisible
-        ? "is-visible"
-        : "is-hidden",
+      headerCompact
+        ? "is-compact"
+        : "is-hero",
 
       menuOpen ||
       menuClosing
         ? "is-menu-open"
         : "",
     ]
-      .filter(
-        Boolean,
-      )
-      .join(
-        " ",
-      );
+      .filter(Boolean)
+      .join(" ");
+
+  const floatingButtonClassName =
+    [
+      floatStyles.button,
+
+      headerCompact &&
+      !floatingLeaving
+        ? floatStyles.visible
+        : "",
+
+      floatingLeaving
+        ? floatStyles.leaving
+        : "",
+
+      menuOpen
+        ? floatStyles.open
+        : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
 
   return (
     <>
@@ -679,6 +838,10 @@ export default function SiteHeader() {
             .skipToMain
         }
       </a>
+
+      {/* =========================
+          NORMAL TOP NAV
+      ========================= */}
 
       <header
         className={
@@ -717,9 +880,7 @@ export default function SiteHeader() {
               }
             >
               {navigation.map(
-                (
-                  item,
-                ) => {
+                (item) => {
                   const active =
                     isActive(
                       item.href,
@@ -773,7 +934,7 @@ export default function SiteHeader() {
 
           <button
             ref={
-              menuButtonRef
+              headerMenuButtonRef
             }
             className={[
               "site-menu-label",
@@ -782,26 +943,25 @@ export default function SiteHeader() {
                 ? "is-open"
                 : "",
             ]
-              .filter(
-                Boolean,
-              )
-              .join(
-                " ",
-              )}
+              .filter(Boolean)
+              .join(" ")}
             type="button"
             aria-label={
               menuOpen
-                ? copy
-                    .accessibility
+                ? copy.accessibility
                     .closeMenu
-                : copy
-                    .accessibility
+                : copy.accessibility
                     .openMenu
             }
             aria-expanded={
               menuOpen
             }
             aria-controls="mobile-navigation"
+            tabIndex={
+              headerCompact
+                ? -1
+                : 0
+            }
             onClick={
               toggleMenu
             }
@@ -817,6 +977,10 @@ export default function SiteHeader() {
           </button>
         </div>
       </header>
+
+      {/* =========================
+          HORIZONTAL SHUTTER MENU
+      ========================= */}
 
       <div
         ref={
@@ -841,21 +1005,48 @@ export default function SiteHeader() {
         }
       >
         <div
-          className={`site-container ${styles.mobileInner}`}
+          className={
+            menuStyles.shutters
+          }
+          aria-hidden="true"
+        >
+          <span
+            className={
+              menuStyles.shutter
+            }
+          />
+
+          <span
+            className={
+              menuStyles.shutter
+            }
+          />
+
+          <span
+            className={
+              menuStyles.shutter
+            }
+          />
+
+          <span
+            className={
+              menuStyles.shutter
+            }
+          />
+        </div>
+
+        <div
+          className={`site-container ${styles.mobileInner} ${menuStyles.inner}`}
         >
           <nav
-            className={
-              styles.mobileNav
-            }
+            className={`${styles.mobileNav} ${menuStyles.nav}`}
             aria-label={
               copy.accessibility
                 .mobileNavigation
             }
           >
             {navigation.map(
-              (
-                item,
-              ) => {
+              (item) => {
                 const active =
                   isActive(
                     item.href,
@@ -875,9 +1066,7 @@ export default function SiteHeader() {
                     onClick={
                       closeMenu
                     }
-                    className={
-                      styles.mobileLink
-                    }
+                    className={`${styles.mobileLink} ${menuStyles.link}`}
                     aria-current={
                       active
                         ? "page"
@@ -891,9 +1080,7 @@ export default function SiteHeader() {
                     }
                   >
                     <span
-                      className={
-                        styles.mobileNumber
-                      }
+                      className={`${styles.mobileNumber} ${menuStyles.number}`}
                     >
                       {
                         item.number
@@ -901,9 +1088,7 @@ export default function SiteHeader() {
                     </span>
 
                     <span
-                      className={
-                        styles.mobileLabel
-                      }
+                      className={`${styles.mobileLabel} ${menuStyles.label}`}
                     >
                       {
                         copy.navigation[
@@ -913,11 +1098,20 @@ export default function SiteHeader() {
                     </span>
 
                     <span
-                      className={
+                      className={[
+                        styles.mobileIndicator,
+                        menuStyles.indicator,
+
                         active
-                          ? `${styles.mobileIndicator} ${styles.mobileIndicatorActive}`
-                          : styles.mobileIndicator
-                      }
+                          ? styles.mobileIndicatorActive
+                          : "",
+
+                        active
+                          ? menuStyles.activeIndicator
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       aria-hidden="true"
                     />
                   </Link>
@@ -926,17 +1120,21 @@ export default function SiteHeader() {
             )}
           </nav>
 
-          <LanguageSwitcher
-            variant="mobile"
-            onNavigate={
-              closeMenu
-            }
-          />
-
           <div
             className={
-              styles.mobileFooter
+              menuStyles.language
             }
+          >
+            <LanguageSwitcher
+              variant="mobile"
+              onNavigate={
+                closeMenu
+              }
+            />
+          </div>
+
+          <div
+            className={`${styles.mobileFooter} ${menuStyles.footer}`}
           >
             <div>
               <span
@@ -981,6 +1179,77 @@ export default function SiteHeader() {
           </div>
         </div>
       </div>
+
+      {/* =========================
+          FLOATING CONTROL
+      ========================= */}
+
+      <button
+        ref={
+          floatingMenuButtonRef
+        }
+        className={
+          floatingButtonClassName
+        }
+        type="button"
+        aria-label={
+          menuOpen
+            ? copy.accessibility
+                .closeMenu
+            : copy.accessibility
+                .openMenu
+        }
+        aria-expanded={
+          menuOpen
+        }
+        aria-controls="mobile-navigation"
+        aria-hidden={
+          !headerCompact ||
+          floatingLeaving
+        }
+        tabIndex={
+          headerCompact &&
+          !floatingLeaving
+            ? 0
+            : -1
+        }
+        onClick={
+          toggleMenu
+        }
+      >
+        <span
+          className={
+            floatStyles.index
+          }
+          aria-hidden="true"
+        >
+          {
+            currentIndex
+          }
+        </span>
+
+        <span
+          className={
+            floatStyles.word
+          }
+          aria-hidden="true"
+        >
+          {
+            menuOpen
+              ? "CLOSE"
+              : "MENU"
+          }
+        </span>
+
+        <span
+          className="site-menu-icon"
+          aria-hidden="true"
+        >
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
     </>
   );
 }
