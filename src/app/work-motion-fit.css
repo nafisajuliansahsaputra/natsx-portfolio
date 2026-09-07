@@ -60,3 +60,32 @@
       );
   }
 }
+
+/* =========================
+   MOBILE PROJECT PREVIEW
+========================= */
+
+/*
+ * Desktop archive keeps its floating
+ * project preview.
+ *
+ * Phone archive is intentionally more
+ * editorial and compact:
+ *
+ * number
+ * title
+ * disciplines
+ * arrow
+ *
+ * No thumbnail / preview image.
+ */
+@media (
+  max-width: 700px
+) {
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div[aria-hidden="true"] {
+    display:
+      none !important;
+  }
+}
