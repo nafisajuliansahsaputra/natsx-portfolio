@@ -1,0 +1,236 @@
+/*
+ * =========================================================
+ * NATSX — PHONE NAVIGATION MODE
+ * =========================================================
+ *
+ * PHONE:
+ *
+ * - legacy header hamburger removed
+ * - new floating control available from
+ *   first rendered frame
+ * - no shell-build animation on refresh
+ * - MENU ↔ CLOSE icon morph stays active
+ *
+ * TABLET + DESKTOP:
+ *
+ * - unchanged
+ * - desktop floating control still uses
+ *   the full NATSX build / unbuild motion
+ */
+
+/* =========================
+   DEFAULT
+========================= */
+
+/*
+ * Phone-specific floating instance is
+ * hidden everywhere unless the viewport
+ * enters the phone breakpoint.
+ */
+.mobileFloatingControl {
+  display:
+    none !important;
+}
+
+/* =========================
+   PHONE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  /* =========================
+     REMOVE OLD HAMBURGER
+  ========================= */
+
+  /*
+   * Old inline header hamburger must
+   * never participate in phone layout.
+   *
+   * CSS controls this from first paint,
+   * preventing hydration flash.
+   */
+  .headerMenuControl {
+    display:
+      none !important;
+  }
+
+  /* =========================
+     REMOVE DESKTOP INSTANCE
+  ========================= */
+
+  /*
+   * Hero-dependent floating control is
+   * desktop / tablet only.
+   *
+   * Never allow both instances to exist
+   * visually at phone width.
+   */
+  .desktopFloatingControl {
+    display:
+      none !important;
+  }
+
+  /* =========================
+     PERMANENT PHONE CONTROL
+  ========================= */
+
+  .mobileFloatingControl {
+    display:
+      inline-flex !important;
+
+    /*
+     * Immediately use the FINAL shell
+     * state.
+     *
+     * No:
+     * seed
+     * → violet fill
+     * → frame flash
+     *
+     * on mobile page refresh.
+     */
+    opacity:
+      1 !important;
+
+    visibility:
+      visible !important;
+
+    pointer-events:
+      auto !important;
+
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+        round
+        14px
+      ) !important;
+
+    filter:
+      none !important;
+
+    transform:
+      none !important;
+
+    transition:
+      none !important;
+
+    will-change:
+      auto;
+  }
+
+  /* =========================
+     DISABLE SHELL BUILD FX
+  ========================= */
+
+  /*
+   * The purple box visible in the
+   * recording comes from the floating
+   * button's ::before construction
+   * layer.
+   *
+   * Phone doesn't need it because the
+   * control is permanent.
+   */
+  .mobileFloatingControl::before {
+    opacity:
+      0 !important;
+
+    animation:
+      none !important;
+
+    transform:
+      none !important;
+  }
+
+  /*
+   * Disable technical frame pulse too.
+   */
+  .mobileFloatingControl::after {
+    opacity:
+      0 !important;
+
+    animation:
+      none !important;
+
+    transform:
+      none !important;
+  }
+
+  /* =========================
+     ICON RESTING STATE
+  ========================= */
+
+  /*
+   * Don't wait for the normal floating
+   * control entrance delay.
+   *
+   * Icon is already ready when the page
+   * becomes visible.
+   *
+   * IMPORTANT:
+   * We only disable transition on the
+   * icon CONTAINER.
+   *
+   * Child spans remain animated, so
+   * MENU → X and X → MENU still work.
+   */
+  .mobileFloatingControl
+    :global(
+      .site-menu-icon
+    ) {
+    opacity:
+      1 !important;
+
+    transform:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}
+
+/* =========================
+   TABLET + DESKTOP
+========================= */
+
+@media (
+  min-width: 701px
+) {
+  /*
+   * Phone instance doesn't exist
+   * visually above the phone breakpoint.
+   */
+  .mobileFloatingControl {
+    display:
+      none !important;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  max-width: 700px
+) and (
+  prefers-reduced-motion:
+    reduce
+) {
+  .mobileFloatingControl,
+  .mobileFloatingControl::before,
+  .mobileFloatingControl::after,
+  .mobileFloatingControl
+    :global(
+      .site-menu-icon
+    ) {
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}

@@ -23,7 +23,11 @@ import { getMessages } from "@/i18n/messages";
 
 import floatStyles from "./SiteHeaderFloating.module.css";
 import menuStyles from "./SiteHeaderMenuReveal.module.css";
+import mobileStyles from "./SiteHeaderMobileMode.module.css";
 import styles from "./SiteHeader.module.css";
+
+const MOBILE_FLOATING_QUERY =
+  "(max-width: 700px)";
 
 const navigation = [
   {
@@ -112,7 +116,21 @@ export default function SiteHeader() {
       null,
     );
 
-  const floatingMenuButtonRef =
+  /*
+   * Desktop / tablet floating control.
+   */
+  const desktopFloatingMenuButtonRef =
+    useRef<HTMLButtonElement>(
+      null,
+    );
+
+  /*
+   * Phone floating control.
+   *
+   * This exists independently from
+   * hero scroll state.
+   */
+  const mobileFloatingMenuButtonRef =
     useRef<HTMLButtonElement>(
       null,
     );
@@ -162,22 +180,74 @@ export default function SiteHeader() {
           ?.number ??
         "00";
 
-  const getActiveMenuButton =
+  /* =========================
+     VIEWPORT HELPERS
+  ========================= */
+
+  const isPhoneViewport =
     useCallback(() => {
       if (
-        headerCompactRef.current
+        typeof window ===
+        "undefined"
+      ) {
+        return false;
+      }
+
+      return window
+        .matchMedia(
+          MOBILE_FLOATING_QUERY,
+        )
+        .matches;
+    }, []);
+
+  /* =========================
+     ACTIVE MENU BUTTON
+  ========================= */
+
+  const getActiveMenuButton =
+    useCallback(() => {
+      /*
+       * Phone always owns the permanent
+       * floating navigation control.
+       */
+      if (
+        isPhoneViewport()
       ) {
         return (
-          floatingMenuButtonRef
+          mobileFloatingMenuButtonRef
             .current
         );
       }
 
+      /*
+       * Desktop / tablet after hero.
+       */
+      if (
+        headerCompactRef.current
+      ) {
+        return (
+          desktopFloatingMenuButtonRef
+            .current
+        );
+      }
+
+      /*
+       * Normal header button.
+       *
+       * Used mainly by tablet before
+       * compact state.
+       */
       return (
         headerMenuButtonRef
           .current
       );
-    }, []);
+    }, [
+      isPhoneViewport,
+    ]);
+
+  /* =========================
+     CLOSE MENU
+  ========================= */
 
   const closeMenu =
     useCallback(() => {
@@ -304,6 +374,25 @@ export default function SiteHeader() {
         }
       };
 
+    const resetDesktopFloating =
+      () => {
+        clearFloatingExitTimer();
+
+        headerCompactRef.current =
+          false;
+
+        floatingLeavingRef.current =
+          false;
+
+        setHeaderCompact(
+          false,
+        );
+
+        setFloatingLeaving(
+          false,
+        );
+      };
+
     const showFloating =
       () => {
         clearFloatingExitTimer();
@@ -381,6 +470,44 @@ export default function SiteHeader() {
 
     const updateCompactState =
       () => {
+        /*
+         * =========================
+         * PHONE
+         * =========================
+         *
+         * Phone does NOT participate
+         * in hero-based floating state.
+         *
+         * Its dedicated floating button
+         * is always available through
+         * CSS from initial page render.
+         */
+        if (
+          window
+            .matchMedia(
+              MOBILE_FLOATING_QUERY,
+            )
+            .matches
+        ) {
+          if (
+            headerCompactRef.current ||
+            floatingLeavingRef.current
+          ) {
+            resetDesktopFloating();
+          }
+
+          scrollFrameRef.current =
+            null;
+
+          return;
+        }
+
+        /*
+         * =========================
+         * DESKTOP / TABLET
+         * =========================
+         */
+
         let shouldCompact =
           false;
 
@@ -737,6 +864,10 @@ export default function SiteHeader() {
     menuOpen,
   ]);
 
+  /* =========================
+     CLEANUP
+  ========================= */
+
   useEffect(() => {
     return () => {
       if (
@@ -766,6 +897,10 @@ export default function SiteHeader() {
       }
     };
   }, []);
+
+  /* =========================
+     CLASSES
+  ========================= */
 
   const mobilePanelClassName =
     [
@@ -807,9 +942,10 @@ export default function SiteHeader() {
       .filter(Boolean)
       .join(" ");
 
-  const floatingButtonClassName =
+  const desktopFloatingButtonClassName =
     [
       floatStyles.button,
+      mobileStyles.desktopFloatingControl,
 
       headerCompact &&
       !floatingLeaving
@@ -826,6 +962,30 @@ export default function SiteHeader() {
     ]
       .filter(Boolean)
       .join(" ");
+
+  /*
+   * Phone floating control always owns
+   * floatStyles.visible.
+   *
+   * Therefore its original NATSX build
+   * animation plays immediately on load.
+   */
+  const mobileFloatingButtonClassName =
+    [
+      floatStyles.button,
+      floatStyles.visible,
+      mobileStyles.mobileFloatingControl,
+
+      menuOpen
+        ? floatStyles.open
+        : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+  /* =========================
+     RENDER
+  ========================= */
 
   return (
     <>
@@ -932,12 +1092,20 @@ export default function SiteHeader() {
             <LanguageSwitcher />
           </div>
 
+          {/* =========================
+              LEGACY HEADER MENU
+
+              Hidden permanently on
+              phones through CSS.
+          ========================= */}
+
           <button
             ref={
               headerMenuButtonRef
             }
             className={[
               "site-menu-label",
+              mobileStyles.headerMenuControl,
 
               menuOpen
                 ? "is-open"
@@ -1181,15 +1349,16 @@ export default function SiteHeader() {
       </div>
 
       {/* =========================
+          DESKTOP / TABLET
           FLOATING CONTROL
       ========================= */}
 
       <button
         ref={
-          floatingMenuButtonRef
+          desktopFloatingMenuButtonRef
         }
         className={
-          floatingButtonClassName
+          desktopFloatingButtonClassName
         }
         type="button"
         aria-label={
@@ -1213,6 +1382,70 @@ export default function SiteHeader() {
             ? 0
             : -1
         }
+        onClick={
+          toggleMenu
+        }
+      >
+        <span
+          className={
+            floatStyles.index
+          }
+          aria-hidden="true"
+        >
+          {
+            currentIndex
+          }
+        </span>
+
+        <span
+          className={
+            floatStyles.word
+          }
+          aria-hidden="true"
+        >
+          {
+            menuOpen
+              ? "CLOSE"
+              : "MENU"
+          }
+        </span>
+
+        <span
+          className="site-menu-icon"
+          aria-hidden="true"
+        >
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+
+      {/* =========================
+          PHONE FLOATING CONTROL
+
+          Always present.
+          Never waits for scroll.
+      ========================= */}
+
+      <button
+        ref={
+          mobileFloatingMenuButtonRef
+        }
+        className={
+          mobileFloatingButtonClassName
+        }
+        type="button"
+        aria-label={
+          menuOpen
+            ? copy.accessibility
+                .closeMenu
+            : copy.accessibility
+                .openMenu
+        }
+        aria-expanded={
+          menuOpen
+        }
+        aria-controls="mobile-navigation"
         onClick={
           toggleMenu
         }
