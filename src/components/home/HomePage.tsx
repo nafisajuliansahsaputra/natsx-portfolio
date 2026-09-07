@@ -1,3 +1,16 @@
+/*
+ * =========================================================
+ * HOMEPAGE-SCOPED GLOBAL MOTION
+ * =========================================================
+ *
+ * Ditaruh di entry component homepage
+ * supaya route lain tidak perlu meminta
+ * stylesheet homepage saat initial load.
+ */
+
+import "@/app/home-motion.css";
+import "@/app/home-motion-fit.css";
+
 import AboutPreview from "@/components/home/AboutPreview";
 import Capabilities from "@/components/home/Capabilities";
 import ContactFooter from "@/components/home/ContactFooter";
@@ -30,29 +43,41 @@ export default function HomePage({
         data-motion-page="home"
       >
         <Hero
-          locale={locale}
+          locale={
+            locale
+          }
         />
 
         <SelectedWork
-          locale={locale}
+          locale={
+            locale
+          }
         />
 
         <SelectedWorkImmersive />
 
         <Capabilities
-          locale={locale}
+          locale={
+            locale
+          }
         />
 
         <AboutPreview
-          locale={locale}
+          locale={
+            locale
+          }
         />
 
         <PlaygroundPreview
-          locale={locale}
+          locale={
+            locale
+          }
         />
 
         <ContactFooter
-          locale={locale}
+          locale={
+            locale
+          }
         />
 
         <HomeSectionChoreography />

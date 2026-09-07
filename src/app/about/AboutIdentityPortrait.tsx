@@ -106,13 +106,6 @@ export default function AboutIdentityPortrait({
             ? 0
             : progress;
 
-        /*
-         * Motion sengaja sangat subtle.
-         *
-         * Portrait tetap menjadi fokus.
-         * Geometry hanya memberi rasa
-         * bahwa komposisinya hidup.
-         */
         root.style.setProperty(
           "--portrait-x",
           `${
@@ -295,7 +288,7 @@ export default function AboutIdentityPortrait({
           />
 
           <Image
-            src="/images/natsx-portrait-hero.png"
+            src="/images/natsx-portrait-hero-bases.png"
             alt={
               site.person
             }

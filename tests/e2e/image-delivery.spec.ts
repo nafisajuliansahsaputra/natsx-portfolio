@@ -1,6 +1,7 @@
 import {
   expect,
   test,
+  type Page,
 } from "@playwright/test";
 
 test.beforeEach(
@@ -24,6 +25,56 @@ const homepageRoutes = [
   "/de",
 ] as const;
 
+const baseHeroImageName =
+  "natsx-portrait-hero-bases.png";
+
+const alternateHeroImageName =
+  "natsx-portrait-hero-altes.png";
+
+/*
+ * =========================================================
+ * HERO IMAGE LOCATORS
+ * =========================================================
+ *
+ * Hero mempunyai dua image layer:
+ *
+ * 1. base portrait
+ *    - accessible
+ *    - alt berisi deskripsi
+ *    - preload
+ *
+ * 2. alternate portrait
+ *    - decorative transition layer
+ *    - alt=""
+ *
+ * Jangan gunakan:
+ *
+ * [data-motion-portrait] img
+ *
+ * karena selector tersebut sengaja
+ * menemukan kedua layer.
+ */
+function getBasePortrait(
+  page: Page,
+) {
+  return page.locator(
+    '[data-motion-portrait] img:not([alt=""])',
+  );
+}
+
+function getAlternatePortrait(
+  page: Page,
+) {
+  return page.locator(
+    '[data-motion-portrait] img[alt=""]',
+  );
+}
+
+/*
+ * =========================================================
+ * RESPONSIVE HERO DELIVERY
+ * =========================================================
+ */
 test.describe(
   "homepage hero image delivery",
   () => {
@@ -41,9 +92,15 @@ test.describe(
           );
 
           const portrait =
-            page.locator(
-              "[data-motion-portrait] img",
+            getBasePortrait(
+              page,
             );
+
+          await expect(
+            portrait,
+          ).toHaveCount(
+            1,
+          );
 
           await expect(
             portrait,
@@ -69,6 +126,12 @@ test.describe(
             srcSet,
           ).toContain(
             "/_next/image",
+          );
+
+          expect(
+            srcSet,
+          ).toContain(
+            baseHeroImageName,
           );
 
           const imageState =
@@ -120,7 +183,40 @@ test.describe(
           expect(
             imageState.currentSrc,
           ).toContain(
-            "natsx-portrait-hero.png",
+            baseHeroImageName,
+          );
+
+          /*
+           * Pastikan layer alternate
+           * memang tetap ada dan
+           * menggunakan asset yang benar.
+           */
+          const alternatePortrait =
+            getAlternatePortrait(
+              page,
+            );
+
+          await expect(
+            alternatePortrait,
+          ).toHaveCount(
+            1,
+          );
+
+          const alternateSrc =
+            await alternatePortrait.getAttribute(
+              "src",
+            );
+
+          expect(
+            alternateSrc,
+          ).toContain(
+            "/_next/image",
+          );
+
+          expect(
+            alternateSrc,
+          ).toContain(
+            alternateHeroImageName,
           );
         },
       );
@@ -128,6 +224,11 @@ test.describe(
   },
 );
 
+/*
+ * =========================================================
+ * HERO PRELOAD
+ * =========================================================
+ */
 test(
   "homepage preloads the optimized hero image",
   async ({
@@ -139,7 +240,9 @@ test(
 
     const heroPreloaded =
       await page.evaluate(
-        () => {
+        (
+          expectedImageName,
+        ) => {
           const preloadLinks =
             Array.from(
               document.querySelectorAll<HTMLLinkElement>(
@@ -167,12 +270,13 @@ test(
                   "/_next/image",
                 ) &&
                 source.includes(
-                  "natsx-portrait-hero.png",
+                  expectedImageName,
                 )
               );
             },
           );
         },
+        baseHeroImageName,
       );
 
     expect(
@@ -181,6 +285,11 @@ test(
   },
 );
 
+/*
+ * =========================================================
+ * OPTIMIZED RESPONSE
+ * =========================================================
+ */
 test(
   "optimized hero response is an image and is cacheable",
   async ({
@@ -191,9 +300,15 @@ test(
     );
 
     const portrait =
-      page.locator(
-        "[data-motion-portrait] img",
+      getBasePortrait(
+        page,
       );
+
+    await expect(
+      portrait,
+    ).toHaveCount(
+      1,
+    );
 
     await expect(
       portrait,
@@ -213,6 +328,12 @@ test(
       currentSrc,
     ).toContain(
       "/_next/image",
+    );
+
+    expect(
+      currentSrc,
+    ).toContain(
+      baseHeroImageName,
     );
 
     const response =

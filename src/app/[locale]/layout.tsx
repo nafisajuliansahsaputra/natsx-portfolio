@@ -2,6 +2,8 @@ import {
   notFound,
 } from "next/navigation";
 
+import "@/app/localized-fit.css";
+
 import {
   isLocalizedLocale,
   localizedLocales,

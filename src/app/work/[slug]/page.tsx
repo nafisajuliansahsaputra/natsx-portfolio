@@ -10,6 +10,10 @@ import {
   notFound,
 } from "next/navigation";
 
+import "@/app/project-motion.css";
+import "@/app/project-media-motion.css";
+import "@/app/project-fit.css";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -78,8 +82,11 @@ export async function generateProjectMetadata(
         copy.notFoundTitle,
 
       robots: {
-        index: false,
-        follow: false,
+        index:
+          false,
+
+        follow:
+          false,
       },
     };
   }
@@ -141,8 +148,11 @@ export async function generateProjectMetadata(
     description,
 
     robots: {
-      index: true,
-      follow: true,
+      index:
+        true,
+
+      follow:
+        true,
     },
 
     alternates: {
@@ -179,19 +189,23 @@ export async function generateProjectMetadata(
         "NATSX",
 
       locale:
-        locale === "id"
+        locale ===
+        "id"
           ? "id_ID"
-          : locale === "de"
+          : locale ===
+              "de"
             ? "de_DE"
             : "en_US",
 
       alternateLocale:
-        locale === "en"
+        locale ===
+        "en"
           ? [
               "id_ID",
               "de_DE",
             ]
-          : locale === "id"
+          : locale ===
+              "id"
             ? [
                 "en_US",
                 "de_DE",
@@ -304,7 +318,8 @@ function getAccessibleContrastColor(
     channel: number,
   ) {
     const value =
-      channel / 255;
+      channel /
+      255;
 
     return value <=
       0.04045

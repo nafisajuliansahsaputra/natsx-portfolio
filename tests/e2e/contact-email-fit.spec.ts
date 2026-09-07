@@ -200,27 +200,79 @@ test(
               },
             );
 
+        type ContactMetrics =
+          Awaited<
+            ReturnType<
+              typeof readMetrics
+            >
+          >;
+
         /*
-         * Range#getClientRects() can briefly
-         * return an empty rect list while a
-         * full parallel Playwright suite is
-         * under layout / rendering pressure.
+         * Object holder sengaja dipakai.
          *
-         * Poll the actual visual condition
-         * instead of treating that transient
-         * browser frame as a layout failure.
+         * Assignment terjadi dari dalam
+         * callback expect.poll().
+         *
+         * Kalau pakai:
+         *
+         * let stableMetrics = null
+         *
+         * TypeScript tidak dapat mengikuti
+         * assignment closure tersebut dengan
+         * baik dan bisa menyempitkannya jadi
+         * `never`.
+         *
+         * Mutating .current menghindari
+         * masalah control-flow itu.
          */
+        const stableMetricsRef: {
+          current:
+            ContactMetrics |
+            null;
+        } = {
+          current:
+            null,
+        };
+
+        let consecutiveStableSamples =
+          0;
+
         await expect
           .poll(
             async () => {
-              const metrics =
+              const candidate =
                 await readMetrics();
 
-              return metrics.lines.map(
-                (
-                  line,
-                ) =>
-                  line.visualLines,
+              const isStable =
+                candidate.lines.length ===
+                  2 &&
+                candidate.lines.every(
+                  (
+                    line,
+                  ) =>
+                    line.visualLines ===
+                    1,
+                );
+
+              if (
+                isStable
+              ) {
+                consecutiveStableSamples +=
+                  1;
+
+                stableMetricsRef.current =
+                  candidate;
+              } else {
+                consecutiveStableSamples =
+                  0;
+
+                stableMetricsRef.current =
+                  null;
+              }
+
+              return Math.min(
+                consecutiveStableSamples,
+                2,
               );
             },
             {
@@ -231,14 +283,27 @@ test(
                 5_000,
             },
           )
-          .toEqual([
-            1,
-            1,
-          ]);
+          .toBe(
+            2,
+          );
 
         const metrics =
-          await readMetrics();
+          stableMetricsRef.current;
 
+        if (!metrics) {
+          throw new Error(
+            `${width}px:${route} did not produce stable contact email metrics`,
+          );
+        }
+
+        /*
+         * Gunakan snapshot yang benar-benar
+         * sudah lolos dua sample berturut-turut.
+         *
+         * Jangan membaca Range lagi sesudah
+         * polling karena browser bisa memberi
+         * transient empty rect frame.
+         */
         expect(
           metrics.lines,
           `${width}px:${route} email must contain exactly two intentional text lines`,

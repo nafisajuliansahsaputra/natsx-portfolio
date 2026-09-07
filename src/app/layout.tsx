@@ -24,23 +24,57 @@ import {
   getSiteUrl,
 } from "@/lib/site-url";
 
+/*
+ * =========================================================
+ * GLOBAL / APP-WIDE STYLES
+ * =========================================================
+ *
+ * Hanya stylesheet yang benar-benar
+ * berlaku lintas seluruh aplikasi
+ * yang tersisa di root.
+ */
+
 import "./globals.css";
 import "./motion.css";
+
 import "./route-transition-sync.css";
 import "./route-transition-title-consistency.css";
-import "./home-motion.css";
-import "./home-motion-fit.css";
-import "./work-motion.css";
-import "./playground-motion.css";
-import "./cv-motion.css";
-import "./about-motion.css";
-import "./contact-motion.css";
-import "./project-motion.css";
-import "./project-media-motion.css";
-import "./project-fit.css";
-import "./localized-fit.css";
-import "./contact-email-fit.css";
+
 import "./intro-motion.css";
+
+/*
+ * =========================================================
+ * ROUTE / SCOPE-SPECIFIC CSS
+ * =========================================================
+ *
+ * home-motion.css
+ * home-motion-fit.css
+ * → components/home/HomePage.tsx
+ *
+ * work-motion.css
+ * → app/work/page.tsx
+ *
+ * about-motion.css
+ * → app/about/page.tsx
+ *
+ * playground-motion.css
+ * → app/playground/page.tsx
+ *
+ * cv-motion.css
+ * → app/cv/page.tsx
+ *
+ * contact-motion.css
+ * contact-email-fit.css
+ * → app/contact/page.tsx
+ *
+ * project-motion.css
+ * project-media-motion.css
+ * project-fit.css
+ * → app/work/[slug]/page.tsx
+ *
+ * localized-fit.css
+ * → app/[locale]/layout.tsx
+ */
 
 const plusJakartaSans =
   Plus_Jakarta_Sans({
@@ -190,12 +224,18 @@ export const metadata: Metadata = {
   },
 
   robots: {
-    index: true,
-    follow: true,
+    index:
+      true,
+
+    follow:
+      true,
 
     googleBot: {
-      index: true,
-      follow: true,
+      index:
+        true,
+
+      follow:
+        true,
 
       "max-image-preview":
         "large",
@@ -248,6 +288,7 @@ export default function RootLayout({
         <MotionController />
 
         <RouteTransitionController />
+
         <RouteTransitionHandoff />
 
         {children}

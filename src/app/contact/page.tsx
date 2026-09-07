@@ -1,3 +1,6 @@
+import "@/app/contact-motion.css";
+import "@/app/contact-email-fit.css";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -100,7 +103,8 @@ export function ContactPageContent({
     site.email
       ? {
           label:
-            copy.primary.email,
+            copy.primary
+              .email,
 
           lineOne:
             emailLocal,
@@ -122,7 +126,8 @@ export function ContactPageContent({
               fallbackSocial.username,
 
             lineTwo:
-              copy.primary.connect,
+              copy.primary
+                .connect,
 
             href:
               fallbackSocial.href,
@@ -137,7 +142,8 @@ export function ContactPageContent({
                 .explore,
 
             lineTwo:
-              copy.primary.work,
+              copy.primary
+                .work,
 
             href:
               "/work",
@@ -237,7 +243,8 @@ export function ContactPageContent({
 
                 <span>
                   {
-                    copy.hero.label
+                    copy.hero
+                      .label
                   }
                   {" / "}
                   {

@@ -1,3 +1,5 @@
+import "@/app/cv-motion.css";
+
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
@@ -132,7 +134,8 @@ export async function CvPageContent({
 
                 <span>
                   {
-                    copy.hero.label
+                    copy.hero
+                      .label
                   }
                 </span>
               </div>

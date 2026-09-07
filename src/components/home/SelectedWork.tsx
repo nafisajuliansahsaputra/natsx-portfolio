@@ -559,7 +559,7 @@ function SpallArtwork({
               className={
                 styles.spallPrimaryImage
               }
-              sizes="(max-width: 700px) 72vw, 58vw"
+              sizes="(max-width: 700px) 79vw, (max-width: 960px) 72vw, 58vw"
             />
           ) : (
             <div
@@ -673,7 +673,7 @@ function SpallPhone({
             className={
               phoneStyles.image
             }
-            sizes="(max-width: 700px) 31vw, 17.6vw"
+            sizes="(max-width: 700px) 24vw, (max-width: 960px) 19vw, 17.6vw"
           />
         </div>
 
@@ -775,7 +775,7 @@ function VisionArtwork({
             className={
               styles.visionPrimaryImage
             }
-            sizes="(max-width: 700px) 62vw, 38vw"
+            sizes="(max-width: 700px) 43vw, (max-width: 960px) 39vw, 38vw"
           />
         </div>
       ) : null}
@@ -794,7 +794,7 @@ function VisionArtwork({
             className={
               styles.visionSecondaryImage
             }
-            sizes="(max-width: 700px) 34vw, 18vw"
+            sizes="(max-width: 700px) 27vw, (max-width: 960px) 22vw, 18vw"
           />
         </div>
       ) : null}
@@ -887,7 +887,7 @@ function StayArtwork({
               className={
                 styles.stayPrimaryImage
               }
-              sizes="(max-width: 700px) 72vw, 46vw"
+              sizes="(max-width: 700px) 78vw, (max-width: 960px) 68vw, 46vw"
             />
           ) : (
             <>
@@ -951,7 +951,7 @@ function StayArtwork({
               className={
                 styles.staySecondaryImage
               }
-              sizes="(max-width: 700px) 34vw, 18vw"
+              sizes="(max-width: 700px) 27vw, (max-width: 960px) 23vw, 18vw"
             />
           </div>
         </div>
@@ -1056,7 +1056,7 @@ function BastArtwork({
               className={
                 styles.bastPrimaryImage
               }
-              sizes="(max-width: 700px) 75vw, 60vw"
+              sizes="(max-width: 700px) 78vw, (max-width: 960px) 72vw, 60vw"
             />
           ) : (
             <BastFallback />
@@ -1078,7 +1078,7 @@ function BastArtwork({
             className={
               styles.bastSecondaryImage
             }
-            sizes="(max-width: 700px) 42vw, 22vw"
+            sizes="(max-width: 700px) 27vw, (max-width: 960px) 26vw, 22vw"
           />
         ) : (
           <div

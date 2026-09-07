@@ -1,3 +1,5 @@
+import "@/app/playground-motion.css";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -79,7 +81,8 @@ export function PlaygroundPageContent({
 
                 <span>
                   {
-                    copy.hero.label
+                    copy.hero
+                      .label
                   }
                 </span>
               </div>
@@ -90,7 +93,8 @@ export function PlaygroundPageContent({
                 }
               >
                 {
-                  copy.hero.meta
+                  copy.hero
+                    .meta
                 }
               </span>
             </div>

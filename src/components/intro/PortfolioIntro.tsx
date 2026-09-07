@@ -76,8 +76,11 @@ export default function PortfolioIntro() {
     );
 
   useEffect(() => {
-    if (isAdminRoute) {
-      document.documentElement.dataset.intro =
+    if (
+      isAdminRoute
+    ) {
+      document.documentElement
+        .dataset.intro =
         "done";
 
       return;
@@ -105,8 +108,25 @@ export default function PortfolioIntro() {
       introState ===
         "running";
 
-    if (!shouldShow) {
-      document.documentElement.dataset.intro =
+    /*
+     * Bootstrap script di root layout
+     * sudah menentukan apakah intro
+     * perlu tampil.
+     *
+     * Kalau intro tidak diperlukan,
+     * cukup ubah data-intro.
+     *
+     * intro-motion.css akan langsung
+     * menyembunyikan overlay melalui:
+     *
+     * html[data-intro="done"]
+     * [data-portfolio-intro]
+     */
+    if (
+      !shouldShow
+    ) {
+      document.documentElement
+        .dataset.intro =
         "done";
 
       return;
@@ -143,13 +163,13 @@ export default function PortfolioIntro() {
       performance.now();
 
     let exitTimer:
-      number |
-      null =
+      | number
+      | null =
       null;
 
     let finishTimer:
-      number |
-      null =
+      | number
+      | null =
       null;
 
     let hasStartedExit =
@@ -158,11 +178,14 @@ export default function PortfolioIntro() {
     let keyboardAttached =
       false;
 
-    document.documentElement.dataset.intro =
+    document.documentElement
+      .dataset.intro =
       "running";
 
     function detachKeyboard() {
-      if (!keyboardAttached) {
+      if (
+        !keyboardAttached
+      ) {
         return;
       }
 
@@ -182,7 +205,8 @@ export default function PortfolioIntro() {
       skipIntro.current =
         null;
 
-      document.documentElement.dataset.intro =
+      document.documentElement
+        .dataset.intro =
         "done";
 
       setPhase(
@@ -191,7 +215,9 @@ export default function PortfolioIntro() {
     }
 
     function beginExit() {
-      if (hasStartedExit) {
+      if (
+        hasStartedExit
+      ) {
         return;
       }
 
@@ -240,7 +266,8 @@ export default function PortfolioIntro() {
         "exit",
       );
 
-      document.documentElement.dataset.intro =
+      document.documentElement
+        .dataset.intro =
         "exit";
 
       finishTimer =
@@ -264,7 +291,9 @@ export default function PortfolioIntro() {
         event.key ===
           "Escape";
 
-      if (!shouldSkip) {
+      if (
+        !shouldSkip
+      ) {
         return;
       }
 
@@ -272,8 +301,7 @@ export default function PortfolioIntro() {
        * Listener dipasang di capture
        * phase supaya shortcut intro
        * tidak sekaligus mengaktifkan
-       * link/button di page yang masih
-       * berada di balik overlay.
+       * link/button di page di belakang.
        */
       event.preventDefault();
 
@@ -518,7 +546,6 @@ export default function PortfolioIntro() {
                   }
                   alt=""
                   fill
-                  priority
                   unoptimized
                   sizes="760px"
                   className={
@@ -573,7 +600,6 @@ export default function PortfolioIntro() {
                     }
                     alt=""
                     fill
-                    priority
                     unoptimized
                     sizes="132px"
                     className={

@@ -1,3 +1,5 @@
+import "@/app/about-motion.css";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -146,7 +148,8 @@ export function AboutPageContent({
 
                 <span>
                   {
-                    copy.hero.label
+                    copy.hero
+                      .label
                   }
                 </span>
               </div>
@@ -209,7 +212,8 @@ export function AboutPageContent({
 
                 <span>
                   {
-                    copy.hero.roles
+                    copy.hero
+                      .roles
                   }
                 </span>
               </div>
@@ -492,8 +496,7 @@ export function AboutPageContent({
           <div className="site-container">
             <div
               className={
-                styles
-                  .disciplinesHeader
+                styles.disciplinesHeader
               }
               data-motion-scroll="about-disciplines-header"
             >

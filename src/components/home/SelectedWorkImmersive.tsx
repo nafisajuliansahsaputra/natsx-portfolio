@@ -8,14 +8,30 @@ import styles from "./SelectedWorkImmersive.module.css";
 
 type ProjectMotionState = {
   project: HTMLElement;
-  header: HTMLElement | null;
-  visual: HTMLElement;
-  visualInner: HTMLElement;
-  footer: HTMLElement | null;
 
-  number: HTMLElement | null;
-  title: HTMLElement | null;
-  year: HTMLElement | null;
+  header:
+    | HTMLElement
+    | null;
+
+  visual: HTMLElement;
+
+  visualInner: HTMLElement;
+
+  footer:
+    | HTMLElement
+    | null;
+
+  number:
+    | HTMLElement
+    | null;
+
+  title:
+    | HTMLElement
+    | null;
+
+  year:
+    | HTMLElement
+    | null;
 
   pointerInside: boolean;
 
@@ -27,6 +43,94 @@ type ProjectMotionState = {
   targetPointerY: number;
   targetPointerRotate: number;
 };
+
+type MotionProfile = {
+  focusLine: number;
+
+  progressRange: number;
+
+  activeRange: number;
+
+  visualTravel: number;
+
+  headerTravel: number;
+
+  footerTravel: number;
+
+  scaleStrength: number;
+
+  frameOpacity: number;
+
+  metaBaseOpacity: number;
+};
+
+const DESKTOP_MOTION:
+  MotionProfile = {
+    focusLine:
+      0.52,
+
+    progressRange:
+      0.92,
+
+    activeRange:
+      0.78,
+
+    visualTravel:
+      20,
+
+    headerTravel:
+      6,
+
+    footerTravel:
+      7,
+
+    scaleStrength:
+      0.006,
+
+    frameOpacity:
+      0.18,
+
+    metaBaseOpacity:
+      0.82,
+  };
+
+const MOBILE_MOTION:
+  MotionProfile = {
+    /*
+     * Mobile tetap punya depth.
+     *
+     * Nilainya hanya dibuat lebih halus
+     * supaya canvas project yang lebih
+     * compact tidak terlihat melompat
+     * saat user scroll.
+     */
+    focusLine:
+      0.54,
+
+    progressRange:
+      1,
+
+    activeRange:
+      0.88,
+
+    visualTravel:
+      5,
+
+    headerTravel:
+      1.25,
+
+    footerTravel:
+      1.5,
+
+    scaleStrength:
+      0.001,
+
+    frameOpacity:
+      0.06,
+
+    metaBaseOpacity:
+      0.9,
+  };
 
 function clamp(
   value: number,
@@ -73,7 +177,19 @@ function getDirectChildren(
     (
       child,
     ): child is HTMLElement =>
-      child instanceof HTMLElement,
+      child instanceof
+      HTMLElement,
+  );
+}
+
+function setMotionProperty(
+  project: HTMLElement,
+  property: string,
+  value: string,
+) {
+  project.style.setProperty(
+    property,
+    value,
   );
 }
 
@@ -230,53 +346,63 @@ export default function SelectedWorkImmersive() {
               "true",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-scroll-y",
               "0px",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-header-y",
               "0px",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-footer-y",
               "0px",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-pointer-x",
               "0px",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-pointer-y",
               "0px",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-pointer-rotate",
               "0deg",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-visual-scale",
               "1",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-frame-opacity",
               "0",
             );
 
-            project.style.setProperty(
+            setMotionProperty(
+              project,
               "--sw-meta-opacity",
               "1",
             );
 
             return {
               project,
+
               header,
               visual,
               visualInner,
@@ -341,13 +467,19 @@ export default function SelectedWorkImmersive() {
       > = [];
 
     /*
-     * =========================
-     * SCROLL SCENE
-     * =========================
+     * =====================================================
+     * SCROLL DEPTH
+     * =====================================================
      *
-     * Kita tidak memindahkan section.
-     * Hanya memberi depth ringan pada
-     * lapisan-lapisan di dalam project.
+     * Ada dua profile:
+     *
+     * Desktop:
+     * depth lebih terasa.
+     *
+     * Mobile:
+     * depth tetap ada tetapi magnitude
+     * lebih kecil agar tidak bentrok
+     * dengan float internal artwork.
      */
 
     const measureProjects =
@@ -367,32 +499,17 @@ export default function SelectedWorkImmersive() {
             1,
           );
 
-        const focusLine =
-          viewportHeight *
-          0.52;
-
         const compact =
           mobile.matches;
 
-        const maximumVisualTravel =
+        const profile =
           compact
-            ? 6
-            : 20;
+            ? MOBILE_MOTION
+            : DESKTOP_MOTION;
 
-        const maximumHeaderTravel =
-          compact
-            ? 2
-            : 6;
-
-        const maximumFooterTravel =
-          compact
-            ? 2
-            : 7;
-
-        const scaleStrength =
-          compact
-            ? 0.0015
-            : 0.006;
+        const focusLine =
+          viewportHeight *
+          profile.focusLine;
 
         let nearestIndex =
           0;
@@ -406,7 +523,8 @@ export default function SelectedWorkImmersive() {
             index,
           ) => {
             const rect =
-              state.visual.getBoundingClientRect();
+              state.visual
+                .getBoundingClientRect();
 
             const visualCenter =
               rect.top +
@@ -438,7 +556,7 @@ export default function SelectedWorkImmersive() {
                 distance /
                   (
                     viewportHeight *
-                    0.92
+                    profile.progressRange
                   ),
                 -1,
                 1,
@@ -450,87 +568,91 @@ export default function SelectedWorkImmersive() {
                   absoluteDistance /
                     (
                       viewportHeight *
-                      0.78
+                      profile.activeRange
                     ),
                 0,
                 1,
               );
 
             /*
-             * Artwork bergerak sedikit
-             * melawan perjalanan viewport.
+             * Visual bergerak berlawanan
+             * arah perjalanan viewport.
              */
             const visualY =
               -progress *
-              maximumVisualTravel;
+              profile.visualTravel;
 
             /*
-             * Header dan footer sengaja
-             * punya arah / magnitude berbeda.
-             * Ini menciptakan layered depth.
+             * Header & footer dipisah
+             * sedikit untuk layered depth.
              */
             const headerY =
               -progress *
-              maximumHeaderTravel;
+              profile.headerTravel;
 
             const footerY =
               progress *
-              maximumFooterTravel;
+              profile.footerTravel;
 
             const visualScale =
               1 +
               activeStrength *
-                scaleStrength;
+                profile.scaleStrength;
 
             const frameOpacity =
               activeStrength *
-              (
-                compact
-                  ? 0.08
-                  : 0.18
-              );
+              profile.frameOpacity;
 
             const metaOpacity =
-              0.82 +
+              profile.metaBaseOpacity +
               activeStrength *
-                0.18;
+                (
+                  1 -
+                  profile.metaBaseOpacity
+                );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-scroll-y",
               `${visualY.toFixed(
                 3,
               )}px`,
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-header-y",
               `${headerY.toFixed(
                 3,
               )}px`,
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-footer-y",
               `${footerY.toFixed(
                 3,
               )}px`,
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-visual-scale",
               visualScale.toFixed(
                 5,
               ),
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-frame-opacity",
               frameOpacity.toFixed(
                 4,
               ),
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-meta-opacity",
               metaOpacity.toFixed(
                 4,
@@ -570,13 +692,15 @@ export default function SelectedWorkImmersive() {
       };
 
     /*
-     * =========================
+     * =====================================================
      * POINTER DEPTH
-     * =========================
+     * =====================================================
      *
-     * Bukan magnetic besar.
-     * Artwork hanya mengikuti cursor
-     * beberapa pixel supaya terasa hidup.
+     * Pointer motion tetap desktop-only
+     * secara natural karena finePointer.
+     *
+     * Mobile touch tidak perlu menjalankan
+     * interpolation loop ini.
      */
 
     const runPointerFrame =
@@ -641,21 +765,24 @@ export default function SelectedWorkImmersive() {
                 deltaTime,
               );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-pointer-x",
               `${state.pointerX.toFixed(
                 3,
               )}px`,
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-pointer-y",
               `${state.pointerY.toFixed(
                 3,
               )}px`,
             );
 
-            state.project.style.setProperty(
+            setMotionProperty(
+              state.project,
               "--sw-pointer-rotate",
               `${state.pointerRotate.toFixed(
                 4,
@@ -699,6 +826,12 @@ export default function SelectedWorkImmersive() {
     const requestPointerFrame =
       () => {
         if (
+          !finePointer.matches
+        ) {
+          return;
+        }
+
+        if (
           pointerFrame !==
           0
         ) {
@@ -714,141 +847,158 @@ export default function SelectedWorkImmersive() {
           );
       };
 
-    states.forEach(
-      (
-        state,
-      ) => {
-        const handlePointerMove =
-          (
-            event: PointerEvent,
-          ) => {
-            if (
-              !finePointer.matches
-            ) {
-              return;
-            }
+    /*
+     * =====================================================
+     * POINTER EVENTS
+     * =====================================================
+     */
 
-            const rect =
-              state.visual.getBoundingClientRect();
+    if (
+      finePointer.matches
+    ) {
+      states.forEach(
+        (
+          state,
+        ) => {
+          const handlePointerMove =
+            (
+              event:
+                PointerEvent,
+            ) => {
+              const rect =
+                state.visual
+                  .getBoundingClientRect();
 
-            if (
-              rect.width <=
-                0 ||
-              rect.height <=
-                0
-            ) {
-              return;
-            }
+              if (
+                rect.width <=
+                  0 ||
+                rect.height <=
+                  0
+              ) {
+                return;
+              }
 
-            const normalizedX =
-              clamp(
-                (
+              const normalizedX =
+                clamp(
                   (
-                    event.clientX -
-                    rect.left
-                  ) /
-                    rect.width
-                ) *
-                  2 -
+                    (
+                      event.clientX -
+                      rect.left
+                    ) /
+                      rect.width
+                  ) *
+                    2 -
+                    1,
+                  -1,
                   1,
-                -1,
-                1,
-              );
+                );
 
-            const normalizedY =
-              clamp(
-                (
+              const normalizedY =
+                clamp(
                   (
-                    event.clientY -
-                    rect.top
-                  ) /
-                    rect.height
-                ) *
-                  2 -
+                    (
+                      event.clientY -
+                      rect.top
+                    ) /
+                      rect.height
+                  ) *
+                    2 -
+                    1,
+                  -1,
                   1,
-                -1,
-                1,
-              );
+                );
 
-            state.pointerInside =
-              true;
+              state.pointerInside =
+                true;
 
-            state.targetPointerX =
-              normalizedX *
-              8;
+              state.targetPointerX =
+                normalizedX *
+                8;
 
-            state.targetPointerY =
-              normalizedY *
-              6;
+              state.targetPointerY =
+                normalizedY *
+                6;
 
-            state.targetPointerRotate =
-              normalizedX *
-              0.14;
+              state.targetPointerRotate =
+                normalizedX *
+                0.14;
 
-            requestPointerFrame();
-          };
+              requestPointerFrame();
+            };
 
-        const handlePointerLeave =
-          () => {
-            state.pointerInside =
-              false;
+          const handlePointerLeave =
+            () => {
+              state.pointerInside =
+                false;
 
-            state.targetPointerX =
-              0;
+              state.targetPointerX =
+                0;
 
-            state.targetPointerY =
-              0;
+              state.targetPointerY =
+                0;
 
-            state.targetPointerRotate =
-              0;
+              state.targetPointerRotate =
+                0;
 
-            requestPointerFrame();
-          };
+              requestPointerFrame();
+            };
 
-        state.visual.addEventListener(
-          "pointermove",
-          handlePointerMove,
-          {
-            passive: true,
-          },
-        );
+          state.visual.addEventListener(
+            "pointermove",
+            handlePointerMove,
+            {
+              passive:
+                true,
+            },
+          );
 
-        state.visual.addEventListener(
-          "pointerleave",
-          handlePointerLeave,
-        );
+          state.visual.addEventListener(
+            "pointerleave",
+            handlePointerLeave,
+          );
 
-        state.visual.addEventListener(
-          "pointercancel",
-          handlePointerLeave,
-        );
+          state.visual.addEventListener(
+            "pointercancel",
+            handlePointerLeave,
+          );
 
-        pointerCleanups.push(
-          () => {
-            state.visual.removeEventListener(
-              "pointermove",
-              handlePointerMove,
-            );
+          pointerCleanups.push(
+            () => {
+              state.visual
+                .removeEventListener(
+                  "pointermove",
+                  handlePointerMove,
+                );
 
-            state.visual.removeEventListener(
-              "pointerleave",
-              handlePointerLeave,
-            );
+              state.visual
+                .removeEventListener(
+                  "pointerleave",
+                  handlePointerLeave,
+                );
 
-            state.visual.removeEventListener(
-              "pointercancel",
-              handlePointerLeave,
-            );
-          },
-        );
-      },
-    );
+              state.visual
+                .removeEventListener(
+                  "pointercancel",
+                  handlePointerLeave,
+                );
+            },
+          );
+        },
+      );
+    }
+
+    /*
+     * =====================================================
+     * GLOBAL MEASUREMENT EVENTS
+     * =====================================================
+     */
 
     window.addEventListener(
       "scroll",
       requestMeasure,
       {
-        passive: true,
+        passive:
+          true,
       },
     );
 
@@ -871,7 +1021,16 @@ export default function SelectedWorkImmersive() {
       section,
     );
 
+    /*
+     * Initial state.
+     */
     measureProjects();
+
+    /*
+     * =====================================================
+     * CLEANUP
+     * =====================================================
+     */
 
     return () => {
       destroyed =
@@ -967,9 +1126,10 @@ export default function SelectedWorkImmersive() {
             (
               property,
             ) => {
-              state.project.style.removeProperty(
-                property,
-              );
+              state.project.style
+                .removeProperty(
+                  property,
+                );
             },
           );
         },

@@ -4,6 +4,8 @@ import type {
 
 import Image from "next/image";
 
+import "@/app/work-motion.css";
+
 import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -134,7 +136,8 @@ export async function WorkPageContent({
 
                 <span>
                   {
-                    copy.hero.label
+                    copy.hero
+                      .label
                   }
                 </span>
               </div>
@@ -145,7 +148,8 @@ export async function WorkPageContent({
                 }
               >
                 {
-                  copy.hero.index
+                  copy.hero
+                    .index
                 }
               </span>
             </div>
@@ -162,7 +166,8 @@ export async function WorkPageContent({
                 data-motion-work-hero-piece="title"
               >
                 {
-                  copy.hero.heading
+                  copy.hero
+                    .heading
                 }
 
                 <span>

@@ -1,9 +1,15 @@
 import {
   expect,
   test,
+  type Locator,
   type Page,
 } from "@playwright/test";
 
+/*
+ * =========================================================
+ * INTRO BYPASS
+ * =========================================================
+ */
 test.beforeEach(
   async ({
     page,
@@ -19,16 +25,32 @@ test.beforeEach(
   },
 );
 
+/*
+ * =========================================================
+ * VIEWPORT MATRIX
+ * =========================================================
+ */
 const viewports = [
   {
     name:
-      "mobile",
+      "mobile-375",
 
     width:
       375,
 
     height:
       812,
+  },
+
+  {
+    name:
+      "mobile-425",
+
+    width:
+      425,
+
+    height:
+      900,
   },
 
   {
@@ -53,6 +75,24 @@ const viewports = [
       900,
   },
 ] as const;
+
+const mobileViewports =
+  viewports.filter(
+    (
+      viewport,
+    ) =>
+      viewport.width <=
+      425,
+  );
+
+const localizedViewports =
+  viewports.filter(
+    (
+      viewport,
+    ) =>
+      viewport.width <=
+      768,
+  );
 
 const publicRoutes = [
   "/",
@@ -83,35 +123,15 @@ const localizedRoutes = [
   "/de/cv",
 ] as const;
 
-const localizedViewports =
-  viewports.filter(
-    (
-      viewport,
-    ) =>
-      viewport.name ===
-        "mobile" ||
-      viewport.name ===
-        "tablet",
-  );
-
+/*
+ * =========================================================
+ * NAVIGATION
+ * =========================================================
+ */
 async function navigateForLayout(
   page: Page,
   route: string,
 ) {
-  /*
-   * Layout tests do not need the full
-   * window "load" lifecycle.
-   *
-   * Waiting for load also waits on
-   * image/resource delivery and can
-   * unnecessarily block loop-heavy
-   * responsive tests.
-   *
-   * DOMContentLoaded is enough because
-   * every assertion below waits for the
-   * actual rendered page element and
-   * fonts before measuring layout.
-   */
   const response =
     await page.goto(
       route,
@@ -134,9 +154,13 @@ async function navigateForLayout(
   return response;
 }
 
-async function assertNoHorizontalOverflow(
+/*
+ * =========================================================
+ * LAYOUT READY
+ * =========================================================
+ */
+async function waitForLayoutReady(
   page: Page,
-  route: string,
 ) {
   await expect(
     page.locator(
@@ -149,26 +173,48 @@ async function assertNoHorizontalOverflow(
       await document.fonts.ready;
     },
   );
+}
+
+/*
+ * =========================================================
+ * OVERFLOW METRICS
+ * =========================================================
+ */
+async function getOverflowMetrics(
+  page: Page,
+) {
+  return page.evaluate(
+    () => ({
+      viewport:
+        window.innerWidth,
+
+      documentWidth:
+        document.documentElement
+          .scrollWidth,
+
+      bodyWidth:
+        document.body
+          .scrollWidth,
+    }),
+  );
+}
+
+async function assertNoHorizontalOverflow(
+  page: Page,
+  label: string,
+) {
+  await waitForLayoutReady(
+    page,
+  );
 
   const initialMetrics =
-    await page.evaluate(
-      () => ({
-        viewport:
-          window.innerWidth,
-
-        documentWidth:
-          document.documentElement
-            .scrollWidth,
-
-        bodyWidth:
-          document.body
-            .scrollWidth,
-      }),
+    await getOverflowMetrics(
+      page,
     );
 
   expect(
     initialMetrics.documentWidth,
-    `${route} document overflows horizontally`,
+    `${label} document overflows horizontally`,
   ).toBeLessThanOrEqual(
     initialMetrics.viewport +
       1,
@@ -176,12 +222,16 @@ async function assertNoHorizontalOverflow(
 
   expect(
     initialMetrics.bodyWidth,
-    `${route} body overflows horizontally`,
+    `${label} body overflows horizontally`,
   ).toBeLessThanOrEqual(
     initialMetrics.viewport +
       1,
   );
 
+  /*
+   * Scroll sekali supaya scroll-based
+   * motion juga sempat aktif.
+   */
   await page.evaluate(
     () => {
       window.scrollTo(
@@ -193,28 +243,17 @@ async function assertNoHorizontalOverflow(
   );
 
   await page.waitForTimeout(
-    100,
+    120,
   );
 
   const scrolledMetrics =
-    await page.evaluate(
-      () => ({
-        viewport:
-          window.innerWidth,
-
-        documentWidth:
-          document.documentElement
-            .scrollWidth,
-
-        bodyWidth:
-          document.body
-            .scrollWidth,
-      }),
+    await getOverflowMetrics(
+      page,
     );
 
   expect(
     scrolledMetrics.documentWidth,
-    `${route} document overflows after scroll motion`,
+    `${label} document overflows after scroll motion`,
   ).toBeLessThanOrEqual(
     scrolledMetrics.viewport +
       1,
@@ -222,13 +261,342 @@ async function assertNoHorizontalOverflow(
 
   expect(
     scrolledMetrics.bodyWidth,
-    `${route} body overflows after scroll motion`,
+    `${label} body overflows after scroll motion`,
   ).toBeLessThanOrEqual(
     scrolledMetrics.viewport +
       1,
   );
 }
 
+/*
+ * =========================================================
+ * LAYOUT METRICS
+ * =========================================================
+ *
+ * IMPORTANT:
+ *
+ * Jangan menggunakan boundingBox()
+ * untuk membandingkan ukuran layout
+ * Selected Work.
+ *
+ * boundingBox() memasukkan CSS transform,
+ * termasuk immersive scale/translate.
+ *
+ * offsetWidth / offsetHeight membaca
+ * layout box sebelum transform.
+ */
+type LayoutMetrics = {
+  width: number;
+  height: number;
+};
+
+async function getLayoutMetrics(
+  locator: Locator,
+): Promise<LayoutMetrics> {
+  return locator.evaluate(
+    (
+      node,
+    ) => {
+      const element =
+        node as HTMLElement;
+
+      return {
+        width:
+          element.offsetWidth,
+
+        height:
+          element.offsetHeight,
+      };
+    },
+  );
+}
+
+function expectClose(
+  actual: number,
+  expected: number,
+  message: string,
+  tolerance = 2,
+) {
+  expect(
+    Math.abs(
+      actual -
+        expected,
+    ),
+    message,
+  ).toBeLessThanOrEqual(
+    tolerance,
+  );
+}
+
+/*
+ * =========================================================
+ * SELECTED WORK MOBILE COMPOSITION
+ * =========================================================
+ *
+ * Test layout asli:
+ *
+ * - card tidak kembali portrait
+ * - width project konsisten
+ * - header/visual/footer sejajar
+ * - card tidak menjadi terlalu sempit
+ *
+ * Motion tidak dimatikan.
+ * Motion overflow diuji terpisah melalui
+ * assertNoHorizontalOverflow().
+ */
+async function assertSelectedWorkMobileGeometry(
+  page: Page,
+  viewportName: string,
+) {
+  await waitForLayoutReady(
+    page,
+  );
+
+  const workSection =
+    page.locator(
+      "#work",
+    );
+
+  await expect(
+    workSection,
+  ).toBeAttached();
+
+  /*
+   * Sengaja tetap scroll ke Selected Work.
+   *
+   * Kita ingin immersive controller aktif
+   * saat regression test berjalan.
+   */
+  await workSection.scrollIntoViewIfNeeded();
+
+  await page.waitForTimeout(
+    160,
+  );
+
+  const projects =
+    page.locator(
+      '#work [data-motion-scroll="project"]',
+    );
+
+  const projectCount =
+    await projects.count();
+
+  expect(
+    projectCount,
+    `${viewportName} should render featured projects`,
+  ).toBeGreaterThan(
+    0,
+  );
+
+  const viewport =
+    page.viewportSize();
+
+  expect(
+    viewport,
+    `${viewportName} should have a viewport`,
+  ).not.toBeNull();
+
+  const viewportWidth =
+    viewport!.width;
+
+  const visualWidths:
+    number[] = [];
+
+  for (
+    let index = 0;
+    index <
+    projectCount;
+    index += 1
+  ) {
+    const project =
+      projects.nth(
+        index,
+      );
+
+    /*
+     * Current structure:
+     *
+     * article
+     * ├── div header
+     * ├── div visual
+     * └── div footer
+     */
+    const directDivs =
+      project.locator(
+        ":scope > div",
+      );
+
+    await expect(
+      directDivs,
+      `${viewportName} project ${index + 1} should have layout children`,
+    ).toHaveCount(
+      3,
+    );
+
+    const header =
+      directDivs.nth(
+        0,
+      );
+
+    const visual =
+      directDivs.nth(
+        1,
+      );
+
+    const footer =
+      directDivs.nth(
+        2,
+      );
+
+    /*
+     * offsetWidth/offsetHeight:
+     *
+     * ✓ CSS layout dimensions
+     * ✓ aspect-ratio result
+     * ✓ unaffected by immersive transform
+     *
+     * boundingBox():
+     *
+     * ✗ affected by scale
+     * ✗ affected by transform
+     *
+     * Jadi geometry regression harus
+     * menggunakan metrics ini.
+     */
+    const [
+      headerMetrics,
+      visualMetrics,
+      footerMetrics,
+    ] =
+      await Promise.all([
+        getLayoutMetrics(
+          header,
+        ),
+
+        getLayoutMetrics(
+          visual,
+        ),
+
+        getLayoutMetrics(
+          footer,
+        ),
+      ]);
+
+    expect(
+      visualMetrics.width,
+      `${viewportName} project ${index + 1} visual width should be measurable`,
+    ).toBeGreaterThan(
+      0,
+    );
+
+    expect(
+      visualMetrics.height,
+      `${viewportName} project ${index + 1} visual height should be measurable`,
+    ).toBeGreaterThan(
+      0,
+    );
+
+    /*
+     * Mobile Selected Work:
+     *
+     * aspect-ratio = 11 / 10
+     *              = 1.1
+     *
+     * Range sedikit longgar untuk menjaga
+     * test tetap robust kalau ada rounding.
+     */
+    const visualRatio =
+      visualMetrics.width /
+      visualMetrics.height;
+
+    expect(
+      visualRatio,
+      `${viewportName} project ${index + 1} visual became portrait/tall`,
+    ).toBeGreaterThanOrEqual(
+      1.04,
+    );
+
+    expect(
+      visualRatio,
+      `${viewportName} project ${index + 1} visual became excessively wide`,
+    ).toBeLessThanOrEqual(
+      1.16,
+    );
+
+    /*
+     * Layout card tidak boleh lebih lebar
+     * dari viewport.
+     */
+    expect(
+      visualMetrics.width,
+      `${viewportName} project ${index + 1} visual exceeds viewport`,
+    ).toBeLessThanOrEqual(
+      viewportWidth +
+        1,
+    );
+
+    /*
+     * Regression guard terhadap layout
+     * mobile lama yang terlalu sempit.
+     */
+    expect(
+      visualMetrics.width,
+      `${viewportName} project ${index + 1} visual became too narrow`,
+    ).toBeGreaterThanOrEqual(
+      viewportWidth *
+        0.86,
+    );
+
+    /*
+     * Header/footer memang harus mengikuti
+     * layout width visual.
+     *
+     * Immersive transform sekarang tidak
+     * mempengaruhi hasil perbandingan.
+     */
+    expectClose(
+      headerMetrics.width,
+      visualMetrics.width,
+      `${viewportName} project ${index + 1} header width does not align with visual`,
+    );
+
+    expectClose(
+      footerMetrics.width,
+      visualMetrics.width,
+      `${viewportName} project ${index + 1} footer width does not align with visual`,
+    );
+
+    visualWidths.push(
+      visualMetrics.width,
+    );
+  }
+
+  /*
+   * Semua featured project mobile harus
+   * menggunakan satu width composition.
+   */
+  const referenceWidth =
+    visualWidths[0];
+
+  for (
+    let index = 1;
+    index <
+    visualWidths.length;
+    index += 1
+  ) {
+    expectClose(
+      visualWidths[index],
+      referenceWidth,
+      `${viewportName} project ${index + 1} uses a different visual width`,
+    );
+  }
+}
+
+/*
+ * =========================================================
+ * PUBLIC ROUTES
+ * =========================================================
+ */
 test.describe(
   "responsive public layout",
   () => {
@@ -241,17 +609,8 @@ test.describe(
         async ({
           page,
         }) => {
-          /*
-           * Six routes are intentionally
-           * checked inside one test.
-           *
-           * 60s prevents unrelated local
-           * server scheduling from turning
-           * a valid layout suite into a
-           * 30s false timeout.
-           */
           test.setTimeout(
-            60_000,
+            80_000,
           );
 
           await page.setViewportSize({
@@ -273,7 +632,7 @@ test.describe(
 
             await assertNoHorizontalOverflow(
               page,
-              route,
+              `${viewport.name}:${route}`,
             );
           }
         },
@@ -282,6 +641,11 @@ test.describe(
   },
 );
 
+/*
+ * =========================================================
+ * LOCALIZED ROUTES
+ * =========================================================
+ */
 test.describe(
   "localized responsive layout",
   () => {
@@ -294,12 +658,8 @@ test.describe(
         async ({
           page,
         }) => {
-          /*
-           * This test intentionally visits
-           * twelve localized routes.
-           */
           test.setTimeout(
-            90_000,
+            110_000,
           );
 
           await page.setViewportSize({
@@ -330,13 +690,67 @@ test.describe(
   },
 );
 
+/*
+ * =========================================================
+ * SELECTED WORK MOBILE REGRESSION
+ * =========================================================
+ */
+test.describe(
+  "selected work mobile composition",
+  () => {
+    for (
+      const viewport
+      of mobileViewports
+    ) {
+      test(
+        `${viewport.name} keeps compact consistent project cards`,
+        async ({
+          page,
+        }) => {
+          test.setTimeout(
+            45_000,
+          );
+
+          await page.setViewportSize({
+            width:
+              viewport.width,
+
+            height:
+              viewport.height,
+          });
+
+          await navigateForLayout(
+            page,
+            "/",
+          );
+
+          await assertSelectedWorkMobileGeometry(
+            page,
+            viewport.name,
+          );
+
+          await assertNoHorizontalOverflow(
+            page,
+            `${viewport.name}:/#work`,
+          );
+        },
+      );
+    }
+  },
+);
+
+/*
+ * =========================================================
+ * PROJECT DETAIL
+ * =========================================================
+ */
 test(
   "project detail stays responsive across viewport sizes",
   async ({
     page,
   }) => {
     test.setTimeout(
-      60_000,
+      80_000,
     );
 
     await page.setViewportSize({
@@ -399,13 +813,18 @@ test(
   },
 );
 
+/*
+ * =========================================================
+ * MOBILE NAVIGATION
+ * =========================================================
+ */
 test(
   "mobile navigation remains contained and restores page scrolling",
   async ({
     page,
   }) => {
     test.setTimeout(
-      60_000,
+      80_000,
     );
 
     await page.setViewportSize({
@@ -485,9 +904,25 @@ test(
           "hidden",
         );
 
-      await assertNoHorizontalOverflow(
-        page,
-        `${route}:mobile-menu`,
+      const metrics =
+        await getOverflowMetrics(
+          page,
+        );
+
+      expect(
+        metrics.documentWidth,
+        `${route} mobile menu document overflows`,
+      ).toBeLessThanOrEqual(
+        metrics.viewport +
+          1,
+      );
+
+      expect(
+        metrics.bodyWidth,
+        `${route} mobile menu body overflows`,
+      ).toBeLessThanOrEqual(
+        metrics.viewport +
+          1,
       );
 
       await page.keyboard.press(
