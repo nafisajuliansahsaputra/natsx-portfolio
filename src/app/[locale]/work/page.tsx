@@ -18,21 +18,57 @@ import {
   createLocalizedPageMetadata,
 } from "@/lib/page-metadata";
 
+
 type LocalizedWorkPageProps = {
-  params: Promise<{
-    locale: string;
-  }>;
+  params:
+    Promise<{
+      locale:
+        string;
+    }>;
+
+  searchParams:
+    Promise<{
+      category?:
+        | string
+        | string[];
+    }>;
 };
+
 
 export const revalidate =
   3600;
+
+
+function getRequestedCategory(
+  value:
+    | string
+    | string[]
+    | undefined,
+) {
+  if (
+    typeof value !==
+    "string"
+  ) {
+    return "all";
+  }
+
+  const normalized =
+    value
+      .trim()
+      .toLowerCase();
+
+  return normalized ||
+    "all";
+}
+
 
 export async function generateMetadata({
   params,
 }: LocalizedWorkPageProps) {
   const {
     locale,
-  } = await params;
+  } =
+    await params;
 
   if (
     !isLocalizedLocale(
@@ -61,12 +97,18 @@ export async function generateMetadata({
   });
 }
 
+
 export default async function LocalizedWorkPage({
   params,
+  searchParams,
 }: LocalizedWorkPageProps) {
   const {
     locale,
-  } = await params;
+  } =
+    await params;
+
+  const query =
+    await searchParams;
 
   if (
     !isLocalizedLocale(
@@ -80,6 +122,11 @@ export default async function LocalizedWorkPage({
     <WorkPageContent
       locale={
         locale
+      }
+      initialCategory={
+        getRequestedCategory(
+          query.category,
+        )
       }
     />
   );

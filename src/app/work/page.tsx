@@ -1,23 +1,14 @@
-import type {
-  CSSProperties,
-} from "react";
-
-import Image from "next/image";
-
-import "@/app/work-motion.css";
-import "@/app/work-motion-fit.css";
-
-import LocaleLink from "@/components/i18n/LocaleLink";
-
-import SiteHeader from "@/components/layout/SiteHeader";
+import {
+  getWorkMessages,
+} from "@/i18n/work-messages";
 
 import type {
   Locale,
 } from "@/i18n/config";
 
-import {
-  getWorkMessages,
-} from "@/i18n/work-messages";
+import SiteHeader from "@/components/layout/SiteHeader";
+
+import LocaleLink from "@/components/i18n/LocaleLink";
 
 import {
   createPageMetadata,
@@ -33,13 +24,27 @@ import {
   getPublicProjectYearRange,
 } from "@/lib/public-projects";
 
+import {
+  getPublicWorkTaxonomy,
+} from "@/lib/public-work-categories";
+
+import WorkArchiveFilter, {
+  type WorkArchiveProject,
+} from "./WorkArchiveFilter";
+
 import styles from "./Work.module.css";
+
+import "@/app/work-motion.css";
+import "@/app/work-motion-fit.css";
+
 
 export const revalidate =
   3600;
 
+
 const description =
   "Selected projects by NATSX across product design, development, identity, and creative direction.";
+
 
 export const metadata =
   createPageMetadata({
@@ -52,40 +57,121 @@ export const metadata =
       "/work",
   });
 
-function getPreviewVariant(
-  index: number,
+
+type WorkPageContentProps = {
+  locale:
+    Locale;
+
+  initialCategory?:
+    string;
+};
+
+
+type WorkPageProps = {
+  searchParams:
+    Promise<{
+      category?:
+        | string
+        | string[];
+    }>;
+};
+
+
+function getRequestedCategory(
+  value:
+    | string
+    | string[]
+    | undefined,
 ) {
   if (
-    index % 3 ===
-    1
+    typeof value !==
+    "string"
   ) {
-    return "drop";
+    return "all";
   }
 
-  if (
-    index % 3 ===
-    2
-  ) {
-    return "center";
-  }
+  const normalized =
+    value
+      .trim()
+      .toLowerCase();
 
-  return "rise";
+  return normalized ||
+    "all";
 }
+
 
 export async function WorkPageContent({
   locale,
-}: {
-  locale: Locale;
-}) {
+  initialCategory = "all",
+}: WorkPageContentProps) {
   const copy =
     getWorkMessages(
       locale,
     );
 
-  const projects =
-    await getPublishedProjects(
-      locale,
+  const [
+    projects,
+    taxonomy,
+  ] =
+    await Promise.all([
+      getPublishedProjects(
+        locale,
+      ),
+
+      getPublicWorkTaxonomy(),
+    ]);
+
+
+  const categorySlugSet =
+    new Set(
+      taxonomy.categories.map(
+        (
+          category,
+        ) =>
+          category.slug,
+      ),
     );
+
+
+  const resolvedInitialCategory =
+    initialCategory !==
+      "all" &&
+    categorySlugSet.has(
+      initialCategory,
+    )
+      ? initialCategory
+      : "all";
+
+
+  const archiveProjects:
+    WorkArchiveProject[] =
+    projects.map(
+      (
+        project,
+      ) => {
+        const previewImage =
+          getProjectPrimaryVisualUrl(
+            project,
+          ) ??
+          getProjectSecondaryVisualUrl(
+            project,
+          );
+
+        return {
+          project,
+
+          previewImage,
+
+          categorySlugs:
+            taxonomy
+              .categorySlugsByProjectId[
+              project.id
+            ] ??
+            [],
+        };
+      },
+    );
+
 
   const projectCount =
     String(
@@ -95,10 +181,12 @@ export async function WorkPageContent({
       "0",
     );
 
+
   const projectPeriod =
     getPublicProjectYearRange(
       projects,
     );
+
 
   return (
     <>
@@ -106,12 +194,18 @@ export async function WorkPageContent({
 
       <main
         id="main-content"
-        tabIndex={-1}
+        tabIndex={
+          -1
+        }
         className={
           styles.page
         }
         data-motion-page="work"
       >
+        {/* =========================
+            HERO
+        ========================= */}
+
         <section
           className={
             styles.hero
@@ -238,6 +332,10 @@ export async function WorkPageContent({
           </div>
         </section>
 
+        {/* =========================
+            ARCHIVE
+        ========================= */}
+
         <section
           className={
             styles.archive
@@ -262,8 +360,12 @@ export async function WorkPageContent({
                   styles.archiveCount
                 }
               >
-                {projectCount}
+                {
+                  projectCount
+                }
+
                 {" / "}
+
                 {
                   copy.archive
                     .current
@@ -271,153 +373,21 @@ export async function WorkPageContent({
               </span>
             </div>
 
-            <div
-              className={
-                styles.projects
+            <WorkArchiveFilter
+              projects={
+                archiveProjects
               }
-            >
-              {projects.map(
-                (
-                  project,
-                  index,
-                ) => {
-                  const previewImage =
-                    getProjectPrimaryVisualUrl(
-                      project,
-                    ) ??
-                    getProjectSecondaryVisualUrl(
-                      project,
-                    );
+              categories={
+                taxonomy.categories
+              }
+              initialCategory={
+                resolvedInitialCategory
+              }
+            />
 
-                  const projectStyle = {
-                    "--row-accent":
-                      project.accentColor,
-                  } as CSSProperties;
-
-                  return (
-                    <LocaleLink
-                      href={`/work/${project.slug}`}
-                      className={
-                        styles.project
-                      }
-                      key={
-                        project.id
-                      }
-                      data-motion-scroll="work-project"
-                      data-preview-variant={
-                        getPreviewVariant(
-                          index,
-                        )
-                      }
-                      data-has-preview={
-                        previewImage
-                          ? "true"
-                          : "false"
-                      }
-                      style={
-                        projectStyle
-                      }
-                    >
-                      <span
-                        className={
-                          styles.projectNumber
-                        }
-                      >
-                        {
-                          project.number
-                        }
-                      </span>
-
-                      <div
-                        className={
-                          styles.projectMain
-                        }
-                      >
-                        <h2>
-                          {
-                            project.title
-                          }
-                        </h2>
-
-                        <div
-                          className={
-                            styles.categories
-                          }
-                        >
-                          {project.disciplines.map(
-                            (
-                              discipline,
-                            ) => (
-                              <span
-                                key={
-                                  discipline
-                                }
-                              >
-                                {
-                                  discipline
-                                }
-                              </span>
-                            ),
-                          )}
-                        </div>
-                      </div>
-
-                      {previewImage ? (
-                        <div
-                          className={
-                            styles.previewStage
-                          }
-                          aria-hidden="true"
-                        >
-                          <div
-                            className={
-                              styles.previewFrame
-                            }
-                          >
-                            <Image
-                              src={
-                                previewImage
-                              }
-                              alt=""
-                              fill
-                              sizes="(max-width: 700px) 74vw, 340px"
-                              className={
-                                styles.previewImage
-                              }
-                            />
-                          </div>
-                        </div>
-                      ) : null}
-
-                      <div
-                        className={
-                          styles.projectMeta
-                        }
-                      >
-                        <span
-                          className={
-                            styles.projectYear
-                          }
-                        >
-                          {
-                            project.year
-                          }
-                        </span>
-                      </div>
-
-                      <span
-                        className={
-                          styles.projectArrow
-                        }
-                        aria-hidden="true"
-                      >
-                        ↗
-                      </span>
-                    </LocaleLink>
-                  );
-                },
-              )}
-            </div>
+            {/* =========================
+                CLOSING
+            ========================= */}
 
             {projects.length ===
             0 ? (
@@ -538,10 +508,21 @@ export async function WorkPageContent({
   );
 }
 
-export default function WorkPage() {
+
+export default async function WorkPage({
+  searchParams,
+}: WorkPageProps) {
+  const params =
+    await searchParams;
+
   return (
     <WorkPageContent
       locale="en"
+      initialCategory={
+        getRequestedCategory(
+          params.category,
+        )
+      }
     />
   );
 }

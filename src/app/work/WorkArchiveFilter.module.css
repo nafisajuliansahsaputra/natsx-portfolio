@@ -1,0 +1,854 @@
+/* =========================
+   WORK ARCHIVE FILTER
+========================= */
+
+.filter {
+  padding:
+    26px
+    0
+    0;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+
+/* =========================
+   META
+========================= */
+
+.filterMeta {
+  padding-bottom:
+    14px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    20px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.07em;
+
+  text-transform:
+    uppercase;
+}
+
+
+/* =========================
+   TRACK SHELL
+========================= */
+
+.trackShell {
+  position:
+    relative;
+
+  min-width:
+    0;
+}
+
+
+/* =========================
+   TRACK
+========================= */
+
+.track {
+  display:
+    flex;
+
+  align-items:
+    stretch;
+
+  gap:
+    clamp(
+      26px,
+      3.5vw,
+      58px
+    );
+
+  overflow-x:
+    auto;
+
+  overflow-y:
+    hidden;
+
+  scrollbar-width:
+    none;
+
+  overscroll-behavior-inline:
+    contain;
+
+  -webkit-overflow-scrolling:
+    touch;
+}
+
+
+.track::-webkit-scrollbar {
+  display:
+    none;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.filterButton {
+  position:
+    relative;
+
+  flex:
+    0
+    0
+    auto;
+
+  min-height:
+    62px;
+
+  padding:
+    0;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    7px
+    auto
+    auto;
+
+  align-items:
+    center;
+
+  gap:
+    9px;
+
+  border:
+    0;
+
+  background:
+    transparent;
+
+  color:
+    var(--muted);
+
+  cursor:
+    pointer;
+
+  font:
+    inherit;
+
+  text-align:
+    left;
+
+  transition:
+    color
+      220ms
+      ease;
+}
+
+
+.filterButton::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  right:
+    0;
+
+  bottom:
+    -1px;
+
+  left:
+    0;
+
+  height:
+    1px;
+
+  background:
+    var(--accent);
+
+  transform:
+    scaleX(
+      0
+    );
+
+  transform-origin:
+    right center;
+
+  transition:
+    transform
+      440ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+
+/* =========================
+   SIGNAL
+========================= */
+
+.signal {
+  width:
+    5px;
+
+  height:
+    5px;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--accent);
+
+  opacity:
+    0;
+
+  transform:
+    scale(
+      0
+    );
+
+  transition:
+    opacity
+      180ms
+      ease,
+    transform
+      380ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+
+/* =========================
+   NAME
+========================= */
+
+.filterName {
+  color:
+    inherit;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.045em;
+
+  text-transform:
+    uppercase;
+
+  white-space:
+    nowrap;
+}
+
+
+/* =========================
+   COUNT
+========================= */
+
+.filterCount {
+  align-self:
+    center;
+
+  color:
+    #aaa9a4;
+
+  font-size:
+    8px;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    0.05em;
+
+  transition:
+    color
+      220ms
+      ease;
+}
+
+
+/* =========================
+   ACTIVE
+========================= */
+
+.active {
+  color:
+    var(--foreground);
+}
+
+
+.active::after {
+  transform:
+    scaleX(
+      1
+    );
+
+  transform-origin:
+    left center;
+}
+
+
+.active
+  .signal {
+  opacity:
+    1;
+
+  transform:
+    scale(
+      1
+    );
+}
+
+
+.active
+  .filterCount {
+  color:
+    var(--accent);
+}
+
+
+/* =========================
+   HOVER
+========================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .filterButton:hover {
+    color:
+      var(--foreground);
+  }
+
+  .filterButton:not(
+      .active
+    ):hover
+    .signal {
+    opacity:
+      0.35;
+
+    transform:
+      scale(
+        0.7
+      );
+  }
+}
+
+
+/* =========================================================
+   PROJECT FILTER TRANSITION
+   =========================================================
+ *
+ * Wrapper owns filter animation.
+ *
+ * The actual project link keeps all
+ * existing Work page scroll / hover /
+ * preview choreography untouched.
+ */
+
+.projectSlot {
+  width:
+    100%;
+}
+
+
+.projectSlot[hidden] {
+  display:
+    none !important;
+}
+
+
+/* =========================
+   LEAVE
+========================= */
+
+.projectLeaving {
+  pointer-events:
+    none;
+
+  animation:
+    work-filter-project-out
+    180ms
+    cubic-bezier(
+      0.55,
+      0,
+      1,
+      0.45
+    )
+    both;
+}
+
+
+/* =========================
+   ENTER
+========================= */
+
+.projectEntering {
+  animation:
+    work-filter-project-in
+    480ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    )
+    var(
+      --filter-stagger,
+      0ms
+    )
+    both;
+}
+
+
+/* =========================
+   PROJECT KEYFRAMES
+========================= */
+
+@keyframes
+  work-filter-project-out {
+  from {
+    opacity:
+      1;
+
+    filter:
+      blur(
+        0
+      );
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      );
+  }
+
+  to {
+    opacity:
+      0;
+
+    filter:
+      blur(
+        1.5px
+      );
+
+    transform:
+      translate3d(
+        0,
+        -8px,
+        0
+      )
+      scale(
+        0.995
+      );
+  }
+}
+
+
+@keyframes
+  work-filter-project-in {
+  from {
+    opacity:
+      0;
+
+    filter:
+      blur(
+        2px
+      );
+
+    transform:
+      translate3d(
+        0,
+        14px,
+        0
+      )
+      scale(
+        0.992
+      );
+  }
+
+  55% {
+    opacity:
+      1;
+  }
+
+  to {
+    opacity:
+      1;
+
+    filter:
+      blur(
+        0
+      );
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      );
+  }
+}
+
+
+/* =========================
+   EMPTY FILTER
+========================= */
+
+.empty {
+  min-height:
+    clamp(
+      260px,
+      30vw,
+      430px
+    );
+
+  padding:
+    clamp(
+      50px,
+      7vw,
+      90px
+    )
+    0;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    space-between;
+
+  gap:
+    80px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+
+.empty > span {
+  color:
+    var(--muted);
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.07em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.empty p {
+  max-width:
+    680px;
+
+  margin:
+    0;
+
+  font-size:
+    clamp(
+      40px,
+      5vw,
+      76px
+    );
+
+  font-weight:
+    500;
+
+  line-height:
+    0.92;
+
+  letter-spacing:
+    -0.065em;
+}
+
+
+.empty strong {
+  color:
+    var(--accent);
+
+  font-weight:
+    inherit;
+}
+
+
+.emptyLeaving {
+  animation:
+    work-filter-project-out
+    180ms
+    cubic-bezier(
+      0.55,
+      0,
+      1,
+      0.45
+    )
+    both;
+}
+
+
+.emptyEntering {
+  animation:
+    work-filter-project-in
+    480ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    )
+    both;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (
+  max-width: 700px
+) {
+  .filter {
+    padding-top:
+      20px;
+  }
+
+
+  .filterMeta {
+    padding-bottom:
+      8px;
+  }
+
+
+  /*
+   * Fade cue only exists on phone.
+   *
+   * It tells the user there are still
+   * categories outside the viewport.
+   */
+  .trackShell::after {
+    content:
+      "";
+
+    position:
+      absolute;
+
+    z-index:
+      3;
+
+    top:
+      0;
+
+    right:
+      calc(
+        var(--page-padding) *
+        -1
+      );
+
+    bottom:
+      0;
+
+    width:
+      44px;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(
+          247,
+          246,
+          242,
+          0
+        ),
+        var(--background)
+          82%
+      );
+
+    opacity:
+      0;
+
+    pointer-events:
+      none;
+
+    transition:
+      opacity
+      220ms
+      ease;
+  }
+
+
+  .trackShell[
+    data-can-scroll-right="true"
+  ]::after {
+    opacity:
+      1;
+  }
+
+
+  .track {
+    gap:
+      18px;
+
+    margin-right:
+      calc(
+        var(--page-padding) *
+        -1
+      );
+
+    padding-right:
+      calc(
+        var(--page-padding) +
+        34px
+      );
+  }
+
+
+  .filterButton {
+    min-height:
+      54px;
+
+    grid-template-columns:
+      5px
+      auto
+      auto;
+
+    gap:
+      6px;
+  }
+
+
+  .signal {
+    width:
+      4px;
+
+    height:
+      4px;
+  }
+
+
+  .filterName {
+    font-size:
+      9px;
+
+    letter-spacing:
+      0.035em;
+  }
+
+
+  .filterCount {
+    font-size:
+      7px;
+  }
+
+
+  .empty {
+    min-height:
+      280px;
+
+    gap:
+      60px;
+  }
+
+
+  .empty p {
+    font-size:
+      clamp(
+        34px,
+        10.5vw,
+        48px
+      );
+  }
+
+
+  /*
+   * Mobile filter transition is a little
+   * tighter so it never feels sluggish.
+   */
+  .projectEntering {
+    animation-duration:
+      430ms;
+  }
+}
+
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .filterButton,
+  .filterButton::after,
+  .signal,
+  .filterCount,
+  .trackShell::after {
+    transition:
+      none !important;
+  }
+
+
+  .projectLeaving,
+  .projectEntering,
+  .emptyLeaving,
+  .emptyEntering {
+    animation:
+      none !important;
+
+    opacity:
+      1 !important;
+
+    filter:
+      none !important;
+
+    transform:
+      none !important;
+  }
+}

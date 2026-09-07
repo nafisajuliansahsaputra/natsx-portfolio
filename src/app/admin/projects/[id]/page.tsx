@@ -75,25 +75,6 @@ type TranslationRow = {
     | null;
 };
 
-
-type WorkCategoryRow = {
-  id:
-    string;
-
-  name:
-    string;
-
-  slug:
-    string;
-
-  sort_order:
-    number;
-
-  is_visible:
-    boolean;
-};
-
-
 type ProjectCategoryRow = {
   category_id:
     string;
