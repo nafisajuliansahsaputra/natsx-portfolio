@@ -1,0 +1,185 @@
+/*
+ * =========================
+ * NATSX — PLAYGROUND MOTION FIT
+ * =========================
+ *
+ * Typography-safe reveal bounds for
+ * Playground display text.
+ *
+ * Motion timing, direction, rotation,
+ * distance, and easing tetap dimiliki
+ * playground-motion.css.
+ */
+
+/* =========================
+   HERO TITLE
+========================= */
+
+/*
+ * Override playground-title-in.
+ *
+ * Vertical reveal tetap sama.
+ * Horizontal bleed kecil mencegah
+ * tight display glyphs kepotong.
+ */
+@keyframes
+  playground-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        -0.12em
+        calc(
+          100% +
+          0.35em
+        )
+        -0.12em
+      );
+
+    translate:
+      -18px
+      30px;
+
+    rotate:
+      -0.8deg;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        -0.12em
+        -0.35em
+        -0.12em
+      );
+
+    translate:
+      0
+      0;
+
+    rotate:
+      0deg;
+  }
+}
+
+/* =========================
+   MANIFESTO TITLE
+========================= */
+
+html[data-motion="enabled"]
+  [data-motion-page="playground"]
+  [data-motion-scroll="playground-manifesto"]
+  [data-motion-piece="title"] {
+  overflow:
+    visible;
+}
+
+/*
+ * Existing drop direction tetap:
+ * dari atas menuju posisi final.
+ */
+@keyframes
+  playground-title-drop {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        calc(
+          100% +
+          0.24em
+        )
+        -0.12em
+        -0.24em
+        -0.12em
+      );
+
+    translate:
+      0
+      -26px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.24em
+        -0.12em
+        -0.24em
+        -0.12em
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   CLOSING DISPLAY COPY
+========================= */
+
+html[data-motion="enabled"]
+  [data-motion-page="playground"]
+  [data-motion-scroll="playground-closing"]
+  [data-motion-piece="main"]
+  > p {
+  overflow:
+    visible;
+}
+
+/*
+ * Closing tetap naik dari bawah.
+ *
+ * Mask final hanya diberi bleed
+ * supaya ascender / descender /
+ * side-bearing tidak terpotong.
+ */
+@keyframes
+  playground-closing-copy {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.24em
+        -0.12em
+        calc(
+          100% +
+          0.24em
+        )
+        -0.12em
+      );
+
+    translate:
+      0
+      20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.24em
+        -0.12em
+        -0.24em
+        -0.12em
+      );
+
+    translate:
+      0
+      0;
+  }
+}

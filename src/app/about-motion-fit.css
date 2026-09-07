@@ -1,0 +1,109 @@
+/*
+ * =========================
+ * NATSX — ABOUT MOTION FIT
+ * =========================
+ *
+ * Typography-safe reveal bounds for
+ * About display text.
+ *
+ * Motion timing, direction, distance,
+ * and easing tetap dimiliki oleh
+ * about-motion.css.
+ */
+
+/* =========================
+   HERO TITLE
+========================= */
+
+@keyframes
+  natsx-about-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        100%
+        -0.35em
+        -0.12em
+      );
+
+    transform:
+      translate3d(
+        -22px,
+        0,
+        0
+      );
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        -0.12em
+        -0.35em
+        -0.12em
+      );
+
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      );
+  }
+}
+
+/* =========================
+   STORY TITLE
+========================= */
+
+html[data-motion="enabled"]
+  [data-motion-page="about"]
+  [data-motion-scroll="about-story"]
+  [data-motion-piece="title"] {
+  overflow:
+    visible;
+}
+
+html[data-motion="enabled"]
+  [data-motion-page="about"]
+  [data-motion-scroll="about-story"][data-motion-visible="true"]
+  [data-motion-piece="title"] {
+  clip-path:
+    inset(
+      -0.22em
+      -0.12em
+      -0.22em
+      -0.12em
+    );
+}
+
+/* =========================
+   APPROACH TITLE
+========================= */
+
+html[data-motion="enabled"]
+  [data-motion-page="about"]
+  [data-motion-scroll="about-approach-header"]
+  [data-motion-piece="title"] {
+  overflow:
+    visible;
+}
+
+html[data-motion="enabled"]
+  [data-motion-page="about"]
+  [data-motion-scroll="about-approach-header"][data-motion-visible="true"]
+  [data-motion-piece="title"] {
+  clip-path:
+    inset(
+      -0.22em
+      -0.12em
+      -0.22em
+      -0.12em
+    );
+}

@@ -28,30 +28,46 @@
 
 [data-motion-page="project-detail"]
   [data-motion-project-hero-piece="title"] {
-  min-width: 0;
+  min-width:
+    0;
 }
 
 [data-motion-page="project-detail"]
   [data-motion-project-hero-piece="title"]
   h1 {
-  max-width: 100%;
+  max-width:
+    100%;
 
-  overflow-wrap: normal;
-  word-break: normal;
+  overflow:
+    visible;
+
+  overflow-wrap:
+    normal;
+
+  word-break:
+    normal;
 }
 
 [data-motion-page="project-detail"]
   [data-motion-scroll="project-next-link"] {
-  min-width: 0;
+  min-width:
+    0;
 }
 
 [data-motion-page="project-detail"]
   [data-motion-scroll="project-next-link"]
   h2 {
-  max-width: 100%;
+  max-width:
+    100%;
 
-  overflow-wrap: normal;
-  word-break: normal;
+  overflow:
+    visible;
+
+  overflow-wrap:
+    normal;
+
+  word-break:
+    normal;
 }
 
 /* =========================
@@ -59,8 +75,10 @@
 ========================= */
 
 /*
- * project-fit.css di-load setelah
- * project-motion.css.
+ * project-fit.css di-load setelah:
+ *
+ * project-motion.css
+ * project-media-motion.css
  *
  * Karena itu keyframe dengan nama
  * yang sama di bawah menggantikan
@@ -70,9 +88,21 @@
  * scale, opacity dan arah reveal
  * tetap dimiliki selector asli dari
  * project-motion.css.
+ *
+ * Horizontal negative inset kecil
+ * sengaja diberikan untuk memberi
+ * breathing room pada glyph dengan:
+ *
+ * - tight negative tracking
+ * - side bearing
+ * - curved glyph
+ * - punctuation
+ * - descender / ascender overhang
  */
 
-/* HERO — horizontal wipe */
+/* =========================
+   HERO — HORIZONTAL WIPE
+========================= */
 
 @keyframes
   project-hero-title-in {
@@ -85,7 +115,7 @@
         -0.35em
         100%
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -100,9 +130,9 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.12em
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -111,7 +141,9 @@
   }
 }
 
-/* STATEMENT — vertical wipe */
+/* =========================
+   STATEMENT — VERTICAL WIPE
+========================= */
 
 @keyframes
   project-statement-in {
@@ -122,12 +154,12 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.12em
         calc(
           100% +
           0.35em
         )
-        0
+        -0.12em
       );
 
     translate:
@@ -145,9 +177,9 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.12em
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -159,7 +191,9 @@
   }
 }
 
-/* QUOTE — horizontal wipe */
+/* =========================
+   QUOTE — HORIZONTAL WIPE
+========================= */
 
 @keyframes
   project-quote-in {
@@ -172,7 +206,7 @@
         -0.35em
         100%
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -187,9 +221,9 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.12em
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -198,7 +232,9 @@
   }
 }
 
-/* NEXT PROJECT — horizontal wipe */
+/* =========================
+   NEXT PROJECT
+========================= */
 
 @keyframes
   project-next-title-in {
@@ -208,7 +244,7 @@
         -0.35em
         100%
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -220,9 +256,9 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.12em
         -0.35em
-        0
+        -0.12em
       );
 
     translate:
@@ -279,6 +315,7 @@
  * menjadi letterbox surface apabila
  * rasio sumber tidak tepat 16:9.
  */
+
 [data-motion-page="project-detail"]
   [data-motion-scroll="project-gallery"]
   figure:nth-child(3n + 1)
@@ -319,6 +356,7 @@
    * Masih editorial dan dominant,
    * tapi tidak merusak composition.
    */
+
   [data-motion-page="project-detail"]
     [data-motion-project-hero-piece="title"]
     h1 {
@@ -338,6 +376,7 @@
    * Masalah yang sama bisa muncul
    * di bagian paling bawah page.
    */
+
   [data-motion-page="project-detail"]
     [data-motion-scroll="project-next-link"]
     h2 {
@@ -362,6 +401,7 @@
    * item yang memang merupakan wide
    * gallery slot.
    */
+
   [data-motion-page="project-detail"]
     [data-motion-scroll="project-gallery"]
     figure:nth-child(3n + 1)

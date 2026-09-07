@@ -5,6 +5,7 @@ import type {
 import Image from "next/image";
 
 import "@/app/work-motion.css";
+import "@/app/work-motion-fit.css";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 

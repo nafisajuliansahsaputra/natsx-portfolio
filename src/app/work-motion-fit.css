@@ -1,0 +1,62 @@
+/*
+ * =========================
+ * NATSX — WORK MOTION FIT
+ * =========================
+ *
+ * Typography-safe reveal bounds for
+ * Work archive display text.
+ *
+ * Motion choreography tetap dimiliki
+ * work-motion.css.
+ */
+
+/* =========================
+   PROJECT TITLE
+========================= */
+
+[data-motion-page="work"]
+  [data-motion-scroll="work-project"]
+  > div:first-of-type
+  > h2 {
+  overflow:
+    visible;
+}
+
+/*
+ * Override work-title-slice-in dari
+ * work-motion.css.
+ *
+ * Tight display type bisa punya
+ * visual overhang di luar line box,
+ * terutama karena:
+ *
+ * - line-height sangat ketat
+ * - negative tracking
+ * - bentuk glyph tertentu
+ *
+ * Reveal horizontal tetap sama,
+ * tetapi final mask diberi ruang
+ * vertikal + horizontal kecil.
+ */
+@keyframes
+  work-title-slice-in {
+  from {
+    clip-path:
+      inset(
+        -0.22em
+        100%
+        -0.22em
+        -0.12em
+      );
+  }
+
+  to {
+    clip-path:
+      inset(
+        -0.22em
+        -0.12em
+        -0.22em
+        -0.12em
+      );
+  }
+}

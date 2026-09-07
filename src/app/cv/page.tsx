@@ -1,4 +1,5 @@
 import "@/app/cv-motion.css";
+import "@/app/cv-motion-fit.css";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 

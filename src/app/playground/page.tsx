@@ -1,4 +1,5 @@
 import "@/app/playground-motion.css";
+import "@/app/playground-motion-fit.css";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 

@@ -1,4 +1,5 @@
 import "@/app/about-motion.css";
+import "@/app/about-motion-fit.css";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 import SiteHeader from "@/components/layout/SiteHeader";

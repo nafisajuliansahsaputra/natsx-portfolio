@@ -165,6 +165,38 @@
 }
 
 /* =========================
+   CONTACT DISPLAY TEXT
+========================= */
+
+/*
+ * The Contact CTA uses explicit
+ * one-line spans. Do not let the
+ * mobile art-direction max-width
+ * become a glyph clipping boundary.
+ *
+ * This changes containment only,
+ * not type scale, tracking, line-height,
+ * or choreography.
+ */
+[data-motion-page="home"]
+  [data-motion-scroll="home-contact-main"]
+  [data-motion-piece="title"] {
+  overflow:
+    visible;
+
+  max-width:
+    100%;
+}
+
+[data-motion-page="home"]
+  [data-motion-scroll="home-contact-main"]
+  [data-motion-piece="title"]
+  > span {
+  overflow:
+    visible;
+}
+
+/* =========================
    HERO TITLE
 ========================= */
 
@@ -253,6 +285,15 @@
    UPWARD TEXT REVEAL
 ========================= */
 
+/*
+ * Horizontal negative inset is
+ * intentional: display glyphs can
+ * visually overhang their line box
+ * because of tight tracking / font
+ * side bearings. The reveal still
+ * masks vertically, while the left
+ * and right edges get breathing room.
+ */
 @keyframes
   home-reveal-clip-up {
   from {
@@ -262,12 +303,12 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.14em
         calc(
           100% +
           0.35em
         )
-        0
+        -0.14em
       );
 
     translate:
@@ -282,9 +323,9 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.14em
         -0.35em
-        0
+        -0.14em
       );
 
     translate:

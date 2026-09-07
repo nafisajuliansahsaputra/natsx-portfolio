@@ -763,48 +763,6 @@ async function findClippedText(
         );
       }
 
-      function hasNonZeroClipPath(
-        clipPath: string,
-      ) {
-        const normalized =
-          clipPath
-            .replace(
-              /\s+/g,
-              "",
-            )
-            .toLowerCase();
-
-        if (
-          normalized ===
-            "none" ||
-          normalized ===
-            ""
-        ) {
-          return false;
-        }
-
-        /*
-         * These are fully-open inset clips
-         * and therefore safe.
-         */
-        if (
-          normalized ===
-            "inset(0px)" ||
-          normalized ===
-            "inset(0)" ||
-          normalized ===
-            "inset(0px0px)" ||
-          normalized ===
-            "inset(0px0px0px0px)" ||
-          normalized ===
-            "inset(0%0%0%0%)"
-        ) {
-          return false;
-        }
-
-        return true;
-      }
-
       function getSelector(
         element: HTMLElement,
       ) {

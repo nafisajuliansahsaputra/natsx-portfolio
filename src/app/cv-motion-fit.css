@@ -1,0 +1,129 @@
+/*
+ * =========================
+ * NATSX — CV MOTION FIT
+ * =========================
+ *
+ * Typography-safe reveal bounds for
+ * CV display text.
+ *
+ * Motion timing, direction, distance,
+ * scale, and easing tetap dimiliki
+ * cv-motion.css.
+ */
+
+/* =========================
+   HERO TITLE
+========================= */
+
+[data-motion-page="cv"]
+  [data-motion-cv-hero-piece="title"] {
+  overflow:
+    visible;
+}
+
+/*
+ * Override cv-title-in.
+ *
+ * Existing vertical wipe tetap sama,
+ * hanya ditambah horizontal bleed
+ * kecil untuk glyph side-bearing.
+ */
+@keyframes
+  cv-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.35em
+        -0.12em
+        calc(
+          100% +
+          0.35em
+        )
+        -0.12em
+      );
+
+    translate:
+      0
+      28px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.35em
+        -0.12em
+        -0.35em
+        -0.12em
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
+   CLOSING DISPLAY COPY
+========================= */
+
+html[data-motion="enabled"]
+  [data-motion-page="cv"]
+  [data-motion-scroll="cv-closing"]
+  [data-motion-piece="main"]
+  > p {
+  overflow:
+    visible;
+}
+
+/*
+ * Original upward reveal tetap ada.
+ *
+ * Final mask diberi ruang supaya
+ * ascender, descender, dan overhang
+ * tight display type tidak terpotong.
+ */
+@keyframes
+  cv-closing-copy-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.24em
+        -0.12em
+        calc(
+          100% +
+          0.24em
+        )
+        -0.12em
+      );
+
+    translate:
+      0
+      18px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.24em
+        -0.12em
+        -0.24em
+        -0.12em
+      );
+
+    translate:
+      0
+      0;
+  }
+}
