@@ -2,6 +2,8 @@ import type {
   Metadata,
 } from "next";
 
+import Script from "next/script";
+
 import {
   Plus_Jakarta_Sans,
 } from "next/font/google";
@@ -91,6 +93,21 @@ const plusJakartaSans =
 
 const description =
   "Portfolio of NATSX, a multidisciplinary digital creator working across design, development, motion, and visual experiences.";
+
+/*
+ * =========================================================
+ * PRE-HYDRATION BOOTSTRAP
+ * =========================================================
+ *
+ * These scripts must run before React hydration.
+ *
+ * next/script + beforeInteractive preserves that behavior
+ * without rendering raw <script> elements as React children.
+ */
+
+const motionBootstrapScript = `
+  document.documentElement.dataset.motion = "enabled";
+`;
 
 const introBootstrapScript = `
   (() => {
@@ -261,28 +278,29 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              document.documentElement.dataset.motion = "enabled";
-            `,
-          }}
-        />
-
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              introBootstrapScript,
-          }}
-        />
-      </head>
-
       <body
         className={
           plusJakartaSans.variable
         }
       >
+        <Script
+          id="natsx-motion-bootstrap"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html:
+              motionBootstrapScript,
+          }}
+        />
+
+        <Script
+          id="natsx-intro-bootstrap"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html:
+              introBootstrapScript,
+          }}
+        />
+
         <PortfolioIntro />
 
         <MotionController />

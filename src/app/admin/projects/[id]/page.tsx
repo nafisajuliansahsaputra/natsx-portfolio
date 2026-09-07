@@ -13,6 +13,10 @@ import {
   createClient,
 } from "@/lib/supabase/server";
 
+import ProjectCategoryEditor, {
+  type EditableWorkCategory,
+} from "./ProjectCategoryEditor";
+
 import ProjectCoverEditor from "./ProjectCoverEditor";
 
 import ProjectEditorForm, {
@@ -22,11 +26,14 @@ import ProjectEditorForm, {
 
 import styles from "./project-editor.module.css";
 
+
 type ProjectEditorPageProps = {
   params: Promise<{
-    id: string;
+    id:
+      string;
   }>;
 };
+
 
 type ProjectRow =
   Omit<
@@ -42,8 +49,10 @@ type ProjectRow =
       | null;
   };
 
+
 type TranslationRow = {
-  locale: string;
+  locale:
+    string;
 
   title:
     | string
@@ -66,8 +75,34 @@ type TranslationRow = {
     | null;
 };
 
+
+type WorkCategoryRow = {
+  id:
+    string;
+
+  name:
+    string;
+
+  slug:
+    string;
+
+  sort_order:
+    number;
+
+  is_visible:
+    boolean;
+};
+
+
+type ProjectCategoryRow = {
+  category_id:
+    string;
+};
+
+
 function isLocale(
-  value: string,
+  value:
+    string,
 ): value is Locale {
   return (
     value ===
@@ -78,6 +113,7 @@ function isLocale(
       "de"
   );
 }
+
 
 export default async function ProjectEditorPage({
   params,
@@ -134,6 +170,8 @@ export default async function ProjectEditorPage({
     projectResult,
     translationResult,
     sectionCountResult,
+    categoryResult,
+    projectCategoryResult,
   ] =
     await Promise.all([
       supabase
@@ -205,6 +243,46 @@ export default async function ProjectEditorPage({
           "project_id",
           id,
         ),
+
+      supabase
+        .from(
+          "work_categories",
+        )
+        .select(
+          `
+            id,
+            name,
+            slug,
+            sort_order,
+            is_visible
+          `,
+        )
+        .order(
+          "sort_order",
+          {
+            ascending:
+              true,
+          },
+        )
+        .order(
+          "created_at",
+          {
+            ascending:
+              true,
+          },
+        ),
+
+      supabase
+        .from(
+          "project_work_categories",
+        )
+        .select(
+          "category_id",
+        )
+        .eq(
+          "project_id",
+          id,
+        ),
     ]);
 
   if (
@@ -234,6 +312,22 @@ export default async function ProjectEditorPage({
   ) {
     throw new Error(
       `Gagal menghitung project section: ${sectionCountResult.error.message}`,
+    );
+  }
+
+  if (
+    categoryResult.error
+  ) {
+    throw new Error(
+      `Gagal memuat work categories: ${categoryResult.error.message}`,
+    );
+  }
+
+  if (
+    projectCategoryResult.error
+  ) {
+    throw new Error(
+      `Gagal memuat category project: ${projectCategoryResult.error.message}`,
     );
   }
 
@@ -336,6 +430,49 @@ export default async function ProjectEditorPage({
 
     translations,
   };
+
+  const workCategories:
+    EditableWorkCategory[] =
+    (
+      categoryResult.data ??
+      []
+    ).map(
+      (
+        category,
+      ) => ({
+        id:
+          category.id,
+
+        name:
+          category.name,
+
+        slug:
+          category.slug,
+
+        sortOrder:
+          category.sort_order,
+
+        isVisible:
+          category.is_visible,
+      }),
+    );
+
+  const selectedCategoryIds =
+    (
+      projectCategoryResult.data ??
+      []
+    )
+      .map(
+        (
+          relation,
+        ) =>
+          (
+            relation as ProjectCategoryRow
+          ).category_id,
+      )
+      .filter(
+        Boolean,
+      );
 
   return (
     <main
@@ -450,7 +587,8 @@ export default async function ProjectEditorPage({
               }
             >
               <p>
-                /{
+                /
+                {
                   project.slug
                 }
               </p>
@@ -477,6 +615,21 @@ export default async function ProjectEditorPage({
                     {String(
                       sectionCountResult.count ??
                         0,
+                    ).padStart(
+                      2,
+                      "0",
+                    )}
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>
+                    Categories
+                  </dt>
+
+                  <dd>
+                    {String(
+                      selectedCategoryIds.length,
                     ).padStart(
                       2,
                       "0",
@@ -525,6 +678,32 @@ export default async function ProjectEditorPage({
             }
             heroImagePath={
               heroImagePath
+            }
+          />
+        </section>
+
+        <section
+          className={
+            styles.editorSection
+          }
+        >
+          <p
+            className={
+              styles.sectionLabel
+            }
+          >
+            WORK CATEGORIES
+          </p>
+
+          <ProjectCategoryEditor
+            projectId={
+              project.id
+            }
+            categories={
+              workCategories
+            }
+            selectedCategoryIds={
+              selectedCategoryIds
             }
           />
         </section>
