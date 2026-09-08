@@ -1,7 +1,35 @@
-.imageFrame {
-  position: relative;
+/*
+ * =========================================================
+ * NATSX — PROJECT MEDIA
+ * =========================================================
+ *
+ * Media keeps the source asset exactly
+ * as it is.
+ *
+ * JPG / opaque PNG:
+ * → looks exactly like the image itself.
+ *
+ * Transparent PNG / WebP / AVIF:
+ * → alpha remains transparent.
+ * → section background remains visible.
+ *
+ * No forced white / black / secondary
+ * background is applied by the media
+ * container.
+ */
 
-  width: 100%;
+
+/* =========================
+   SINGLE IMAGE FRAME
+========================= */
+
+.imageFrame {
+  position:
+    relative;
+
+  width:
+    100%;
+
   height:
     clamp(
       360px,
@@ -9,27 +37,81 @@
       900px
     );
 
-  overflow: hidden;
+  overflow:
+    hidden;
 
+  /*
+   * IMPORTANT:
+   *
+   * Previously:
+   *
+   * background:
+   *   var(--project-secondary);
+   *
+   * That filled transparent PNG pixels
+   * with the project's secondary color.
+   *
+   * The frame now inherits the actual
+   * section underneath.
+   */
   background:
-    var(
-      --project-secondary
-    );
+    transparent !important;
 }
 
-.imageMedia {
-  width: 100% !important;
-  height: 100% !important;
 
-  max-height: none !important;
+/* =========================
+   SINGLE IMAGE MEDIA
+========================= */
+
+.imageMedia {
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+
+  max-height:
+    none !important;
 
   object-fit:
     contain !important;
+
+  /*
+   * ProjectDetail.module.css currently
+   * applies a fallback background to
+   * .imageFigure img.
+   *
+   * Explicitly neutralize it here so
+   * alpha pixels stay transparent.
+   */
+  background:
+    transparent !important;
 }
 
+
+/* =========================
+   POSITIONED MEDIA FRAME
+========================= */
+
 .positionedFrame {
-  position: relative;
+  position:
+    relative;
+
+  /*
+   * Gallery's existing CSS gives the
+   * frame --project-secondary.
+   *
+   * This class lives on the same element
+   * and intentionally removes that fill.
+   */
+  background:
+    transparent !important;
 }
+
+
+/* =========================
+   GALLERY MEDIA
+========================= */
 
 .galleryMedia {
   min-height:
@@ -37,8 +119,33 @@
 
   object-fit:
     cover !important;
+
+  /*
+   * Transparent source assets remain
+   * transparent.
+   *
+   * Opaque JPG / PNG assets are visually
+   * unchanged because their background
+   * already exists inside the image.
+   */
+  background:
+    transparent !important;
 }
 
+
+/* =========================
+   FINALE
+========================= */
+
+/*
+ * Finale behavior stays untouched.
+ *
+ * This change is intentionally scoped
+ * only to:
+ *
+ * - Single Image
+ * - Gallery
+ */
 .finaleImage {
   min-height:
     0 !important;
