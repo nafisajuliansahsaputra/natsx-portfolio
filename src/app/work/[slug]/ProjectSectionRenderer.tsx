@@ -1,3 +1,7 @@
+import type {
+  CSSProperties,
+} from "react";
+
 import Image from "next/image";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
@@ -32,9 +36,19 @@ import type {
   PublicProjectSection,
 } from "@/lib/public-projects";
 
+import {
+  getSmartBentoPlacements,
+  type SmartBentoPlacement,
+} from "@/lib/smart-bento-layout";
+
 import galleryStyles from "./ProjectGalleryBento.module.css";
 import mediaStyles from "./ProjectMedia.module.css";
 import styles from "./ProjectDetail.module.css";
+
+
+/* =========================================================
+   SHARED
+========================================================= */
 
 function getTheme(
   theme: string,
@@ -49,12 +63,16 @@ function getTheme(
   return "light";
 }
 
+
 function isAnimatedImage(
   mimeType: string,
 ) {
-  return mimeType ===
-    "image/gif";
+  return (
+    mimeType ===
+    "image/gif"
+  );
 }
+
 
 function getSectionFallbackLabel(
   sectionType: string,
@@ -96,6 +114,11 @@ function getSectionFallbackLabel(
       return copy.generic;
   }
 }
+
+
+/* =========================================================
+   BODY COPY
+========================================================= */
 
 function BodyCopy({
   body,
@@ -148,6 +171,11 @@ function BodyCopy({
     </div>
   );
 }
+
+
+/* =========================================================
+   SECTION INTRODUCTION
+========================================================= */
 
 function SectionIntroduction({
   section,
@@ -217,6 +245,11 @@ function SectionIntroduction({
     </div>
   );
 }
+
+
+/* =========================================================
+   OVERVIEW
+========================================================= */
 
 function OverviewSection({
   section,
@@ -298,6 +331,11 @@ function OverviewSection({
   );
 }
 
+
+/* =========================================================
+   NARRATIVE
+========================================================= */
+
 function NarrativeSection({
   section,
   locale,
@@ -331,6 +369,11 @@ function NarrativeSection({
     </section>
   );
 }
+
+
+/* =========================================================
+   STATEMENT
+========================================================= */
 
 function StatementSection({
   section,
@@ -392,6 +435,11 @@ function StatementSection({
     </section>
   );
 }
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
 
 function ImageSection({
   section,
@@ -510,6 +558,11 @@ function ImageSection({
   );
 }
 
+
+/* =========================================================
+   GALLERY — IMAGE SIZES
+========================================================= */
+
 function getGalleryImageSizes(
   layout:
     GalleryLayout,
@@ -539,11 +592,114 @@ function getGalleryImageSizes(
     size ===
       "tall"
   ) {
-    return "(max-width: 700px) 50vw, (max-width: 960px) 50vw, 34vw";
+    return (
+      "(max-width: 700px) 50vw, " +
+      "(max-width: 960px) 34vw, " +
+      "25vw"
+    );
   }
 
-  return "(max-width: 960px) 100vw, 67vw";
+  return (
+    "(max-width: 700px) 100vw, " +
+    "(max-width: 960px) 67vw, " +
+    "50vw"
+  );
 }
+
+
+/* =========================================================
+   SMART BENTO STYLE VARIABLES
+========================================================= */
+
+type BentoPlacementStyle =
+  CSSProperties & {
+    "--bento-tablet-column"?:
+      string;
+
+    "--bento-tablet-row"?:
+      string;
+
+    "--bento-tablet-column-span"?:
+      string;
+
+    "--bento-tablet-row-span"?:
+      string;
+
+    "--bento-mobile-column"?:
+      string;
+
+    "--bento-mobile-row"?:
+      string;
+
+    "--bento-mobile-column-span"?:
+      string;
+
+    "--bento-mobile-row-span"?:
+      string;
+  };
+
+
+function getBentoPlacementStyle(
+  tablet:
+    SmartBentoPlacement | undefined,
+
+  mobile:
+    SmartBentoPlacement | undefined,
+): BentoPlacementStyle | undefined {
+  if (
+    !tablet ||
+    !mobile
+  ) {
+    return undefined;
+  }
+
+  return {
+    "--bento-tablet-column":
+      String(
+        tablet.columnStart,
+      ),
+
+    "--bento-tablet-row":
+      String(
+        tablet.rowStart,
+      ),
+
+    "--bento-tablet-column-span":
+      String(
+        tablet.columnSpan,
+      ),
+
+    "--bento-tablet-row-span":
+      String(
+        tablet.rowSpan,
+      ),
+
+    "--bento-mobile-column":
+      String(
+        mobile.columnStart,
+      ),
+
+    "--bento-mobile-row":
+      String(
+        mobile.rowStart,
+      ),
+
+    "--bento-mobile-column-span":
+      String(
+        mobile.columnSpan,
+      ),
+
+    "--bento-mobile-row-span":
+      String(
+        mobile.rowSpan,
+      ),
+  };
+}
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
 
 function GallerySection({
   section,
@@ -581,6 +737,59 @@ function GallerySection({
     GalleryLayout =
     gallery?.layout ??
     "grid";
+
+
+  /*
+   * =====================================================
+   * SMART BENTO PACKING
+   * =====================================================
+   *
+   * Desktop:
+   * CSS tetap mempertahankan urutan
+   * editorial dari dashboard.
+   *
+   * Tablet:
+   * packer menyusun ulang posisi visual
+   * ke 3 columns.
+   *
+   * Mobile:
+   * packer menyusun ulang posisi visual
+   * ke 2 columns.
+   *
+   * Order data / DOM tidak diubah.
+   */
+
+  const gallerySizes:
+    GalleryItemSize[] =
+    gallery?.items.map(
+      (
+        item,
+      ) =>
+        item.size ??
+        "small",
+    ) ??
+    [];
+
+
+  const tabletPlacements =
+    layout ===
+    "bento"
+      ? getSmartBentoPlacements(
+          gallerySizes,
+          3,
+        )
+      : [];
+
+
+  const mobilePlacements =
+    layout ===
+    "bento"
+      ? getSmartBentoPlacements(
+          gallerySizes,
+          2,
+        )
+      : [];
+
 
   return (
     <section
@@ -625,10 +834,12 @@ function GallerySection({
                       .path,
                   );
 
+
                 const size:
                   GalleryItemSize =
                   item.size ??
                   "small";
+
 
                 const imageSizes =
                   getGalleryImageSizes(
@@ -636,6 +847,22 @@ function GallerySection({
                     size,
                     index,
                   );
+
+
+                const bentoPlacementStyle =
+                  layout ===
+                  "bento"
+                    ? getBentoPlacementStyle(
+                        tabletPlacements[
+                          index
+                        ],
+
+                        mobilePlacements[
+                          index
+                        ],
+                      )
+                    : undefined;
+
 
                 return (
                   <figure
@@ -645,6 +872,9 @@ function GallerySection({
                     }
                     data-size={
                       size
+                    }
+                    style={
+                      bentoPlacementStyle
                     }
                     data-motion-piece="item"
                   >
@@ -705,6 +935,11 @@ function GallerySection({
     </section>
   );
 }
+
+
+/* =========================================================
+   METRICS
+========================================================= */
 
 function MetricsSection({
   section,
@@ -817,6 +1052,11 @@ function MetricsSection({
   );
 }
 
+
+/* =========================================================
+   QUOTE
+========================================================= */
+
 function QuoteSection({
   section,
 }: {
@@ -896,6 +1136,11 @@ function QuoteSection({
     </section>
   );
 }
+
+
+/* =========================================================
+   FINALE
+========================================================= */
 
 function FinaleSection({
   section,
@@ -1078,6 +1323,11 @@ function FinaleSection({
     </section>
   );
 }
+
+
+/* =========================================================
+   RENDERER
+========================================================= */
 
 export default function ProjectSectionRenderer({
   section,

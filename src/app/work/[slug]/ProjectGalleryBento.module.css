@@ -1,24 +1,24 @@
 /*
  * =========================================================
- * NATSX — PROJECT GALLERY BENTO
+ * NATSX — SMART PROJECT GALLERY BENTO
  * =========================================================
  *
- * Modular geometry:
+ * Desktop:
+ * editorial order dari dashboard.
+ *
+ * Tablet / Mobile:
+ * explicit positions dihasilkan oleh
+ * Smart Bento Packer.
  *
  * SMALL = 1 × 1
  * WIDE  = 2 × 1
  * TALL  = 1 × 2
  * LARGE = 2 × 2
- *
- * Important:
- * Bento rules explicitly override the
- * legacy gallery nth-child / aspect-ratio
- * rules from ProjectDetail.module.css.
  */
 
 
 /* =========================
-   ROOT
+   ROOT / DESKTOP
 ========================= */
 
 .galleryGrid[data-layout="bento"] {
@@ -66,16 +66,6 @@
 /* =========================
    LEGACY RESET
 ========================= */
-
-/*
- * ProjectDetail.module.css punya:
- *
- * .galleryItem:nth-child(3n + 1)
- * .galleryImage ...
- *
- * Bento harus completely override
- * behavior tersebut.
- */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem:nth-child(
@@ -129,17 +119,17 @@
   padding:
     0;
 
-  justify-self:
-    stretch !important;
-
-  align-self:
-    stretch !important;
-
   display:
     flex;
 
   flex-direction:
     column;
+
+  align-self:
+    stretch !important;
+
+  justify-self:
+    stretch !important;
 
   box-sizing:
     border-box;
@@ -147,8 +137,7 @@
 
 
 /* =========================
-   SMALL
-   1 × 1
+   DESKTOP SIZES
 ========================= */
 
 .galleryGrid[data-layout="bento"]
@@ -160,12 +149,6 @@
     span 1 !important;
 }
 
-
-/* =========================
-   WIDE
-   2 × 1
-========================= */
-
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="wide"] {
   grid-column:
@@ -175,12 +158,6 @@
     span 1 !important;
 }
 
-
-/* =========================
-   TALL
-   1 × 2
-========================= */
-
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="tall"] {
   grid-column:
@@ -189,12 +166,6 @@
   grid-row:
     span 2 !important;
 }
-
-
-/* =========================
-   LARGE
-   2 × 2
-========================= */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="large"] {
@@ -209,20 +180,6 @@
 /* =========================
    MEDIA FRAME
 ========================= */
-
-/*
- * This selector intentionally has
- * higher specificity than the legacy
- * gallery selectors.
- *
- * Wide now stretches across:
- *
- * small width
- * + grid gap
- * + small width
- *
- * exactly.
- */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size]
@@ -274,10 +231,6 @@
   box-sizing:
     border-box;
 
-  /*
-   * Makes corner clipping reliable
-   * even with Next/Image absolute fill.
-   */
   clip-path:
     inset(
       0
@@ -355,7 +308,7 @@ figcaption {
 
 
 /* =========================
-   TABLET
+   TABLET — SMART PACKED
 ========================= */
 
 @media (
@@ -378,52 +331,49 @@ figcaption {
         250px
       );
 
+    grid-auto-flow:
+      row;
+
     gap:
       var(
         --bento-gap
       ) !important;
   }
 
+  /*
+   * Posisi tidak lagi ditentukan
+   * berdasarkan urutan DOM.
+   *
+   * Smart packer mengisi CSS variables
+   * ini untuk setiap tile.
+   */
   .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="small"] {
+  .galleryItem[data-size] {
     grid-column:
-      span 1 !important;
+      var(
+        --bento-tablet-column
+      )
+      /
+      span
+      var(
+        --bento-tablet-column-span
+      ) !important;
 
     grid-row:
-      span 1 !important;
-  }
-
-  .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="wide"] {
-    grid-column:
-      span 2 !important;
-
-    grid-row:
-      span 1 !important;
-  }
-
-  .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="tall"] {
-    grid-column:
-      span 1 !important;
-
-    grid-row:
-      span 2 !important;
-  }
-
-  .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="large"] {
-    grid-column:
-      span 2 !important;
-
-    grid-row:
-      span 2 !important;
+      var(
+        --bento-tablet-row
+      )
+      /
+      span
+      var(
+        --bento-tablet-row-span
+      ) !important;
   }
 }
 
 
 /* =========================
-   MOBILE
+   MOBILE — SMART PACKED
 ========================= */
 
 @media (
@@ -446,44 +396,34 @@ figcaption {
         190px
       );
 
+    grid-auto-flow:
+      row;
+
     gap:
       8px !important;
   }
 
   .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="small"] {
+  .galleryItem[data-size] {
     grid-column:
-      span 1 !important;
+      var(
+        --bento-mobile-column
+      )
+      /
+      span
+      var(
+        --bento-mobile-column-span
+      ) !important;
 
     grid-row:
-      span 1 !important;
-  }
-
-  .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="wide"] {
-    grid-column:
-      span 2 !important;
-
-    grid-row:
-      span 1 !important;
-  }
-
-  .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="tall"] {
-    grid-column:
-      span 1 !important;
-
-    grid-row:
-      span 2 !important;
-  }
-
-  .galleryGrid[data-layout="bento"]
-  .galleryItem[data-size="large"] {
-    grid-column:
-      span 2 !important;
-
-    grid-row:
-      span 2 !important;
+      var(
+        --bento-mobile-row
+      )
+      /
+      span
+      var(
+        --bento-mobile-row-span
+      ) !important;
   }
 
   .galleryGrid[data-layout="bento"]
