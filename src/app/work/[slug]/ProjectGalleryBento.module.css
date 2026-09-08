@@ -3,26 +3,37 @@
  * NATSX — PROJECT GALLERY BENTO
  * =========================================================
  *
- * Grid lama tetap ditangani oleh
- * ProjectDetail.module.css.
+ * Modular geometry:
  *
- * File ini hanya aktif ketika:
+ * SMALL = 1 × 1
+ * WIDE  = 2 × 1
+ * TALL  = 1 × 2
+ * LARGE = 2 × 2
  *
- * data-layout="bento"
+ * Important:
+ * Bento rules explicitly override the
+ * legacy gallery nth-child / aspect-ratio
+ * rules from ProjectDetail.module.css.
  */
 
 
 /* =========================
-   DESKTOP BENTO
+   ROOT
 ========================= */
 
 .galleryGrid[data-layout="bento"] {
+  --bento-gap:
+    10px;
+
+  --bento-radius:
+    14px;
+
   display:
-    grid;
+    grid !important;
 
   grid-template-columns:
     repeat(
-      12,
+      4,
       minmax(
         0,
         1fr
@@ -30,71 +41,251 @@
     ) !important;
 
   grid-auto-rows:
-    78px;
+    clamp(
+      190px,
+      20vw,
+      300px
+    );
 
   grid-auto-flow:
-    dense;
+    row;
 
   gap:
-    clamp(
-      12px,
-      1.5vw,
-      22px
+    var(
+      --bento-gap
     ) !important;
+
+  align-items:
+    stretch;
+
+  justify-items:
+    stretch;
+}
+
+
+/* =========================
+   LEGACY RESET
+========================= */
+
+/*
+ * ProjectDetail.module.css punya:
+ *
+ * .galleryItem:nth-child(3n + 1)
+ * .galleryImage ...
+ *
+ * Bento harus completely override
+ * behavior tersebut.
+ */
+
+.galleryGrid[data-layout="bento"]
+.galleryItem:nth-child(
+  3n + 1
+) {
+  grid-column:
+    auto !important;
 }
 
 .galleryGrid[data-layout="bento"]
-.galleryItem {
+.galleryItem:nth-child(
+  3n + 1
+)
+.galleryImage,
+.galleryGrid[data-layout="bento"]
+.galleryItem:not(
+  :nth-child(
+    3n + 1
+  )
+)
+.galleryImage {
+  aspect-ratio:
+    auto !important;
+}
+
+
+/* =========================
+   ITEM BASE
+========================= */
+
+.galleryGrid[data-layout="bento"]
+.galleryItem[data-size] {
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+
   min-width:
-    0;
+    0 !important;
 
   min-height:
-    0;
+    0 !important;
+
+  max-width:
+    none !important;
 
   margin:
+    0 !important;
+
+  padding:
     0;
+
+  justify-self:
+    stretch !important;
+
+  align-self:
+    stretch !important;
 
   display:
     flex;
 
   flex-direction:
     column;
+
+  box-sizing:
+    border-box;
 }
+
+
+/* =========================
+   SMALL
+   1 × 1
+========================= */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="small"] {
   grid-column:
-    span 4 !important;
+    span 1 !important;
 
   grid-row:
-    span 4;
+    span 1 !important;
 }
+
+
+/* =========================
+   WIDE
+   2 × 1
+========================= */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="wide"] {
   grid-column:
-    span 8 !important;
+    span 2 !important;
 
   grid-row:
-    span 4;
+    span 1 !important;
 }
+
+
+/* =========================
+   TALL
+   1 × 2
+========================= */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="tall"] {
   grid-column:
-    span 4 !important;
+    span 1 !important;
 
   grid-row:
-    span 8;
+    span 2 !important;
 }
+
+
+/* =========================
+   LARGE
+   2 × 2
+========================= */
 
 .galleryGrid[data-layout="bento"]
 .galleryItem[data-size="large"] {
   grid-column:
-    span 8 !important;
+    span 2 !important;
 
   grid-row:
-    span 8;
+    span 2 !important;
+}
+
+
+/* =========================
+   MEDIA FRAME
+========================= */
+
+/*
+ * This selector intentionally has
+ * higher specificity than the legacy
+ * gallery selectors.
+ *
+ * Wide now stretches across:
+ *
+ * small width
+ * + grid gap
+ * + small width
+ *
+ * exactly.
+ */
+
+.galleryGrid[data-layout="bento"]
+.galleryItem[data-size]
+.galleryImage {
+  position:
+    relative !important;
+
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+
+  min-width:
+    0 !important;
+
+  min-height:
+    0 !important;
+
+  max-width:
+    none !important;
+
+  max-height:
+    none !important;
+
+  flex:
+    1 1 0 !important;
+
+  align-self:
+    stretch !important;
+
+  justify-self:
+    stretch !important;
+
+  overflow:
+    hidden !important;
+
+  aspect-ratio:
+    auto !important;
+
+  border-radius:
+    var(
+      --bento-radius
+    ) !important;
+
+  background:
+    transparent !important;
+
+  box-sizing:
+    border-box;
+
+  /*
+   * Makes corner clipping reliable
+   * even with Next/Image absolute fill.
+   */
+  clip-path:
+    inset(
+      0
+      round
+      var(
+        --bento-radius
+      )
+    );
 }
 
 
@@ -103,39 +294,48 @@
 ========================= */
 
 .galleryGrid[data-layout="bento"]
-.galleryImage {
-  width:
-    100%;
-
-  min-width:
-    0;
-
-  min-height:
-    0;
-
-  flex:
-    1 1 auto;
-
-  overflow:
-    hidden;
-
-  aspect-ratio:
-    auto !important;
-}
-
-.galleryGrid[data-layout="bento"]
+.galleryItem[data-size]
 .galleryImage img {
+  position:
+    absolute !important;
+
+  inset:
+    0 !important;
+
   width:
     100% !important;
 
   height:
     100% !important;
 
+  min-width:
+    100% !important;
+
   min-height:
-    0 !important;
+    100% !important;
+
+  max-width:
+    none !important;
+
+  max-height:
+    none !important;
+
+  display:
+    block;
 
   object-fit:
     cover !important;
+
+  object-position:
+    center center !important;
+
+  border-radius:
+    var(
+      --bento-radius
+    ) !important;
+
+  background:
+    transparent !important;
 }
 
 
@@ -144,12 +344,13 @@
 ========================= */
 
 .galleryGrid[data-layout="bento"]
-.galleryItem figcaption {
+.galleryItem[data-size]
+figcaption {
   flex:
     0 0 auto;
 
   padding-top:
-    12px;
+    10px;
 }
 
 
@@ -157,11 +358,13 @@
    TABLET
 ========================= */
 
-@media (max-width: 960px) {
+@media (
+  max-width: 960px
+) {
   .galleryGrid[data-layout="bento"] {
     grid-template-columns:
       repeat(
-        6,
+        3,
         minmax(
           0,
           1fr
@@ -169,43 +372,52 @@
       ) !important;
 
     grid-auto-rows:
-      70px;
+      clamp(
+        170px,
+        28vw,
+        250px
+      );
+
+    gap:
+      var(
+        --bento-gap
+      ) !important;
   }
 
   .galleryGrid[data-layout="bento"]
   .galleryItem[data-size="small"] {
     grid-column:
-      span 3 !important;
+      span 1 !important;
 
     grid-row:
-      span 4;
+      span 1 !important;
   }
 
   .galleryGrid[data-layout="bento"]
   .galleryItem[data-size="wide"] {
     grid-column:
-      span 6 !important;
+      span 2 !important;
 
     grid-row:
-      span 4;
+      span 1 !important;
   }
 
   .galleryGrid[data-layout="bento"]
   .galleryItem[data-size="tall"] {
     grid-column:
-      span 3 !important;
+      span 1 !important;
 
     grid-row:
-      span 8;
+      span 2 !important;
   }
 
   .galleryGrid[data-layout="bento"]
   .galleryItem[data-size="large"] {
     grid-column:
-      span 6 !important;
+      span 2 !important;
 
     grid-row:
-      span 8;
+      span 2 !important;
   }
 }
 
@@ -214,14 +426,9 @@
    MOBILE
 ========================= */
 
-@media (max-width: 700px) {
-  /*
-   * Sengaja tetap 2 column.
-   *
-   * Kalau jadi 1 column seluruhnya,
-   * karakter Bento hilang.
-   */
-
+@media (
+  max-width: 700px
+) {
   .galleryGrid[data-layout="bento"] {
     grid-template-columns:
       repeat(
@@ -234,13 +441,13 @@
 
     grid-auto-rows:
       clamp(
-        88px,
-        24vw,
-        112px
+        140px,
+        44vw,
+        190px
       );
 
     gap:
-      10px !important;
+      8px !important;
   }
 
   .galleryGrid[data-layout="bento"]
@@ -249,7 +456,7 @@
       span 1 !important;
 
     grid-row:
-      span 2;
+      span 1 !important;
   }
 
   .galleryGrid[data-layout="bento"]
@@ -258,7 +465,7 @@
       span 2 !important;
 
     grid-row:
-      span 2;
+      span 1 !important;
   }
 
   .galleryGrid[data-layout="bento"]
@@ -267,7 +474,7 @@
       span 1 !important;
 
     grid-row:
-      span 4;
+      span 2 !important;
   }
 
   .galleryGrid[data-layout="bento"]
@@ -276,18 +483,24 @@
       span 2 !important;
 
     grid-row:
-      span 4;
+      span 2 !important;
   }
 
   .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size]
   .galleryImage {
-    aspect-ratio:
-      auto !important;
-  }
+    border-radius:
+      var(
+        --bento-radius
+      ) !important;
 
-  .galleryGrid[data-layout="bento"]
-  .galleryItem figcaption {
-    padding-top:
-      9px;
+    clip-path:
+      inset(
+        0
+        round
+        var(
+          --bento-radius
+        )
+      );
   }
 }
