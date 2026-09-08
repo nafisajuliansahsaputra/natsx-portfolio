@@ -1,0 +1,394 @@
+.layoutPanel {
+  margin:
+    0 0 28px;
+
+  padding:
+    24px;
+
+  border:
+    1px solid
+    var(--line);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--surface) 86%,
+      var(--background)
+    );
+}
+
+.layoutHeader {
+  display:
+    flex;
+
+  align-items:
+    flex-start;
+
+  justify-content:
+    space-between;
+
+  gap:
+    32px;
+
+  margin-bottom:
+    22px;
+}
+
+.layoutHeader > div {
+  display:
+    grid;
+
+  gap:
+    7px;
+}
+
+.layoutEyebrow {
+  color:
+    var(--muted);
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.08em;
+
+  text-transform:
+    uppercase;
+}
+
+.layoutTitle {
+  font-size:
+    18px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.025em;
+}
+
+.layoutDescription {
+  max-width:
+    460px;
+
+  margin:
+    0;
+
+  color:
+    var(--muted);
+
+  font-size:
+    12px;
+
+  line-height:
+    1.6;
+}
+
+.layoutOptions {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    10px;
+}
+
+.layoutButton {
+  min-height:
+    56px;
+
+  padding:
+    0 18px;
+
+  border:
+    1px solid
+    var(--line);
+
+  background:
+    transparent;
+
+  color:
+    var(--muted);
+
+  cursor:
+    pointer;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    16px;
+
+  font:
+    inherit;
+
+  transition:
+    border-color
+      180ms ease,
+    background
+      180ms ease,
+    color
+      180ms ease;
+}
+
+.layoutButton:hover {
+  border-color:
+    var(--text);
+
+  color:
+    var(--text);
+}
+
+.layoutButton[data-active="true"] {
+  border-color:
+    var(--text);
+
+  background:
+    var(--text);
+
+  color:
+    var(--surface);
+}
+
+.layoutButton strong {
+  font-size:
+    11px;
+
+  letter-spacing:
+    0.05em;
+
+  text-transform:
+    uppercase;
+}
+
+.layoutButton span {
+  font-size:
+    10px;
+
+  opacity:
+    0.7;
+}
+
+.layoutButton:disabled {
+  cursor:
+    not-allowed;
+
+  opacity:
+    0.55;
+}
+
+
+/* =========================
+   ITEM SIZE
+========================= */
+
+.sizePanel {
+  margin:
+    18px 0 0;
+
+  padding:
+    16px;
+
+  border:
+    1px solid
+    var(--line);
+
+  background:
+    var(--background);
+}
+
+.sizeHeader {
+  margin-bottom:
+    12px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    14px;
+}
+
+.sizeHeader span {
+  color:
+    var(--muted);
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.07em;
+
+  text-transform:
+    uppercase;
+}
+
+.sizeHeader small {
+  color:
+    var(--muted);
+
+  font-size:
+    9px;
+}
+
+.sizeOptions {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    7px;
+}
+
+.sizeButton {
+  min-height:
+    38px;
+
+  padding:
+    0 10px;
+
+  border:
+    1px solid
+    var(--line);
+
+  background:
+    transparent;
+
+  color:
+    var(--muted);
+
+  cursor:
+    pointer;
+
+  font:
+    inherit;
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    0.04em;
+
+  text-transform:
+    uppercase;
+
+  transition:
+    background
+      160ms ease,
+    border-color
+      160ms ease,
+    color
+      160ms ease;
+}
+
+.sizeButton:hover {
+  border-color:
+    var(--text);
+
+  color:
+    var(--text);
+}
+
+.sizeButton[data-active="true"] {
+  border-color:
+    var(--accent);
+
+  background:
+    var(--accent);
+
+  color:
+    #ffffff;
+}
+
+.sizeButton:disabled {
+  cursor:
+    not-allowed;
+
+  opacity:
+    0.5;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .layoutPanel {
+    padding:
+      18px;
+  }
+
+  .layoutHeader {
+    display:
+      grid;
+
+    gap:
+      16px;
+  }
+
+  .layoutOptions {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .layoutButton {
+    min-height:
+      52px;
+
+    padding:
+      0 13px;
+  }
+
+  .layoutButton span {
+    display:
+      none;
+  }
+
+  .sizeOptions {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      );
+  }
+}

@@ -14,6 +14,8 @@ import {
   getFinaleSectionMedia,
   getGallerySectionMedia,
   getImageSectionMedia,
+  type GalleryItemSize,
+  type GalleryLayout,
 } from "@/lib/portfolio-media";
 
 import {
@@ -30,6 +32,7 @@ import type {
   PublicProjectSection,
 } from "@/lib/public-projects";
 
+import galleryStyles from "./ProjectGalleryBento.module.css";
 import mediaStyles from "./ProjectMedia.module.css";
 import styles from "./ProjectDetail.module.css";
 
@@ -49,10 +52,8 @@ function getTheme(
 function isAnimatedImage(
   mimeType: string,
 ) {
-  return (
-    mimeType ===
-    "image/gif"
-  );
+  return mimeType ===
+    "image/gif";
 }
 
 function getSectionFallbackLabel(
@@ -103,7 +104,9 @@ function BodyCopy({
 }) {
   const paragraphs =
     body
-      .split(/\n{2,}/)
+      .split(
+        /\n{2,}/,
+      )
       .map(
         (
           paragraph,
@@ -153,7 +156,8 @@ function SectionIntroduction({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   if (
     !section.eyebrow &&
@@ -221,7 +225,8 @@ function OverviewSection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   const copy =
     getProjectMessages(
@@ -300,7 +305,8 @@ function NarrativeSection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   return (
     <section
@@ -333,7 +339,8 @@ function StatementSection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   const copy =
     getProjectMessages(
@@ -393,7 +400,8 @@ function ImageSection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   const copy =
     getProjectMessages(
@@ -502,6 +510,41 @@ function ImageSection({
   );
 }
 
+function getGalleryImageSizes(
+  layout:
+    GalleryLayout,
+
+  size:
+    GalleryItemSize,
+
+  index:
+    number,
+) {
+  if (
+    layout ===
+    "grid"
+  ) {
+    const isWideItem =
+      index % 3 ===
+      0;
+
+    return isWideItem
+      ? "100vw"
+      : "(max-width: 700px) 100vw, 50vw";
+  }
+
+  if (
+    size ===
+      "small" ||
+    size ===
+      "tall"
+  ) {
+    return "(max-width: 700px) 50vw, (max-width: 960px) 50vw, 34vw";
+  }
+
+  return "(max-width: 960px) 100vw, 67vw";
+}
+
 function GallerySection({
   section,
   locale,
@@ -509,7 +552,8 @@ function GallerySection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   const copy =
     getProjectMessages(
@@ -522,15 +566,21 @@ function GallerySection({
     );
 
   if (
-    (!gallery ||
-      gallery.items
-        .length ===
-        0) &&
+    (
+      !gallery ||
+      gallery.items.length ===
+        0
+    ) &&
     !section.heading &&
     !section.body
   ) {
     return null;
   }
+
+  const layout:
+    GalleryLayout =
+    gallery?.layout ??
+    "grid";
 
   return (
     <section
@@ -553,12 +603,12 @@ function GallerySection({
         />
 
         {gallery &&
-        gallery.items
-          .length >
+        gallery.items.length >
           0 ? (
           <div
-            className={
-              styles.galleryGrid
+            className={`${styles.galleryGrid} ${galleryStyles.galleryGrid}`}
+            data-layout={
+              layout
             }
           >
             {gallery.items.map(
@@ -575,27 +625,31 @@ function GallerySection({
                       .path,
                   );
 
-                const isWideItem =
-                  index % 3 ===
-                  0;
+                const size:
+                  GalleryItemSize =
+                  item.size ??
+                  "small";
 
                 const imageSizes =
-                  isWideItem
-                    ? "100vw"
-                    : "(max-width: 700px) 100vw, 50vw";
+                  getGalleryImageSizes(
+                    layout,
+                    size,
+                    index,
+                  );
 
                 return (
                   <figure
-                    className={
-                      styles.galleryItem
-                    }
+                    className={`${styles.galleryItem} ${galleryStyles.galleryItem}`}
                     key={
                       item.id
+                    }
+                    data-size={
+                      size
                     }
                     data-motion-piece="item"
                   >
                     <div
-                      className={`${styles.galleryImage} ${mediaStyles.positionedFrame}`}
+                      className={`${styles.galleryImage} ${mediaStyles.positionedFrame} ${galleryStyles.galleryImage}`}
                     >
                       <Image
                         src={
@@ -659,7 +713,8 @@ function MetricsSection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   const metrics =
     getMetricsSectionContent(
@@ -695,8 +750,7 @@ function MetricsSection({
           }
         />
 
-        {metrics.items
-          .length >
+        {metrics.items.length >
         0 ? (
           <div
             className={
@@ -850,7 +904,8 @@ function FinaleSection({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   const copy =
     getProjectMessages(
@@ -1031,7 +1086,8 @@ export default function ProjectSectionRenderer({
   section:
     PublicProjectSection;
 
-  locale: Locale;
+  locale:
+    Locale;
 }) {
   switch (
     section.sectionType

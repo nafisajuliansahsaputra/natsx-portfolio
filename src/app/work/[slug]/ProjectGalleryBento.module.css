@@ -1,0 +1,293 @@
+/*
+ * =========================================================
+ * NATSX — PROJECT GALLERY BENTO
+ * =========================================================
+ *
+ * Grid lama tetap ditangani oleh
+ * ProjectDetail.module.css.
+ *
+ * File ini hanya aktif ketika:
+ *
+ * data-layout="bento"
+ */
+
+
+/* =========================
+   DESKTOP BENTO
+========================= */
+
+.galleryGrid[data-layout="bento"] {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      12,
+      minmax(
+        0,
+        1fr
+      )
+    ) !important;
+
+  grid-auto-rows:
+    78px;
+
+  grid-auto-flow:
+    dense;
+
+  gap:
+    clamp(
+      12px,
+      1.5vw,
+      22px
+    ) !important;
+}
+
+.galleryGrid[data-layout="bento"]
+.galleryItem {
+  min-width:
+    0;
+
+  min-height:
+    0;
+
+  margin:
+    0;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+}
+
+.galleryGrid[data-layout="bento"]
+.galleryItem[data-size="small"] {
+  grid-column:
+    span 4 !important;
+
+  grid-row:
+    span 4;
+}
+
+.galleryGrid[data-layout="bento"]
+.galleryItem[data-size="wide"] {
+  grid-column:
+    span 8 !important;
+
+  grid-row:
+    span 4;
+}
+
+.galleryGrid[data-layout="bento"]
+.galleryItem[data-size="tall"] {
+  grid-column:
+    span 4 !important;
+
+  grid-row:
+    span 8;
+}
+
+.galleryGrid[data-layout="bento"]
+.galleryItem[data-size="large"] {
+  grid-column:
+    span 8 !important;
+
+  grid-row:
+    span 8;
+}
+
+
+/* =========================
+   IMAGE
+========================= */
+
+.galleryGrid[data-layout="bento"]
+.galleryImage {
+  width:
+    100%;
+
+  min-width:
+    0;
+
+  min-height:
+    0;
+
+  flex:
+    1 1 auto;
+
+  overflow:
+    hidden;
+
+  aspect-ratio:
+    auto !important;
+}
+
+.galleryGrid[data-layout="bento"]
+.galleryImage img {
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+
+  min-height:
+    0 !important;
+
+  object-fit:
+    cover !important;
+}
+
+
+/* =========================
+   CAPTION
+========================= */
+
+.galleryGrid[data-layout="bento"]
+.galleryItem figcaption {
+  flex:
+    0 0 auto;
+
+  padding-top:
+    12px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 960px) {
+  .galleryGrid[data-layout="bento"] {
+    grid-template-columns:
+      repeat(
+        6,
+        minmax(
+          0,
+          1fr
+        )
+      ) !important;
+
+    grid-auto-rows:
+      70px;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="small"] {
+    grid-column:
+      span 3 !important;
+
+    grid-row:
+      span 4;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="wide"] {
+    grid-column:
+      span 6 !important;
+
+    grid-row:
+      span 4;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="tall"] {
+    grid-column:
+      span 3 !important;
+
+    grid-row:
+      span 8;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="large"] {
+    grid-column:
+      span 6 !important;
+
+    grid-row:
+      span 8;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  /*
+   * Sengaja tetap 2 column.
+   *
+   * Kalau jadi 1 column seluruhnya,
+   * karakter Bento hilang.
+   */
+
+  .galleryGrid[data-layout="bento"] {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(
+          0,
+          1fr
+        )
+      ) !important;
+
+    grid-auto-rows:
+      clamp(
+        88px,
+        24vw,
+        112px
+      );
+
+    gap:
+      10px !important;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="small"] {
+    grid-column:
+      span 1 !important;
+
+    grid-row:
+      span 2;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="wide"] {
+    grid-column:
+      span 2 !important;
+
+    grid-row:
+      span 2;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="tall"] {
+    grid-column:
+      span 1 !important;
+
+    grid-row:
+      span 4;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem[data-size="large"] {
+    grid-column:
+      span 2 !important;
+
+    grid-row:
+      span 4;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryImage {
+    aspect-ratio:
+      auto !important;
+  }
+
+  .galleryGrid[data-layout="bento"]
+  .galleryItem figcaption {
+    padding-top:
+      9px;
+  }
+}
