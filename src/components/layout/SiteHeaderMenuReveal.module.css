@@ -9,20 +9,18 @@
  * CLOSE:
  * shutters leave toward the right.
  *
- * Navigation content does NOT run away
- * independently.
+ * Desktop menu composition:
  *
- * During close:
- * - numbers stay still
- * - labels stay still
- * - indicators stay still
- * - row rules stay still
- * - top rule physically travels with
- *   the first shutter
+ * - Work
+ * - About
+ * - Playground
+ * - Contact
+ * - Language
  *
- * Result:
- * every visible menu element feels
- * attached to the shutter surface.
+ * all receive the same vertical share.
+ *
+ * Mobile / tablet composition remains
+ * untouched.
  */
 
 /* =========================
@@ -364,12 +362,6 @@
 
   opacity: 0;
 
-  /*
-   * Opening begins as a collapsed line.
-   *
-   * Translation remains zero so opening
-   * still grows naturally from left.
-   */
   transform:
     translate3d(
       0,
@@ -420,22 +412,9 @@
       240ms;
 }
 
-/*
- * CLOSE:
- *
- * DO NOT:
- * - fade
- * - scale down
- * - clip
- *
- * Keep the line completely intact.
- *
- * It physically travels toward the
- * right together with shutter #1.
- *
- * This gives the same "being swept"
- * illusion as the surface underneath.
- */
+/* =========================
+   TOP RULE CLOSE
+========================= */
 
 .closing
   .nav::before {
@@ -744,9 +723,9 @@
 
   font-size:
     clamp(
-      58px,
-      6.2vw,
-      94px
+      50px,
+      5.2vw,
+      80px
     ) !important;
 
   font-weight:
@@ -1075,7 +1054,9 @@
     );
 }
 
-/* LANGUAGE STRUCTURAL LINE */
+/* =========================
+   LANGUAGE BOTTOM LINE
+========================= */
 
 .language::after {
   content: "";
@@ -1247,7 +1228,9 @@
     none !important;
 }
 
-/* FOOTER STRUCTURAL LINE */
+/* =========================
+   FOOTER STRUCTURAL LINE
+========================= */
 
 .footer::before {
   content: "";
@@ -1388,6 +1371,103 @@
       0ms;
 }
 
+/* =========================================================
+   DESKTOP — FIVE EQUAL MENU ROWS
+========================================================= */
+
+/*
+ * Language is the fifth navigation row.
+ *
+ * No independent separator underneath it
+ * on desktop. The footer keeps its own
+ * structural separator.
+ */
+.language::after {
+  display:
+    none !important;
+}
+
+@media (
+  min-width: 961px
+) {
+  /*
+   * NAV contains four equal rows.
+   *
+   * Giving NAV four fractions and
+   * LANGUAGE one fraction means:
+   *
+   * Work       = 1fr
+   * About      = 1fr
+   * Playground = 1fr
+   * Contact    = 1fr
+   * Language   = 1fr
+   *
+   * Footer keeps its natural size.
+   */
+  .inner {
+    grid-template-rows:
+      minmax(
+        0,
+        4fr
+      )
+      minmax(
+        0,
+        1fr
+      )
+      auto;
+  }
+
+  /*
+   * Language now behaves as the fifth
+   * navigation row rather than a block
+   * with its own external spacing.
+   */
+  .language {
+    min-height: 0;
+
+    height: 100%;
+
+    margin-top:
+      0;
+
+    padding-block:
+      0;
+
+    display:
+      flex;
+
+    align-items:
+      center;
+  }
+
+  /*
+   * LanguageSwitcher mobile variant has
+   * its own margin-top, padding-top and
+   * border-top.
+   *
+   * Those were responsible for the
+   * extra gap + extra horizontal rule
+   * visible above Bahasa on desktop.
+   *
+   * Remove them only inside the desktop
+   * navigation overlay.
+   */
+  .language
+    > :first-child {
+    width:
+      100%;
+
+    margin-top:
+      0 !important;
+
+    padding-top:
+      0 !important;
+
+    border-top:
+      0 !important;
+  }
+}
+
 /* =========================
    DESKTOP HOVER
 ========================= */
@@ -1471,13 +1551,16 @@
       ) !important;
   }
 
+  /*
+   * Keep language as equal fifth row
+   * even on short desktop screens.
+   */
   .language {
     margin-top:
-      14px;
+      0;
 
     padding-block:
-      14px
-      17px;
+      0;
   }
 
   .footer {
@@ -1645,6 +1728,10 @@
       ) !important;
   }
 
+  /*
+   * Existing mobile composition stays
+   * exactly as before.
+   */
   .language {
     margin-top:
       14px;
@@ -1668,10 +1755,6 @@
       470ms;
   }
 
-  /*
-   * Every visual zone follows the same
-   * physical close duration on phone.
-   */
   .closing
     .shutter,
   .closing

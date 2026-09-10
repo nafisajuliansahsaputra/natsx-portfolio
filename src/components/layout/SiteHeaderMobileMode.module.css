@@ -11,6 +11,12 @@
  * - no shell-build animation on refresh
  * - MENU ↔ CLOSE icon morph stays active
  *
+ * ALIGNMENT:
+ *
+ * - phone control follows --page-padding
+ * - desktop control follows centered
+ *   site-container edge
+ *
  * MENU STACKING:
  *
  * - page / hero / original header stay
@@ -18,17 +24,6 @@
  * - navigation overlay sits above them
  * - floating MENU / CLOSE control stays
  *   above navigation overlay
- *
- * Result:
- *
- * opening shutters naturally cover the
- * logo, header line, hero and page copy.
- *
- * Nothing suddenly disappears.
- *
- * TABLET + DESKTOP:
- *
- * - unchanged
  */
 
 /* =========================
@@ -69,27 +64,6 @@
      MENU OVERLAY STACKING
   ========================= */
 
-  /*
-   * SiteHeader's normal header inner sits
-   * around z-index 100.
-   *
-   * Navigation previously sat at 90, so
-   * the hero logo / header decoration
-   * could remain visually above it.
-   *
-   * Put the complete phone navigation at
-   * 160 instead.
-   *
-   * Floating control uses z-index 180,
-   * therefore CLOSE still remains on top.
-   *
-   * IMPORTANT:
-   * Header is NOT hidden.
-   *
-   * It stays underneath and becomes
-   * naturally covered by the horizontal
-   * shutters.
-   */
   :global(
     #mobile-navigation
   ) {
@@ -104,6 +78,19 @@
   .mobileFloatingControl {
     display:
       inline-flex !important;
+
+    /*
+     * Match the exact right edge used
+     * by site-container.
+     *
+     * Floating base CSS uses 14px on
+     * small screens, while the portfolio
+     * content uses --page-padding.
+     *
+     * This removes that mismatch.
+     */
+    right:
+      var(--page-padding) !important;
 
     opacity:
       1 !important;
@@ -141,18 +128,6 @@
      OPEN CONTROL SURFACE
   ========================= */
 
-  /*
-   * Floating mobile button normally uses
-   * a slightly transparent background.
-   *
-   * During an opened menu that can allow
-   * structural lines underneath the
-   * control to remain subtly visible.
-   *
-   * Once expanded, make the control fully
-   * opaque so it behaves like part of the
-   * navigation surface.
-   */
   .mobileFloatingControl[
     aria-expanded="true"
   ] {
@@ -221,6 +196,33 @@
   .mobileFloatingControl {
     display:
       none !important;
+  }
+}
+
+/* =========================
+   DESKTOP CONTAINER ALIGNMENT
+========================= */
+
+@media (
+  min-width: 961px
+) {
+  /*
+   * Follow the actual right edge of the
+   * centered site-container.
+   */
+  .desktopFloatingControl {
+    right:
+      max(
+        var(--page-padding),
+        calc(
+          (
+            100vw -
+            var(--container)
+          ) /
+          2 +
+          var(--page-padding)
+        )
+      ) !important;
   }
 }
 
