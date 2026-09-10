@@ -936,16 +936,14 @@ select {
  * Full mobile menu uses the
  * original 76px header height
  * so panel alignment remains exact.
+ *
+ * Logo sizing is deliberately NOT
+ * changed while the menu is open.
  */
 
 .site-header.is-menu-open
   .site-header__inner {
   min-height: 76px;
-}
-
-.site-header.is-menu-open
-  .site-logo__image {
-  height: 48px;
 }
 
   .site-header__inner {

@@ -3,15 +3,26 @@
  * NATSX — HORIZONTAL SHUTTER NAVIGATION
  * =========================================================
  *
- * Route transition:
- * vertical shutters / bottom → top.
+ * OPEN:
+ * horizontal shutters enter right → left.
  *
- * Navigation:
- * horizontal shutters / right → left.
+ * CLOSE:
+ * shutters leave toward the right.
  *
- * Structural dots + lines explicitly
- * participate in both enter AND exit
- * choreography.
+ * Navigation content does NOT run away
+ * independently.
+ *
+ * During close:
+ * - numbers stay still
+ * - labels stay still
+ * - indicators stay still
+ * - row rules stay still
+ * - top rule physically travels with
+ *   the first shutter
+ *
+ * Result:
+ * every visible menu element feels
+ * attached to the shutter surface.
  */
 
 /* =========================
@@ -49,7 +60,8 @@
 }
 
 .open {
-  opacity: 1 !important;
+  opacity:
+    1 !important;
 
   visibility:
     visible !important;
@@ -65,7 +77,8 @@
 }
 
 .closing {
-  opacity: 1 !important;
+  opacity:
+    1 !important;
 
   visibility:
     visible !important;
@@ -317,13 +330,6 @@
       )
     );
 
-  /*
-   * Static border removed.
-   *
-   * Top rule is now an animated
-   * pseudo element so it can disappear
-   * immediately when CLOSE is pressed.
-   */
   border-top:
     0 !important;
 }
@@ -358,7 +364,18 @@
 
   opacity: 0;
 
+  /*
+   * Opening begins as a collapsed line.
+   *
+   * Translation remains zero so opening
+   * still grows naturally from left.
+   */
   transform:
+    translate3d(
+      0,
+      0,
+      0
+    )
     scaleX(
       0
     );
@@ -366,7 +383,11 @@
   transform-origin:
     left center;
 
-  pointer-events: none;
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
 }
 
 .open
@@ -374,6 +395,11 @@
   opacity: 1;
 
   transform:
+    translate3d(
+      0,
+      0,
+      0
+    )
     scaleX(
       1
     );
@@ -395,38 +421,49 @@
 }
 
 /*
- * IMPORTANT:
+ * CLOSE:
  *
- * No exit delay.
- * Rule starts retracting the exact
- * frame CLOSE is pressed.
+ * DO NOT:
+ * - fade
+ * - scale down
+ * - clip
+ *
+ * Keep the line completely intact.
+ *
+ * It physically travels toward the
+ * right together with shutter #1.
+ *
+ * This gives the same "being swept"
+ * illusion as the surface underneath.
  */
+
 .closing
   .nav::before {
-  opacity: 0;
+  opacity: 1;
 
   transform:
-    scaleX(
+    translate3d(
+      104%,
+      0,
       0
+    )
+    scaleX(
+      1
     );
 
   transform-origin:
-    right center;
+    left center;
 
   transition:
-    opacity
-      90ms
-      ease
-      0ms,
     transform
-      180ms
+      500ms
       cubic-bezier(
         0.76,
         0,
         0.24,
         1
       )
-      0ms;
+      108ms;
 }
 
 /* =========================
@@ -467,14 +504,22 @@
   align-items:
     center !important;
 
-  /*
-   * Static border removed.
-   */
   border-bottom:
     0 !important;
 
   overflow:
     visible !important;
+
+  clip-path:
+    inset(
+      0
+      0
+      0
+      0
+    );
+
+  will-change:
+    clip-path;
 }
 
 /* =========================
@@ -571,39 +616,20 @@
    STRUCTURAL LINE EXIT
 ========================= */
 
-/*
- * All separators disappear together
- * with ZERO stagger on exit.
- *
- * This fixes the delayed line artefact
- * visible in the recording.
- */
 .closing
   .link::before {
-  opacity: 0;
+  opacity: 1;
 
   transform:
     scaleX(
-      0
+      1
     );
 
   transform-origin:
-    right center;
+    left center;
 
   transition:
-    opacity
-      90ms
-      ease
-      0ms,
-    transform
-      170ms
-      cubic-bezier(
-        0.76,
-        0,
-        0.24,
-        1
-      )
-      0ms !important;
+    none !important;
 }
 
 /* =========================
@@ -649,10 +675,6 @@
       );
 }
 
-/*
- * Force hover line away immediately
- * during close as well.
- */
 .closing
   .link::after {
   opacity: 0;
@@ -663,14 +685,7 @@
     );
 
   transition:
-    opacity
-      70ms
-      ease
-      0ms,
-    transform
-      120ms
-      ease
-      0ms;
+    none !important;
 }
 
 /* =========================
@@ -931,138 +946,94 @@
   .number,
 .closing
   .label {
-  opacity: 0;
+  opacity: 1;
 
   clip-path:
     inset(
       -0.16em
-      100%
+      -0.08em
       -0.16em
       -0.08em
     );
 
   transform:
     translate3d(
-      -22px,
+      0,
       0,
       0
     );
 
   transition:
-    opacity
-      150ms
-      ease,
-    clip-path
-      300ms
-      cubic-bezier(
-        0.76,
-        0,
-        0.24,
-        1
-      ),
-    transform
-      300ms
-      cubic-bezier(
-        0.76,
-        0,
-        0.24,
-        1
-      ) !important;
+    none !important;
 
   animation:
     none !important;
 }
 
-/* =========================
-   ACTIVE DOT EXIT
-========================= */
-
-/*
- * Critical fix:
- *
- * Active dot is NOT included in the
- * row's delayed text exit anymore.
- *
- * It disappears immediately when
- * CLOSE is pressed.
- */
 .closing
-  .indicator {
-  opacity: 0 !important;
+  .activeIndicator {
+  opacity:
+    1 !important;
 
   transform:
     scale(
-      0
+      1
     ) !important;
 
   transition:
-    opacity
-      70ms
-      ease-out
-      0ms,
-    transform
-      150ms
-      cubic-bezier(
-        0.76,
-        0,
-        0.24,
-        1
-      )
-      0ms !important;
+    none !important;
 
   animation:
     none !important;
 }
 
 /* =========================
-   TEXT EXIT STAGGER
+   ROW SHUTTER EXIT
 ========================= */
 
-/*
- * Only NUMBER + LABEL use reverse
- * staggering.
- *
- * Indicator intentionally excluded.
- */
+.closing
+  .link {
+  clip-path:
+    inset(
+      0
+      0
+      0
+      100%
+    );
 
-.closing
-  .link:nth-child(1)
-  .number,
-.closing
-  .link:nth-child(1)
-  .label {
-  transition-delay:
-    90ms !important;
+  transition:
+    clip-path
+      500ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      );
 }
 
 .closing
-  .link:nth-child(2)
-  .number,
-.closing
-  .link:nth-child(2)
-  .label {
+  .link:nth-child(1) {
   transition-delay:
-    60ms !important;
+    108ms;
 }
 
 .closing
-  .link:nth-child(3)
-  .number,
-.closing
-  .link:nth-child(3)
-  .label {
+  .link:nth-child(2) {
   transition-delay:
-    30ms !important;
+    72ms;
 }
 
 .closing
-  .link:nth-child(4)
-  .number,
-.closing
-  .link:nth-child(4)
-  .label {
+  .link:nth-child(3) {
   transition-delay:
-    0ms !important;
+    34ms;
+}
+
+.closing
+  .link:nth-child(4) {
+  transition-delay:
+    0ms;
 }
 
 /* =========================
@@ -1092,6 +1063,14 @@
     translate3d(
       20px,
       0,
+      0
+    );
+
+  clip-path:
+    inset(
+      0
+      0
+      0
       0
     );
 }
@@ -1141,6 +1120,14 @@
       0
     );
 
+  clip-path:
+    inset(
+      0
+      0
+      0
+      0
+    );
+
   transition:
     opacity
       260ms
@@ -1184,45 +1171,26 @@
 
 .closing
   .language {
-  opacity: 0;
+  opacity: 1;
 
   transform:
     translate3d(
-      -18px,
+      0,
       0,
       0
     );
 
-  transition:
-    opacity
-      150ms
-      ease
-      0ms,
-    transform
-      260ms
-      ease
-      0ms;
-}
-
-.closing
-  .language::after {
-  opacity: 0;
-
-  transform:
-    scaleX(
+  clip-path:
+    inset(
       0
+      0
+      0
+      100%
     );
 
-  transform-origin:
-    right center;
-
   transition:
-    opacity
-      80ms
-      ease
-      0ms,
-    transform
-      160ms
+    clip-path
+      500ms
       cubic-bezier(
         0.76,
         0,
@@ -1230,6 +1198,19 @@
         1
       )
       0ms;
+}
+
+.closing
+  .language::after {
+  opacity: 1;
+
+  transform:
+    scaleX(
+      1
+    );
+
+  transition:
+    none;
 }
 
 /* =========================
@@ -1447,6 +1428,20 @@
 
     transform-origin:
       left center;
+  }
+
+  .closing
+    .link:hover
+    .label,
+  .closing
+    .link:hover
+    .number {
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      ) !important;
   }
 }
 
@@ -1673,8 +1668,18 @@
       470ms;
   }
 
+  /*
+   * Every visual zone follows the same
+   * physical close duration on phone.
+   */
   .closing
-    .shutter {
+    .shutter,
+  .closing
+    .link,
+  .closing
+    .nav::before,
+  .closing
+    .language {
     transition-duration:
       430ms;
   }
@@ -1734,6 +1739,7 @@
 ) {
   .shutter,
   .nav::before,
+  .link,
   .link::before,
   .link::after,
   .number,
@@ -1768,11 +1774,6 @@
   .open
     .footer::before {
     opacity: 1;
-
-    transform:
-      scaleX(
-        1
-      );
   }
 
   .open
@@ -1795,18 +1796,27 @@
       none !important;
   }
 
+  .open
+    .link {
+    clip-path:
+      none;
+  }
+
   .closing
-    .indicator,
+    .link,
   .closing
-    .nav::before,
+    .language {
+    clip-path:
+      inset(
+        0
+        0
+        0
+        100%
+      ) !important;
+  }
+
   .closing
-    .link::before,
-  .closing
-    .link::after,
-  .closing
-    .language::after,
-  .closing
-    .footer::before {
+    .footer {
     opacity:
       0 !important;
   }

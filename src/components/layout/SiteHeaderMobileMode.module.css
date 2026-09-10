@@ -6,27 +6,35 @@
  * PHONE:
  *
  * - legacy header hamburger removed
- * - new floating control available from
- *   first rendered frame
+ * - dedicated floating control available
+ *   from first rendered frame
  * - no shell-build animation on refresh
  * - MENU ↔ CLOSE icon morph stays active
+ *
+ * MENU STACKING:
+ *
+ * - page / hero / original header stay
+ *   physically untouched underneath
+ * - navigation overlay sits above them
+ * - floating MENU / CLOSE control stays
+ *   above navigation overlay
+ *
+ * Result:
+ *
+ * opening shutters naturally cover the
+ * logo, header line, hero and page copy.
+ *
+ * Nothing suddenly disappears.
  *
  * TABLET + DESKTOP:
  *
  * - unchanged
- * - desktop floating control still uses
- *   the full NATSX build / unbuild motion
  */
 
 /* =========================
    DEFAULT
 ========================= */
 
-/*
- * Phone-specific floating instance is
- * hidden everywhere unless the viewport
- * enters the phone breakpoint.
- */
 .mobileFloatingControl {
   display:
     none !important;
@@ -43,13 +51,6 @@
      REMOVE OLD HAMBURGER
   ========================= */
 
-  /*
-   * Old inline header hamburger must
-   * never participate in phone layout.
-   *
-   * CSS controls this from first paint,
-   * preventing hydration flash.
-   */
   .headerMenuControl {
     display:
       none !important;
@@ -59,16 +60,41 @@
      REMOVE DESKTOP INSTANCE
   ========================= */
 
-  /*
-   * Hero-dependent floating control is
-   * desktop / tablet only.
-   *
-   * Never allow both instances to exist
-   * visually at phone width.
-   */
   .desktopFloatingControl {
     display:
       none !important;
+  }
+
+  /* =========================
+     MENU OVERLAY STACKING
+  ========================= */
+
+  /*
+   * SiteHeader's normal header inner sits
+   * around z-index 100.
+   *
+   * Navigation previously sat at 90, so
+   * the hero logo / header decoration
+   * could remain visually above it.
+   *
+   * Put the complete phone navigation at
+   * 160 instead.
+   *
+   * Floating control uses z-index 180,
+   * therefore CLOSE still remains on top.
+   *
+   * IMPORTANT:
+   * Header is NOT hidden.
+   *
+   * It stays underneath and becomes
+   * naturally covered by the horizontal
+   * shutters.
+   */
+  :global(
+    #mobile-navigation
+  ) {
+    z-index:
+      160 !important;
   }
 
   /* =========================
@@ -79,17 +105,6 @@
     display:
       inline-flex !important;
 
-    /*
-     * Immediately use the FINAL shell
-     * state.
-     *
-     * No:
-     * seed
-     * → violet fill
-     * → frame flash
-     *
-     * on mobile page refresh.
-     */
     opacity:
       1 !important;
 
@@ -123,18 +138,38 @@
   }
 
   /* =========================
-     DISABLE SHELL BUILD FX
+     OPEN CONTROL SURFACE
   ========================= */
 
   /*
-   * The purple box visible in the
-   * recording comes from the floating
-   * button's ::before construction
-   * layer.
+   * Floating mobile button normally uses
+   * a slightly transparent background.
    *
-   * Phone doesn't need it because the
-   * control is permanent.
+   * During an opened menu that can allow
+   * structural lines underneath the
+   * control to remain subtly visible.
+   *
+   * Once expanded, make the control fully
+   * opaque so it behaves like part of the
+   * navigation surface.
    */
+  .mobileFloatingControl[
+    aria-expanded="true"
+  ] {
+    background:
+      #f7f6f2 !important;
+
+    -webkit-backdrop-filter:
+      none !important;
+
+    backdrop-filter:
+      none !important;
+  }
+
+  /* =========================
+     DISABLE SHELL BUILD FX
+  ========================= */
+
   .mobileFloatingControl::before {
     opacity:
       0 !important;
@@ -146,9 +181,6 @@
       none !important;
   }
 
-  /*
-   * Disable technical frame pulse too.
-   */
   .mobileFloatingControl::after {
     opacity:
       0 !important;
@@ -164,20 +196,6 @@
      ICON RESTING STATE
   ========================= */
 
-  /*
-   * Don't wait for the normal floating
-   * control entrance delay.
-   *
-   * Icon is already ready when the page
-   * becomes visible.
-   *
-   * IMPORTANT:
-   * We only disable transition on the
-   * icon CONTAINER.
-   *
-   * Child spans remain animated, so
-   * MENU → X and X → MENU still work.
-   */
   .mobileFloatingControl
     :global(
       .site-menu-icon
@@ -200,10 +218,6 @@
 @media (
   min-width: 701px
 ) {
-  /*
-   * Phone instance doesn't exist
-   * visually above the phone breakpoint.
-   */
   .mobileFloatingControl {
     display:
       none !important;
