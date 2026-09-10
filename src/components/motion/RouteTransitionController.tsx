@@ -74,6 +74,20 @@ const desktopRevealDuration =
 const mobileRevealDuration =
   560;
 
+/*
+ * Hard refresh overlay sudah full covered
+ * sebelum hydration melalui bootstrap CSS.
+ *
+ * React hanya butuh satu beat kecil untuk
+ * mengambil ownership.
+ */
+
+const desktopRefreshCoveredDelay =
+  72;
+
+const mobileRefreshCoveredDelay =
+  56;
+
 const routeSettleDelay =
   24;
 
@@ -328,21 +342,18 @@ function getRevealDuration() {
     : desktopRevealDuration;
 }
 
+function getRefreshCoveredDelay() {
+  return window.matchMedia(
+    "(max-width: 700px)",
+  ).matches
+    ? mobileRefreshCoveredDelay
+    : desktopRefreshCoveredDelay;
+}
+
 /*
  * =========================================================
  * PROJECT COLOR UTILITIES
  * =========================================================
- *
- * Project transition content is white.
- *
- * Very light project accent colors are
- * darkened only as much as necessary to
- * keep transition content readable.
- *
- * This is the exact same treatment for:
- *
- * - Work archive → Project
- * - Project → Next Project
  */
 
 function getRelativeLuminance(
@@ -417,10 +428,6 @@ function getReadableTransitionAccent(
       /^#([0-9a-f]{6})$/i,
     );
 
-  /*
-   * Preserve other valid CSS color
-   * formats instead of discarding them.
-   */
   if (!match) {
     return (
       color ||
@@ -458,9 +465,6 @@ function getReadableTransitionAccent(
       16,
     );
 
-  /*
-   * Already safe with white content.
-   */
   if (
     getWhiteContrast(
       red,
@@ -472,11 +476,6 @@ function getReadableTransitionAccent(
     return color;
   }
 
-  /*
-   * Preserve hue while mixing toward
-   * the portfolio foreground until
-   * white content has enough contrast.
-   */
   const targetRed =
     17;
 
@@ -552,27 +551,6 @@ function getReadableTransitionAccent(
  * =========================================================
  * PROJECT TRANSITION HINT
  * =========================================================
- *
- * There are currently two project-entry
- * surfaces:
- *
- * 1. Work archive row
- *
- *    accent:
- *    --row-accent
- *
- * 2. Next Project handoff
- *
- *    accent:
- *    --next-project-accent
- *
- * CSS custom properties inherit, so the
- * Next Project accent can be read from
- * the clicked anchor even though it is
- * assigned to its parent section.
- *
- * This keeps one single transition
- * pipeline for both navigation paths.
  */
 
 function getProjectTransitionHint(
@@ -586,18 +564,6 @@ function getProjectTransitionHint(
       )
       ?.textContent
       ?.trim();
-
-  /*
-   * =========================
-   * PROJECT NUMBER
-   * =========================
-   *
-   * Work archive:
-   * first direct span of row.
-   *
-   * Next Project:
-   * section's data-next-project-number.
-   */
 
   const archiveNumber =
     anchor
@@ -621,22 +587,6 @@ function getProjectTransitionHint(
   const number =
     nextProjectNumber ||
     archiveNumber;
-
-  /*
-   * =========================
-   * DESTINATION ACCENT
-   * =========================
-   *
-   * Work row:
-   * --row-accent
-   *
-   * Next Project:
-   * --next-project-accent
-   *
-   * We check inline values first, then
-   * computed values so inherited custom
-   * properties are supported too.
-   */
 
   const inlineRowAccent =
     anchor.style
@@ -722,23 +672,27 @@ export default function RouteTransitionController() {
       "forward",
     );
 
+  /*
+   * Current pathname is already known
+   * during initial render.
+   *
+   * This is especially important for
+   * hard refresh because bootstrap CSS
+   * can display correct route copy before
+   * React transition state starts.
+   */
+
   const [
     meta,
     setMeta,
   ] =
     useState<TransitionMeta>(
-      initialMeta,
+      () =>
+        getTransitionMeta(
+          pathname,
+        ),
     );
 
-  /*
-   * Scoped transition accent.
-   *
-   * null:
-   * normal NATSX violet.
-   *
-   * project navigation:
-   * accent of the DESTINATION project.
-   */
   const [
     transitionAccent,
     setTransitionAccent,
@@ -755,6 +709,11 @@ export default function RouteTransitionController() {
   const expectedPathRef =
     useRef<string | null>(
       null,
+    );
+
+  const hasHandledRefreshRef =
+    useRef(
+      false,
     );
 
   const navigationTimerRef =
@@ -810,6 +769,9 @@ export default function RouteTransitionController() {
 
       delete root.dataset
         .routeTransitionHold;
+
+      delete root.dataset
+        .routeRefresh;
     }, []);
 
   const resetTransition =
@@ -827,10 +789,6 @@ export default function RouteTransitionController() {
         "idle",
       );
 
-      /*
-       * Project accent is scoped only to
-       * one transition lifecycle.
-       */
       setTransitionAccent(
         null,
       );
@@ -838,6 +796,181 @@ export default function RouteTransitionController() {
       clearDocumentState,
       clearTimers,
     ]);
+
+  /*
+   * =========================================================
+   * HARD REFRESH HANDOFF
+   * =========================================================
+   *
+   * Root bootstrap memberi:
+   *
+   * data-route-refresh="pending"
+   *
+   * sebelum hydration.
+   *
+   * intro-motion.css membuat overlay
+   * transition sudah berada pada full
+   * covered state.
+   *
+   * IMPORTANT:
+   *
+   * Tidak ada state React yang diubah
+   * secara synchronous dari effect.
+   *
+   * Ownership dipindahkan pada timer task
+   * berikutnya agar compatible dengan
+   * react-hooks/set-state-in-effect.
+   */
+
+  useEffect(() => {
+    if (
+      hasHandledRefreshRef.current
+    ) {
+      return;
+    }
+
+    hasHandledRefreshRef.current =
+      true;
+
+    const root =
+      document.documentElement;
+
+    if (
+      isAdminPath(
+        pathname,
+      )
+    ) {
+      delete root.dataset
+        .routeRefresh;
+
+      return;
+    }
+
+    if (
+      root.dataset
+        .routeRefresh !==
+      "pending"
+    ) {
+      return;
+    }
+
+    const prefersReducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+    if (
+      prefersReducedMotion ||
+      !isTransitionRoute(
+        pathname,
+      )
+    ) {
+      delete root.dataset
+        .routeRefresh;
+
+      delete root.dataset
+        .routeTransitionHold;
+
+      return;
+    }
+
+    /*
+     * Bootstrap CSS masih menahan full
+     * screen selama timer 0ms ini.
+     *
+     * Jadi tidak ada flash / gap.
+     */
+
+    navigationTimerRef.current =
+      window.setTimeout(
+        () => {
+          navigationTimerRef.current =
+            null;
+
+          /*
+           * Initial state sudah:
+           *
+           * meta      = current pathname
+           * accent    = null
+           * direction = forward
+           *
+           * Jadi tidak perlu setMeta /
+           * setDirection /
+           * setTransitionAccent di sini.
+           */
+
+          phaseRef.current =
+            "covering";
+
+          setPhase(
+            "covering",
+          );
+
+          /*
+           * Beri satu covered beat sebelum
+           * menjalankan reveal.
+           */
+
+          revealTimerRef.current =
+            window.setTimeout(
+              () => {
+                /*
+                 * React sekarang sudah
+                 * memiliki full-covered
+                 * .covering state.
+                 *
+                 * Bootstrap marker aman
+                 * dilepas.
+                 */
+
+                delete root.dataset
+                  .routeRefresh;
+
+                /*
+                 * Samakan lifecycle dengan
+                 * normal client transition:
+                 *
+                 * destination entrance mulai
+                 * saat shutters mulai reveal.
+                 */
+
+                delete root.dataset
+                  .routeTransitionHold;
+
+                phaseRef.current =
+                  "revealing";
+
+                setPhase(
+                  "revealing",
+                );
+
+                revealTimerRef.current =
+                  window.setTimeout(
+                    resetTransition,
+                    getRevealDuration(),
+                  );
+              },
+              getRefreshCoveredDelay(),
+            );
+        },
+        0,
+      );
+
+    safetyTimerRef.current =
+      window.setTimeout(
+        resetTransition,
+        navigationSafetyTimeout,
+      );
+  }, [
+    pathname,
+    resetTransition,
+  ]);
+
+  /*
+   * =========================================================
+   * ROOT DATASET SYNC
+   * =========================================================
+   */
 
   useEffect(() => {
     phaseRef.current =
@@ -868,6 +1001,12 @@ export default function RouteTransitionController() {
   }, [
     phase,
   ]);
+
+  /*
+   * =========================================================
+   * SCROLL INTERCEPTION
+   * =========================================================
+   */
 
   useEffect(() => {
     if (
@@ -912,6 +1051,12 @@ export default function RouteTransitionController() {
   }, [
     phase,
   ]);
+
+  /*
+   * =========================================================
+   * CLIENT-SIDE LINK NAVIGATION
+   * =========================================================
+   */
 
   useEffect(() => {
     if (
@@ -1078,18 +1223,11 @@ export default function RouteTransitionController() {
       expectedPathRef.current =
         destinationPath;
 
-      /* =====================================================
-         DESTINATION META + DESTINATION PROJECT ACCENT
-      ===================================================== */
-
       const fallbackMeta =
         getTransitionMeta(
           destination.pathname,
         );
 
-      /*
-       * Work archive project card.
-       */
       const isWorkArchiveProject =
         currentBasePath ===
           "/work" &&
@@ -1100,13 +1238,6 @@ export default function RouteTransitionController() {
           '[data-motion-scroll="work-project"]',
         );
 
-      /*
-       * Project Detail → Next Project.
-       *
-       * This is the path that previously
-       * fell through to the default NATSX
-       * violet.
-       */
       const isNextProjectHandoff =
         currentBasePath.startsWith(
           "/work/",
@@ -1118,11 +1249,6 @@ export default function RouteTransitionController() {
           "[data-next-project-link]",
         );
 
-      /*
-       * Both project-entry surfaces now
-       * use exactly the same transition
-       * hint + readability pipeline.
-       */
       if (
         isWorkArchiveProject ||
         isNextProjectHandoff
@@ -1210,6 +1336,12 @@ export default function RouteTransitionController() {
     router,
   ]);
 
+  /*
+   * =========================================================
+   * CLIENT ROUTE DESTINATION HANDOFF
+   * =========================================================
+   */
+
   useEffect(() => {
     const expectedPath =
       expectedPathRef.current;
@@ -1266,6 +1398,12 @@ export default function RouteTransitionController() {
     resetTransition,
   ]);
 
+  /*
+   * =========================================================
+   * CLEANUP
+   * =========================================================
+   */
+
   useEffect(() => {
     return () => {
       clearTimers();
@@ -1302,14 +1440,6 @@ export default function RouteTransitionController() {
         " ",
       );
 
-  /*
-   * Route transition CSS already uses
-   * var(--accent).
-   *
-   * Override it only on this overlay,
-   * so the actual page theme never gets
-   * mutated during navigation.
-   */
   const rootStyle =
     transitionAccent
       ? ({

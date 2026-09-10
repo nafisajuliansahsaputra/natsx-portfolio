@@ -24,8 +24,24 @@ import TypedWordmark from "./TypedWordmark";
 
 import styles from "./PortfolioIntro.module.css";
 
+/*
+ * IMPORTANT:
+ *
+ * Intro choreography was authored against
+ * the original NATSX geometry:
+ *
+ * 1110 × 380
+ *
+ * Do NOT reuse the mutable header PNG here.
+ *
+ * The header asset may have different
+ * intrinsic dimensions / transparent bounds,
+ * while the intro's diagonal handoff and
+ * clipping geometry depend on the original
+ * 1110 × 380 coordinate system.
+ */
 const FULL_LOGO_SOURCE =
-  "/images/branding/natsx-logo-black.png";
+  "/images/branding/natsx-logo-motion-ready.svg";
 
 const SYMBOL_SOURCE =
   "/images/branding/natsx-symbol.png";
@@ -546,6 +562,7 @@ export default function PortfolioIntro() {
                   }
                   alt=""
                   fill
+                  priority
                   unoptimized
                   sizes="760px"
                   className={

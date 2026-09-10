@@ -2,8 +2,6 @@ import type {
   Metadata,
 } from "next";
 
-import Script from "next/script";
-
 import {
   Plus_Jakarta_Sans,
 } from "next/font/google";
@@ -96,17 +94,35 @@ const description =
 
 /*
  * =========================================================
- * PRE-HYDRATION BOOTSTRAP
+ * PRE-PAINT BOOTSTRAP
  * =========================================================
  *
- * These scripts must run before React hydration.
+ * IMPORTANT:
  *
- * next/script + beforeInteractive preserves that behavior
- * without rendering raw <script> elements as React children.
+ * These scripts intentionally live
+ * directly inside <head>.
+ *
+ * They must execute while the browser
+ * is still parsing the document,
+ * BEFORE body / public-page content can
+ * receive its first paint.
+ *
+ * This prevents:
+ *
+ * homepage hero
+ *      ↓
+ * one-frame flash
+ *      ↓
+ * Portfolio Intro
+ *
+ * Both motion state and intro state are
+ * therefore resolved before the page is
+ * visually exposed.
  */
 
 const motionBootstrapScript = `
-  document.documentElement.dataset.motion = "enabled";
+  document.documentElement.dataset.motion =
+    "enabled";
 `;
 
 const introBootstrapScript = `
@@ -130,7 +146,9 @@ const introBootstrapScript = `
         );
 
       const forceIntro =
-        params.get("intro") === "1";
+        params.get(
+          "intro"
+        ) === "1";
 
       const seen =
         sessionStorage.getItem(
@@ -149,13 +167,30 @@ const introBootstrapScript = `
           ? "pending"
           : "done";
 
-      if (shouldShow) {
+      /*
+       * Mark the public-entry session
+       * immediately.
+       *
+       * The intro is therefore a
+       * first-entry experience, not a
+       * refresh experience.
+       */
+      if (
+        shouldShow
+      ) {
         sessionStorage.setItem(
           "natsx:portfolio-intro:v5",
           "1"
         );
       }
     } catch {
+      /*
+       * Safe public fallback:
+       *
+       * if sessionStorage cannot be read,
+       * allow the intro instead of exposing
+       * the destination page underneath.
+       */
       root.dataset.intro =
         isAdmin
           ? "done"
@@ -278,29 +313,36 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <body
-        className={
-          plusJakartaSans.variable
-        }
-      >
-        <Script
-          id="natsx-motion-bootstrap"
-          strategy="beforeInteractive"
+      <head>
+        {/*
+         * ===============================================
+         * MUST RUN BEFORE BODY FIRST PAINT
+         * ===============================================
+         *
+         * Do not move these scripts back to
+         * next/script in the body.
+         */}
+
+        <script
           dangerouslySetInnerHTML={{
             __html:
               motionBootstrapScript,
           }}
         />
 
-        <Script
-          id="natsx-intro-bootstrap"
-          strategy="beforeInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html:
               introBootstrapScript,
           }}
         />
+      </head>
 
+      <body
+        className={
+          plusJakartaSans.variable
+        }
+      >
         <PortfolioIntro />
 
         <MotionController />

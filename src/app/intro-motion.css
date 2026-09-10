@@ -1,53 +1,306 @@
 /*
- * =========================
+ * =========================================================
  * NATSX INTRO → SITE BRIDGE
- * =========================
+ * =========================================================
  *
- * Intro dapat muncul pada first
- * entry ke PUBLIC route mana pun.
+ * Dua entry system:
  *
- * Selama phase:
+ * FIRST ENTRY
+ * → Portfolio Intro
+ *
+ * HARD REFRESH SETELAH INTRO SEEN
+ * → Route Transition
+ *
+ * Intro TIDAK boleh flash hanya karena
+ * React server-render sempat membawa
+ * phase="running".
+ */
+
+/* =========================================================
+   INTRO VISIBILITY — FAIL CLOSED
+========================================================= */
+
+/*
+ * Default:
+ *
+ * intro selalu hidden.
+ *
+ * Ia hanya boleh terlihat ketika bootstrap
+ * secara EXPLICIT memberi salah satu state:
  *
  * pending
  * running
- *
- * entrance animation halaman tujuan
- * ditahan.
- *
- * Begitu phase berubah menjadi:
- *
  * exit
  *
- * halaman tujuan mulai menjalankan
- * entrance motion di belakang split
- * panels.
- *
- * Jadi intro dan destination page
- * overlap secara visual.
+ * Jadi apabila data-intro belum sempat
+ * terpasang pada satu paint frame,
+ * intro tetap tidak akan bocor.
  */
 
-/* =========================
-   INTRO VISIBILITY
-========================= */
+[data-portfolio-intro] {
+  display:
+    none !important;
+}
+
+html[data-intro="pending"]
+  [data-portfolio-intro],
+html[data-intro="running"]
+  [data-portfolio-intro],
+html[data-intro="exit"]
+  [data-portfolio-intro] {
+  display:
+    block !important;
+}
 
 html[data-intro="done"]
   [data-portfolio-intro] {
-  display: none;
+  display:
+    none !important;
 }
+
+/* =========================================================
+   PAGE LOCK — INTRO
+========================================================= */
+
+html[data-intro="pending"],
+html[data-intro="running"],
+html[data-intro="exit"] {
+  overflow:
+    hidden;
+}
+
+/* =========================================================
+   HARD REFRESH BOOTSTRAP
+========================================================= */
+
+/*
+ * Browser hard refresh berbeda dengan
+ * client-side route navigation.
+ *
+ * Pada refresh, React belum sempat
+ * menjalankan RouteTransitionController.
+ *
+ * Bootstrap di layout memberi:
+ *
+ * data-route-refresh="pending"
+ *
+ * sebelum hydration.
+ *
+ * Overlay route transition yang memang
+ * sudah ada di DOM kemudian dipaksa ke
+ * FULL COVERED STATE.
+ *
+ * Setelah React hidup, controller mengganti
+ * phase menjadi revealing.
+ *
+ * Hasil:
+ *
+ * REFRESH
+ *
+ * [purple full transition]
+ *        ↓
+ * editorial shutters reveal page
+ *
+ * Tidak ada PortfolioIntro.
+ * Tidak ada flash halaman mentah.
+ */
 
 /* =========================
    PAGE LOCK
 ========================= */
 
-html[data-intro="pending"],
-html[data-intro="running"],
-html[data-intro="exit"] {
-  overflow: hidden;
+html[data-route-refresh="pending"] {
+  overflow:
+    hidden;
 }
 
 /* =========================
-   MOTION BRIDGE
+   ROOT
 ========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer] {
+  visibility:
+    visible !important;
+
+  pointer-events:
+    auto !important;
+}
+
+/* =========================
+   RAIL
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:first-child {
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    ) !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   SHUTTERS
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(2)
+  > span {
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    ) !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   CONTENT ROOT
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3) {
+  opacity:
+    1 !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   TOP + BOTTOM
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:first-child,
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:nth-child(3) {
+  opacity:
+    1 !important;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    ) !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   TOP / BOTTOM AXIS
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:first-child::after,
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:nth-child(3)::before {
+  transform:
+    scaleX(
+      1
+    ) !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   TITLE INDEX
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:nth-child(2)
+  > span:first-child {
+  opacity:
+    0.68 !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:nth-child(2)
+  > div:nth-child(2)
+  > span {
+  opacity:
+    1 !important;
+
+  clip-path:
+    inset(
+      -0.22em
+      -0.12em
+      -0.22em
+      -0.12em
+    ) !important;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    ) !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================
+   TITLE AXIS
+========================= */
+
+html[data-route-refresh="pending"]
+  [data-route-transition-layer]
+  > div:nth-child(3)
+  > div
+  > div:nth-child(2)
+  > span:nth-child(3) {
+  transform:
+    scaleX(
+      1
+    ) !important;
+
+  transition:
+    none !important;
+}
+
+/* =========================================================
+   INTRO → PAGE MOTION BRIDGE
+========================================================= */
 
 @media (
   prefers-reduced-motion:
@@ -58,18 +311,13 @@ html[data-intro="exit"] {
    * HOLD PAGE ENTRANCE
    * =========================
    *
-   * Semua entrance animation
-   * public page ditahan selama
-   * intro masih full-screen.
+   * Semua entrance animation public page
+   * ditahan selama intro masih full-screen.
    *
-   * IMPORTANT:
+   * data-intro="exit" sengaja tidak masuk.
    *
-   * data-intro="exit"
-   * sengaja TIDAK dimasukkan.
-   *
-   * Saat phase menjadi exit,
-   * page entrance mulai berjalan
-   * di belakang split panels.
+   * Begitu intro exit, destination page
+   * mulai bergerak di belakang split panels.
    */
 
   html[data-intro="pending"]
@@ -134,17 +382,8 @@ html[data-intro="exit"] {
    * HOLD HOMEPAGE PORTRAIT
    * =========================
    *
-   * Homepage portrait punya
-   * transition sendiri, bukan
-   * hero keyframe biasa.
-   *
-   * Karena itu portrait perlu
-   * ditahan secara terpisah.
-   *
-   * Begitu phase = exit,
-   * rule otomatis lepas dan
-   * portrait menjalankan
-   * transition aslinya.
+   * Homepage portrait memakai transition
+   * sendiri, bukan hero keyframe biasa.
    */
 
   html[data-intro="pending"]
