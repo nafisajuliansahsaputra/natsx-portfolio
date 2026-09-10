@@ -116,20 +116,11 @@ export default function SiteHeader() {
       null,
     );
 
-  /*
-   * Desktop / tablet floating control.
-   */
   const desktopFloatingMenuButtonRef =
     useRef<HTMLButtonElement>(
       null,
     );
 
-  /*
-   * Phone floating control.
-   *
-   * This exists independently from
-   * hero scroll state.
-   */
   const mobileFloatingMenuButtonRef =
     useRef<HTMLButtonElement>(
       null,
@@ -152,17 +143,14 @@ export default function SiteHeader() {
       href === "/work"
     ) {
       return (
-        basePath ===
-          "/work" ||
+        basePath === "/work" ||
         basePath.startsWith(
           "/work/",
         )
       );
     }
 
-    return (
-      basePath === href
-    );
+    return basePath === href;
   }
 
   const activeNavigationItem =
@@ -179,6 +167,32 @@ export default function SiteHeader() {
       : activeNavigationItem
           ?.number ??
         "00";
+
+  /*
+   * =========================================================
+   * MENU VISUAL STATE
+   * =========================================================
+   *
+   * menuOpen:
+   * controls whether the navigation is
+   * still physically mounted / active.
+   *
+   * menuClosing:
+   * keeps the panel alive while its
+   * shutter choreography finishes.
+   *
+   * menuVisualOpen:
+   * controls only the MENU ↔ CLOSE
+   * appearance.
+   *
+   * Therefore clicking CLOSE immediately
+   * starts the reverse button morph even
+   * though the panel itself remains alive
+   * during its closing sequence.
+   */
+  const menuVisualOpen =
+    menuOpen &&
+    !menuClosing;
 
   /* =========================
      VIEWPORT HELPERS
@@ -206,10 +220,6 @@ export default function SiteHeader() {
 
   const getActiveMenuButton =
     useCallback(() => {
-      /*
-       * Phone always owns the permanent
-       * floating navigation control.
-       */
       if (
         isPhoneViewport()
       ) {
@@ -219,9 +229,6 @@ export default function SiteHeader() {
         );
       }
 
-      /*
-       * Desktop / tablet after hero.
-       */
       if (
         headerCompactRef.current
       ) {
@@ -231,12 +238,6 @@ export default function SiteHeader() {
         );
       }
 
-      /*
-       * Normal header button.
-       *
-       * Used mainly by tablet before
-       * compact state.
-       */
       return (
         headerMenuButtonRef
           .current
@@ -258,6 +259,14 @@ export default function SiteHeader() {
         return;
       }
 
+      /*
+       * This immediately makes
+       * menuVisualOpen false.
+       *
+       * Button reverse motion therefore
+       * begins on the exact frame CLOSE
+       * is pressed.
+       */
       setMenuClosing(
         true,
       );
@@ -333,7 +342,6 @@ export default function SiteHeader() {
       menuOpen
     ) {
       closeMenu();
-
       return;
     }
 
@@ -470,18 +478,6 @@ export default function SiteHeader() {
 
     const updateCompactState =
       () => {
-        /*
-         * =========================
-         * PHONE
-         * =========================
-         *
-         * Phone does NOT participate
-         * in hero-based floating state.
-         *
-         * Its dedicated floating button
-         * is always available through
-         * CSS from initial page render.
-         */
         if (
           window
             .matchMedia(
@@ -501,12 +497,6 @@ export default function SiteHeader() {
 
           return;
         }
-
-        /*
-         * =========================
-         * DESKTOP / TABLET
-         * =========================
-         */
 
         let shouldCompact =
           false;
@@ -698,7 +688,7 @@ export default function SiteHeader() {
           const firstLink =
             mobilePanelRef.current
               ?.querySelector<HTMLElement>(
-                'a[href]:not([tabindex="-1"])',
+                'nav a[href]:not([tabindex="-1"])',
               );
 
           firstLink?.focus();
@@ -946,6 +936,7 @@ export default function SiteHeader() {
     [
       floatStyles.button,
       mobileStyles.desktopFloatingControl,
+      mobileStyles.menuToggleControl,
 
       headerCompact &&
       !floatingLeaving
@@ -956,28 +947,22 @@ export default function SiteHeader() {
         ? floatStyles.leaving
         : "",
 
-      menuOpen
-        ? floatStyles.open
+      menuVisualOpen
+        ? mobileStyles.menuToggleOpen
         : "",
     ]
       .filter(Boolean)
       .join(" ");
 
-  /*
-   * Phone floating control always owns
-   * floatStyles.visible.
-   *
-   * Therefore its original NATSX build
-   * animation plays immediately on load.
-   */
   const mobileFloatingButtonClassName =
     [
       floatStyles.button,
       floatStyles.visible,
       mobileStyles.mobileFloatingControl,
+      mobileStyles.menuToggleControl,
 
-      menuOpen
-        ? floatStyles.open
+      menuVisualOpen
+        ? mobileStyles.menuToggleOpen
         : "",
     ]
       .filter(Boolean)
@@ -1092,13 +1077,6 @@ export default function SiteHeader() {
             <LanguageSwitcher />
           </div>
 
-          {/* =========================
-              LEGACY HEADER MENU
-
-              Hidden permanently on
-              phones through CSS.
-          ========================= */}
-
           <button
             ref={
               headerMenuButtonRef
@@ -1107,7 +1085,7 @@ export default function SiteHeader() {
               "site-menu-label",
               mobileStyles.headerMenuControl,
 
-              menuOpen
+              menuVisualOpen
                 ? "is-open"
                 : "",
             ]
@@ -1201,6 +1179,42 @@ export default function SiteHeader() {
               menuStyles.shutter
             }
           />
+        </div>
+
+        {/* =========================
+            HOME LOGO
+        ========================= */}
+
+        <div
+          className={`site-container ${menuStyles.homeHeader}`}
+        >
+          <Link
+            href={
+              localizePath(
+                "/",
+                locale,
+              )
+            }
+            className={`site-logo ${menuStyles.homeLogo}`}
+            aria-label={
+              copy.accessibility
+                .home
+            }
+            onClick={
+              closeMenu
+            }
+            tabIndex={
+              menuOpen &&
+              !menuClosing
+                ? 0
+                : -1
+            }
+          >
+            <span
+              className="site-logo__image"
+              aria-hidden="true"
+            />
+          </Link>
         </div>
 
         <div
@@ -1398,13 +1412,11 @@ export default function SiteHeader() {
         </span>
 
         <span
-          className={
-            floatStyles.word
-          }
+          className={`${floatStyles.word} ${mobileStyles.menuToggleWord}`}
           aria-hidden="true"
         >
           {
-            menuOpen
+            menuVisualOpen
               ? "CLOSE"
               : "MENU"
           }
@@ -1422,9 +1434,6 @@ export default function SiteHeader() {
 
       {/* =========================
           PHONE FLOATING CONTROL
-
-          Always present.
-          Never waits for scroll.
       ========================= */}
 
       <button
@@ -1462,13 +1471,11 @@ export default function SiteHeader() {
         </span>
 
         <span
-          className={
-            floatStyles.word
-          }
+          className={`${floatStyles.word} ${mobileStyles.menuToggleWord}`}
           aria-hidden="true"
         >
           {
-            menuOpen
+            menuVisualOpen
               ? "CLOSE"
               : "MENU"
           }

@@ -1,6 +1,6 @@
 /*
  * =========================================================
- * NATSX — PHONE NAVIGATION MODE
+ * NATSX — NAVIGATION CONTROL MODE
  * =========================================================
  *
  * PHONE:
@@ -8,8 +8,6 @@
  * - legacy header hamburger removed
  * - dedicated floating control available
  *   from first rendered frame
- * - no shell-build animation on refresh
- * - MENU ↔ CLOSE icon morph stays active
  *
  * ALIGNMENT:
  *
@@ -17,13 +15,34 @@
  * - desktop control follows centered
  *   site-container edge
  *
- * MENU STACKING:
+ * MENU TOGGLE MOTION:
  *
- * - page / hero / original header stay
- *   physically untouched underneath
- * - navigation overlay sits above them
- * - floating MENU / CLOSE control stays
- *   above navigation overlay
+ * MENU ↔ CLOSE
+ *
+ * The exact same two horizontal strokes
+ * physically morph into the X.
+ *
+ * No replacement graphic.
+ * No erase → redraw trick.
+ * No separate X pseudo-elements.
+ *
+ * CLOSED:
+ *
+ * long horizontal line
+ * accent dot
+ * short horizontal line
+ *
+ * OPEN:
+ *
+ * those SAME two horizontal lines
+ * travel toward center while rotating
+ * into the X.
+ *
+ * CLOSE:
+ *
+ * the SAME X strokes rotate back
+ * and return to their horizontal
+ * resting positions.
  */
 
 /* =========================
@@ -35,9 +54,825 @@
     none !important;
 }
 
+/* =========================================================
+   REVERSIBLE MENU TOGGLE
+========================================================= */
+
+.menuToggleControl {
+  /*
+   * Scope hook.
+   *
+   * Geometry continues to come from
+   * SiteHeaderFloating.module.css.
+   */
+}
+
+/* =========================================================
+   WORD SWAP
+========================================================= */
+
+.menuToggleWord {
+  position:
+    relative !important;
+
+  width:
+    46px;
+
+  min-width:
+    46px !important;
+
+  height:
+    10px;
+
+  display:
+    block;
+
+  overflow:
+    hidden;
+
+  color:
+    transparent !important;
+
+  clip-path:
+    none !important;
+
+  transform:
+    none !important;
+}
+
+.menuToggleWord::before,
+.menuToggleWord::after {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  color:
+    #ffffff;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.11em;
+
+  white-space:
+    nowrap;
+
+  pointer-events:
+    none;
+
+  will-change:
+    opacity,
+    transform,
+    clip-path;
+}
+
 /* =========================
-   PHONE
+   MENU — RESTING
 ========================= */
+
+.menuToggleWord::before {
+  content:
+    "MENU";
+
+  opacity:
+    1;
+
+  clip-path:
+    inset(
+      0
+      0
+      0
+      0
+    );
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  /*
+   * CLOSE → MENU
+   */
+  transition:
+    opacity
+      170ms
+      ease
+      115ms,
+    clip-path
+      300ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      85ms,
+    transform
+      340ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      75ms;
+}
+
+/* =========================
+   CLOSE — HIDDEN
+========================= */
+
+.menuToggleWord::after {
+  content:
+    "CLOSE";
+
+  opacity:
+    0;
+
+  clip-path:
+    inset(
+      100%
+      0
+      0
+      0
+    );
+
+  transform:
+    translate3d(
+      0,
+      7px,
+      0
+    );
+
+  transition:
+    opacity
+      120ms
+      ease
+      0ms,
+    clip-path
+      230ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      )
+      0ms,
+    transform
+      260ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      )
+      0ms;
+}
+
+/* =========================
+   MENU → CLOSE WORD
+========================= */
+
+.menuToggleOpen
+  .menuToggleWord::before {
+  opacity:
+    0;
+
+  clip-path:
+    inset(
+      0
+      0
+      100%
+      0
+    );
+
+  transform:
+    translate3d(
+      0,
+      -7px,
+      0
+    );
+
+  transition:
+    opacity
+      120ms
+      ease
+      0ms,
+    clip-path
+      230ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      )
+      0ms,
+    transform
+      260ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      )
+      0ms;
+}
+
+.menuToggleOpen
+  .menuToggleWord::after {
+  opacity:
+    1;
+
+  clip-path:
+    inset(
+      0
+      0
+      0
+      0
+    );
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+
+  transition:
+    opacity
+      180ms
+      ease
+      110ms,
+    clip-path
+      310ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      80ms,
+    transform
+      340ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      70ms;
+}
+
+/* =========================================================
+   ICON CONTAINER
+========================================================= */
+
+.menuToggleControl
+  :global(
+    .site-menu-icon
+  ),
+.headerMenuControl
+  :global(
+    .site-menu-icon
+  ) {
+  position:
+    relative !important;
+
+  width:
+    24px !important;
+
+  height:
+    20px !important;
+
+  display:
+    block !important;
+
+  overflow:
+    visible !important;
+
+  opacity:
+    1 !important;
+
+  transform:
+    none !important;
+
+  /*
+   * Existing one-direction icon animation
+   * from Floating.module.css must not
+   * control this morph.
+   */
+  animation:
+    none !important;
+}
+
+/* =========================================================
+   ALL THREE ORIGINAL PIECES
+========================================================= */
+
+.menuToggleControl
+  :global(
+    .site-menu-icon
+  )
+  > span,
+.headerMenuControl
+  :global(
+    .site-menu-icon
+  )
+  > span {
+  position:
+    absolute !important;
+
+  left:
+    auto !important;
+
+  transform-origin:
+    center center !important;
+
+  animation:
+    none !important;
+
+  will-change:
+    top,
+    right,
+    width,
+    transform,
+    opacity;
+}
+
+/* =========================================================
+   LINE 01 — LONG TOP LINE
+========================================================= */
+
+.menuToggleControl
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(1),
+.headerMenuControl
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(1) {
+  top:
+    2px !important;
+
+  right:
+    0 !important;
+
+  width:
+    23px !important;
+
+  height:
+    1.6px !important;
+
+  border-radius:
+    999px !important;
+
+  background:
+    currentColor !important;
+
+  opacity:
+    1 !important;
+
+  transform:
+    rotate(
+      0deg
+    )
+    scaleX(
+      1
+    ) !important;
+
+  /*
+   * X → MENU
+   *
+   * Rotation, position and geometry
+   * reverse simultaneously.
+   *
+   * This is what makes the X visibly
+   * become the horizontal line again.
+   */
+  transition:
+    top
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    right
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    width
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    transform
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    opacity
+      180ms
+      ease !important;
+}
+
+/* =========================================================
+   ACCENT DOT
+========================================================= */
+
+.menuToggleControl
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(2),
+.headerMenuControl
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(2) {
+  top:
+    7.5px !important;
+
+  right:
+    1px !important;
+
+  width:
+    5px !important;
+
+  height:
+    5px !important;
+
+  border-radius:
+    50% !important;
+
+  background:
+    var(--accent) !important;
+
+  opacity:
+    1 !important;
+
+  transform:
+    scale(
+      1
+    ) !important;
+
+  /*
+   * On CLOSE → MENU the punctuation
+   * returns slightly after both lines
+   * begin opening back up.
+   */
+  transition:
+    opacity
+      170ms
+      ease
+      180ms,
+    transform
+      300ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      145ms !important;
+}
+
+/* =========================================================
+   LINE 02 — SHORT BOTTOM LINE
+========================================================= */
+
+.menuToggleControl
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(3),
+.headerMenuControl
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(3) {
+  top:
+    16px !important;
+
+  right:
+    0 !important;
+
+  width:
+    14px !important;
+
+  height:
+    1.6px !important;
+
+  border-radius:
+    999px !important;
+
+  background:
+    currentColor !important;
+
+  opacity:
+    1 !important;
+
+  transform:
+    rotate(
+      0deg
+    )
+    scaleX(
+      1
+    ) !important;
+
+  /*
+   * Same movement system as line 01.
+   *
+   * This line doesn't disappear and get
+   * replaced. It stretches while moving
+   * upward and rotates directly into
+   * the second X stroke.
+   */
+  transition:
+    top
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    right
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    width
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    transform
+      420ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    opacity
+      180ms
+      ease !important;
+}
+
+/* =========================================================
+   MENU → X
+========================================================= */
+
+/*
+ * THIS IS THE CORE MORPH.
+ *
+ * Both existing horizontal strokes:
+ *
+ * - move toward y = 9px
+ * - become equal width
+ * - align to equal right position
+ * - rotate ±45deg
+ *
+ * ALL FOUR properties animate together.
+ *
+ * Therefore there is never a visual cut
+ * between the MENU icon and X.
+ */
+
+/* =========================
+   LINE 01 → X
+========================= */
+
+.menuToggleOpen
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(1),
+.headerMenuControl:global(
+    .is-open
+  )
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(1) {
+  top:
+    9px !important;
+
+  right:
+    1px !important;
+
+  width:
+    22px !important;
+
+  opacity:
+    1 !important;
+
+  transform:
+    rotate(
+      45deg
+    )
+    scaleX(
+      1
+    ) !important;
+
+  /*
+   * MENU → X
+   *
+   * Smooth but decisive.
+   * No artificial staging.
+   */
+  transition:
+    top
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    right
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    width
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    transform
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    opacity
+      180ms
+      ease !important;
+}
+
+/* =========================
+   DOT → OUT
+========================= */
+
+.menuToggleOpen
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(2),
+.headerMenuControl:global(
+    .is-open
+  )
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(2) {
+  opacity:
+    0 !important;
+
+  transform:
+    scale(
+      0
+    ) !important;
+
+  transition:
+    opacity
+      110ms
+      ease
+      0ms,
+    transform
+      220ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      )
+      0ms !important;
+}
+
+/* =========================
+   LINE 02 → X
+========================= */
+
+.menuToggleOpen
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(3),
+.headerMenuControl:global(
+    .is-open
+  )
+  :global(
+    .site-menu-icon
+  )
+  > span:nth-child(3) {
+  top:
+    9px !important;
+
+  right:
+    1px !important;
+
+  width:
+    22px !important;
+
+  opacity:
+    1 !important;
+
+  transform:
+    rotate(
+      -45deg
+    )
+    scaleX(
+      1
+    ) !important;
+
+  transition:
+    top
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    right
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    width
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    transform
+      430ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    opacity
+      180ms
+      ease !important;
+}
+
+/* =========================================================
+   PHONE
+========================================================= */
 
 @media (
   max-width: 700px
@@ -79,16 +914,6 @@
     display:
       inline-flex !important;
 
-    /*
-     * Match the exact right edge used
-     * by site-container.
-     *
-     * Floating base CSS uses 14px on
-     * small screens, while the portfolio
-     * content uses --page-padding.
-     *
-     * This removes that mismatch.
-     */
     right:
       var(--page-padding) !important;
 
@@ -167,10 +992,12 @@
       none !important;
   }
 
-  /* =========================
-     ICON RESTING STATE
-  ========================= */
-
+  /*
+   * Container stays still.
+   *
+   * The two strokes INSIDE remain free
+   * to morph between MENU and X.
+   */
   .mobileFloatingControl
     :global(
       .site-menu-icon
@@ -206,10 +1033,6 @@
 @media (
   min-width: 961px
 ) {
-  /*
-   * Follow the actual right edge of the
-   * centered site-container.
-   */
   .desktopFloatingControl {
     right:
       max(
@@ -226,9 +1049,33 @@
   }
 }
 
-/* =========================
+/* =========================================================
    REDUCED MOTION
-========================= */
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .menuToggleWord::before,
+  .menuToggleWord::after,
+  .menuToggleControl
+    :global(
+      .site-menu-icon
+    )
+    > span,
+  .headerMenuControl
+    :global(
+      .site-menu-icon
+    )
+    > span {
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+  }
+}
 
 @media (
   max-width: 700px

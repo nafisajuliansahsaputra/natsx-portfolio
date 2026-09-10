@@ -9,7 +9,7 @@
  * CLOSE:
  * shutters leave toward the right.
  *
- * Desktop menu composition:
+ * MENU COMPOSITION:
  *
  * - Work
  * - About
@@ -17,10 +17,18 @@
  * - Contact
  * - Language
  *
- * all receive the same vertical share.
+ * All five navigation zones receive the
+ * same vertical share on desktop,
+ * tablet and mobile.
  *
- * Mobile / tablet composition remains
- * untouched.
+ * Footer remains a separate natural-size
+ * zone underneath the five menu rows.
+ *
+ * HOME LOGO:
+ *
+ * The menu Home logo does not pop/fade.
+ * It follows the shutter reveal / close
+ * choreography.
  */
 
 /* =========================
@@ -260,6 +268,130 @@
 }
 
 /* =========================
+   HOME LOGO WIPE
+========================= */
+
+.homeHeader {
+  position:
+    absolute;
+
+  z-index:
+    4;
+
+  top:
+    0;
+
+  right:
+    0;
+
+  left:
+    0;
+
+  min-height:
+    88px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  pointer-events:
+    none;
+
+  clip-path:
+    inset(
+      0
+      0
+      0
+      100%
+    );
+
+  will-change:
+    clip-path;
+}
+
+.open
+  .homeHeader {
+  clip-path:
+    inset(
+      0
+      0
+      0
+      0
+    );
+
+  transition:
+    clip-path
+      560ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      )
+      0ms;
+}
+
+.closing
+  .homeHeader {
+  clip-path:
+    inset(
+      0
+      0
+      0
+      100%
+    );
+
+  transition:
+    clip-path
+      500ms
+      cubic-bezier(
+        0.76,
+        0,
+        0.24,
+        1
+      )
+      108ms;
+}
+
+/* =========================
+   HOME LOGO
+========================= */
+
+.homeLogo {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  opacity:
+    1;
+
+  visibility:
+    visible;
+
+  pointer-events:
+    auto;
+
+  transform:
+    none;
+
+  animation:
+    none;
+
+  transition:
+    none;
+}
+
+/* =========================
    CONTENT LAYOUT
 ========================= */
 
@@ -276,12 +408,19 @@
   min-height:
     0 !important;
 
+  /*
+   * IMPORTANT:
+   *
+   * Previous desktop composition could
+   * push this down to 132px.
+   *
+   * 96px brings the first structural line
+   * closer to the logo / CLOSE control,
+   * while giving more vertical room to
+   * all five navigation zones below.
+   */
   padding-top:
-    clamp(
-      108px,
-      11.5vh,
-      132px
-    ) !important;
+    96px !important;
 
   padding-bottom:
     clamp(
@@ -296,9 +435,12 @@
   grid-template-rows:
     minmax(
       0,
+      4fr
+    )
+    minmax(
+      0,
       1fr
     )
-    auto
     auto;
 
   align-content:
@@ -411,10 +553,6 @@
       )
       240ms;
 }
-
-/* =========================
-   TOP RULE CLOSE
-========================= */
 
 .closing
   .nav::before {
@@ -540,10 +678,6 @@
     none;
 }
 
-/* =========================
-   STRUCTURAL LINE ENTER
-========================= */
-
 .open
   .link::before {
   opacity: 1;
@@ -590,10 +724,6 @@
   transition-delay:
     420ms;
 }
-
-/* =========================
-   STRUCTURAL LINE EXIT
-========================= */
 
 .closing
   .link::before {
@@ -1022,19 +1152,26 @@
 .language {
   position: relative;
 
+  min-height:
+    0;
+
+  height:
+    100%;
+
   margin-top:
-    clamp(
-      20px,
-      2.4vh,
-      30px
-    );
+    0;
 
   padding-block:
-    18px
-    22px;
+    0;
 
   border-bottom:
     0;
+
+  display:
+    flex;
+
+  align-items:
+    center;
 
   opacity: 0;
 
@@ -1054,40 +1191,24 @@
     );
 }
 
-/* =========================
-   LANGUAGE BOTTOM LINE
-========================= */
+.language
+  > :first-child {
+  width:
+    100%;
+
+  margin-top:
+    0 !important;
+
+  padding-top:
+    0 !important;
+
+  border-top:
+    0 !important;
+}
 
 .language::after {
-  content: "";
-
-  position: absolute;
-
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  height: 1px;
-
-  background:
-    rgba(
-      26,
-      26,
-      26,
-      0.1
-    );
-
-  opacity: 0;
-
-  transform:
-    scaleX(
-      0
-    );
-
-  transform-origin:
-    left center;
-
-  pointer-events: none;
+  display:
+    none !important;
 }
 
 .open
@@ -1125,31 +1246,6 @@
       470ms;
 }
 
-.open
-  .language::after {
-  opacity: 1;
-
-  transform:
-    scaleX(
-      1
-    );
-
-  transition:
-    opacity
-      160ms
-      ease
-      500ms,
-    transform
-      430ms
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      )
-      480ms;
-}
-
 .closing
   .language {
   opacity: 1;
@@ -1179,19 +1275,6 @@
         1
       )
       0ms;
-}
-
-.closing
-  .language::after {
-  opacity: 1;
-
-  transform:
-    scaleX(
-      1
-    );
-
-  transition:
-    none;
 }
 
 /* =========================
@@ -1227,10 +1310,6 @@
   animation:
     none !important;
 }
-
-/* =========================
-   FOOTER STRUCTURAL LINE
-========================= */
 
 .footer::before {
   content: "";
@@ -1371,103 +1450,6 @@
       0ms;
 }
 
-/* =========================================================
-   DESKTOP — FIVE EQUAL MENU ROWS
-========================================================= */
-
-/*
- * Language is the fifth navigation row.
- *
- * No independent separator underneath it
- * on desktop. The footer keeps its own
- * structural separator.
- */
-.language::after {
-  display:
-    none !important;
-}
-
-@media (
-  min-width: 961px
-) {
-  /*
-   * NAV contains four equal rows.
-   *
-   * Giving NAV four fractions and
-   * LANGUAGE one fraction means:
-   *
-   * Work       = 1fr
-   * About      = 1fr
-   * Playground = 1fr
-   * Contact    = 1fr
-   * Language   = 1fr
-   *
-   * Footer keeps its natural size.
-   */
-  .inner {
-    grid-template-rows:
-      minmax(
-        0,
-        4fr
-      )
-      minmax(
-        0,
-        1fr
-      )
-      auto;
-  }
-
-  /*
-   * Language now behaves as the fifth
-   * navigation row rather than a block
-   * with its own external spacing.
-   */
-  .language {
-    min-height: 0;
-
-    height: 100%;
-
-    margin-top:
-      0;
-
-    padding-block:
-      0;
-
-    display:
-      flex;
-
-    align-items:
-      center;
-  }
-
-  /*
-   * LanguageSwitcher mobile variant has
-   * its own margin-top, padding-top and
-   * border-top.
-   *
-   * Those were responsible for the
-   * extra gap + extra horizontal rule
-   * visible above Bahasa on desktop.
-   *
-   * Remove them only inside the desktop
-   * navigation overlay.
-   */
-  .language
-    > :first-child {
-    width:
-      100%;
-
-    margin-top:
-      0 !important;
-
-    padding-top:
-      0 !important;
-
-    border-top:
-      0 !important;
-  }
-}
-
 /* =========================
    DESKTOP HOVER
 ========================= */
@@ -1534,6 +1516,10 @@
 ) and (
   max-height: 820px
 ) {
+  /*
+   * Slightly tighter only on genuinely
+   * short desktop viewports.
+   */
   .inner {
     padding-top:
       92px !important;
@@ -1549,18 +1535,6 @@
         5.4vw,
         72px
       ) !important;
-  }
-
-  /*
-   * Keep language as equal fifth row
-   * even on short desktop screens.
-   */
-  .language {
-    margin-top:
-      0;
-
-    padding-block:
-      0;
   }
 
   .footer {
@@ -1579,6 +1553,16 @@
 @media (
   max-width: 960px
 ) {
+  .homeHeader {
+    min-height:
+      76px;
+  }
+
+  /*
+   * Tablet already had a more balanced
+   * header composition, so keep its
+   * current value.
+   */
   .inner {
     padding-top:
       92px !important;
@@ -1614,15 +1598,6 @@
         8vw,
         66px
       ) !important;
-  }
-
-  .language {
-    margin-top:
-      18px;
-
-    padding-block:
-      16px
-      20px;
   }
 
   .footer {
@@ -1690,6 +1665,11 @@
 @media (
   max-width: 700px
 ) {
+  .homeHeader {
+    min-height:
+      76px;
+  }
+
   .inner {
     padding-top:
       82px !important;
@@ -1728,19 +1708,6 @@
       ) !important;
   }
 
-  /*
-   * Existing mobile composition stays
-   * exactly as before.
-   */
-  .language {
-    margin-top:
-      14px;
-
-    padding-block:
-      14px
-      17px;
-  }
-
   .footer {
     margin-top:
       14px !important;
@@ -1750,13 +1717,17 @@
   }
 
   .open
-    .shutter {
+    .shutter,
+  .open
+    .homeHeader {
     transition-duration:
       470ms;
   }
 
   .closing
     .shutter,
+  .closing
+    .homeHeader,
   .closing
     .link,
   .closing
@@ -1794,15 +1765,6 @@
       ) !important;
   }
 
-  .language {
-    margin-top:
-      10px;
-
-    padding-block:
-      10px
-      12px;
-  }
-
   .footer {
     margin-top:
       10px !important;
@@ -1821,6 +1783,7 @@
     reduce
 ) {
   .shutter,
+  .homeHeader,
   .nav::before,
   .link,
   .link::before,
@@ -1829,7 +1792,6 @@
   .label,
   .indicator,
   .language,
-  .language::after,
   .footer,
   .footer::before {
     animation:
@@ -1842,9 +1804,23 @@
       0ms !important;
   }
 
+  .homeLogo {
+    animation:
+      none !important;
+
+    transition:
+      none !important;
+  }
+
   .open
     .shutter {
     transform:
+      none;
+  }
+
+  .open
+    .homeHeader {
+    clip-path:
       none;
   }
 
@@ -1853,10 +1829,9 @@
   .open
     .link::before,
   .open
-    .language::after,
-  .open
     .footer::before {
-    opacity: 1;
+    opacity:
+      1;
   }
 
   .open
@@ -1885,6 +1860,8 @@
       none;
   }
 
+  .closing
+    .homeHeader,
   .closing
     .link,
   .closing
