@@ -288,7 +288,7 @@ export default function AboutIdentityPortrait({
           />
 
           <Image
-            src="/images/natsx-portrait-hero-bases.png"
+            src="/images/natsx-abt.png"
             alt={
               site.person
             }
