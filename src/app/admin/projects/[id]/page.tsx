@@ -24,16 +24,18 @@ import ProjectEditorForm, {
   type EditableProjectTranslation,
 } from "./ProjectEditorForm";
 
+import ProjectTranslationGenerator from "./ProjectTranslationGenerator";
+
 import styles from "./project-editor.module.css";
 
+export const maxDuration =
+  60;
 
 type ProjectEditorPageProps = {
   params: Promise<{
-    id:
-      string;
+    id: string;
   }>;
 };
-
 
 type ProjectRow =
   Omit<
@@ -49,10 +51,8 @@ type ProjectRow =
       | null;
   };
 
-
 type TranslationRow = {
-  locale:
-    string;
+  locale: string;
 
   title:
     | string
@@ -76,14 +76,11 @@ type TranslationRow = {
 };
 
 type ProjectCategoryRow = {
-  category_id:
-    string;
+  category_id: string;
 };
 
-
 function isLocale(
-  value:
-    string,
+  value: string,
 ): value is Locale {
   return (
     value ===
@@ -94,7 +91,6 @@ function isLocale(
       "de"
   );
 }
-
 
 export default async function ProjectEditorPage({
   params,
@@ -321,15 +317,15 @@ export default async function ProjectEditorPage({
       Locale,
       EditableProjectTranslation | null
     > = {
-      en:
-        null,
+    en:
+      null,
 
-      id:
-        null,
+    id:
+      null,
 
-      de:
-        null,
-    };
+    de:
+      null,
+  };
 
   for (
     const row of
@@ -448,8 +444,10 @@ export default async function ProjectEditorPage({
           relation,
         ) =>
           (
-            relation as ProjectCategoryRow
-          ).category_id,
+            relation as
+              ProjectCategoryRow
+          )
+            .category_id,
       )
       .filter(
         Boolean,
@@ -685,6 +683,29 @@ export default async function ProjectEditorPage({
             }
             selectedCategoryIds={
               selectedCategoryIds
+            }
+          />
+        </section>
+
+        <section
+          className={
+            styles.editorSection
+          }
+        >
+          <p
+            className={
+              styles.sectionLabel
+            }
+          >
+            TRANSLATION ENGINE
+          </p>
+
+          <ProjectTranslationGenerator
+            projectId={
+              project.id
+            }
+            projectTitle={
+              project.title
             }
           />
         </section>
