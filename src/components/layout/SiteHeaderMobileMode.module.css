@@ -9,40 +9,20 @@
  * - dedicated floating control available
  *   from first rendered frame
  *
- * ALIGNMENT:
+ * TABLET / PHONE COMPACT CONTROL:
  *
- * - phone control follows --page-padding
- * - desktop control follows centered
- *   site-container edge
+ * - no MENU / CLOSE text
+ * - no numeric index
+ * - icon remains perfectly centered
  *
- * MENU TOGGLE MOTION:
+ * DESKTOP:
  *
- * MENU ↔ CLOSE
+ * - keeps index + MENU / CLOSE text
  *
- * The exact same two horizontal strokes
- * physically morph into the X.
+ * ICON:
  *
- * No replacement graphic.
- * No erase → redraw trick.
- * No separate X pseudo-elements.
- *
- * CLOSED:
- *
- * long horizontal line
- * accent dot
- * short horizontal line
- *
- * OPEN:
- *
- * those SAME two horizontal lines
- * travel toward center while rotating
- * into the X.
- *
- * CLOSE:
- *
- * the SAME X strokes rotate back
- * and return to their horizontal
- * resting positions.
+ * Same two physical horizontal strokes
+ * morph continuously into the X.
  */
 
 /* =========================
@@ -56,16 +36,7 @@
 
 /* =========================================================
    REVERSIBLE MENU TOGGLE
-========================================================= */
-
-.menuToggleControl {
-  /*
-   * Scope hook.
-   *
-   * Geometry continues to come from
-   * SiteHeaderFloating.module.css.
-   */
-}
+========================================================= *
 
 /* =========================================================
    WORD SWAP
@@ -167,9 +138,6 @@
       0
     );
 
-  /*
-   * CLOSE → MENU
-   */
   transition:
     opacity
       170ms
@@ -373,11 +341,6 @@
   transform:
     none !important;
 
-  /*
-   * Existing one-direction icon animation
-   * from Floating.module.css must not
-   * control this morph.
-   */
   animation:
     none !important;
 }
@@ -459,15 +422,6 @@
       1
     ) !important;
 
-  /*
-   * X → MENU
-   *
-   * Rotation, position and geometry
-   * reverse simultaneously.
-   *
-   * This is what makes the X visibly
-   * become the horizontal line again.
-   */
   transition:
     top
       420ms
@@ -546,11 +500,6 @@
       1
     ) !important;
 
-  /*
-   * On CLOSE → MENU the punctuation
-   * returns slightly after both lines
-   * begin opening back up.
-   */
   transition:
     opacity
       170ms
@@ -610,14 +559,6 @@
       1
     ) !important;
 
-  /*
-   * Same movement system as line 01.
-   *
-   * This line doesn't disappear and get
-   * replaced. It stretches while moving
-   * upward and rotates directly into
-   * the second X stroke.
-   */
   transition:
     top
       420ms
@@ -660,22 +601,6 @@
    MENU → X
 ========================================================= */
 
-/*
- * THIS IS THE CORE MORPH.
- *
- * Both existing horizontal strokes:
- *
- * - move toward y = 9px
- * - become equal width
- * - align to equal right position
- * - rotate ±45deg
- *
- * ALL FOUR properties animate together.
- *
- * Therefore there is never a visual cut
- * between the MENU icon and X.
- */
-
 /* =========================
    LINE 01 → X
 ========================= */
@@ -712,12 +637,6 @@
       1
     ) !important;
 
-  /*
-   * MENU → X
-   *
-   * Smooth but decisive.
-   * No artificial staging.
-   */
   transition:
     top
       430ms
@@ -871,6 +790,61 @@
 }
 
 /* =========================================================
+   TABLET + PHONE COMPACT BUTTON
+========================================================= */
+
+/*
+ * Floating CSS originally intends
+ * controls <= 960px to be icon-only.
+ *
+ * menuToggleWord had re-enabled itself
+ * afterwards, so explicitly remove it
+ * again here.
+ */
+
+@media (
+  max-width: 960px
+) {
+  .menuToggleWord {
+    display:
+      none !important;
+
+    width:
+      0 !important;
+
+    min-width:
+      0 !important;
+
+    height:
+      0 !important;
+
+    overflow:
+      hidden !important;
+  }
+
+  /*
+   * Floating.module.css gives the icon
+   * margin-left:auto because desktop
+   * has index + word before it.
+   *
+   * Compact controls have no text, so
+   * reset that margin and center glyph.
+   */
+
+  .menuToggleControl
+    :global(
+      .site-menu-icon
+    ),
+  .headerMenuControl
+    :global(
+      .site-menu-icon
+    ) {
+    margin-left:
+      0 !important;
+  }
+}
+
+/* =========================================================
    PHONE
 ========================================================= */
 
@@ -915,7 +889,27 @@
       inline-flex !important;
 
     right:
-      var(--page-padding) !important;
+      var(
+        --page-padding
+      ) !important;
+
+    min-width:
+      48px !important;
+
+    width:
+      48px !important;
+
+    height:
+      48px !important;
+
+    padding:
+      0 !important;
+
+    gap:
+      0 !important;
+
+    justify-content:
+      center !important;
 
     opacity:
       1 !important;
@@ -947,6 +941,27 @@
 
     will-change:
       auto;
+  }
+
+  /*
+   * First direct span is the route index.
+   *
+   * Keep phone control purely graphical:
+   *
+   * no 00
+   * no MENU
+   * no CLOSE
+   *
+   * Accessibility is still provided by
+   * aria-label on the actual button.
+   */
+
+  .mobileFloatingControl
+    > span:nth-child(1),
+  .mobileFloatingControl
+    .menuToggleWord {
+    display:
+      none !important;
   }
 
   /* =========================
@@ -992,16 +1007,17 @@
       none !important;
   }
 
-  /*
-   * Container stays still.
-   *
-   * The two strokes INSIDE remain free
-   * to morph between MENU and X.
-   */
+  /* =========================
+     CENTER GLYPH
+  ========================= */
+
   .mobileFloatingControl
     :global(
       .site-menu-icon
     ) {
+    margin-left:
+      0 !important;
+
     opacity:
       1 !important;
 
@@ -1036,14 +1052,20 @@
   .desktopFloatingControl {
     right:
       max(
-        var(--page-padding),
+        var(
+          --page-padding
+        ),
         calc(
           (
             100vw -
-            var(--container)
+            var(
+              --container
+            )
           ) /
           2 +
-          var(--page-padding)
+          var(
+            --page-padding
+          )
         )
       ) !important;
   }
