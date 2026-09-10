@@ -326,10 +326,34 @@ test(
       "/",
     );
 
+    /*
+     * SiteHeader intentionally renders
+     * separate controls for header,
+     * desktop floating, and phone
+     * floating navigation.
+     *
+     * Only one is visible at this
+     * viewport.
+     *
+     * Selecting :visible prevents
+     * Playwright strict-mode ambiguity
+     * without weakening the actual
+     * accessibility contract.
+     */
     const menuButton =
       page.locator(
-        'button[aria-controls="mobile-navigation"]',
+        'button[aria-controls="mobile-navigation"]:visible',
       );
+
+    await expect(
+      menuButton,
+    ).toHaveCount(
+      1,
+    );
+
+    await expect(
+      menuButton,
+    ).toBeVisible();
 
     await menuButton.click();
 

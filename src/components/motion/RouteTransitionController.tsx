@@ -51,7 +51,7 @@ type TransitionMeta = {
   kind: TransitionKind;
 };
 
-type ArchiveProjectHint = {
+type ProjectTransitionHint = {
   meta: TransitionMeta;
   accent: string | null;
 };
@@ -329,16 +329,20 @@ function getRevealDuration() {
 }
 
 /*
- * =========================
+ * =========================================================
  * PROJECT COLOR UTILITIES
- * =========================
+ * =========================================================
  *
- * Project colors can be anything.
+ * Project transition content is white.
  *
- * Route transition typography is white,
- * therefore very light project colors
- * need a slightly darker transition
- * treatment to preserve readability.
+ * Very light project accent colors are
+ * darkened only as much as necessary to
+ * keep transition content readable.
+ *
+ * This is the exact same treatment for:
+ *
+ * - Work archive → Project
+ * - Project → Next Project
  */
 
 function getRelativeLuminance(
@@ -414,9 +418,8 @@ function getReadableTransitionAccent(
     );
 
   /*
-   * If a project ever uses another
-   * valid CSS color format, don't
-   * destroy it.
+   * Preserve other valid CSS color
+   * formats instead of discarding them.
    */
   if (!match) {
     return (
@@ -470,10 +473,9 @@ function getReadableTransitionAccent(
   }
 
   /*
-   * Preserve hue as much as possible,
-   * then gradually mix it toward the
-   * portfolio foreground until white
-   * content has enough contrast.
+   * Preserve hue while mixing toward
+   * the portfolio foreground until
+   * white content has enough contrast.
    */
   const targetRed =
     17;
@@ -547,26 +549,36 @@ function getReadableTransitionAccent(
 }
 
 /*
- * =========================
- * WORK ARCHIVE → PROJECT HINT
- * =========================
+ * =========================================================
+ * PROJECT TRANSITION HINT
+ * =========================================================
  *
- * No new markup is required.
+ * There are currently two project-entry
+ * surfaces:
  *
- * Existing Work row already contains:
- * - project number
- * - h2 title
- * - --row-accent
+ * 1. Work archive row
  *
- * We read those values directly from
- * the clicked anchor so transition
- * content matches the exact project.
+ *    accent:
+ *    --row-accent
+ *
+ * 2. Next Project handoff
+ *
+ *    accent:
+ *    --next-project-accent
+ *
+ * CSS custom properties inherit, so the
+ * Next Project accent can be read from
+ * the clicked anchor even though it is
+ * assigned to its parent section.
+ *
+ * This keeps one single transition
+ * pipeline for both navigation paths.
  */
 
-function getArchiveProjectHint(
+function getProjectTransitionHint(
   anchor: HTMLAnchorElement,
   fallbackMeta: TransitionMeta,
-): ArchiveProjectHint {
+): ProjectTransitionHint {
   const title =
     anchor
       .querySelector(
@@ -576,10 +588,18 @@ function getArchiveProjectHint(
       ?.trim();
 
   /*
-   * First direct span in the current
-   * Work row is the project number.
+   * =========================
+   * PROJECT NUMBER
+   * =========================
+   *
+   * Work archive:
+   * first direct span of row.
+   *
+   * Next Project:
+   * section's data-next-project-number.
    */
-  const number =
+
+  const archiveNumber =
     anchor
       .querySelector(
         ":scope > span",
@@ -587,32 +607,79 @@ function getArchiveProjectHint(
       ?.textContent
       ?.trim();
 
+  const nextProjectSection =
+    anchor.closest<HTMLElement>(
+      "[data-next-project-handoff]",
+    );
+
+  const nextProjectNumber =
+    nextProjectSection
+      ?.dataset
+      .nextProjectNumber
+      ?.trim();
+
+  const number =
+    nextProjectNumber ||
+    archiveNumber;
+
   /*
-   * Work.module.css defines --row-accent,
-   * with the actual value passed inline
-   * from project.accentColor.
+   * =========================
+   * DESTINATION ACCENT
+   * =========================
+   *
+   * Work row:
+   * --row-accent
+   *
+   * Next Project:
+   * --next-project-accent
+   *
+   * We check inline values first, then
+   * computed values so inherited custom
+   * properties are supported too.
    */
-  const inlineAccent =
+
+  const inlineRowAccent =
     anchor.style
       .getPropertyValue(
         "--row-accent",
       )
       .trim();
 
-  const computedAccent =
-    window
-      .getComputedStyle(
-        anchor,
+  const inlineNextAccent =
+    anchor.style
+      .getPropertyValue(
+        "--next-project-accent",
       )
+      .trim();
+
+  const computedStyle =
+    window.getComputedStyle(
+      anchor,
+    );
+
+  const computedRowAccent =
+    computedStyle
       .getPropertyValue(
         "--row-accent",
       )
       .trim();
 
+  const computedNextAccent =
+    computedStyle
+      .getPropertyValue(
+        "--next-project-accent",
+      )
+      .trim();
+
+  const rawAccent =
+    inlineRowAccent ||
+    inlineNextAccent ||
+    computedRowAccent ||
+    computedNextAccent;
+
   const accent =
     getReadableTransitionAccent(
-      inlineAccent ||
-        computedAccent,
+      rawAccent,
     );
 
   return {
@@ -666,9 +733,11 @@ export default function RouteTransitionController() {
   /*
    * Scoped transition accent.
    *
-   * Null means normal NATSX violet.
-   * Project archive navigation can
-   * temporarily override it.
+   * null:
+   * normal NATSX violet.
+   *
+   * project navigation:
+   * accent of the DESTINATION project.
    */
   const [
     transitionAccent,
@@ -759,9 +828,8 @@ export default function RouteTransitionController() {
       );
 
       /*
-       * Return overlay to the normal
-       * NATSX accent after project
-       * transition is fully finished.
+       * Project accent is scoped only to
+       * one transition lifecycle.
        */
       setTransitionAccent(
         null,
@@ -1010,17 +1078,18 @@ export default function RouteTransitionController() {
       expectedPathRef.current =
         destinationPath;
 
-      /*
-       * =========================
-       * DESTINATION META
-       * =========================
-       */
+      /* =====================================================
+         DESTINATION META + DESTINATION PROJECT ACCENT
+      ===================================================== */
 
       const fallbackMeta =
         getTransitionMeta(
           destination.pathname,
         );
 
+      /*
+       * Work archive project card.
+       */
       const isWorkArchiveProject =
         currentBasePath ===
           "/work" &&
@@ -1031,11 +1100,35 @@ export default function RouteTransitionController() {
           '[data-motion-scroll="work-project"]',
         );
 
+      /*
+       * Project Detail → Next Project.
+       *
+       * This is the path that previously
+       * fell through to the default NATSX
+       * violet.
+       */
+      const isNextProjectHandoff =
+        currentBasePath.startsWith(
+          "/work/",
+        ) &&
+        destinationBasePath.startsWith(
+          "/work/",
+        ) &&
+        anchor.matches(
+          "[data-next-project-link]",
+        );
+
+      /*
+       * Both project-entry surfaces now
+       * use exactly the same transition
+       * hint + readability pipeline.
+       */
       if (
-        isWorkArchiveProject
+        isWorkArchiveProject ||
+        isNextProjectHandoff
       ) {
         const hint =
-          getArchiveProjectHint(
+          getProjectTransitionHint(
             anchor,
             fallbackMeta,
           );
@@ -1210,12 +1303,12 @@ export default function RouteTransitionController() {
       );
 
   /*
-   * Existing transition CSS uses
+   * Route transition CSS already uses
    * var(--accent).
    *
-   * Scoping the custom property to
-   * this overlay means the page itself
-   * never changes accent color.
+   * Override it only on this overlay,
+   * so the actual page theme never gets
+   * mutated during navigation.
    */
   const rootStyle =
     transitionAccent

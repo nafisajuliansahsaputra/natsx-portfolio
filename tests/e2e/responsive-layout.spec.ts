@@ -10,6 +10,7 @@ import {
  * INTRO BYPASS
  * =========================================================
  */
+
 test.beforeEach(
   async ({
     page,
@@ -30,6 +31,7 @@ test.beforeEach(
  * VIEWPORT MATRIX
  * =========================================================
  */
+
 const viewports = [
   {
     name:
@@ -128,6 +130,7 @@ const localizedRoutes = [
  * NAVIGATION
  * =========================================================
  */
+
 async function navigateForLayout(
   page: Page,
   route: string,
@@ -159,6 +162,7 @@ async function navigateForLayout(
  * LAYOUT READY
  * =========================================================
  */
+
 async function waitForLayoutReady(
   page: Page,
 ) {
@@ -180,6 +184,7 @@ async function waitForLayoutReady(
  * OVERFLOW METRICS
  * =========================================================
  */
+
 async function getOverflowMetrics(
   page: Page,
 ) {
@@ -229,8 +234,8 @@ async function assertNoHorizontalOverflow(
   );
 
   /*
-   * Scroll sekali supaya scroll-based
-   * motion juga sempat aktif.
+   * Scroll once so scroll-driven motion
+   * also gets exercised.
    */
   await page.evaluate(
     () => {
@@ -272,19 +277,8 @@ async function assertNoHorizontalOverflow(
  * =========================================================
  * LAYOUT METRICS
  * =========================================================
- *
- * IMPORTANT:
- *
- * Jangan menggunakan boundingBox()
- * untuk membandingkan ukuran layout
- * Selected Work.
- *
- * boundingBox() memasukkan CSS transform,
- * termasuk immersive scale/translate.
- *
- * offsetWidth / offsetHeight membaca
- * layout box sebelum transform.
  */
+
 type LayoutMetrics = {
   width: number;
   height: number;
@@ -332,18 +326,8 @@ function expectClose(
  * =========================================================
  * SELECTED WORK MOBILE COMPOSITION
  * =========================================================
- *
- * Test layout asli:
- *
- * - card tidak kembali portrait
- * - width project konsisten
- * - header/visual/footer sejajar
- * - card tidak menjadi terlalu sempit
- *
- * Motion tidak dimatikan.
- * Motion overflow diuji terpisah melalui
- * assertNoHorizontalOverflow().
  */
+
 async function assertSelectedWorkMobileGeometry(
   page: Page,
   viewportName: string,
@@ -362,10 +346,8 @@ async function assertSelectedWorkMobileGeometry(
   ).toBeAttached();
 
   /*
-   * Sengaja tetap scroll ke Selected Work.
-   *
-   * Kita ingin immersive controller aktif
-   * saat regression test berjalan.
+   * Keep immersive controller active
+   * during regression testing.
    */
   await workSection.scrollIntoViewIfNeeded();
 
@@ -405,7 +387,7 @@ async function assertSelectedWorkMobileGeometry(
   for (
     let index = 0;
     index <
-    projectCount;
+      projectCount;
     index += 1
   ) {
     const project =
@@ -449,19 +431,8 @@ async function assertSelectedWorkMobileGeometry(
       );
 
     /*
-     * offsetWidth/offsetHeight:
-     *
-     * ✓ CSS layout dimensions
-     * ✓ aspect-ratio result
-     * ✓ unaffected by immersive transform
-     *
-     * boundingBox():
-     *
-     * ✗ affected by scale
-     * ✗ affected by transform
-     *
-     * Jadi geometry regression harus
-     * menggunakan metrics ini.
+     * offsetWidth/offsetHeight read layout
+     * geometry before immersive transforms.
      */
     const [
       headerMetrics,
@@ -499,11 +470,7 @@ async function assertSelectedWorkMobileGeometry(
     /*
      * Mobile Selected Work:
      *
-     * aspect-ratio = 11 / 10
-     *              = 1.1
-     *
-     * Range sedikit longgar untuk menjaga
-     * test tetap robust kalau ada rounding.
+     * aspect-ratio ≈ 11 / 10
      */
     const visualRatio =
       visualMetrics.width /
@@ -523,10 +490,6 @@ async function assertSelectedWorkMobileGeometry(
       1.16,
     );
 
-    /*
-     * Layout card tidak boleh lebih lebar
-     * dari viewport.
-     */
     expect(
       visualMetrics.width,
       `${viewportName} project ${index + 1} visual exceeds viewport`,
@@ -535,10 +498,6 @@ async function assertSelectedWorkMobileGeometry(
         1,
     );
 
-    /*
-     * Regression guard terhadap layout
-     * mobile lama yang terlalu sempit.
-     */
     expect(
       visualMetrics.width,
       `${viewportName} project ${index + 1} visual became too narrow`,
@@ -547,13 +506,6 @@ async function assertSelectedWorkMobileGeometry(
         0.86,
     );
 
-    /*
-     * Header/footer memang harus mengikuti
-     * layout width visual.
-     *
-     * Immersive transform sekarang tidak
-     * mempengaruhi hasil perbandingan.
-     */
     expectClose(
       headerMetrics.width,
       visualMetrics.width,
@@ -571,17 +523,13 @@ async function assertSelectedWorkMobileGeometry(
     );
   }
 
-  /*
-   * Semua featured project mobile harus
-   * menggunakan satu width composition.
-   */
   const referenceWidth =
     visualWidths[0];
 
   for (
     let index = 1;
     index <
-    visualWidths.length;
+      visualWidths.length;
     index += 1
   ) {
     expectClose(
@@ -597,6 +545,7 @@ async function assertSelectedWorkMobileGeometry(
  * PUBLIC ROUTES
  * =========================================================
  */
+
 test.describe(
   "responsive public layout",
   () => {
@@ -646,6 +595,7 @@ test.describe(
  * LOCALIZED ROUTES
  * =========================================================
  */
+
 test.describe(
   "localized responsive layout",
   () => {
@@ -695,6 +645,7 @@ test.describe(
  * SELECTED WORK MOBILE REGRESSION
  * =========================================================
  */
+
 test.describe(
   "selected work mobile composition",
   () => {
@@ -744,6 +695,7 @@ test.describe(
  * PROJECT DETAIL
  * =========================================================
  */
+
 test(
   "project detail stays responsive across viewport sizes",
   async ({
@@ -818,6 +770,7 @@ test(
  * MOBILE NAVIGATION
  * =========================================================
  */
+
 test(
   "mobile navigation remains contained and restores page scrolling",
   async ({
@@ -850,10 +803,25 @@ test(
         route,
       );
 
+      /*
+       * SiteHeader now contains multiple
+       * viewport-specific navigation
+       * controls.
+       *
+       * Only the phone control is visible
+       * at this viewport, so target that
+       * actual interactive instance.
+       */
       const menuButton =
         page.locator(
-          'button[aria-controls="mobile-navigation"]',
+          'button[aria-controls="mobile-navigation"]:visible',
         );
+
+      await expect(
+        menuButton,
+      ).toHaveCount(
+        1,
+      );
 
       await expect(
         menuButton,
@@ -929,6 +897,13 @@ test(
         "Escape",
       );
 
+      /*
+       * closeMenu keeps the overlay mounted
+       * during its shutter exit animation.
+       *
+       * Playwright retries this assertion
+       * until aria-expanded returns false.
+       */
       await expect(
         menuButton,
       ).toHaveAttribute(

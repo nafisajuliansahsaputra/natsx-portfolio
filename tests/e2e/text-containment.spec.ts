@@ -268,8 +268,7 @@ async function finishFiniteAnimations(
           /*
            * Some animations cannot be
            * finished in their current
-           * playback state. They can be
-           * safely ignored here.
+           * playback state.
            */
         }
       }
@@ -348,8 +347,7 @@ async function settleWholePage(
   );
 
   const collected:
-    ClippedTextIssue[] =
-    [];
+    ClippedTextIssue[] = [];
 
   const seen =
     new Set<string>();
@@ -370,12 +368,6 @@ async function settleWholePage(
       y,
     );
 
-    /*
-     * Give IntersectionObserver and
-     * requestAnimationFrame-driven motion
-     * one moment to react to the new
-     * viewport position.
-     */
     await page.waitForTimeout(
       motionMode ===
         "normal"
@@ -383,11 +375,6 @@ async function settleWholePage(
         : 25,
     );
 
-    /*
-     * Finish only finite reveal animations
-     * so we measure their stable layout,
-     * not an intentional pre-reveal frame.
-     */
     await finishFiniteAnimations(
       page,
     );
@@ -540,6 +527,16 @@ async function findClippedText(
         const rect =
           element.getBoundingClientRect();
 
+        /*
+         * Horizontal intersection is
+         * intentionally NOT required.
+         *
+         * We need to detect accidental
+         * horizontal text overflow.
+         *
+         * Intentional horizontal scrollers
+         * are handled separately below.
+         */
         const intersectsViewport =
           rect.bottom >
             -tolerance &&
@@ -611,15 +608,13 @@ async function findClippedText(
         | TextRect
         | null {
         /*
-         * Measure only text that is actually
-         * painted.
+         * Measure only text that is
+         * actually painted.
          *
-         * A Range over the whole element would
-         * also include text inside opacity: 0
-         * reveal children. That produced false
-         * clipping reports for Playground and
-         * Contact normal-motion pre-reveal
-         * states.
+         * A Range over the whole element
+         * would include opacity: 0 reveal
+         * children and create false
+         * clipping reports.
          */
         const walker =
           document.createTreeWalker(
@@ -628,8 +623,7 @@ async function findClippedText(
           );
 
         const rects:
-          DOMRect[] =
-          [];
+          DOMRect[] = [];
 
         let node =
           walker.nextNode();
@@ -761,6 +755,79 @@ async function findClippedText(
         ].includes(
           value,
         );
+      }
+
+      /*
+       * =========================
+       * INTENTIONAL X SCROLL
+       * =========================
+       *
+       * Work category filters and other
+       * horizontal tracks are allowed to
+       * contain items that currently sit
+       * outside the viewport.
+       *
+       * A container qualifies only when:
+       *
+       * - overflow-x is auto / scroll
+       * - scrollWidth is genuinely larger
+       *   than clientWidth
+       *
+       * overflow:hidden / clip still count
+       * as real clipping.
+       */
+      function isIntentionalHorizontalScroller(
+        element: HTMLElement,
+      ) {
+        const style =
+          window.getComputedStyle(
+            element,
+          );
+
+        const scrollableOverflow =
+          style.overflowX ===
+            "auto" ||
+          style.overflowX ===
+            "scroll";
+
+        return (
+          scrollableOverflow &&
+          element.scrollWidth >
+            element.clientWidth +
+              1
+        );
+      }
+
+      function getHorizontalScrollAncestor(
+        element: HTMLElement,
+      ):
+        | HTMLElement
+        | null {
+        let ancestor:
+          HTMLElement |
+          null =
+          element.parentElement;
+
+        while (
+          ancestor &&
+          ancestor !==
+            document.body &&
+          ancestor !==
+            document.documentElement
+        ) {
+          if (
+            isIntentionalHorizontalScroller(
+              ancestor,
+            )
+          ) {
+            return ancestor;
+          }
+
+          ancestor =
+            ancestor.parentElement;
+        }
+
+        return null;
       }
 
       function getSelector(
@@ -917,7 +984,9 @@ async function findClippedText(
             element,
           );
 
-        if (!textRect) {
+        if (
+          !textRect
+        ) {
           continue;
         }
 
@@ -929,17 +998,32 @@ async function findClippedText(
             element,
           );
 
+        const horizontalScrollAncestor =
+          getHorizontalScrollAncestor(
+            element,
+          );
+
         /*
          * =========================
          * VIEWPORT CLIPPING
          * =========================
+         *
+         * An item inside a genuine
+         * horizontal scroller may sit
+         * outside the current viewport.
+         *
+         * That is scrollable content,
+         * not accidental clipping.
          */
         if (
-          textRect.left <
-            -tolerance ||
-          textRect.right >
-            window.innerWidth +
-              tolerance
+          !horizontalScrollAncestor &&
+          (
+            textRect.left <
+              -tolerance ||
+            textRect.right >
+              window.innerWidth +
+                tolerance
+          )
         ) {
           addIssue(
             issues,
@@ -956,6 +1040,7 @@ async function findClippedText(
          * OWN OVERFLOW CLIPPING
          * =========================
          */
+
         const ownClipsX =
           isClippingOverflow(
             style.overflowX,
@@ -1018,11 +1103,26 @@ async function findClippedText(
          * =========================
          * ANCESTOR CLIPPING
          * =========================
+         *
+         * Inner ancestors before an
+         * intentional horizontal scroller
+         * are still fully audited.
+         *
+         * Once the intentional scroller is
+         * reached, horizontal clipping from
+         * that point outward is expected.
+         *
+         * Vertical clipping is NEVER
+         * ignored.
          */
+
         let ancestor:
           HTMLElement |
           null =
           element.parentElement;
+
+        let reachedHorizontalScroller =
+          false;
 
         while (
           ancestor &&
@@ -1031,6 +1131,14 @@ async function findClippedText(
           ancestor !==
             document.documentElement
         ) {
+          if (
+            ancestor ===
+            horizontalScrollAncestor
+          ) {
+            reachedHorizontalScroller =
+              true;
+          }
+
           const ancestorStyle =
             window.getComputedStyle(
               ancestor,
@@ -1053,6 +1161,7 @@ async function findClippedText(
 
           if (
             clipsX &&
+            !reachedHorizontalScroller &&
             (
               textRect.left <
                 ancestorRect.left -

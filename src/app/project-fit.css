@@ -89,15 +89,23 @@
  * tetap dimiliki selector asli dari
  * project-motion.css.
  *
- * Horizontal negative inset kecil
- * sengaja diberikan untuk memberi
- * breathing room pada glyph dengan:
+ * IMPORTANT:
  *
- * - tight negative tracking
- * - side bearing
- * - curved glyph
- * - punctuation
- * - descender / ascender overhang
+ * Hero animation ditempel pada wrapper
+ * title, bukan langsung pada giant h1.
+ *
+ * Karena itu memakai em pada clip-path
+ * tidak aman untuk descender oversized:
+ * nilai em mengikuti font-size wrapper,
+ * bukan ukuran display typography.
+ *
+ * Hero memakai absolute safety gutter
+ * supaya glyph seperti:
+ *
+ * p / g / y / j / q
+ *
+ * tidak pernah terpotong tanpa mengubah
+ * line-height atau composition.
  */
 
 /* =========================
@@ -112,10 +120,10 @@
 
     clip-path:
       inset(
-        -0.35em
+        -64px
         100%
-        -0.35em
-        -0.12em
+        -64px
+        -24px
       );
 
     translate:
@@ -129,10 +137,10 @@
 
     clip-path:
       inset(
-        -0.35em
-        -0.12em
-        -0.35em
-        -0.12em
+        -64px
+        -24px
+        -64px
+        -24px
       );
 
     translate:
