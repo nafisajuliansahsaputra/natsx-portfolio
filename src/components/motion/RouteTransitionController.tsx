@@ -31,19 +31,23 @@ import {
 
 import styles from "./RouteTransitionController.module.css";
 
+
 type TransitionPhase =
   | "idle"
   | "covering"
   | "revealing";
+
 
 type TransitionKind =
   | "home"
   | "page"
   | "project";
 
+
 type TransitionDirection =
   | "forward"
   | "backward";
+
 
 type TransitionMeta = {
   index: string;
@@ -51,16 +55,19 @@ type TransitionMeta = {
   kind: TransitionKind;
 };
 
+
 type ProjectTransitionHint = {
   meta: TransitionMeta;
   accent: string | null;
 };
+
 
 const initialMeta: TransitionMeta = {
   index: "00",
   label: site.name,
   kind: "home",
 };
+
 
 const desktopCoverDelay =
   560;
@@ -74,14 +81,6 @@ const desktopRevealDuration =
 const mobileRevealDuration =
   560;
 
-/*
- * Hard refresh overlay sudah full covered
- * sebelum hydration melalui bootstrap CSS.
- *
- * React hanya butuh satu beat kecil untuk
- * mengambil ownership.
- */
-
 const desktopRefreshCoveredDelay =
   72;
 
@@ -94,8 +93,12 @@ const routeSettleDelay =
 const navigationSafetyTimeout =
   5000;
 
+
 const routeOrder =
-  new Map<string, number>([
+  new Map<
+    string,
+    number
+  >([
     ["/", 0],
     ["/work", 1],
     ["/about", 2],
@@ -103,6 +106,11 @@ const routeOrder =
     ["/contact", 4],
     ["/cv", 5],
   ]);
+
+
+/* =========================================================
+   ROUTE HELPERS
+========================================================= */
 
 function normalizePathname(
   pathname: string,
@@ -120,6 +128,7 @@ function normalizePathname(
   return pathname;
 }
 
+
 function isAdminPath(
   pathname: string,
 ) {
@@ -136,6 +145,7 @@ function isAdminPath(
   );
 }
 
+
 function isTransitionRoute(
   pathname: string,
 ) {
@@ -148,14 +158,35 @@ function isTransitionRoute(
     cleanPath === "/" ||
     cleanPath === "/work" ||
     cleanPath === "/about" ||
-    cleanPath === "/playground" ||
-    cleanPath === "/contact" ||
+    cleanPath ===
+      "/playground" ||
+    cleanPath ===
+      "/contact" ||
     cleanPath === "/cv" ||
     cleanPath.startsWith(
       "/work/",
     )
   );
 }
+
+
+function isProjectRoute(
+  pathname: string,
+) {
+  const cleanPath =
+    stripLocaleFromPathname(
+      pathname,
+    );
+
+  return (
+    cleanPath.startsWith(
+      "/work/",
+    ) &&
+    cleanPath !==
+      "/work/"
+  );
+}
+
 
 function getRoutePosition(
   pathname: string,
@@ -180,6 +211,7 @@ function getRoutePosition(
   );
 }
 
+
 function getTransitionDirection(
   currentPathname: string,
   destinationPathname: string,
@@ -193,6 +225,7 @@ function getTransitionDirection(
     ? "forward"
     : "backward";
 }
+
 
 function getProjectLabel(
   pathname: string,
@@ -222,6 +255,7 @@ function getProjectLabel(
       .trim();
   }
 }
+
 
 function getTransitionMeta(
   pathname: string,
@@ -287,7 +321,8 @@ function getTransitionMeta(
   }
 
   if (
-    cleanPath === "/contact"
+    cleanPath ===
+    "/contact"
   ) {
     return {
       index: "04",
@@ -314,17 +349,26 @@ function getTransitionMeta(
     )
   ) {
     return {
-      index: "PROJECT",
+      index:
+        "PROJECT",
+
       label:
         getProjectLabel(
           cleanPath,
         ),
-      kind: "project",
+
+      kind:
+        "project",
     };
   }
 
   return initialMeta;
 }
+
+
+/* =========================================================
+   TIMING
+========================================================= */
 
 function getCoverDelay() {
   return window.matchMedia(
@@ -334,6 +378,7 @@ function getCoverDelay() {
     : desktopCoverDelay;
 }
 
+
 function getRevealDuration() {
   return window.matchMedia(
     "(max-width: 700px)",
@@ -341,6 +386,7 @@ function getRevealDuration() {
     ? mobileRevealDuration
     : desktopRevealDuration;
 }
+
 
 function getRefreshCoveredDelay() {
   return window.matchMedia(
@@ -350,11 +396,10 @@ function getRefreshCoveredDelay() {
     : desktopRefreshCoveredDelay;
 }
 
-/*
- * =========================================================
- * PROJECT COLOR UTILITIES
- * =========================================================
- */
+
+/* =========================================================
+   PROJECT COLOR UTILITIES
+========================================================= */
 
 function getRelativeLuminance(
   red: number,
@@ -396,6 +441,7 @@ function getRelativeLuminance(
   );
 }
 
+
 function getWhiteContrast(
   red: number,
   green: number,
@@ -417,11 +463,23 @@ function getWhiteContrast(
   );
 }
 
+
+/*
+ * Accent project tetap dipertahankan.
+ *
+ * Kalau terlalu terang untuk tulisan putih,
+ * warnanya sedikit digelapkan supaya
+ * transition tetap readable.
+ */
 function getReadableTransitionAccent(
   rawColor: string,
 ) {
   const color =
     rawColor.trim();
+
+  if (!color) {
+    return null;
+  }
 
   const match =
     color.match(
@@ -429,10 +487,7 @@ function getReadableTransitionAccent(
     );
 
   if (!match) {
-    return (
-      color ||
-      null
-    );
+    return color;
   }
 
   const hex =
@@ -547,61 +602,84 @@ function getReadableTransitionAccent(
   return `rgb(${outputRed} ${outputGreen} ${outputBlue})`;
 }
 
+
+/* =========================================================
+   PROJECT ACCENT RESOLVER
+========================================================= */
+
 /*
- * =========================================================
- * PROJECT TRANSITION HINT
- * =========================================================
+ * Project links muncul dari beberapa tempat:
+ *
+ * Homepage SelectedWork:
+ *   article memiliki --accent
+ *
+ * Work archive:
+ *   link memiliki --row-accent
+ *
+ * Next Project handoff:
+ *   parent section memiliki
+ *   --next-project-accent
+ *
+ * Resolver ini berjalan dari <a>
+ * ke seluruh ancestor sampai menemukan
+ * accent project yang eksplisit.
+ *
+ * IMPORTANT:
+ * computed --accent sengaja TIDAK
+ * digunakan sebagai fallback karena
+ * :root juga punya global purple accent.
+ * Kalau itu dibaca, project tanpa
+ * local accent akan kembali ungu.
  */
+function getProjectAccentFromAnchor(
+  anchor:
+    HTMLAnchorElement,
+) {
+  const properties = [
+    "--row-accent",
+    "--next-project-accent",
+    "--project-accent",
+    "--accent",
+  ] as const;
 
-function getProjectTransitionHint(
-  anchor: HTMLAnchorElement,
-  fallbackMeta: TransitionMeta,
-): ProjectTransitionHint {
-  const title =
-    anchor
-      .querySelector(
-        "h2",
-      )
-      ?.textContent
-      ?.trim();
+  let element:
+    HTMLElement | null =
+    anchor;
 
-  const archiveNumber =
-    anchor
-      .querySelector(
-        ":scope > span",
-      )
-      ?.textContent
-      ?.trim();
+  while (element) {
+    for (
+      const property of
+      properties
+    ) {
+      const value =
+        element.style
+          .getPropertyValue(
+            property,
+          )
+          .trim();
 
-  const nextProjectSection =
-    anchor.closest<HTMLElement>(
-      "[data-next-project-handoff]",
-    );
+      if (value) {
+        return (
+          getReadableTransitionAccent(
+            value,
+          )
+        );
+      }
+    }
 
-  const nextProjectNumber =
-    nextProjectSection
-      ?.dataset
-      .nextProjectNumber
-      ?.trim();
+    element =
+      element.parentElement;
+  }
 
-  const number =
-    nextProjectNumber ||
-    archiveNumber;
-
-  const inlineRowAccent =
-    anchor.style
-      .getPropertyValue(
-        "--row-accent",
-      )
-      .trim();
-
-  const inlineNextAccent =
-    anchor.style
-      .getPropertyValue(
-        "--next-project-accent",
-      )
-      .trim();
-
+  /*
+   * Support CSS variables yang
+   * memang khusus project dan
+   * diwariskan lewat stylesheet.
+   *
+   * Jangan baca computed --accent
+   * karena global theme juga
+   * menggunakan variable tersebut.
+   */
   const computedStyle =
     window.getComputedStyle(
       anchor,
@@ -621,15 +699,119 @@ function getProjectTransitionHint(
       )
       .trim();
 
-  const rawAccent =
-    inlineRowAccent ||
-    inlineNextAccent ||
+  const computedProjectAccent =
+    computedStyle
+      .getPropertyValue(
+        "--project-accent",
+      )
+      .trim();
+
+  const computedAccent =
     computedRowAccent ||
-    computedNextAccent;
+    computedNextAccent ||
+    computedProjectAccent;
+
+  return (
+    getReadableTransitionAccent(
+      computedAccent,
+    )
+  );
+}
+
+
+/* =========================================================
+   PROJECT META RESOLVER
+========================================================= */
+
+function getProjectTransitionHint(
+  anchor: HTMLAnchorElement,
+  fallbackMeta:
+    TransitionMeta,
+): ProjectTransitionHint {
+  /*
+   * Work archive / Next Project
+   * punya title di dalam link.
+   */
+  const directTitle =
+    anchor
+      .querySelector(
+        "h2",
+      )
+      ?.textContent
+      ?.trim();
+
+  /*
+   * Homepage SelectedWork:
+   *
+   * tombol "Lihat Proyek" berada
+   * di footer, sementara judul
+   * project berada di header article.
+   */
+  const selectedWorkProject =
+    anchor.closest<HTMLElement>(
+      '[data-motion-scroll="project"]',
+    );
+
+  const selectedWorkTitle =
+    selectedWorkProject
+      ?.querySelector(
+        ":scope > div:first-child > h3",
+      )
+      ?.textContent
+      ?.trim();
+
+  const selectedWorkNumber =
+    selectedWorkProject
+      ?.querySelector(
+        ":scope > div:first-child > span:first-child",
+      )
+      ?.textContent
+      ?.trim();
+
+  /*
+   * Work archive number.
+   *
+   * Hanya dibaca jika memang anchor
+   * work archive, supaya arrow ↗ dari
+   * CTA homepage tidak dianggap nomor.
+   */
+  const archiveNumber =
+    anchor.matches(
+      '[data-motion-scroll="work-project"]',
+    )
+      ? anchor
+          .querySelector(
+            ":scope > span",
+          )
+          ?.textContent
+          ?.trim()
+      : undefined;
+
+  const nextProjectSection =
+    anchor.closest<HTMLElement>(
+      "[data-next-project-handoff]",
+    );
+
+  const nextProjectNumber =
+    nextProjectSection
+      ?.dataset
+      .nextProjectNumber
+      ?.trim();
+
+  const number =
+    nextProjectNumber ||
+    selectedWorkNumber ||
+    archiveNumber ||
+    fallbackMeta.index;
+
+  const title =
+    directTitle ||
+    selectedWorkTitle ||
+    fallbackMeta.label;
 
   const accent =
-    getReadableTransitionAccent(
-      rawAccent,
+    getProjectAccentFromAnchor(
+      anchor,
     );
 
   return {
@@ -637,17 +819,20 @@ function getProjectTransitionHint(
       ...fallbackMeta,
 
       index:
-        number ||
-        fallbackMeta.index,
+        number,
 
       label:
-        title ||
-        fallbackMeta.label,
+        title,
     },
 
     accent,
   };
 }
+
+
+/* =========================================================
+   CONTROLLER
+========================================================= */
 
 export default function RouteTransitionController() {
   const pathname =
@@ -672,16 +857,6 @@ export default function RouteTransitionController() {
       "forward",
     );
 
-  /*
-   * Current pathname is already known
-   * during initial render.
-   *
-   * This is especially important for
-   * hard refresh because bootstrap CSS
-   * can display correct route copy before
-   * React transition state starts.
-   */
-
   const [
     meta,
     setMeta,
@@ -697,7 +872,9 @@ export default function RouteTransitionController() {
     transitionAccent,
     setTransitionAccent,
   ] =
-    useState<string | null>(
+    useState<
+      string | null
+    >(
       null,
     );
 
@@ -707,7 +884,9 @@ export default function RouteTransitionController() {
     );
 
   const expectedPathRef =
-    useRef<string | null>(
+    useRef<
+      string | null
+    >(
       null,
     );
 
@@ -717,19 +896,26 @@ export default function RouteTransitionController() {
     );
 
   const navigationTimerRef =
-    useRef<number | null>(
+    useRef<
+      number | null
+    >(
       null,
     );
 
   const revealTimerRef =
-    useRef<number | null>(
+    useRef<
+      number | null
+    >(
       null,
     );
 
   const safetyTimerRef =
-    useRef<number | null>(
+    useRef<
+      number | null
+    >(
       null,
     );
+
 
   const clearTimers =
     useCallback(() => {
@@ -756,6 +942,7 @@ export default function RouteTransitionController() {
       );
     }, []);
 
+
   const clearDocumentState =
     useCallback(() => {
       const root =
@@ -773,6 +960,7 @@ export default function RouteTransitionController() {
       delete root.dataset
         .routeRefresh;
     }, []);
+
 
   const resetTransition =
     useCallback(() => {
@@ -797,30 +985,10 @@ export default function RouteTransitionController() {
       clearTimers,
     ]);
 
-  /*
-   * =========================================================
-   * HARD REFRESH HANDOFF
-   * =========================================================
-   *
-   * Root bootstrap memberi:
-   *
-   * data-route-refresh="pending"
-   *
-   * sebelum hydration.
-   *
-   * intro-motion.css membuat overlay
-   * transition sudah berada pada full
-   * covered state.
-   *
-   * IMPORTANT:
-   *
-   * Tidak ada state React yang diubah
-   * secara synchronous dari effect.
-   *
-   * Ownership dipindahkan pada timer task
-   * berikutnya agar compatible dengan
-   * react-hooks/set-state-in-effect.
-   */
+
+/* =========================================================
+   HARD REFRESH HANDOFF
+========================================================= */
 
   useEffect(() => {
     if (
@@ -874,30 +1042,11 @@ export default function RouteTransitionController() {
       return;
     }
 
-    /*
-     * Bootstrap CSS masih menahan full
-     * screen selama timer 0ms ini.
-     *
-     * Jadi tidak ada flash / gap.
-     */
-
     navigationTimerRef.current =
       window.setTimeout(
         () => {
           navigationTimerRef.current =
             null;
-
-          /*
-           * Initial state sudah:
-           *
-           * meta      = current pathname
-           * accent    = null
-           * direction = forward
-           *
-           * Jadi tidak perlu setMeta /
-           * setDirection /
-           * setTransitionAccent di sini.
-           */
 
           phaseRef.current =
             "covering";
@@ -906,33 +1055,11 @@ export default function RouteTransitionController() {
             "covering",
           );
 
-          /*
-           * Beri satu covered beat sebelum
-           * menjalankan reveal.
-           */
-
           revealTimerRef.current =
             window.setTimeout(
               () => {
-                /*
-                 * React sekarang sudah
-                 * memiliki full-covered
-                 * .covering state.
-                 *
-                 * Bootstrap marker aman
-                 * dilepas.
-                 */
-
                 delete root.dataset
                   .routeRefresh;
-
-                /*
-                 * Samakan lifecycle dengan
-                 * normal client transition:
-                 *
-                 * destination entrance mulai
-                 * saat shutters mulai reveal.
-                 */
 
                 delete root.dataset
                   .routeTransitionHold;
@@ -966,11 +1093,10 @@ export default function RouteTransitionController() {
     resetTransition,
   ]);
 
-  /*
-   * =========================================================
-   * ROOT DATASET SYNC
-   * =========================================================
-   */
+
+/* =========================================================
+   ROOT DATASET SYNC
+========================================================= */
 
   useEffect(() => {
     phaseRef.current =
@@ -980,7 +1106,8 @@ export default function RouteTransitionController() {
       document.documentElement;
 
     if (
-      phase === "idle"
+      phase ===
+      "idle"
     ) {
       delete root.dataset
         .routeTransitionActive;
@@ -1002,15 +1129,15 @@ export default function RouteTransitionController() {
     phase,
   ]);
 
-  /*
-   * =========================================================
-   * SCROLL INTERCEPTION
-   * =========================================================
-   */
+
+/* =========================================================
+   SCROLL INTERCEPTION
+========================================================= */
 
   useEffect(() => {
     if (
-      phase === "idle"
+      phase ===
+      "idle"
     ) {
       return;
     }
@@ -1052,11 +1179,10 @@ export default function RouteTransitionController() {
     phase,
   ]);
 
-  /*
-   * =========================================================
-   * CLIENT-SIDE LINK NAVIGATION
-   * =========================================================
-   */
+
+/* =========================================================
+   CLIENT-SIDE LINK NAVIGATION
+========================================================= */
 
   useEffect(() => {
     if (
@@ -1228,30 +1354,39 @@ export default function RouteTransitionController() {
           destination.pathname,
         );
 
-      const isWorkArchiveProject =
-        currentBasePath ===
-          "/work" &&
-        destinationBasePath.startsWith(
-          "/work/",
-        ) &&
-        anchor.matches(
-          '[data-motion-scroll="work-project"]',
+
+      /*
+       * =====================================================
+       * IMPORTANT FIX
+       * =====================================================
+       *
+       * Sebelumnya accent hanya aktif:
+       *
+       * /work -> /work/[slug]
+       *
+       * atau:
+       *
+       * /work/[slug] -> next project
+       *
+       * Akibatnya homepage:
+       *
+       * / -> /work/[slug]
+       *
+       * selalu masuk else dan accent
+       * di-reset menjadi null.
+       *
+       * Sekarang SEMUA navigasi menuju
+       * halaman project mendapatkan
+       * project transition hint.
+       */
+      const projectDestination =
+        isProjectRoute(
+          destinationBasePath,
         );
 
-      const isNextProjectHandoff =
-        currentBasePath.startsWith(
-          "/work/",
-        ) &&
-        destinationBasePath.startsWith(
-          "/work/",
-        ) &&
-        anchor.matches(
-          "[data-next-project-link]",
-        );
 
       if (
-        isWorkArchiveProject ||
-        isNextProjectHandoff
+        projectDestination
       ) {
         const hint =
           getProjectTransitionHint(
@@ -1275,6 +1410,7 @@ export default function RouteTransitionController() {
           null,
         );
       }
+
 
       setDirection(
         getTransitionDirection(
@@ -1317,11 +1453,13 @@ export default function RouteTransitionController() {
         );
     };
 
+
     document.addEventListener(
       "click",
       handleDocumentClick,
       true,
     );
+
 
     return () => {
       document.removeEventListener(
@@ -1336,11 +1474,10 @@ export default function RouteTransitionController() {
     router,
   ]);
 
-  /*
-   * =========================================================
-   * CLIENT ROUTE DESTINATION HANDOFF
-   * =========================================================
-   */
+
+/* =========================================================
+   CLIENT ROUTE DESTINATION HANDOFF
+========================================================= */
 
   useEffect(() => {
     const expectedPath =
@@ -1398,11 +1535,10 @@ export default function RouteTransitionController() {
     resetTransition,
   ]);
 
-  /*
-   * =========================================================
-   * CLEANUP
-   * =========================================================
-   */
+
+/* =========================================================
+   CLEANUP
+========================================================= */
 
   useEffect(() => {
     return () => {
@@ -1414,6 +1550,7 @@ export default function RouteTransitionController() {
     clearTimers,
   ]);
 
+
   if (
     isAdminPath(
       pathname,
@@ -1421,6 +1558,11 @@ export default function RouteTransitionController() {
   ) {
     return null;
   }
+
+
+/* =========================================================
+   RENDER
+========================================================= */
 
   const rootClassName =
     [
@@ -1433,12 +1575,9 @@ export default function RouteTransitionController() {
         ? styles.project
         : "",
     ]
-      .filter(
-        Boolean,
-      )
-      .join(
-        " ",
-      );
+      .filter(Boolean)
+      .join(" ");
+
 
   const rootStyle =
     transitionAccent
@@ -1447,6 +1586,7 @@ export default function RouteTransitionController() {
             transitionAccent,
         } as CSSProperties)
       : undefined;
+
 
   return (
     <div
@@ -1512,7 +1652,9 @@ export default function RouteTransitionController() {
               {
                 site.name
               }
-              {" / PORTFOLIO"}
+              {
+                " / PORTFOLIO"
+              }
             </span>
 
             <span
