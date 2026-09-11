@@ -19,14 +19,17 @@ import {
 import styles from "./Hero.module.css";
 import portraitStyles from "./HeroPortraitTransition.module.css";
 
+
 type HeroVisualProps = {
   locale: Locale;
 };
+
 
 type SmoothDampResult = {
   value: number;
   velocity: number;
 };
+
 
 function clamp(
   value: number,
@@ -41,6 +44,7 @@ function clamp(
     maximum,
   );
 }
+
 
 function damp(
   current: number,
@@ -60,6 +64,7 @@ function damp(
       )
   );
 }
+
 
 function smoothDamp(
   current: number,
@@ -133,6 +138,7 @@ function smoothDamp(
   };
 }
 
+
 function isInsidePortraitZone(
   clientX: number,
   clientY: number,
@@ -196,6 +202,7 @@ function isInsidePortraitZone(
   );
 }
 
+
 export default function HeroVisual({
   locale,
 }: HeroVisualProps) {
@@ -212,14 +219,6 @@ export default function HeroVisual({
       false,
     );
 
-  /*
-   * Alternate portrait is decorative
-   * and only participates in the
-   * desktop hover transition.
-   *
-   * Keep it out of the critical
-   * mobile image path.
-   */
   const [
     alternatePortraitEnabled,
     setAlternatePortraitEnabled,
@@ -238,22 +237,23 @@ export default function HeroVisual({
       null,
     );
 
+
   /*
    * =====================================================
    * ALTERNATE PORTRAIT DELIVERY
    * =====================================================
    *
-   * Base portrait owns the critical
-   * image preload / LCP path.
+   * BASE tetap menjadi critical image / LCP.
    *
-   * Alternate portrait starts loading
-   * only after:
+   * Desktop:
+   * ALT diaktifkan langsung setelah BASE siap,
+   * karena diperlukan cursor reveal.
    *
-   * 1. base portrait has loaded
-   * 2. viewport is desktop
-   * 3. reduced motion is not enabled
+   * Mobile:
+   * ALT baru mulai dimuat sedikit setelah BASE
+   * selesai supaya tidak ikut berebut critical load.
    *
-   * Once loaded we keep it mounted.
+   * Tidak ada autoplay effect.
    */
 
   useEffect(() => {
@@ -273,16 +273,71 @@ export default function HeroVisual({
         "(prefers-reduced-motion: reduce)",
       );
 
-    function enableWhenUseful() {
+    let mobileLoadTimer:
+      | number
+      | null =
+      null;
+
+
+    function clearMobileLoadTimer() {
       if (
-        desktop.matches &&
-        !reducedMotion.matches
+        mobileLoadTimer ===
+        null
+      ) {
+        return;
+      }
+
+      window.clearTimeout(
+        mobileLoadTimer,
+      );
+
+      mobileLoadTimer =
+        null;
+    }
+
+
+    function enableWhenUseful() {
+      clearMobileLoadTimer();
+
+      if (
+        reducedMotion.matches
+      ) {
+        return;
+      }
+
+      /*
+       * Desktop:
+       * langsung siap untuk hover.
+       */
+      if (
+        desktop.matches
       ) {
         setAlternatePortraitEnabled(
           true,
         );
+
+        return;
       }
+
+      /*
+       * Mobile / tablet:
+       * beri BASE sedikit ruang
+       * menyelesaikan critical paint.
+       */
+      mobileLoadTimer =
+        window.setTimeout(
+          () => {
+            setAlternatePortraitEnabled(
+              true,
+            );
+
+            mobileLoadTimer =
+              null;
+          },
+          650,
+        );
     }
+
 
     enableWhenUseful();
 
@@ -296,7 +351,10 @@ export default function HeroVisual({
       enableWhenUseful,
     );
 
+
     return () => {
+      clearMobileLoadTimer();
+
       desktop.removeEventListener(
         "change",
         enableWhenUseful,
@@ -310,6 +368,7 @@ export default function HeroVisual({
   }, [
     portraitLoaded,
   ]);
+
 
   /*
    * =========================
@@ -346,6 +405,7 @@ export default function HeroVisual({
     let isInView =
       true;
 
+
     function syncAmbientState() {
       const active =
         isInView &&
@@ -357,6 +417,7 @@ export default function HeroVisual({
           ? "true"
           : "false";
     }
+
 
     const observer =
       typeof IntersectionObserver !==
@@ -375,6 +436,7 @@ export default function HeroVisual({
           )
         : null;
 
+
     observer?.observe(
       heroElement,
     );
@@ -390,6 +452,7 @@ export default function HeroVisual({
     );
 
     syncAmbientState();
+
 
     return () => {
       observer?.disconnect();
@@ -409,10 +472,25 @@ export default function HeroVisual({
     };
   }, []);
 
+
   /*
-   * =========================
-   * PORTRAIT REVEAL
-   * =========================
+   * =====================================================
+   * PORTRAIT REVEAL ENGINE
+   * =====================================================
+   *
+   * DESKTOP:
+   * pointer-follow radial brush.
+   *
+   * MOBILE:
+   * tap creates the same radial brush
+   * at the tapped position.
+   *
+   * Both use the exact same:
+   *
+   * - radius physics
+   * - feather
+   * - brush mask
+   * - inverse BASE eraser
    */
 
   useEffect(() => {
@@ -447,6 +525,11 @@ export default function HeroVisual({
         "(hover: hover) and (pointer: fine) and (min-width: 961px)",
       );
 
+    const touchLayout =
+      window.matchMedia(
+        "(max-width: 960px) and (pointer: coarse)",
+      );
+
     let destroyed =
       false;
 
@@ -479,7 +562,42 @@ export default function HeroVisual({
     let radiusVelocity =
       0;
 
-    function getMaximumRadius() {
+    let mobileTracking =
+      false;
+
+    let mobileMoved =
+      false;
+
+    let mobileStartX =
+      0;
+
+    let mobileStartY =
+      0;
+
+    let mobileCollapseTimer:
+      | number
+      | null =
+      null;
+
+
+    function clearMobileCollapseTimer() {
+      if (
+        mobileCollapseTimer ===
+        null
+      ) {
+        return;
+      }
+
+      window.clearTimeout(
+        mobileCollapseTimer,
+      );
+
+      mobileCollapseTimer =
+        null;
+    }
+
+
+    function getDesktopMaximumRadius() {
       return clamp(
         window.innerWidth *
           0.108,
@@ -487,6 +605,25 @@ export default function HeroVisual({
         190,
       );
     }
+
+
+    function getMobileMaximumRadius(
+      rect: DOMRect,
+    ) {
+      const shortestSide =
+        Math.min(
+          rect.width,
+          rect.height,
+        );
+
+      return clamp(
+        shortestSide *
+          0.31,
+        104,
+        142,
+      );
+    }
+
 
     function apply() {
       const radius =
@@ -496,9 +633,8 @@ export default function HeroVisual({
         );
 
       /*
-       * Feather sedikit lebih panjang
-       * dari versi sebelumnya, supaya
-       * falloff lebih creamy / halus.
+       * Same creamy feather field
+       * untuk desktop dan mobile.
        */
       const feather =
         Math.min(
@@ -511,9 +647,8 @@ export default function HeroVisual({
         );
 
       /*
-       * Core cutout tetap cukup besar
-       * supaya base tidak bocor di
-       * area leher / baju.
+       * Core tetap kuat supaya BASE
+       * tidak bocor ke area ALT.
        */
       const cutRadius =
         Math.max(
@@ -569,6 +704,7 @@ export default function HeroVisual({
         start +
         feather *
           0.965;
+
 
       stageElement.style.setProperty(
         "--portrait-pointer-x",
@@ -668,6 +804,7 @@ export default function HeroVisual({
       );
     }
 
+
     function requestFrame() {
       if (
         frameId !==
@@ -684,6 +821,7 @@ export default function HeroVisual({
           renderFrame,
         );
     }
+
 
     function renderFrame(
       timestamp: number,
@@ -747,6 +885,7 @@ export default function HeroVisual({
       radiusVelocity =
         radiusResult.velocity;
 
+
       if (
         Math.abs(
           currentRadius -
@@ -765,6 +904,7 @@ export default function HeroVisual({
           0;
       }
 
+
       if (
         Math.abs(
           currentX -
@@ -775,6 +915,7 @@ export default function HeroVisual({
         currentX =
           targetX;
       }
+
 
       if (
         Math.abs(
@@ -787,7 +928,9 @@ export default function HeroVisual({
           targetY;
       }
 
+
       apply();
+
 
       const moving =
         Math.abs(
@@ -810,6 +953,7 @@ export default function HeroVisual({
         ) >
           0.0002;
 
+
       if (
         moving
       ) {
@@ -817,7 +961,14 @@ export default function HeroVisual({
       }
     }
 
-    function updateInteraction(
+
+    /*
+     * =========================
+     * DESKTOP POINTER
+     * =========================
+     */
+
+    function updateDesktopInteraction(
       event: PointerEvent,
     ) {
       if (
@@ -868,6 +1019,7 @@ export default function HeroVisual({
           rect,
         );
 
+
       if (
         currentRadius <
           1 &&
@@ -880,6 +1032,7 @@ export default function HeroVisual({
           nextY;
       }
 
+
       targetX =
         nextX;
 
@@ -888,36 +1041,280 @@ export default function HeroVisual({
 
       targetRadius =
         inside
-          ? getMaximumRadius()
+          ? getDesktopMaximumRadius()
           : 0;
 
       requestFrame();
     }
 
+
     function handlePointerEnter(
       event: PointerEvent,
     ) {
-      updateInteraction(
+      updateDesktopInteraction(
         event,
       );
     }
+
 
     function handlePointerMove(
       event: PointerEvent,
     ) {
-      updateInteraction(
+      updateDesktopInteraction(
         event,
       );
     }
 
+
     function handlePointerLeave() {
+      if (
+        !interactivePointer.matches
+      ) {
+        return;
+      }
+
       targetRadius =
         0;
 
       requestFrame();
     }
 
+
+    /*
+     * =========================
+     * MOBILE TAP
+     * =========================
+     *
+     * Pointer down alone does nothing.
+     *
+     * Reveal only happens after a
+     * genuine TAP, so normal vertical
+     * scrolling remains untouched.
+     */
+
+    function handleMobilePointerDown(
+      event: PointerEvent,
+    ) {
+      if (
+        reducedMotion.matches ||
+        !touchLayout.matches ||
+        event.pointerType ===
+          "mouse"
+      ) {
+        return;
+      }
+
+      mobileTracking =
+        true;
+
+      mobileMoved =
+        false;
+
+      mobileStartX =
+        event.clientX;
+
+      mobileStartY =
+        event.clientY;
+    }
+
+
+    function handleMobilePointerMove(
+      event: PointerEvent,
+    ) {
+      if (
+        !mobileTracking
+      ) {
+        return;
+      }
+
+      const distance =
+        Math.hypot(
+          event.clientX -
+            mobileStartX,
+          event.clientY -
+            mobileStartY,
+        );
+
+      /*
+       * Lebih dari 12px dianggap
+       * scrolling / drag, bukan tap.
+       */
+      if (
+        distance >
+        12
+      ) {
+        mobileMoved =
+          true;
+      }
+    }
+
+
+    function handleMobilePointerUp(
+      event: PointerEvent,
+    ) {
+      if (
+        !mobileTracking
+      ) {
+        return;
+      }
+
+      const wasTap =
+        !mobileMoved;
+
+      mobileTracking =
+        false;
+
+      mobileMoved =
+        false;
+
+
+      if (
+        !wasTap ||
+        reducedMotion.matches ||
+        !touchLayout.matches ||
+        event.pointerType ===
+          "mouse" ||
+        stageElement.dataset
+          .mobileAltReady !==
+          "true"
+      ) {
+        return;
+      }
+
+
+      const rect =
+        stageElement.getBoundingClientRect();
+
+      if (
+        rect.width <=
+          0 ||
+        rect.height <=
+          0
+      ) {
+        return;
+      }
+
+
+      /*
+       * Hanya tap pada portrait zone
+       * yang memicu reveal.
+       */
+      const inside =
+        isInsidePortraitZone(
+          event.clientX,
+          event.clientY,
+          rect,
+        );
+
+      if (
+        !inside
+      ) {
+        return;
+      }
+
+
+      const nextX =
+        clamp(
+          (
+            event.clientX -
+            rect.left
+          ) /
+            rect.width,
+          0,
+          1,
+        );
+
+      const nextY =
+        clamp(
+          (
+            event.clientY -
+            rect.top
+          ) /
+            rect.height,
+          0,
+          1,
+        );
+
+
+      clearMobileCollapseTimer();
+
+
+      /*
+       * Tap baru selalu mengambil
+       * posisi jari secara langsung.
+       *
+       * Tidak ada trailing cursor
+       * seperti desktop.
+       */
+      currentX =
+        nextX;
+
+      currentY =
+        nextY;
+
+      targetX =
+        nextX;
+
+      targetY =
+        nextY;
+
+      radiusVelocity =
+        0;
+
+      targetRadius =
+        getMobileMaximumRadius(
+          rect,
+        );
+
+      requestFrame();
+
+
+      /*
+       * Circle sempat mencapai ukuran
+       * penuh lalu kembali mengecil.
+       *
+       * Total feel sekitar ±1 detik.
+       */
+      mobileCollapseTimer =
+        window.setTimeout(
+          () => {
+            targetRadius =
+              0;
+
+            requestFrame();
+
+            mobileCollapseTimer =
+              null;
+          },
+          620,
+        );
+    }
+
+
+    function cancelMobileTracking() {
+      mobileTracking =
+        false;
+
+      mobileMoved =
+        false;
+    }
+
+
+    /*
+     * =========================
+     * RESET / ENVIRONMENT
+     * =========================
+     */
+
     function resetInteraction() {
+      clearMobileCollapseTimer();
+
+      mobileTracking =
+        false;
+
+      mobileMoved =
+        false;
+
       targetRadius =
         0;
 
@@ -939,6 +1336,7 @@ export default function HeroVisual({
       currentY =
         0.5;
 
+
       if (
         frameId !==
         null
@@ -954,22 +1352,33 @@ export default function HeroVisual({
       apply();
     }
 
+
     function handleEnvironmentChange() {
       resetInteraction();
     }
 
+
     function handleResize() {
+      /*
+       * Desktop hover circle keeps
+       * adapting to viewport size.
+       */
       if (
+        interactivePointer.matches &&
         targetRadius >
-        0
+          0
       ) {
         targetRadius =
-          getMaximumRadius();
+          getDesktopMaximumRadius();
 
         requestFrame();
       }
     }
 
+
+    /*
+     * Desktop listeners.
+     */
     visualElement.addEventListener(
       "pointerenter",
       handlePointerEnter,
@@ -989,10 +1398,42 @@ export default function HeroVisual({
       handlePointerLeave,
     );
 
-    visualElement.addEventListener(
-      "pointercancel",
-      handlePointerLeave,
+
+    /*
+     * Mobile tap listeners.
+     */
+    stageElement.addEventListener(
+      "pointerdown",
+      handleMobilePointerDown,
+      {
+        passive:
+          true,
+      },
     );
+
+    stageElement.addEventListener(
+      "pointermove",
+      handleMobilePointerMove,
+      {
+        passive:
+          true,
+      },
+    );
+
+    stageElement.addEventListener(
+      "pointerup",
+      handleMobilePointerUp,
+      {
+        passive:
+          true,
+      },
+    );
+
+    stageElement.addEventListener(
+      "pointercancel",
+      cancelMobileTracking,
+    );
+
 
     reducedMotion.addEventListener(
       "change",
@@ -1000,6 +1441,11 @@ export default function HeroVisual({
     );
 
     interactivePointer.addEventListener(
+      "change",
+      handleEnvironmentChange,
+    );
+
+    touchLayout.addEventListener(
       "change",
       handleEnvironmentChange,
     );
@@ -1013,11 +1459,16 @@ export default function HeroVisual({
       },
     );
 
+
     apply();
+
 
     return () => {
       destroyed =
         true;
+
+      clearMobileCollapseTimer();
+
 
       visualElement.removeEventListener(
         "pointerenter",
@@ -1034,10 +1485,27 @@ export default function HeroVisual({
         handlePointerLeave,
       );
 
-      visualElement.removeEventListener(
-        "pointercancel",
-        handlePointerLeave,
+
+      stageElement.removeEventListener(
+        "pointerdown",
+        handleMobilePointerDown,
       );
+
+      stageElement.removeEventListener(
+        "pointermove",
+        handleMobilePointerMove,
+      );
+
+      stageElement.removeEventListener(
+        "pointerup",
+        handleMobilePointerUp,
+      );
+
+      stageElement.removeEventListener(
+        "pointercancel",
+        cancelMobileTracking,
+      );
+
 
       reducedMotion.removeEventListener(
         "change",
@@ -1049,10 +1517,16 @@ export default function HeroVisual({
         handleEnvironmentChange,
       );
 
+      touchLayout.removeEventListener(
+        "change",
+        handleEnvironmentChange,
+      );
+
       window.removeEventListener(
         "resize",
         handleResize,
       );
+
 
       if (
         frameId !==
@@ -1062,6 +1536,7 @@ export default function HeroVisual({
           frameId,
         );
       }
+
 
       [
         "--portrait-pointer-x",
@@ -1088,6 +1563,7 @@ export default function HeroVisual({
       );
     };
   }, []);
+
 
   return (
     <div
@@ -1144,9 +1620,9 @@ export default function HeroVisual({
                 .portrait
             }
             fill
-loading="eager"
-fetchPriority="high"
-sizes="(max-width: 960px) 100vw, 42vw"
+            loading="eager"
+            fetchPriority="high"
+            sizes="(max-width: 960px) 100vw, 42vw"
             className={
               portraitStyles.baseImage
             }
@@ -1168,10 +1644,21 @@ sizes="(max-width: 960px) 100vw, 42vw"
               alt=""
               fill
               loading="eager"
-              sizes="42vw"
+              sizes="(max-width: 960px) 100vw, 42vw"
               className={
                 portraitStyles.altImage
               }
+              onLoad={() => {
+                const stage =
+                  portraitStageRef.current;
+
+                if (!stage) {
+                  return;
+                }
+
+                stage.dataset.mobileAltReady =
+                  "true";
+              }}
             />
           ) : null}
         </div>

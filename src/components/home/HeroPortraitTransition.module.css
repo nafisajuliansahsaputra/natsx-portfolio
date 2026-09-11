@@ -2,17 +2,17 @@
    NATSX
    HERO PORTRAIT TRANSITION
 
-   SHARED BRUSH / ERASER MASK
+   SAME VISUAL LANGUAGE
+   ACROSS INPUT DEVICES
+
+   DESKTOP
+   cursor = moving brush
+
+   MOBILE
+   tap = temporary brush
 
    ALT  = brush
    BASE = inverse eraser
-
-   Both use exactly the same
-   soft feather field.
-
-   Current revision:
-   softer S-curve tail
-   + cleaner invisible edge.
 ========================= */
 
 
@@ -21,23 +21,47 @@
 ========================= */
 
 .stage {
-  --portrait-pointer-x: 50%;
-  --portrait-pointer-y: 50%;
+  --portrait-pointer-x:
+    50%;
 
-  --portrait-radius: 0.01px;
-  --portrait-cut-radius: 0.01px;
+  --portrait-pointer-y:
+    50%;
 
-  --portrait-feather-start: 0px;
-  --portrait-feather-1: 0px;
-  --portrait-feather-2: 0px;
-  --portrait-feather-3: 0px;
-  --portrait-feather-4: 0px;
-  --portrait-feather-5: 0px;
-  --portrait-feather-6: 0px;
-  --portrait-feather-7: 0px;
-  --portrait-feather-8: 0px;
+  --portrait-radius:
+    0.01px;
 
-  isolation: isolate;
+  --portrait-cut-radius:
+    0.01px;
+
+  --portrait-feather-start:
+    0px;
+
+  --portrait-feather-1:
+    0px;
+
+  --portrait-feather-2:
+    0px;
+
+  --portrait-feather-3:
+    0px;
+
+  --portrait-feather-4:
+    0px;
+
+  --portrait-feather-5:
+    0px;
+
+  --portrait-feather-6:
+    0px;
+
+  --portrait-feather-7:
+    0px;
+
+  --portrait-feather-8:
+    0px;
+
+  isolation:
+    isolate;
 }
 
 
@@ -46,26 +70,41 @@
 ========================= */
 
 .layer {
-  position: absolute;
-  inset: 0;
+  position:
+    absolute;
 
-  pointer-events: none;
+  inset:
+    0;
+
+  pointer-events:
+    none;
 }
 
 
 .baseImage,
 .altImage {
-  object-fit: contain;
-  object-position: center bottom;
+  object-fit:
+    contain;
 
-  transform: scale(1.006);
-  transform-origin: center bottom;
+  object-position:
+    center bottom;
 
-  user-select: none;
+  transform:
+    scale(
+      1.006
+    );
 
-  -webkit-user-drag: none;
+  transform-origin:
+    center bottom;
 
-  backface-visibility: hidden;
+  user-select:
+    none;
+
+  -webkit-user-drag:
+    none;
+
+  backface-visibility:
+    hidden;
 }
 
 
@@ -75,7 +114,8 @@
 ========================= */
 
 .baseLayer {
-  z-index: 1;
+  z-index:
+    1;
 
   /*
    * Exact inverse dari ALT.
@@ -95,98 +135,213 @@
   -webkit-mask-image:
     radial-gradient(
       circle
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
         at
-        var(--portrait-pointer-x)
-        var(--portrait-pointer-y),
-
-      transparent 0,
+        var(
+          --portrait-pointer-x
+        )
+        var(
+          --portrait-pointer-y
+        ),
 
       transparent
-        var(--portrait-feather-start),
+        0,
 
-      rgb(0 0 0 / 0.02)
-        var(--portrait-feather-1),
+      transparent
+        var(
+          --portrait-feather-start
+        ),
 
-      rgb(0 0 0 / 0.09)
-        var(--portrait-feather-2),
+      rgb(
+        0 0 0 /
+        0.02
+      )
+        var(
+          --portrait-feather-1
+        ),
 
-      rgb(0 0 0 / 0.22)
-        var(--portrait-feather-3),
+      rgb(
+        0 0 0 /
+        0.09
+      )
+        var(
+          --portrait-feather-2
+        ),
 
-      rgb(0 0 0 / 0.40)
-        var(--portrait-feather-4),
+      rgb(
+        0 0 0 /
+        0.22
+      )
+        var(
+          --portrait-feather-3
+        ),
 
-      rgb(0 0 0 / 0.60)
-        var(--portrait-feather-5),
+      rgb(
+        0 0 0 /
+        0.40
+      )
+        var(
+          --portrait-feather-4
+        ),
 
-      rgb(0 0 0 / 0.78)
-        var(--portrait-feather-6),
+      rgb(
+        0 0 0 /
+        0.60
+      )
+        var(
+          --portrait-feather-5
+        ),
 
-      rgb(0 0 0 / 0.915)
-        var(--portrait-feather-7),
+      rgb(
+        0 0 0 /
+        0.78
+      )
+        var(
+          --portrait-feather-6
+        ),
 
-      rgb(0 0 0 / 0.988)
-        var(--portrait-feather-8),
+      rgb(
+        0 0 0 /
+        0.915
+      )
+        var(
+          --portrait-feather-7
+        ),
+
+      rgb(
+        0 0 0 /
+        0.988
+      )
+        var(
+          --portrait-feather-8
+        ),
 
       #000
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
     );
 
 
   mask-image:
     radial-gradient(
       circle
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
         at
-        var(--portrait-pointer-x)
-        var(--portrait-pointer-y),
-
-      transparent 0,
+        var(
+          --portrait-pointer-x
+        )
+        var(
+          --portrait-pointer-y
+        ),
 
       transparent
-        var(--portrait-feather-start),
+        0,
 
-      rgb(0 0 0 / 0.02)
-        var(--portrait-feather-1),
+      transparent
+        var(
+          --portrait-feather-start
+        ),
 
-      rgb(0 0 0 / 0.09)
-        var(--portrait-feather-2),
+      rgb(
+        0 0 0 /
+        0.02
+      )
+        var(
+          --portrait-feather-1
+        ),
 
-      rgb(0 0 0 / 0.22)
-        var(--portrait-feather-3),
+      rgb(
+        0 0 0 /
+        0.09
+      )
+        var(
+          --portrait-feather-2
+        ),
 
-      rgb(0 0 0 / 0.40)
-        var(--portrait-feather-4),
+      rgb(
+        0 0 0 /
+        0.22
+      )
+        var(
+          --portrait-feather-3
+        ),
 
-      rgb(0 0 0 / 0.60)
-        var(--portrait-feather-5),
+      rgb(
+        0 0 0 /
+        0.40
+      )
+        var(
+          --portrait-feather-4
+        ),
 
-      rgb(0 0 0 / 0.78)
-        var(--portrait-feather-6),
+      rgb(
+        0 0 0 /
+        0.60
+      )
+        var(
+          --portrait-feather-5
+        ),
 
-      rgb(0 0 0 / 0.915)
-        var(--portrait-feather-7),
+      rgb(
+        0 0 0 /
+        0.78
+      )
+        var(
+          --portrait-feather-6
+        ),
 
-      rgb(0 0 0 / 0.988)
-        var(--portrait-feather-8),
+      rgb(
+        0 0 0 /
+        0.915
+      )
+        var(
+          --portrait-feather-7
+        ),
+
+      rgb(
+        0 0 0 /
+        0.988
+      )
+        var(
+          --portrait-feather-8
+        ),
 
       #000
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
     );
 
 
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  -webkit-mask-repeat:
+    no-repeat;
 
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
+  mask-repeat:
+    no-repeat;
 
-  mask-mode: alpha;
+  -webkit-mask-size:
+    100%
+    100%;
 
-  transform: translateZ(0);
+  mask-size:
+    100%
+    100%;
 
-  backface-visibility: hidden;
+  mask-mode:
+    alpha;
+
+  transform:
+    translateZ(
+      0
+    );
+
+  backface-visibility:
+    hidden;
 
   will-change:
     mask-image,
@@ -195,7 +350,10 @@
 
 
 .baseImage {
-  filter: grayscale(100%);
+  filter:
+    grayscale(
+      100%
+    );
 }
 
 
@@ -205,130 +363,231 @@
 ========================= */
 
 .altLayer {
-  z-index: 2;
-
-  /*
-   * Smoother S-curve.
-   *
-   * Bagian dalam:
-   * tetap kuat supaya ALT tidak
-   * terasa washed-out.
-   *
-   * Bagian tengah:
-   * turun secara progressive.
-   *
-   * Bagian paling luar:
-   * sudah hampir transparent
-   * SEBELUM radius berakhir.
-   *
-   * Ini yang menghilangkan kesan
-   * "lingkaran punya outline".
-   */
+  z-index:
+    2;
 
   -webkit-mask-image:
     radial-gradient(
       circle
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
         at
-        var(--portrait-pointer-x)
-        var(--portrait-pointer-y),
-
-      #000 0,
+        var(
+          --portrait-pointer-x
+        )
+        var(
+          --portrait-pointer-y
+        ),
 
       #000
-        var(--portrait-feather-start),
+        0,
 
-      rgb(0 0 0 / 0.98)
-        var(--portrait-feather-1),
+      #000
+        var(
+          --portrait-feather-start
+        ),
 
-      rgb(0 0 0 / 0.91)
-        var(--portrait-feather-2),
+      rgb(
+        0 0 0 /
+        0.98
+      )
+        var(
+          --portrait-feather-1
+        ),
 
-      rgb(0 0 0 / 0.78)
-        var(--portrait-feather-3),
+      rgb(
+        0 0 0 /
+        0.91
+      )
+        var(
+          --portrait-feather-2
+        ),
 
-      rgb(0 0 0 / 0.60)
-        var(--portrait-feather-4),
+      rgb(
+        0 0 0 /
+        0.78
+      )
+        var(
+          --portrait-feather-3
+        ),
 
-      rgb(0 0 0 / 0.40)
-        var(--portrait-feather-5),
+      rgb(
+        0 0 0 /
+        0.60
+      )
+        var(
+          --portrait-feather-4
+        ),
 
-      rgb(0 0 0 / 0.22)
-        var(--portrait-feather-6),
+      rgb(
+        0 0 0 /
+        0.40
+      )
+        var(
+          --portrait-feather-5
+        ),
 
-      rgb(0 0 0 / 0.085)
-        var(--portrait-feather-7),
+      rgb(
+        0 0 0 /
+        0.22
+      )
+        var(
+          --portrait-feather-6
+        ),
 
-      rgb(0 0 0 / 0.012)
-        var(--portrait-feather-8),
+      rgb(
+        0 0 0 /
+        0.085
+      )
+        var(
+          --portrait-feather-7
+        ),
+
+      rgb(
+        0 0 0 /
+        0.012
+      )
+        var(
+          --portrait-feather-8
+        ),
 
       transparent
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
     );
 
 
   mask-image:
     radial-gradient(
       circle
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
         at
-        var(--portrait-pointer-x)
-        var(--portrait-pointer-y),
-
-      #000 0,
+        var(
+          --portrait-pointer-x
+        )
+        var(
+          --portrait-pointer-y
+        ),
 
       #000
-        var(--portrait-feather-start),
+        0,
 
-      rgb(0 0 0 / 0.98)
-        var(--portrait-feather-1),
+      #000
+        var(
+          --portrait-feather-start
+        ),
 
-      rgb(0 0 0 / 0.91)
-        var(--portrait-feather-2),
+      rgb(
+        0 0 0 /
+        0.98
+      )
+        var(
+          --portrait-feather-1
+        ),
 
-      rgb(0 0 0 / 0.78)
-        var(--portrait-feather-3),
+      rgb(
+        0 0 0 /
+        0.91
+      )
+        var(
+          --portrait-feather-2
+        ),
 
-      rgb(0 0 0 / 0.60)
-        var(--portrait-feather-4),
+      rgb(
+        0 0 0 /
+        0.78
+      )
+        var(
+          --portrait-feather-3
+        ),
 
-      rgb(0 0 0 / 0.40)
-        var(--portrait-feather-5),
+      rgb(
+        0 0 0 /
+        0.60
+      )
+        var(
+          --portrait-feather-4
+        ),
 
-      rgb(0 0 0 / 0.22)
-        var(--portrait-feather-6),
+      rgb(
+        0 0 0 /
+        0.40
+      )
+        var(
+          --portrait-feather-5
+        ),
 
-      rgb(0 0 0 / 0.085)
-        var(--portrait-feather-7),
+      rgb(
+        0 0 0 /
+        0.22
+      )
+        var(
+          --portrait-feather-6
+        ),
 
-      rgb(0 0 0 / 0.012)
-        var(--portrait-feather-8),
+      rgb(
+        0 0 0 /
+        0.085
+      )
+        var(
+          --portrait-feather-7
+        ),
+
+      rgb(
+        0 0 0 /
+        0.012
+      )
+        var(
+          --portrait-feather-8
+        ),
 
       transparent
-        var(--portrait-radius)
+        var(
+          --portrait-radius
+        )
     );
 
 
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  -webkit-mask-repeat:
+    no-repeat;
 
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
+  mask-repeat:
+    no-repeat;
 
-  mask-mode: alpha;
+  -webkit-mask-size:
+    100%
+    100%;
+
+  mask-size:
+    100%
+    100%;
+
+  mask-mode:
+    alpha;
 
 
   /*
-   * Menjaga brush + eraser
-   * complementary supaya tidak
-   * muncul white alpha gap.
+   * Brush + eraser complementary
+   * compositing.
+   *
+   * Tetap sama untuk desktop
+   * maupun tap mobile.
    */
-  mix-blend-mode: plus-lighter;
+  mix-blend-mode:
+    plus-lighter;
 
 
-  transform: translateZ(0);
+  transform:
+    translateZ(
+      0
+    );
 
-  backface-visibility: hidden;
+  backface-visibility:
+    hidden;
 
   will-change:
     mask-image,
@@ -337,26 +596,39 @@
 
 
 /* =========================
-   MOBILE
+   MOBILE / TABLET
 ========================= */
 
-@media (max-width: 960px) {
-  .baseLayer {
-    -webkit-mask-image: none;
-    mask-image: none;
+@media (
+  max-width:
+    960px
+) {
+  /*
+   * Jangan blok vertical scrolling.
+   */
+  .stage {
+    touch-action:
+      pan-y;
   }
 
 
-  .altLayer {
-    display: none;
-
-    mix-blend-mode: normal;
-  }
-
-
+  /*
+   * Mask TIDAK dimatikan lagi.
+   *
+   * Radius default hanya 0.01px,
+   * sehingga dalam keadaan idle
+   * portrait secara visual tetap
+   * BASE seperti sebelumnya.
+   *
+   * Saat user tap, JS hanya
+   * memperbesar radius sementara.
+   */
   .baseImage,
   .altImage {
-    transform: scale(1.003);
+    transform:
+      scale(
+        1.003
+      );
   }
 }
 
@@ -365,22 +637,39 @@
    REDUCED MOTION
 ========================= */
 
-@media (prefers-reduced-motion: reduce) {
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  /*
+   * Accessibility:
+   * selalu tampil BASE normal.
+   */
+
   .baseLayer {
-    -webkit-mask-image: none;
-    mask-image: none;
+    -webkit-mask-image:
+      none;
+
+    mask-image:
+      none;
+
+    transform:
+      none;
   }
 
 
   .altLayer {
-    display: none;
+    display:
+      none;
 
-    mix-blend-mode: normal;
+    mix-blend-mode:
+      normal;
   }
 
 
   .baseImage,
   .altImage {
-    transform: none;
+    transform:
+      none;
   }
 }
