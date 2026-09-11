@@ -92,11 +92,6 @@ export default function FiveAmVisionArtwork({
 
 
       const applyMotion = () => {
-        /*
-         * FOREGROUND
-         *
-         * Aven mengikuti cursor.
-         */
         root.style.setProperty(
           "--vision-character-x",
           `${currentX * 20}px`,
@@ -112,12 +107,6 @@ export default function FiveAmVisionArtwork({
           `${currentX * 0.45}deg`,
         );
 
-
-        /*
-         * BIG TYPE
-         *
-         * Bergerak berlawanan dengan Aven.
-         */
         root.style.setProperty(
           "--vision-type-x",
           `${currentX * -17}px`,
@@ -128,13 +117,6 @@ export default function FiveAmVisionArtwork({
           `${currentY * -10}px`,
         );
 
-
-        /*
-         * ORBIT
-         *
-         * Background depth:
-         * berlawanan, tetapi lebih pelan.
-         */
         root.style.setProperty(
           "--vision-orbit-x",
           `${currentX * -10}px`,
@@ -145,10 +127,6 @@ export default function FiveAmVisionArtwork({
           `${currentY * -7}px`,
         );
 
-
-        /*
-         * TOP META
-         */
         root.style.setProperty(
           "--vision-top-x",
           `${currentX * -4}px`,
@@ -159,10 +137,6 @@ export default function FiveAmVisionArtwork({
           `${currentY * -2}px`,
         );
 
-
-        /*
-         * LEFT META
-         */
         root.style.setProperty(
           "--vision-left-x",
           `${currentX * -8}px`,
@@ -173,14 +147,6 @@ export default function FiveAmVisionArtwork({
           `${currentY * -5}px`,
         );
 
-
-        /*
-         * RIGHT STATEMENT
-         *
-         * Layer ini sedikit mengikuti
-         * arah Aven supaya komposisi
-         * melebar dari tengah.
-         */
         root.style.setProperty(
           "--vision-right-x",
           `${currentX * 7}px`,
@@ -191,10 +157,6 @@ export default function FiveAmVisionArtwork({
           `${currentY * 4}px`,
         );
 
-
-        /*
-         * TAGLINE
-         */
         root.style.setProperty(
           "--vision-tagline-x",
           `${currentX * 5}px`,
@@ -205,13 +167,6 @@ export default function FiveAmVisionArtwork({
           `${currentY * 3}px`,
         );
 
-
-        /*
-         * BACKGROUND AMBIENT
-         *
-         * Sangat kecil supaya tidak
-         * terasa artificial.
-         */
         root.style.setProperty(
           "--vision-ambient-x",
           `${currentX * -3}px`,
@@ -225,12 +180,6 @@ export default function FiveAmVisionArtwork({
 
 
       const tick = () => {
-        /*
-         * Lerp.
-         *
-         * Semakin kecil angkanya,
-         * semakin lembut / berat.
-         */
         const easing =
           0.115;
 
@@ -249,7 +198,6 @@ export default function FiveAmVisionArtwork({
           easing;
 
         applyMotion();
-
 
         const movingX =
           Math.abs(
@@ -356,10 +304,6 @@ export default function FiveAmVisionArtwork({
 
       const handlePointerLeave =
         () => {
-          /*
-           * Balik halus ke posisi
-           * netral saat cursor keluar.
-           */
           targetX =
             0;
 
@@ -460,10 +404,19 @@ export default function FiveAmVisionArtwork({
       >
         <span
           className={
-            styles.topIndex
+            styles.topLogo
           }
         >
-          02
+          <Image
+            src="/images/projects/5am-vision/5am-logo.png"
+            alt=""
+            fill
+            sizes="(max-width: 700px) 28px, (max-width: 960px) 34px, 42px"
+            className={
+              styles.topLogoImage
+            }
+            unoptimized
+          />
         </span>
 
         <span
@@ -474,10 +427,10 @@ export default function FiveAmVisionArtwork({
 
         <span
           className={
-            styles.topTime
+            styles.topIndex
           }
         >
-          05:00
+          02
         </span>
       </div>
 

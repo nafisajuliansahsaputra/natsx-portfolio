@@ -58,25 +58,25 @@ const homeMessages = {
 
       visionArtwork: {
         disciplineLabel:
-          "DISCIPLINE",
+          "BUILT",
 
         identity:
-          "BRAND IDENTITY",
+          "WHILE THE",
 
         artDirection:
-          "ART DIRECTION",
+          "WORLD SLEEPS",
 
         digitalDesign:
           "DIGITAL DESIGN",
 
         philosophyLine1:
-          "DISCIPLINE",
+          "BUILT",
 
         philosophyLine2:
-          "BUILDS",
+          "WHILE THE",
 
         philosophyLine3:
-          "FREEDOM",
+          "WORLD SLEEPS",
 
         tagline:
           "IDEAS THAT MOVE FORWARD",
@@ -277,25 +277,25 @@ const homeMessages = {
 
       visionArtwork: {
         disciplineLabel:
-          "DISIPLIN",
+          "BUILT",
 
         identity:
-          "IDENTITAS BRAND",
+          "WHILE THE",
 
         artDirection:
-          "ARAH KREATIF",
+          "WORLD SLEEPS",
 
         digitalDesign:
           "DESAIN DIGITAL",
 
         philosophyLine1:
-          "DISIPLIN",
+          "BUILT",
 
         philosophyLine2:
-          "MEMBANGUN",
+          "WHILE THE",
 
         philosophyLine3:
-          "KEBEBASAN",
+          "WORLD SLEEPS",
 
         tagline:
           "IDE YANG BERGERAK MAJU",
@@ -496,25 +496,25 @@ const homeMessages = {
 
       visionArtwork: {
         disciplineLabel:
-          "DISZIPLIN",
+          "BUILT",
 
         identity:
-          "MARKENIDENTITÄT",
+          "WHILE THE",
 
         artDirection:
-          "ART DIRECTION",
+          "WORLD SLEEPS",
 
         digitalDesign:
           "DIGITALES DESIGN",
 
         philosophyLine1:
-          "DISZIPLIN",
+          "BUILT",
 
         philosophyLine2:
-          "SCHAFFT",
+          "WHILE THE",
 
         philosophyLine3:
-          "FREIHEIT",
+          "WORLD SLEEPS",
 
         tagline:
           "IDEEN, DIE VORANBRINGEN",
