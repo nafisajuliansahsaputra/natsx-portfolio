@@ -15,10 +15,10 @@ import AboutPreview from "@/components/home/AboutPreview";
 import Capabilities from "@/components/home/Capabilities";
 import ContactFooter from "@/components/home/ContactFooter";
 import Hero from "@/components/home/Hero";
-import HomeSectionChoreography from "@/components/home/HomeSectionChoreography";
+import HomeSectionChoreographyGate from "@/components/home/HomeSectionChoreographyGate";
 import PlaygroundPreview from "@/components/home/PlaygroundPreview";
 import SelectedWork from "@/components/home/SelectedWork";
-import SelectedWorkImmersive from "@/components/home/SelectedWorkImmersive";
+import SelectedWorkImmersiveGate from "@/components/home/SelectedWorkImmersiveGate";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -54,7 +54,7 @@ export default function HomePage({
           }
         />
 
-        <SelectedWorkImmersive />
+        <SelectedWorkImmersiveGate />
 
         <Capabilities
           locale={
@@ -80,7 +80,7 @@ export default function HomePage({
           }
         />
 
-        <HomeSectionChoreography />
+        <HomeSectionChoreographyGate />
       </main>
     </>
   );

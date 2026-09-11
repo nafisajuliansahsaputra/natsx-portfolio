@@ -50,7 +50,7 @@ const aboutMessages = {
         "experience.",
 
       paragraphs: [
-        "I'm Nafisa, a multidisciplinary digital creator working under the creative identity NATSX.",
+        "I'm Julian, a multidisciplinary digital creator working under the creative identity NATSX.",
 
         "My work moves between design, development, motion, branding, and visual storytelling. Rather than treating those as isolated skills, I like connecting them to create work that feels complete from idea to execution.",
 
@@ -217,7 +217,7 @@ const aboutMessages = {
         "dirasakan.",
 
       paragraphs: [
-        "Saya Nafisa, kreator digital multidisiplin yang berkarya dengan identitas kreatif NATSX.",
+        "Saya Julian, kreator digital multidisiplin yang berkarya dengan identitas kreatif NATSX.",
 
         "Karya saya bergerak di antara desain, development, motion, branding, dan visual storytelling. Alih-alih memperlakukannya sebagai keahlian yang terpisah, saya lebih suka menghubungkannya agar sebuah karya terasa utuh dari ide hingga eksekusi.",
 
@@ -384,7 +384,7 @@ const aboutMessages = {
         "erleben.",
 
       paragraphs: [
-        "Ich bin Nafisa, ein multidisziplinärer Digital Creator und arbeite unter der kreativen Identität NATSX.",
+        "Ich bin Julian, ein multidisziplinärer Digital Creator und arbeite unter der kreativen Identität NATSX.",
 
         "Meine Arbeit bewegt sich zwischen Design, Development, Motion, Branding und visuellem Storytelling. Statt diese Bereiche als getrennte Fähigkeiten zu betrachten, verbinde ich sie zu Arbeiten, die sich von der Idee bis zur Umsetzung ganzheitlich anfühlen.",
 

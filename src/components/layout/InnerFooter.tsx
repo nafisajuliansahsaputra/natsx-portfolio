@@ -167,23 +167,50 @@ export default function InnerFooter() {
             styles.top
           }
         >
-          <LocaleLink
-            href="/"
-            className={
-              styles.brand
-            }
-            aria-label={
-              copy.accessibility
-                .home
-            }
-          >
-            <span
-              className={
-                styles.logo
-              }
-              aria-hidden="true"
-            />
-          </LocaleLink>
+          <div
+  className={
+    styles.brandRow
+  }
+>
+  <LocaleLink
+    href="/"
+    className={
+      styles.brand
+    }
+    aria-label={
+      copy.accessibility
+        .home
+    }
+  >
+    <span
+      className={
+        styles.logo
+      }
+      aria-hidden="true"
+    />
+  </LocaleLink>
+
+  <div
+    className={
+      styles.brandMeta
+    }
+  >
+    <span>
+      {
+        site.role
+      }
+    </span>
+
+    <span>
+      {
+        site.location
+      }{" / "}
+      {
+        site.year
+      }
+    </span>
+  </div>
+</div>
 
           <nav
             className={
@@ -388,27 +415,21 @@ export default function InnerFooter() {
           <div
             className={`${styles.meta} ${styles.right}`}
           >
-            <div
-              className={
-                styles.copyright
-              }
-            >
-              <span>
-                ©{" "}
-                {
-                  site.year
-                }{" "}
-                {
-                  site.name
-                }
-              </span>
-
-              <span>
-                {
-                  site.location
-                }
-              </span>
-            </div>
+<div
+  className={
+    styles.copyright
+  }
+>
+  <span>
+    ©{" "}
+    {
+      site.year
+    }{" "}
+    {
+      site.name
+    }
+  </span>
+</div>
 
             <button
               type="button"

@@ -17,7 +17,7 @@ import {
   getMessages,
 } from "@/i18n/messages";
 
-import HeroAmbientSignature from "./HeroAmbientSignature";
+import HeroAmbientSignatureGate from "./HeroAmbientSignatureGate";
 import HeroVisual from "./HeroVisual";
 
 import styles from "./Hero.module.css";
@@ -49,7 +49,7 @@ export default function Hero({
       }
       data-ambient-active="false"
     >
-      <HeroAmbientSignature />
+      <HeroAmbientSignatureGate />
 
       <div
         className={`site-container ${styles.inner}`}

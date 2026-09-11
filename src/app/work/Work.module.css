@@ -795,9 +795,9 @@
 ========================= */
 
 @media (
-  hover: hover
+  any-hover: hover
 ) and (
-  pointer: fine
+  any-pointer: fine
 ) {
   .project:hover,
   .project:focus-visible {

@@ -164,6 +164,51 @@
     none;
 }
 
+/* =========================================================
+   MOBILE / TABLET PORTRAIT LCP GUARD
+========================================================= */
+
+/*
+ * Base portrait is the mobile LCP candidate.
+ *
+ * Existing global motion fades it from:
+ *
+ * opacity 0 → 1
+ * over 850ms.
+ *
+ * That means the image can already be
+ * downloaded and decoded while the browser
+ * still waits for the opacity animation.
+ *
+ * Compact layouts now expose the portrait
+ * immediately after image load.
+ *
+ * The small translate / scale settling
+ * motion remains, so the visual does not
+ * suddenly feel static.
+ *
+ * Desktop keeps the original full reveal.
+ */
+
+@media (
+  max-width: 960px
+) and (
+  prefers-reduced-motion:
+    no-preference
+) {
+  html[data-motion="enabled"]
+    [data-motion-page="home"]
+    [data-motion-portrait="loaded"] {
+    opacity:
+      1;
+
+    transition:
+      transform
+        700ms
+        var(--motion-ease-out);
+  }
+}
+
 /* =========================
    CONTACT DISPLAY TEXT
 ========================= */

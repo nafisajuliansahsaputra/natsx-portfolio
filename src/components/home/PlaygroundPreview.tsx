@@ -43,7 +43,7 @@ const experiments = [
   },
 ] as const;
 
-function prefersReducedMotion() {
+function canUseInteractivePointer() {
   if (
     typeof window ===
     "undefined"
@@ -51,8 +51,26 @@ function prefersReducedMotion() {
     return false;
   }
 
+  const reducedMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+  if (
+    reducedMotion
+  ) {
+    return false;
+  }
+
+  /*
+   * Pointer-driven Live Lab motion is
+   * purely decorative.
+   *
+   * Running layout reads on touch devices
+   * provides no useful interaction.
+   */
   return window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
+    "(min-width: 961px) and (hover: hover) and (pointer: fine)",
   ).matches;
 }
 
@@ -72,8 +90,15 @@ export default function PlaygroundPreview({
   function handlePointerMove(
     event: ReactPointerEvent<HTMLDivElement>,
   ) {
+    /*
+     * IMPORTANT:
+     *
+     * Do not call getBoundingClientRect()
+     * unless this device can actually
+     * use the pointer interaction.
+     */
     if (
-      prefersReducedMotion()
+      !canUseInteractivePointer()
     ) {
       return;
     }
@@ -87,6 +112,15 @@ export default function PlaygroundPreview({
 
     const rect =
       element.getBoundingClientRect();
+
+    if (
+      rect.width <=
+        0 ||
+      rect.height <=
+        0
+    ) {
+      return;
+    }
 
     const x =
       (

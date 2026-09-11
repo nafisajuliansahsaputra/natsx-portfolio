@@ -51,10 +51,13 @@ function damp(
   return (
     current +
     (target - current) *
-      (1 -
+      (
+        1 -
         Math.exp(
-          -lambda * deltaTime,
-        ))
+          -lambda *
+            deltaTime,
+        )
+      )
   );
 }
 
@@ -72,10 +75,12 @@ function smoothDamp(
     );
 
   const omega =
-    2 / safeSmoothTime;
+    2 /
+    safeSmoothTime;
 
   const x =
-    omega * deltaTime;
+    omega *
+    deltaTime;
 
   const exponential =
     1 /
@@ -92,30 +97,39 @@ function smoothDamp(
     );
 
   const change =
-    current - target;
+    current -
+    target;
 
   const temporary =
     (
       velocity +
-      omega * change
-    ) * deltaTime;
+      omega *
+        change
+    ) *
+    deltaTime;
 
   const nextVelocity =
     (
       velocity -
-      omega * temporary
-    ) * exponential;
+      omega *
+        temporary
+    ) *
+    exponential;
 
   const nextValue =
     target +
     (
       change +
       temporary
-    ) * exponential;
+    ) *
+    exponential;
 
   return {
-    value: nextValue,
-    velocity: nextVelocity,
+    value:
+      nextValue,
+
+    velocity:
+      nextVelocity,
   };
 }
 
@@ -125,8 +139,10 @@ function isInsidePortraitZone(
   rect: DOMRect,
 ) {
   if (
-    rect.width <= 0 ||
-    rect.height <= 0
+    rect.width <=
+      0 ||
+    rect.height <=
+      0
   ) {
     return false;
   }
@@ -135,13 +151,15 @@ function isInsidePortraitZone(
     (
       clientX -
       rect.left
-    ) / rect.width;
+    ) /
+    rect.width;
 
   const y =
     (
       clientY -
       rect.top
-    ) / rect.height;
+    ) /
+    rect.height;
 
   const centerX =
     0.53;
@@ -159,17 +177,21 @@ function isInsidePortraitZone(
     (
       x -
       centerX
-    ) / radiusX;
+    ) /
+    radiusX;
 
   const dy =
     (
       y -
       centerY
-    ) / radiusY;
+    ) /
+    radiusY;
 
   return (
-    dx * dx +
-      dy * dy <=
+    dx *
+      dx +
+      dy *
+        dy <=
     1
   );
 }
@@ -190,6 +212,22 @@ export default function HeroVisual({
       false,
     );
 
+  /*
+   * Alternate portrait is decorative
+   * and only participates in the
+   * desktop hover transition.
+   *
+   * Keep it out of the critical
+   * mobile image path.
+   */
+  const [
+    alternatePortraitEnabled,
+    setAlternatePortraitEnabled,
+  ] =
+    useState(
+      false,
+    );
+
   const visualRef =
     useRef<HTMLDivElement>(
       null,
@@ -199,6 +237,79 @@ export default function HeroVisual({
     useRef<HTMLDivElement>(
       null,
     );
+
+  /*
+   * =====================================================
+   * ALTERNATE PORTRAIT DELIVERY
+   * =====================================================
+   *
+   * Base portrait owns the critical
+   * image preload / LCP path.
+   *
+   * Alternate portrait starts loading
+   * only after:
+   *
+   * 1. base portrait has loaded
+   * 2. viewport is desktop
+   * 3. reduced motion is not enabled
+   *
+   * Once loaded we keep it mounted.
+   */
+
+  useEffect(() => {
+    if (
+      !portraitLoaded
+    ) {
+      return;
+    }
+
+    const desktop =
+      window.matchMedia(
+        "(min-width: 961px)",
+      );
+
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
+    function enableWhenUseful() {
+      if (
+        desktop.matches &&
+        !reducedMotion.matches
+      ) {
+        setAlternatePortraitEnabled(
+          true,
+        );
+      }
+    }
+
+    enableWhenUseful();
+
+    desktop.addEventListener(
+      "change",
+      enableWhenUseful,
+    );
+
+    reducedMotion.addEventListener(
+      "change",
+      enableWhenUseful,
+    );
+
+    return () => {
+      desktop.removeEventListener(
+        "change",
+        enableWhenUseful,
+      );
+
+      reducedMotion.removeEventListener(
+        "change",
+        enableWhenUseful,
+      );
+    };
+  }, [
+    portraitLoaded,
+  ]);
 
   /*
    * =========================
@@ -258,7 +369,8 @@ export default function HeroVisual({
               syncAmbientState();
             },
             {
-              threshold: 0.1,
+              threshold:
+                0.1,
             },
           )
         : null;
@@ -392,7 +504,8 @@ export default function HeroVisual({
         Math.min(
           36,
           Math.max(
-            radius * 0.235,
+            radius *
+              0.235,
             0,
           ),
         );
@@ -405,52 +518,63 @@ export default function HeroVisual({
       const cutRadius =
         Math.max(
           radius -
-            feather * 0.68,
+            feather *
+              0.68,
           0.01,
         );
 
       const start =
         Math.max(
-          radius - feather,
+          radius -
+            feather,
           0,
         );
 
       const feather1 =
         start +
-        feather * 0.08;
+        feather *
+          0.08;
 
       const feather2 =
         start +
-        feather * 0.18;
+        feather *
+          0.18;
 
       const feather3 =
         start +
-        feather * 0.31;
+        feather *
+          0.31;
 
       const feather4 =
         start +
-        feather * 0.47;
+        feather *
+          0.47;
 
       const feather5 =
         start +
-        feather * 0.63;
+        feather *
+          0.63;
 
       const feather6 =
         start +
-        feather * 0.77;
+        feather *
+          0.77;
 
       const feather7 =
         start +
-        feather * 0.89;
+        feather *
+          0.89;
 
       const feather8 =
         start +
-        feather * 0.965;
+        feather *
+          0.965;
 
       stageElement.style.setProperty(
         "--portrait-pointer-x",
         `${(
-          currentX * 100
+          currentX *
+          100
         ).toFixed(
           3,
         )}%`,
@@ -459,7 +583,8 @@ export default function HeroVisual({
       stageElement.style.setProperty(
         "--portrait-pointer-y",
         `${(
-          currentY * 100
+          currentY *
+          100
         ).toFixed(
           3,
         )}%`,
@@ -545,7 +670,8 @@ export default function HeroVisual({
 
     function requestFrame() {
       if (
-        frameId !== null
+        frameId !==
+        null
       ) {
         return;
       }
@@ -562,7 +688,8 @@ export default function HeroVisual({
     function renderFrame(
       timestamp: number,
     ) {
-      frameId = null;
+      frameId =
+        null;
 
       if (
         destroyed
@@ -575,7 +702,8 @@ export default function HeroVisual({
           (
             timestamp -
             previousTime
-          ) / 1000,
+          ) /
+            1000,
           0.033,
         );
 
@@ -623,22 +751,26 @@ export default function HeroVisual({
         Math.abs(
           currentRadius -
             targetRadius,
-        ) < 0.04 &&
+        ) <
+          0.04 &&
         Math.abs(
           radiusVelocity,
-        ) < 0.15
+        ) <
+          0.15
       ) {
         currentRadius =
           targetRadius;
 
-        radiusVelocity = 0;
+        radiusVelocity =
+          0;
       }
 
       if (
         Math.abs(
           currentX -
             targetX,
-        ) < 0.0002
+        ) <
+        0.0002
       ) {
         currentX =
           targetX;
@@ -648,7 +780,8 @@ export default function HeroVisual({
         Math.abs(
           currentY -
             targetY,
-        ) < 0.0002
+        ) <
+        0.0002
       ) {
         currentY =
           targetY;
@@ -660,18 +793,22 @@ export default function HeroVisual({
         Math.abs(
           currentRadius -
             targetRadius,
-        ) > 0.04 ||
+        ) >
+          0.04 ||
         Math.abs(
           radiusVelocity,
-        ) > 0.15 ||
+        ) >
+          0.15 ||
         Math.abs(
           currentX -
             targetX,
-        ) > 0.0002 ||
+        ) >
+          0.0002 ||
         Math.abs(
           currentY -
             targetY,
-        ) > 0.0002;
+        ) >
+          0.0002;
 
       if (
         moving
@@ -694,8 +831,10 @@ export default function HeroVisual({
         stageElement.getBoundingClientRect();
 
       if (
-        rect.width <= 0 ||
-        rect.height <= 0
+        rect.width <=
+          0 ||
+        rect.height <=
+          0
       ) {
         return;
       }
@@ -705,7 +844,8 @@ export default function HeroVisual({
           (
             event.clientX -
             rect.left
-          ) / rect.width,
+          ) /
+            rect.width,
           0,
           1,
         );
@@ -715,7 +855,8 @@ export default function HeroVisual({
           (
             event.clientY -
             rect.top
-          ) / rect.height,
+          ) /
+            rect.height,
           0,
           1,
         );
@@ -739,8 +880,11 @@ export default function HeroVisual({
           nextY;
       }
 
-      targetX = nextX;
-      targetY = nextY;
+      targetX =
+        nextX;
+
+      targetY =
+        nextY;
 
       targetRadius =
         inside
@@ -767,28 +911,44 @@ export default function HeroVisual({
     }
 
     function handlePointerLeave() {
-      targetRadius = 0;
+      targetRadius =
+        0;
+
       requestFrame();
     }
 
     function resetInteraction() {
-      targetRadius = 0;
-      currentRadius = 0;
-      radiusVelocity = 0;
+      targetRadius =
+        0;
 
-      targetX = 0.5;
-      targetY = 0.5;
-      currentX = 0.5;
-      currentY = 0.5;
+      currentRadius =
+        0;
+
+      radiusVelocity =
+        0;
+
+      targetX =
+        0.5;
+
+      targetY =
+        0.5;
+
+      currentX =
+        0.5;
+
+      currentY =
+        0.5;
 
       if (
-        frameId !== null
+        frameId !==
+        null
       ) {
         window.cancelAnimationFrame(
           frameId,
         );
 
-        frameId = null;
+        frameId =
+          null;
       }
 
       apply();
@@ -800,7 +960,8 @@ export default function HeroVisual({
 
     function handleResize() {
       if (
-        targetRadius > 0
+        targetRadius >
+        0
       ) {
         targetRadius =
           getMaximumRadius();
@@ -818,7 +979,8 @@ export default function HeroVisual({
       "pointermove",
       handlePointerMove,
       {
-        passive: true,
+        passive:
+          true,
       },
     );
 
@@ -846,14 +1008,16 @@ export default function HeroVisual({
       "resize",
       handleResize,
       {
-        passive: true,
+        passive:
+          true,
       },
     );
 
     apply();
 
     return () => {
-      destroyed = true;
+      destroyed =
+        true;
 
       visualElement.removeEventListener(
         "pointerenter",
@@ -891,7 +1055,8 @@ export default function HeroVisual({
       );
 
       if (
-        frameId !== null
+        frameId !==
+        null
       ) {
         window.cancelAnimationFrame(
           frameId,
@@ -979,8 +1144,9 @@ export default function HeroVisual({
                 .portrait
             }
             fill
-            preload
-            sizes="(max-width: 960px) 100vw, 42vw"
+loading="eager"
+fetchPriority="high"
+sizes="(max-width: 960px) 100vw, 42vw"
             className={
               portraitStyles.baseImage
             }
@@ -996,16 +1162,18 @@ export default function HeroVisual({
           className={`${portraitStyles.layer} ${portraitStyles.altLayer}`}
           aria-hidden="true"
         >
-          <Image
-            src="/images/natsx-portrait-hero-altes.png"
-            alt=""
-            fill
-            loading="eager"
-            sizes="(max-width: 960px) 100vw, 42vw"
-            className={
-              portraitStyles.altImage
-            }
-          />
+          {alternatePortraitEnabled ? (
+            <Image
+              src="/images/natsx-portrait-hero-altes.png"
+              alt=""
+              fill
+              loading="eager"
+              sizes="42vw"
+              className={
+                portraitStyles.altImage
+              }
+            />
+          ) : null}
         </div>
       </div>
     </div>
