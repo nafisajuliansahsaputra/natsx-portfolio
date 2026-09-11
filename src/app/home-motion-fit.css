@@ -245,6 +245,27 @@
    HERO TITLE
 ========================= */
 
+/*
+ * The localized hero deliberately keeps
+ * each title line on one line.
+ *
+ * Indonesian can visually overhang the
+ * H1 box into the copy-side gutter
+ * ("Pengalaman." is the longest case).
+ *
+ * The entrance animation uses `both`, so
+ * its final clip-path remains active after
+ * the animation has finished. A zero right
+ * inset therefore becomes a permanent hard
+ * crop and can cut the final "n" + accent
+ * period even though both still exist in
+ * the DOM.
+ *
+ * Keep the vertical reveal exactly the same,
+ * but overscan the clip mask horizontally.
+ * No type scale, tracking, layout, or motion
+ * timing is changed.
+ */
 @keyframes
   home-hero-title-in {
   from {
@@ -254,12 +275,12 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.9em
         calc(
           100% +
           0.35em
         )
-        0
+        -0.18em
       );
 
     translate:
@@ -274,9 +295,9 @@
     clip-path:
       inset(
         -0.35em
-        0
+        -0.9em
         -0.35em
-        0
+        -0.18em
       );
 
     translate:

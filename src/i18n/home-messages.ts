@@ -2,6 +2,7 @@ import type {
   Locale,
 } from "@/i18n/config";
 
+
 const homeMessages = {
   en: {
     hero: {
@@ -54,6 +55,32 @@ const homeMessages = {
 
       viewCaseStudy:
         "View case study",
+
+      visionArtwork: {
+        disciplineLabel:
+          "DISCIPLINE",
+
+        identity:
+          "BRAND IDENTITY",
+
+        artDirection:
+          "ART DIRECTION",
+
+        digitalDesign:
+          "DIGITAL DESIGN",
+
+        philosophyLine1:
+          "DISCIPLINE",
+
+        philosophyLine2:
+          "BUILDS",
+
+        philosophyLine3:
+          "FREEDOM",
+
+        tagline:
+          "IDEAS THAT MOVE FORWARD",
+      },
     },
 
     capabilities: {
@@ -195,6 +222,7 @@ const homeMessages = {
     },
   },
 
+
   id: {
     hero: {
       titlePrimary:
@@ -246,6 +274,32 @@ const homeMessages = {
 
       viewCaseStudy:
         "Lihat studi kasus",
+
+      visionArtwork: {
+        disciplineLabel:
+          "DISIPLIN",
+
+        identity:
+          "IDENTITAS BRAND",
+
+        artDirection:
+          "ARAH KREATIF",
+
+        digitalDesign:
+          "DESAIN DIGITAL",
+
+        philosophyLine1:
+          "DISIPLIN",
+
+        philosophyLine2:
+          "MEMBANGUN",
+
+        philosophyLine3:
+          "KEBEBASAN",
+
+        tagline:
+          "IDE YANG BERGERAK MAJU",
+      },
     },
 
     capabilities: {
@@ -387,6 +441,7 @@ const homeMessages = {
     },
   },
 
+
   de: {
     hero: {
       titlePrimary:
@@ -438,6 +493,32 @@ const homeMessages = {
 
       viewCaseStudy:
         "Case Study ansehen",
+
+      visionArtwork: {
+        disciplineLabel:
+          "DISZIPLIN",
+
+        identity:
+          "MARKENIDENTITÄT",
+
+        artDirection:
+          "ART DIRECTION",
+
+        digitalDesign:
+          "DIGITALES DESIGN",
+
+        philosophyLine1:
+          "DISZIPLIN",
+
+        philosophyLine2:
+          "SCHAFFT",
+
+        philosophyLine3:
+          "FREIHEIT",
+
+        tagline:
+          "IDEEN, DIE VORANBRINGEN",
+      },
     },
 
     capabilities: {
@@ -579,6 +660,7 @@ const homeMessages = {
     },
   },
 } as const;
+
 
 export function getHomeMessages(
   locale: Locale,

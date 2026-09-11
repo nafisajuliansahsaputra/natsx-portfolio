@@ -1,0 +1,1642 @@
+/*
+ * ==========================================
+ * NATSX — 5AM VISION ARTWORK
+ * ==========================================
+ *
+ * Real cursor-follow magnetic parallax.
+ *
+ * Cursor:
+ *
+ * LEFT
+ *   Aven       ←
+ *   Big Type   →
+ *
+ * RIGHT
+ *   Aven       →
+ *   Big Type   ←
+ *
+ * Same principle applies vertically.
+ */
+
+
+/* =========================================================
+   DESKTOP FRAME
+========================================================= */
+
+@media (min-width: 701px) {
+  :global(
+    [data-project-visual="vision"]
+  )
+  > div:nth-child(2) {
+    min-height:
+      0 !important;
+
+    aspect-ratio:
+      3 / 2 !important;
+  }
+}
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+.artwork {
+  --vision-character-x:
+    0px;
+
+  --vision-character-y:
+    0px;
+
+  --vision-character-rotate:
+    0deg;
+
+  --vision-type-x:
+    0px;
+
+  --vision-type-y:
+    0px;
+
+  --vision-orbit-x:
+    0px;
+
+  --vision-orbit-y:
+    0px;
+
+  --vision-top-x:
+    0px;
+
+  --vision-top-y:
+    0px;
+
+  --vision-left-x:
+    0px;
+
+  --vision-left-y:
+    0px;
+
+  --vision-right-x:
+    0px;
+
+  --vision-right-y:
+    0px;
+
+  --vision-tagline-x:
+    0px;
+
+  --vision-tagline-y:
+    0px;
+
+  --vision-ambient-x:
+    0px;
+
+  --vision-ambient-y:
+    0px;
+
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  overflow:
+    hidden;
+
+  isolation:
+    isolate;
+
+  background:
+    radial-gradient(
+      circle at 73% 34%,
+      rgba(
+        88,
+        98,
+        236,
+        0.32
+      )
+      0%,
+      rgba(
+        88,
+        98,
+        236,
+        0.13
+      )
+      22%,
+      transparent
+      48%
+    ),
+    radial-gradient(
+      circle at 54% 48%,
+      rgba(
+        58,
+        70,
+        172,
+        0.11
+      )
+      0%,
+      transparent
+      46%
+    ),
+    linear-gradient(
+      145deg,
+      #0a1628
+      0%,
+      #0f1b2d
+      48%,
+      #091426
+      72%,
+      #06101f
+      100%
+    );
+
+  color:
+    #ffffff;
+
+  /*
+   * Menjaga pointer tracking
+   * tetap responsif.
+   */
+  touch-action:
+    pan-y;
+}
+
+
+/* =========================================================
+   AMBIENT
+========================================================= */
+
+.ambient {
+  position:
+    absolute;
+
+  z-index:
+    0;
+
+  inset:
+    -12%;
+
+  background:
+    radial-gradient(
+      circle at 13% 82%,
+      rgba(
+        255,
+        255,
+        255,
+        0.028
+      )
+      0%,
+      transparent
+      27%
+    ),
+    radial-gradient(
+      circle at 84% 13%,
+      rgba(
+        88,
+        98,
+        236,
+        0.09
+      )
+      0%,
+      transparent
+      26%
+    ),
+    linear-gradient(
+      117deg,
+      transparent
+      0%,
+      rgba(
+        255,
+        255,
+        255,
+        0.018
+      )
+      42%,
+      transparent
+      61%
+    );
+
+  opacity:
+    0.95;
+
+  translate:
+    var(
+      --vision-ambient-x
+    )
+    var(
+      --vision-ambient-y
+    );
+
+  pointer-events:
+    none;
+}
+
+
+/* =========================================================
+   FRAME
+========================================================= */
+
+.frame {
+  position:
+    absolute;
+
+  z-index:
+    3;
+
+  inset:
+    0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(
+        255,
+        255,
+        255,
+        0.17
+      ),
+      rgba(
+        255,
+        255,
+        255,
+        0.17
+      )
+    )
+    center
+    89.4%
+    /
+    88%
+    1px
+    no-repeat;
+
+  /*
+   * Frame sengaja statis.
+   *
+   * Jadi dia jadi visual anchor
+   * saat layer lain bergerak.
+   */
+  pointer-events:
+    none;
+}
+
+
+/* =========================================================
+   TOP META
+========================================================= */
+
+.topMeta {
+  position:
+    absolute;
+
+  z-index:
+    5;
+
+  top:
+    9.1%;
+
+  left:
+    6.1%;
+
+  right:
+    6.1%;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    auto
+    minmax(
+      0,
+      1fr
+    )
+    auto;
+
+  align-items:
+    center;
+
+  gap:
+    22px;
+
+  transform:
+    translate3d(
+      var(
+        --vision-top-x
+      ),
+      var(
+        --vision-top-y
+      ),
+      0
+    );
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
+}
+
+
+.topIndex,
+.topTime {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+
+  font-size:
+    10px;
+
+  font-weight:
+    500;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.19em;
+
+  white-space:
+    nowrap;
+}
+
+
+.topRule {
+  display:
+    block;
+
+  width:
+    100%;
+
+  height:
+    1px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.22
+    );
+}
+
+
+/* =========================================================
+   ORBIT
+========================================================= */
+
+.orbit {
+  position:
+    absolute;
+
+  z-index:
+    2;
+
+  top:
+    43%;
+
+  left:
+    63%;
+
+  width:
+    48%;
+
+  aspect-ratio:
+    1;
+
+  border:
+    1px solid
+    rgba(
+      111,
+      128,
+      255,
+      0.68
+    );
+
+  border-radius:
+    50%;
+
+  background:
+    radial-gradient(
+      circle at 54% 38%,
+      rgba(
+        88,
+        98,
+        236,
+        0.28
+      )
+      0%,
+      rgba(
+        88,
+        98,
+        236,
+        0.12
+      )
+      36%,
+      rgba(
+        47,
+        59,
+        150,
+        0.035
+      )
+      61%,
+      transparent
+      72%
+    );
+
+  box-shadow:
+    0
+    0
+    145px
+    rgba(
+      88,
+      98,
+      236,
+      0.2
+    );
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    )
+    translate3d(
+      var(
+        --vision-orbit-x
+      ),
+      var(
+        --vision-orbit-y
+      ),
+      0
+    );
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform,
+    box-shadow;
+
+  transition:
+    box-shadow
+      500ms
+      ease;
+}
+
+
+.orbit::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    -41%;
+
+  border:
+    1px solid
+    rgba(
+      88,
+      98,
+      236,
+      0.13
+    );
+
+  border-radius:
+    50%;
+}
+
+
+.orbit::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    18%;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+
+  border-radius:
+    50%;
+}
+
+
+/* =========================================================
+   BIG TYPE
+========================================================= */
+
+.type {
+  position:
+    absolute;
+
+  z-index:
+    4;
+
+  top:
+    21%;
+
+  left:
+    5.7%;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  transform:
+    translate3d(
+      var(
+        --vision-type-x
+      ),
+      var(
+        --vision-type-y
+      ),
+      0
+    );
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
+}
+
+
+.type span {
+  display:
+    block;
+
+  font-size:
+    clamp(
+      72px,
+      9.2vw,
+      144px
+    );
+
+  font-weight:
+    500;
+
+  line-height:
+    0.79;
+
+  letter-spacing:
+    -0.075em;
+
+  text-shadow:
+    0
+    12px
+    45px
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    );
+}
+
+
+/* =========================================================
+   LEFT META
+========================================================= */
+
+.leftMeta {
+  position:
+    absolute;
+
+  z-index:
+    4;
+
+  left:
+    6.1%;
+
+  bottom:
+    12.6%;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    flex-start;
+
+  gap:
+    2px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.64
+    );
+
+  font-size:
+    6.5px;
+
+  font-weight:
+    500;
+
+  line-height:
+    1.55;
+
+  letter-spacing:
+    0.3em;
+
+  text-transform:
+    uppercase;
+
+  transform:
+    translate3d(
+      var(
+        --vision-left-x
+      ),
+      var(
+        --vision-left-y
+      ),
+      0
+    );
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
+}
+
+
+.metaLabel {
+  margin-bottom:
+    8px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.46
+    );
+}
+
+
+/* =========================================================
+   RIGHT STATEMENT
+========================================================= */
+
+.rightStatement {
+  position:
+    absolute;
+
+  z-index:
+    4;
+
+  top:
+    46%;
+
+  right:
+    6.2%;
+
+  width:
+    11%;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    flex-start;
+
+  color:
+    rgba(
+      154,
+      169,
+      255,
+      0.82
+    );
+
+  font-size:
+    8px;
+
+  font-weight:
+    500;
+
+  line-height:
+    1.8;
+
+  letter-spacing:
+    0.36em;
+
+  text-transform:
+    uppercase;
+
+  transform:
+    translate3d(
+      var(
+        --vision-right-x
+      ),
+      var(
+        --vision-right-y
+      ),
+      0
+    );
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
+}
+
+
+.rightStatement span {
+  display:
+    block;
+}
+
+
+.rightRule {
+  display:
+    block;
+
+  width:
+    28px;
+
+  height:
+    1px;
+
+  margin-top:
+    14px;
+
+  background:
+    rgba(
+      154,
+      169,
+      255,
+      0.56
+    );
+}
+
+
+/* =========================================================
+   TAGLINE
+========================================================= */
+
+.tagline {
+  position:
+    absolute;
+
+  z-index:
+    4;
+
+  right:
+    6.2%;
+
+  bottom:
+    6.6%;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.56
+    );
+
+  font-size:
+    7px;
+
+  font-weight:
+    500;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    0.34em;
+
+  text-transform:
+    uppercase;
+
+  white-space:
+    nowrap;
+
+  transform:
+    translate3d(
+      var(
+        --vision-tagline-x
+      ),
+      var(
+        --vision-tagline-y
+      ),
+      0
+    );
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
+}
+
+
+/* =========================================================
+   AVEN
+========================================================= */
+
+/*
+ * Static position sedikit lebih kanan.
+ *
+ * Sebelumnya:
+ * 25 / 28%
+ *
+ * Sekarang:
+ * 29%
+ */
+
+.character {
+  position:
+    absolute;
+
+  z-index:
+    6;
+
+  left:
+    29%;
+
+  bottom:
+    -53%;
+
+  width:
+    58%;
+
+  height:
+    140%;
+
+  overflow:
+    visible;
+
+  transform:
+    translate3d(
+      var(
+        --vision-character-x
+      ),
+      var(
+        --vision-character-y
+      ),
+      0
+    )
+    rotate(
+      var(
+        --vision-character-rotate
+      )
+    );
+
+  transform-origin:
+    center
+    bottom;
+
+  pointer-events:
+    none;
+
+  will-change:
+    transform;
+}
+
+
+.character::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  z-index:
+    -1;
+
+  left:
+    51%;
+
+  bottom:
+    35%;
+
+  width:
+    48%;
+
+  height:
+    14%;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.2
+    );
+
+  filter:
+    blur(
+      30px
+    );
+
+  opacity:
+    0.52;
+
+  transform:
+    translateX(
+      -50%
+    );
+}
+
+
+.characterImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center
+    bottom;
+
+  image-rendering:
+    auto;
+
+  transform:
+    scale(
+      1
+    );
+
+  transform-origin:
+    center
+    bottom;
+
+  filter:
+    drop-shadow(
+      0
+      32px
+      45px
+      rgba(
+        0,
+        0,
+        0,
+        0.28
+      )
+    );
+
+  transition:
+    transform
+      650ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    filter
+      650ms
+      ease;
+
+  pointer-events:
+    none;
+}
+
+
+/* =========================================================
+   HOVER DEPTH
+========================================================= */
+
+/*
+ * Directional movement TIDAK ada di sini.
+ *
+ * Directional movement sekarang berasal
+ * langsung dari posisi cursor via JS.
+ *
+ * Hover hanya memberi micro depth.
+ */
+
+@media (
+  hover:
+    hover
+) and (
+  pointer:
+    fine
+) {
+  .artwork:hover
+    .characterImage {
+    transform:
+      scale(
+        1.012
+      );
+
+    filter:
+      drop-shadow(
+        0
+        40px
+        56px
+        rgba(
+          0,
+          0,
+          0,
+          0.37
+        )
+      );
+  }
+
+
+  .artwork:hover
+    .orbit {
+    box-shadow:
+      0
+      0
+      180px
+      rgba(
+        88,
+        98,
+        236,
+        0.29
+      );
+  }
+}
+
+
+/* =========================================================
+   AMBIENT MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  .orbit {
+    animation:
+      vision-orbit-float
+      9s
+      ease-in-out
+      infinite;
+  }
+
+
+  .orbit::after {
+    animation:
+      vision-orbit-ring
+      7.2s
+      ease-in-out
+      infinite;
+  }
+
+
+  .ambient {
+    animation:
+      vision-ambient-drift
+      14s
+      ease-in-out
+      infinite;
+  }
+
+
+  .character {
+    animation:
+      vision-character-float
+      9.8s
+      ease-in-out
+      infinite;
+  }
+
+
+  .type
+    span:first-child {
+    animation:
+      vision-type-a
+      7.6s
+      ease-in-out
+      infinite;
+  }
+
+
+  .type
+    span:last-child {
+    animation:
+      vision-type-b
+      7.6s
+      ease-in-out
+      0.4s
+      infinite;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (
+  min-width:
+    701px
+) and (
+  max-width:
+    960px
+) {
+  .topMeta {
+    gap:
+      15px;
+  }
+
+
+  .topIndex,
+  .topTime {
+    font-size:
+      8px;
+  }
+
+
+  .type {
+    top:
+      20%;
+
+    left:
+      5.5%;
+  }
+
+
+  .type span {
+    font-size:
+      clamp(
+        56px,
+        9vw,
+        88px
+      );
+  }
+
+
+  .orbit {
+    top:
+      43%;
+
+    left:
+      65%;
+
+    width:
+      49%;
+  }
+
+
+  .character {
+    left:
+      28%;
+
+    bottom:
+      -52%;
+
+    width:
+      61%;
+
+    height:
+      139%;
+  }
+
+
+  .leftMeta {
+    font-size:
+      5px;
+  }
+
+
+  .rightStatement {
+    font-size:
+      6px;
+  }
+
+
+  .tagline {
+    font-size:
+      5px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+  max-width:
+    700px
+) {
+  :global(
+    [data-project-visual="vision"]
+  )
+  > div:nth-child(2) {
+    min-height:
+      0 !important;
+
+    aspect-ratio:
+      11 / 10 !important;
+  }
+
+
+  .frame {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(
+          255,
+          255,
+          255,
+          0.16
+        ),
+        rgba(
+          255,
+          255,
+          255,
+          0.16
+        )
+      )
+      center
+      91%
+      /
+      88%
+      1px
+      no-repeat;
+  }
+
+
+  .topMeta {
+    top:
+      6.4%;
+
+    left:
+      5.5%;
+
+    right:
+      5.5%;
+
+    gap:
+      10px;
+  }
+
+
+  .topIndex,
+  .topTime {
+    font-size:
+      6px;
+
+    letter-spacing:
+      0.15em;
+  }
+
+
+  .type {
+    top:
+      19%;
+
+    left:
+      5.5%;
+  }
+
+
+  .type span {
+    font-size:
+      clamp(
+        35px,
+        12vw,
+        52px
+      );
+
+    line-height:
+      0.8;
+  }
+
+
+  .orbit {
+    top:
+      43%;
+
+    left:
+      66%;
+
+    width:
+      55%;
+  }
+
+
+  .character {
+    left:
+      24%;
+
+    bottom:
+      -47%;
+
+    width:
+      68%;
+
+    height:
+      134%;
+
+    /*
+     * Pointer parallax otomatis disabled
+     * oleh JS pada touch device.
+     */
+  }
+
+
+  .leftMeta {
+    left:
+      5.5%;
+
+    bottom:
+      12%;
+
+    gap:
+      1px;
+
+    font-size:
+      3.8px;
+
+    line-height:
+      1.55;
+
+    letter-spacing:
+      0.22em;
+  }
+
+
+  .metaLabel {
+    margin-bottom:
+      5px;
+  }
+
+
+  .rightStatement {
+    top:
+      44%;
+
+    right:
+      4.8%;
+
+    width:
+      13%;
+
+    font-size:
+      4px;
+
+    line-height:
+      1.8;
+
+    letter-spacing:
+      0.25em;
+  }
+
+
+  .rightRule {
+    width:
+      16px;
+
+    margin-top:
+      8px;
+  }
+
+
+  .tagline {
+    right:
+      5.5%;
+
+    bottom:
+      5%;
+
+    font-size:
+      4px;
+
+    letter-spacing:
+      0.25em;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (
+  max-width:
+    420px
+) {
+  .type span {
+    font-size:
+      clamp(
+        32px,
+        11.5vw,
+        46px
+      );
+  }
+
+
+  .character {
+    left:
+      22%;
+
+    bottom:
+      -46%;
+
+    width:
+      72%;
+
+    height:
+      132%;
+  }
+
+
+  .orbit {
+    left:
+      67%;
+
+    width:
+      57%;
+  }
+
+
+  .tagline {
+    font-size:
+      3.5px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .ambient,
+  .orbit,
+  .orbit::after,
+  .character,
+  .characterImage,
+  .type,
+  .type span,
+  .topMeta,
+  .leftMeta,
+  .rightStatement,
+  .tagline {
+    animation:
+      none !important;
+
+    transition-duration:
+      0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   KEYFRAMES
+========================================================= */
+
+@keyframes
+  vision-orbit-float {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+
+    filter:
+      brightness(
+        1
+      );
+  }
+
+  35% {
+    translate:
+      4px
+      -5px;
+
+    filter:
+      brightness(
+        1.035
+      );
+  }
+
+  68% {
+    translate:
+      -3px
+      3px;
+
+    filter:
+      brightness(
+        0.985
+      );
+  }
+}
+
+
+@keyframes
+  vision-orbit-ring {
+  0%,
+  100% {
+    opacity:
+      0.55;
+
+    scale:
+      1;
+  }
+
+  50% {
+    opacity:
+      1;
+
+    scale:
+      1.055;
+  }
+}
+
+
+@keyframes
+  vision-character-float {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  46% {
+    translate:
+      3px
+      -6px;
+  }
+
+  72% {
+    translate:
+      -2px
+      -2px;
+  }
+}
+
+
+@keyframes
+  vision-type-a {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  50% {
+    translate:
+      3px
+      -2px;
+  }
+}
+
+
+@keyframes
+  vision-type-b {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  50% {
+    translate:
+      -2px
+      2px;
+  }
+}
+
+
+@keyframes
+  vision-ambient-drift {
+  0%,
+  100% {
+    scale:
+      1;
+  }
+
+  50% {
+    scale:
+      1.015;
+  }
+}

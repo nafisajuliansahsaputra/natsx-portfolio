@@ -62,6 +62,86 @@
 }
 
 /* =========================
+   CLOSING DISPLAY TEXT
+========================= */
+
+/*
+ * Closing copy memakai reveal vertikal
+ * dari work-motion.css.
+ *
+ * Animation tersebut memakai fill-mode
+ * `both`, sehingga clip-path pada frame
+ * akhir tetap aktif setelah animasi
+ * selesai.
+ *
+ * Glyph dengan descender seperti:
+ *
+ * j
+ * g
+ * p
+ * q
+ * y
+ *
+ * dapat turun sedikit melewati line box.
+ * Jika final mask berhenti tepat di
+ * inset(0), bagian bawah glyph akan
+ * terpotong.
+ *
+ * Beri overscan di sekeliling mask tanpa
+ * mengubah ukuran font, line-height,
+ * tracking, layout, timing, atau arah
+ * animasi.
+ */
+
+[data-motion-page="work"]
+  [data-motion-scroll="work-closing"]
+  > div:last-child
+  > p {
+  overflow:
+    visible;
+}
+
+@keyframes
+  work-closing-copy-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.28em
+        -0.14em
+        calc(
+          100% +
+          0.28em
+        )
+        -0.14em
+      );
+
+    translate:
+      0
+      20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.28em
+        -0.14em
+        -0.32em
+        -0.14em
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
    MOBILE PROJECT PREVIEW
 ========================= */
 

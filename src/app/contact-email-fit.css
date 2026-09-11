@@ -191,6 +191,123 @@
 }
 
 /* =========================
+   SOCIAL DISPLAY GLYPH SAFETY
+========================= */
+
+/*
+ * contact-social-title-in in
+ * contact-motion.css finishes at
+ * clip-path: inset(0).
+ *
+ * Because the animation uses `both`,
+ * that final mask remains active.
+ * With the social heading's tight
+ * 0.92 line-height, descenders such
+ * as the "y" in "saya" can extend
+ * below the text box and get cropped.
+ *
+ * Overscan the mask around the glyphs,
+ * while preserving the exact entrance
+ * direction, duration, translation,
+ * and scale from contact-motion.css.
+ */
+@keyframes
+  contact-social-title-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.28em
+        -0.16em
+        calc(
+          100% +
+          0.28em
+        )
+        -0.16em
+      );
+
+    translate:
+      22px
+      18px;
+
+    scale:
+      0.97;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.28em
+        -0.16em
+        -0.32em
+        -0.16em
+      );
+
+    translate:
+      0
+      0;
+
+    scale:
+      1;
+  }
+}
+
+/* =========================
+   CLOSING DISPLAY GLYPH SAFETY
+========================= */
+
+/*
+ * Same protection for the closing
+ * display-copy reveal. This prevents
+ * the same clipping class from
+ * reappearing on future localized copy.
+ */
+@keyframes
+  contact-closing-copy-in {
+  from {
+    opacity:
+      0;
+
+    clip-path:
+      inset(
+        -0.28em
+        -0.16em
+        calc(
+          100% +
+          0.28em
+        )
+        -0.16em
+      );
+
+    translate:
+      0
+      20px;
+  }
+
+  to {
+    opacity:
+      1;
+
+    clip-path:
+      inset(
+        -0.28em
+        -0.16em
+        -0.32em
+        -0.16em
+      );
+
+    translate:
+      0
+      0;
+  }
+}
+
+/* =========================
    DESKTOP EMAIL
    961px+
 ========================= */

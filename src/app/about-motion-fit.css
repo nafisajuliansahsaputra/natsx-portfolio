@@ -12,6 +12,40 @@
  */
 
 /* =========================
+   PROFILE / CV ALIGNMENT
+========================= */
+
+/*
+ * storyCopy dan CV access berada
+ * di dalam story column yang sama.
+ *
+ * Base About.module.css memberi
+ * cvAccess margin-left: auto,
+ * sehingga blok:
+ *
+ * - garis atas
+ * - "Profil Profesional"
+ * - link "Lihat CV"
+ *
+ * bergeser ke kanan dibanding copy
+ * tepat di atasnya.
+ *
+ * Pertahankan max-width existing
+ * supaya panjang garis tetap sama
+ * dengan story copy, tapi align
+ * keduanya dari sisi kiri.
+ */
+[data-motion-page="about"]
+  [data-motion-scroll="about-story"]
+  > div:last-child {
+  margin-left:
+    0;
+
+  margin-right:
+    auto;
+}
+
+/* =========================
    HERO TITLE
 ========================= */
 

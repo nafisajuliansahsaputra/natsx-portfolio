@@ -101,6 +101,9 @@
       2.5vw,
       40px
     );
+
+  transform:
+    translateY(5px);
 }
 
 .navigation a {
@@ -171,17 +174,38 @@
 
   display: grid;
 
+  /*
+   * Desktop:
+   *
+   * Track mengikuti lebar konten,
+   * bukan membagi viewport menjadi
+   * empat kotak besar.
+   *
+   * Sisa ruang container dibagi
+   * secara merata ANTAR track.
+   *
+   * Hasil:
+   *
+   * left edge
+   * ↓
+   * 01 -------- 02 -------- 03 -------- 04
+   *                                      ↑
+   *                              right edge
+   */
   grid-template-columns:
-    minmax(0, 1.15fr)
-    minmax(0, 1.45fr)
-    minmax(0, 0.8fr)
-    minmax(0, 0.8fr);
+    repeat(
+      4,
+      auto
+    );
+
+  justify-content:
+    space-between;
 
   column-gap:
     clamp(
-      34px,
-      4vw,
-      76px
+      28px,
+      3vw,
+      52px
     );
 
   border-top:
@@ -220,6 +244,24 @@
 
 .profileMeta {
   grid-column: 4;
+}
+
+/*
+ * Kolom terakhir tetap mengunci
+ * ujung kanan.
+ *
+ * Karena track sekarang selebar
+ * kontennya sendiri, ini tidak lagi
+ * menciptakan gap besar dari kolom 3.
+ */
+@media (min-width: 961px) {
+  .profileMeta {
+    align-items:
+      flex-end;
+
+    text-align:
+      right;
+  }
 }
 
 .metaLabel {
@@ -488,6 +530,9 @@
         )
       );
 
+    justify-content:
+      stretch;
+
     column-gap:
       40px;
 
@@ -623,7 +668,7 @@
       33px;
   }
 
-  .navigation {
+.navigation {
     width:
       100%;
 
@@ -640,6 +685,9 @@
 
     gap:
       12px;
+
+    transform:
+      none;
   }
 
   .navigation a {
@@ -667,6 +715,9 @@
         0,
         0.82fr
       );
+
+    justify-content:
+      stretch;
 
     column-gap:
       22px;

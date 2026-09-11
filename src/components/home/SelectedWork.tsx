@@ -1,18 +1,12 @@
-import type {
-  CSSProperties,
-} from "react";
+import type { CSSProperties } from "react";
 
 import Image from "next/image";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 
-import type {
-  Locale,
-} from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 
-import {
-  getHomeMessages,
-} from "@/i18n/home-messages";
+import { getHomeMessages } from "@/i18n/home-messages";
 
 import {
   getProjectPrimaryVisualUrl,
@@ -25,8 +19,10 @@ import {
   type PublicProject,
 } from "@/lib/public-projects";
 
+import FiveAmVisionArtwork from "./FiveAmVisionArtwork";
 import phoneStyles from "./SpallPhone.module.css";
 import styles from "./SelectedWork.module.css";
+
 
 type HomeLayout =
   | "wide"
@@ -34,20 +30,24 @@ type HomeLayout =
   | "left"
   | "finale";
 
+
 type HomeVisual =
   | "spall"
   | "vision"
   | "stay"
   | "bast";
 
+
 type SelectedWorkProps = {
   locale: Locale;
 };
+
 
 type SelectedWorkCopy =
   ReturnType<
     typeof getHomeMessages
   >["selectedWork"];
+
 
 const FALLBACK_LAYOUTS:
   HomeLayout[] = [
@@ -57,6 +57,7 @@ const FALLBACK_LAYOUTS:
     "finale",
   ];
 
+
 const FALLBACK_VISUALS:
   HomeVisual[] = [
     "spall",
@@ -65,13 +66,12 @@ const FALLBACK_VISUALS:
     "bast",
   ];
 
+
 function getProjectPresentation(
   project: PublicProject,
   index: number,
 ) {
-  switch (
-    project.slug
-  ) {
+  switch (project.slug) {
     case "spall-spill":
       return {
         layout:
@@ -124,6 +124,7 @@ function getProjectPresentation(
       };
   }
 }
+
 
 export default async function SelectedWork({
   locale,
@@ -390,6 +391,7 @@ export default async function SelectedWork({
   );
 }
 
+
 function ProjectArtwork({
   project,
   variant,
@@ -399,16 +401,6 @@ function ProjectArtwork({
   variant: HomeVisual;
   copy: SelectedWorkCopy;
 }) {
-  const primaryVisual =
-    getProjectPrimaryVisualUrl(
-      project,
-    );
-
-  const secondaryVisual =
-    getProjectSecondaryVisualUrl(
-      project,
-    );
-
   const visualLabel =
     project.disciplines
       .slice(
@@ -418,27 +410,38 @@ function ProjectArtwork({
       .join(" / ") ||
     copy.selectedProject;
 
+  /*
+   * 5AM Vision memiliki dedicated
+   * coded artwork.
+   *
+   * Tidak mengambil visual Admin.
+   */
   if (
     variant ===
     "vision"
   ) {
     return (
-      <VisionArtwork
-        project={
-          project
-        }
-        primaryVisual={
-          primaryVisual
-        }
-        secondaryVisual={
-          secondaryVisual
-        }
-        visualLabel={
-          visualLabel
+      <FiveAmVisionArtwork
+        copy={
+          copy.visionArtwork
         }
       />
     );
   }
+
+  /*
+   * Project lainnya tetap menggunakan
+   * image Admin / Supabase.
+   */
+  const primaryVisual =
+    getProjectPrimaryVisualUrl(
+      project,
+    );
+
+  const secondaryVisual =
+    getProjectSecondaryVisualUrl(
+      project,
+    );
 
   if (
     variant ===
@@ -504,6 +507,11 @@ function ProjectArtwork({
     />
   );
 }
+
+
+/* =========================================================
+   SPALL SPILL
+========================================================= */
 
 function SpallArtwork({
   project,
@@ -642,6 +650,7 @@ function SpallArtwork({
   );
 }
 
+
 function SpallPhone({
   project,
   image,
@@ -700,126 +709,10 @@ function SpallPhone({
   );
 }
 
-function VisionArtwork({
-  project,
-  primaryVisual,
-  secondaryVisual,
-  visualLabel,
-}: {
-  project: PublicProject;
 
-  primaryVisual:
-    | string
-    | null;
-
-  secondaryVisual:
-    | string
-    | null;
-
-  visualLabel: string;
-}) {
-  const titleLines =
-    getTitleLines(
-      project.title,
-    );
-
-  return (
-    <div
-      className={
-        styles.visionArtwork
-      }
-    >
-      <div
-        className={
-          styles.visionOrb
-        }
-      />
-
-      <div
-        className={
-          styles.visionType
-        }
-        aria-hidden={
-          Boolean(
-            primaryVisual,
-          )
-        }
-      >
-        {titleLines.map(
-          (
-            line,
-            index,
-          ) => (
-            <span
-              key={`${line}-${index}`}
-            >
-              {
-                line
-              }
-            </span>
-          ),
-        )}
-      </div>
-
-      {primaryVisual ? (
-        <div
-          className={
-            styles.visionPrimary
-          }
-        >
-          <ShowcaseImage
-            src={
-              primaryVisual
-            }
-            alt={`${project.title} primary brand visual`}
-            className={
-              styles.visionPrimaryImage
-            }
-            sizes="(max-width: 700px) 43vw, (max-width: 960px) 39vw, 38vw"
-          />
-        </div>
-      ) : null}
-
-      {secondaryVisual ? (
-        <div
-          className={
-            styles.visionSecondary
-          }
-        >
-          <ShowcaseImage
-            src={
-              secondaryVisual
-            }
-            alt={`${project.title} secondary brand visual`}
-            className={
-              styles.visionSecondaryImage
-            }
-            sizes="(max-width: 700px) 27vw, (max-width: 960px) 22vw, 18vw"
-          />
-        </div>
-      ) : null}
-
-      <span
-        className={
-          styles.visionEdition
-        }
-        aria-hidden="true"
-      >
-        05:00
-      </span>
-
-      <span
-        className={
-          styles.visualLabel
-        }
-      >
-        {
-          visualLabel
-        }
-      </span>
-    </div>
-  );
-}
+/* =========================================================
+   NUSANTARA STAY
+========================================================= */
 
 function StayArtwork({
   project,
@@ -839,7 +732,9 @@ function StayArtwork({
     | null;
 
   visualLabel: string;
-  copy: SelectedWorkCopy;
+
+  copy:
+    SelectedWorkCopy;
 }) {
   const titleLines =
     getTitleLines(
@@ -970,6 +865,11 @@ function StayArtwork({
   );
 }
 
+
+/* =========================================================
+   BAST
+========================================================= */
+
 function BastArtwork({
   project,
   primaryVisual,
@@ -1037,8 +937,7 @@ function BastArtwork({
           </div>
 
           <span>
-            MANAGEMENT
-            SYSTEM
+            MANAGEMENT SYSTEM
           </span>
         </div>
 
@@ -1091,9 +990,7 @@ function BastArtwork({
             </span>
 
             <div />
-
             <div />
-
             <div />
 
             <strong>
@@ -1134,6 +1031,7 @@ function BastArtwork({
     </div>
   );
 }
+
 
 function BastFallback() {
   return (
@@ -1197,6 +1095,11 @@ function BastFallback() {
   );
 }
 
+
+/* =========================================================
+   SHARED
+========================================================= */
+
 function BrowserChrome({
   className,
 }: {
@@ -1215,6 +1118,7 @@ function BrowserChrome({
     </div>
   );
 }
+
 
 function ShowcaseImage({
   src,
@@ -1245,6 +1149,7 @@ function ShowcaseImage({
     />
   );
 }
+
 
 function getTitleLines(
   title: string,
