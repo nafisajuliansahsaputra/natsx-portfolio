@@ -2,8 +2,22 @@
    NATSX
    HERO PORTRAIT TRANSITION
 
-   TRUE CORE SWAP
-   + SOFT PHOTOSHOP-LIKE FEATHER
+   SHARED BRUSH / ERASER MASK
+
+   ALT  = brush
+   BASE = inverse eraser
+
+   Both use exactly the same
+   soft feather field.
+
+   Current revision:
+   softer S-curve tail
+   + cleaner invisible edge.
+========================= */
+
+
+/* =========================
+   STAGE
 ========================= */
 
 .stage {
@@ -26,6 +40,7 @@
   isolation: isolate;
 }
 
+
 /* =========================
    SHARED
 ========================= */
@@ -33,86 +48,48 @@
 .layer {
   position: absolute;
   inset: 0;
+
   pointer-events: none;
 }
+
 
 .baseImage,
 .altImage {
   object-fit: contain;
   object-position: center bottom;
+
   transform: scale(1.006);
   transform-origin: center bottom;
+
   user-select: none;
+
   -webkit-user-drag: none;
+
   backface-visibility: hidden;
 }
 
+
 /* =========================
    BASE
+   INVERSE ERASER
 ========================= */
 
 .baseLayer {
   z-index: 1;
 
   /*
-   * Base dihilangkan pada core area,
-   * tapi tepi cutout diberi anti-alias
-   * tipis supaya tidak keras.
-   */
-
-  -webkit-mask-image:
-    radial-gradient(
-      circle
-        var(--portrait-cut-radius)
-        at
-        var(--portrait-pointer-x)
-        var(--portrait-pointer-y),
-      transparent 0,
-      transparent calc(var(--portrait-cut-radius) - 1.35px),
-      rgb(0 0 0 / 0.18) calc(var(--portrait-cut-radius) - 0.8px),
-      rgb(0 0 0 / 0.72) calc(var(--portrait-cut-radius) - 0.35px),
-      #000 var(--portrait-cut-radius)
-    );
-
-  mask-image:
-    radial-gradient(
-      circle
-        var(--portrait-cut-radius)
-        at
-        var(--portrait-pointer-x)
-        var(--portrait-pointer-y),
-      transparent 0,
-      transparent calc(var(--portrait-cut-radius) - 1.35px),
-      rgb(0 0 0 / 0.18) calc(var(--portrait-cut-radius) - 0.8px),
-      rgb(0 0 0 / 0.72) calc(var(--portrait-cut-radius) - 0.35px),
-      #000 var(--portrait-cut-radius)
-    );
-
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-
-  transform: translateZ(0);
-}
-
-.baseImage {
-  filter: grayscale(100%);
-}
-
-/* =========================
-   ALT
-========================= */
-
-.altLayer {
-  z-index: 2;
-
-  /*
-   * Core tetap solid.
-   * Feather dibuat lebih halus dengan
-   * lebih banyak stop, supaya feel-nya
-   * lebih mirip feather Photoshop.
+   * Exact inverse dari ALT.
+   *
+   * ALT 100% -> BASE   0%
+   * ALT  98% -> BASE   2%
+   * ALT  91% -> BASE   9%
+   * ALT  78% -> BASE  22%
+   * ALT  60% -> BASE  40%
+   * ALT  40% -> BASE  60%
+   * ALT  22% -> BASE  78%
+   * ALT 8.5% -> BASE 91.5%
+   * ALT 1.2% -> BASE 98.8%
+   * ALT   0% -> BASE 100%
    */
 
   -webkit-mask-image:
@@ -123,20 +100,39 @@
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
 
-      #000 0,
-      #000 var(--portrait-feather-start),
+      transparent 0,
 
-      rgb(0 0 0 / 0.998) var(--portrait-feather-1),
-      rgb(0 0 0 / 0.992) var(--portrait-feather-2),
-      rgb(0 0 0 / 0.968) var(--portrait-feather-3),
-      rgb(0 0 0 / 0.9) var(--portrait-feather-4),
-      rgb(0 0 0 / 0.76) var(--portrait-feather-5),
-      rgb(0 0 0 / 0.56) var(--portrait-feather-6),
-      rgb(0 0 0 / 0.31) var(--portrait-feather-7),
-      rgb(0 0 0 / 0.12) var(--portrait-feather-8),
+      transparent
+        var(--portrait-feather-start),
 
-      transparent var(--portrait-radius)
+      rgb(0 0 0 / 0.02)
+        var(--portrait-feather-1),
+
+      rgb(0 0 0 / 0.09)
+        var(--portrait-feather-2),
+
+      rgb(0 0 0 / 0.22)
+        var(--portrait-feather-3),
+
+      rgb(0 0 0 / 0.40)
+        var(--portrait-feather-4),
+
+      rgb(0 0 0 / 0.60)
+        var(--portrait-feather-5),
+
+      rgb(0 0 0 / 0.78)
+        var(--portrait-feather-6),
+
+      rgb(0 0 0 / 0.915)
+        var(--portrait-feather-7),
+
+      rgb(0 0 0 / 0.988)
+        var(--portrait-feather-8),
+
+      #000
+        var(--portrait-radius)
     );
+
 
   mask-image:
     radial-gradient(
@@ -146,20 +142,39 @@
         var(--portrait-pointer-x)
         var(--portrait-pointer-y),
 
-      #000 0,
-      #000 var(--portrait-feather-start),
+      transparent 0,
 
-      rgb(0 0 0 / 0.998) var(--portrait-feather-1),
-      rgb(0 0 0 / 0.992) var(--portrait-feather-2),
-      rgb(0 0 0 / 0.968) var(--portrait-feather-3),
-      rgb(0 0 0 / 0.9) var(--portrait-feather-4),
-      rgb(0 0 0 / 0.76) var(--portrait-feather-5),
-      rgb(0 0 0 / 0.56) var(--portrait-feather-6),
-      rgb(0 0 0 / 0.31) var(--portrait-feather-7),
-      rgb(0 0 0 / 0.12) var(--portrait-feather-8),
+      transparent
+        var(--portrait-feather-start),
 
-      transparent var(--portrait-radius)
+      rgb(0 0 0 / 0.02)
+        var(--portrait-feather-1),
+
+      rgb(0 0 0 / 0.09)
+        var(--portrait-feather-2),
+
+      rgb(0 0 0 / 0.22)
+        var(--portrait-feather-3),
+
+      rgb(0 0 0 / 0.40)
+        var(--portrait-feather-4),
+
+      rgb(0 0 0 / 0.60)
+        var(--portrait-feather-5),
+
+      rgb(0 0 0 / 0.78)
+        var(--portrait-feather-6),
+
+      rgb(0 0 0 / 0.915)
+        var(--portrait-feather-7),
+
+      rgb(0 0 0 / 0.988)
+        var(--portrait-feather-8),
+
+      #000
+        var(--portrait-radius)
     );
+
 
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
@@ -170,10 +185,156 @@
   mask-mode: alpha;
 
   transform: translateZ(0);
+
   backface-visibility: hidden;
 
-  will-change: mask-image, -webkit-mask-image;
+  will-change:
+    mask-image,
+    -webkit-mask-image;
 }
+
+
+.baseImage {
+  filter: grayscale(100%);
+}
+
+
+/* =========================
+   ALT
+   SOFT BRUSH
+========================= */
+
+.altLayer {
+  z-index: 2;
+
+  /*
+   * Smoother S-curve.
+   *
+   * Bagian dalam:
+   * tetap kuat supaya ALT tidak
+   * terasa washed-out.
+   *
+   * Bagian tengah:
+   * turun secara progressive.
+   *
+   * Bagian paling luar:
+   * sudah hampir transparent
+   * SEBELUM radius berakhir.
+   *
+   * Ini yang menghilangkan kesan
+   * "lingkaran punya outline".
+   */
+
+  -webkit-mask-image:
+    radial-gradient(
+      circle
+        var(--portrait-radius)
+        at
+        var(--portrait-pointer-x)
+        var(--portrait-pointer-y),
+
+      #000 0,
+
+      #000
+        var(--portrait-feather-start),
+
+      rgb(0 0 0 / 0.98)
+        var(--portrait-feather-1),
+
+      rgb(0 0 0 / 0.91)
+        var(--portrait-feather-2),
+
+      rgb(0 0 0 / 0.78)
+        var(--portrait-feather-3),
+
+      rgb(0 0 0 / 0.60)
+        var(--portrait-feather-4),
+
+      rgb(0 0 0 / 0.40)
+        var(--portrait-feather-5),
+
+      rgb(0 0 0 / 0.22)
+        var(--portrait-feather-6),
+
+      rgb(0 0 0 / 0.085)
+        var(--portrait-feather-7),
+
+      rgb(0 0 0 / 0.012)
+        var(--portrait-feather-8),
+
+      transparent
+        var(--portrait-radius)
+    );
+
+
+  mask-image:
+    radial-gradient(
+      circle
+        var(--portrait-radius)
+        at
+        var(--portrait-pointer-x)
+        var(--portrait-pointer-y),
+
+      #000 0,
+
+      #000
+        var(--portrait-feather-start),
+
+      rgb(0 0 0 / 0.98)
+        var(--portrait-feather-1),
+
+      rgb(0 0 0 / 0.91)
+        var(--portrait-feather-2),
+
+      rgb(0 0 0 / 0.78)
+        var(--portrait-feather-3),
+
+      rgb(0 0 0 / 0.60)
+        var(--portrait-feather-4),
+
+      rgb(0 0 0 / 0.40)
+        var(--portrait-feather-5),
+
+      rgb(0 0 0 / 0.22)
+        var(--portrait-feather-6),
+
+      rgb(0 0 0 / 0.085)
+        var(--portrait-feather-7),
+
+      rgb(0 0 0 / 0.012)
+        var(--portrait-feather-8),
+
+      transparent
+        var(--portrait-radius)
+    );
+
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+
+  mask-mode: alpha;
+
+
+  /*
+   * Menjaga brush + eraser
+   * complementary supaya tidak
+   * muncul white alpha gap.
+   */
+  mix-blend-mode: plus-lighter;
+
+
+  transform: translateZ(0);
+
+  backface-visibility: hidden;
+
+  will-change:
+    mask-image,
+    -webkit-mask-image;
+}
+
 
 /* =========================
    MOBILE
@@ -185,15 +346,20 @@
     mask-image: none;
   }
 
+
   .altLayer {
     display: none;
+
+    mix-blend-mode: normal;
   }
+
 
   .baseImage,
   .altImage {
     transform: scale(1.003);
   }
 }
+
 
 /* =========================
    REDUCED MOTION
@@ -205,9 +371,13 @@
     mask-image: none;
   }
 
+
   .altLayer {
     display: none;
+
+    mix-blend-mode: normal;
   }
+
 
   .baseImage,
   .altImage {
