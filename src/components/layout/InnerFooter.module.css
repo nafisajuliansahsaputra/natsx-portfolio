@@ -16,6 +16,7 @@
     var(--foreground);
 }
 
+
 /* =========================
    TOP
 ========================= */
@@ -30,12 +31,14 @@
   gap: 40px;
 }
 
+
 .brandRow {
   display: flex;
   align-items: flex-start;
 
   gap: 28px;
 }
+
 
 .brand {
   display: inline-flex;
@@ -44,9 +47,11 @@
   flex: 0 0 auto;
 }
 
+
 .brandMeta {
   display: none;
 }
+
 
 .logo {
   display: block;
@@ -86,6 +91,7 @@
     contain;
 }
 
+
 /* =========================
    NAVIGATION
 ========================= */
@@ -106,6 +112,7 @@
     translateY(5px);
 }
 
+
 .navigation a {
   position: relative;
 
@@ -125,6 +132,7 @@
     180ms
     ease;
 }
+
 
 .navigation a::after {
   content: "";
@@ -152,10 +160,12 @@
     ease;
 }
 
+
 .navigation a:hover {
   color:
     var(--accent);
 }
+
 
 .navigation a:hover::after {
   transform:
@@ -164,6 +174,7 @@
   transform-origin:
     left;
 }
+
 
 /* =========================
    INFORMATION GRID
@@ -174,24 +185,6 @@
 
   display: grid;
 
-  /*
-   * Desktop:
-   *
-   * Track mengikuti lebar konten,
-   * bukan membagi viewport menjadi
-   * empat kotak besar.
-   *
-   * Sisa ruang container dibagi
-   * secara merata ANTAR track.
-   *
-   * Hasil:
-   *
-   * left edge
-   * ↓
-   * 01 -------- 02 -------- 03 -------- 04
-   *                                      ↑
-   *                              right edge
-   */
   grid-template-columns:
     repeat(
       4,
@@ -213,6 +206,7 @@
     var(--border);
 }
 
+
 .meta {
   min-width: 0;
 
@@ -230,30 +224,27 @@
     -0.01em;
 }
 
+
 .meta:nth-child(1) {
   grid-column: 1;
 }
+
 
 .meta:nth-child(2) {
   grid-column: 2;
 }
 
+
 .meta:nth-child(3) {
   grid-column: 3;
 }
+
 
 .profileMeta {
   grid-column: 4;
 }
 
-/*
- * Kolom terakhir tetap mengunci
- * ujung kanan.
- *
- * Karena track sekarang selebar
- * kontennya sendiri, ini tidak lagi
- * menciptakan gap besar dari kolom 3.
- */
+
 @media (min-width: 961px) {
   .profileMeta {
     align-items:
@@ -263,6 +254,7 @@
       right;
   }
 }
+
 
 .metaLabel {
   color:
@@ -277,6 +269,7 @@
   text-transform:
     uppercase;
 }
+
 
 .metaLink {
   display: inline-flex;
@@ -293,10 +286,12 @@
     ease;
 }
 
+
 .metaLink:hover {
   color:
     var(--accent);
 }
+
 
 .metaArrow {
   display: inline-block;
@@ -312,6 +307,7 @@
     ease;
 }
 
+
 .metaLink:hover
   .metaArrow {
   transform:
@@ -320,6 +316,7 @@
       -3px
     );
 }
+
 
 /* =========================
    SOCIAL LINKS
@@ -334,6 +331,7 @@
   gap: 6px;
 }
 
+
 .socialLinks a {
   position: relative;
 
@@ -343,10 +341,12 @@
     ease;
 }
 
+
 .socialLinks a:hover {
   color:
     var(--accent);
 }
+
 
 /* =========================
    BOTTOM STRIP
@@ -376,6 +376,7 @@
     var(--border);
 }
 
+
 .copyright {
   display: flex;
 
@@ -385,6 +386,7 @@
 
   gap: 10px;
 }
+
 
 .backToTop {
   margin-top: 0;
@@ -417,6 +419,7 @@
     ease;
 }
 
+
 .backToTop span {
   display: inline-block;
 
@@ -429,10 +432,12 @@
     ease;
 }
 
+
 .backToTop:hover {
   color:
     var(--accent);
 }
+
 
 .backToTop:hover
   span {
@@ -441,6 +446,7 @@
       -3px
     );
 }
+
 
 /* =========================
    LEGACY UTILITIES
@@ -459,6 +465,7 @@
   flex-wrap: wrap;
 }
 
+
 .footerCvLink {
   display: inline-flex;
 
@@ -475,6 +482,7 @@
     ease;
 }
 
+
 .footerCvLink > span {
   display: inline-block;
 
@@ -487,10 +495,12 @@
     ease;
 }
 
+
 .footerCvLink:hover {
   color:
     var(--accent);
 }
+
 
 .footerCvLink:hover
   > span {
@@ -500,6 +510,7 @@
       -3px
     );
 }
+
 
 /* =========================
    TABLET
@@ -515,10 +526,12 @@
       24px;
   }
 
+
   .top {
     min-height:
       68px;
   }
+
 
   .bottom {
     grid-template-columns:
@@ -540,25 +553,30 @@
       30px;
   }
 
+
   .meta:nth-child(1) {
     grid-column: 1;
     grid-row: 1;
   }
+
 
   .meta:nth-child(2) {
     grid-column: 2;
     grid-row: 1;
   }
 
+
   .meta:nth-child(3) {
     grid-column: 1;
     grid-row: 2;
   }
 
+
   .profileMeta {
     grid-column: 2;
     grid-row: 2;
   }
+
 
   .right {
     grid-column:
@@ -570,6 +588,7 @@
     margin-top: 4px;
   }
 }
+
 
 /* =========================
    MOBILE
@@ -584,6 +603,7 @@
       24px
       20px;
   }
+
 
   /* =========================
      BRAND + NAV
@@ -610,6 +630,7 @@
       30px;
   }
 
+
   .brandRow {
     width:
       100%;
@@ -620,45 +641,23 @@
       center;
 
     justify-content:
-      space-between;
+      flex-start;
 
     gap:
-      24px;
+      0;
   }
 
+
+  /*
+   * Mobile:
+   * hide DIGITAL CREATOR /
+   * INDONESIA / 2026.
+   */
   .brandMeta {
-    display: flex;
-
-    flex-direction:
-      column;
-
-    align-items:
-      flex-end;
-
-    gap:
-      4px;
-
-    color:
-      var(--muted);
-
-    font-size:
-      7.5px;
-
-    font-weight:
-      600;
-
-    line-height:
-      1.3;
-
-    letter-spacing:
-      0.065em;
-
-    text-transform:
-      uppercase;
-
-    text-align:
-      right;
+    display:
+      none;
   }
+
 
   .logo {
     width:
@@ -668,7 +667,8 @@
       33px;
   }
 
-.navigation {
+
+  .navigation {
     width:
       100%;
 
@@ -690,6 +690,7 @@
       none;
   }
 
+
   .navigation a {
     padding-bottom:
       4px;
@@ -697,6 +698,7 @@
     font-size:
       10.5px;
   }
+
 
   /* =========================
      TWO-COLUMN INFO GRID
@@ -726,6 +728,7 @@
       0;
   }
 
+
   .meta {
     font-size:
       10px;
@@ -734,10 +737,14 @@
       1.45;
   }
 
+
   .metaLabel {
     font-size:
       7.5px;
   }
+
+
+  /* LEFT COLUMN */
 
   .meta:nth-child(1) {
     grid-column:
@@ -746,6 +753,7 @@
     grid-row:
       1;
   }
+
 
   .meta:nth-child(2) {
     grid-column:
@@ -758,13 +766,60 @@
       28px;
   }
 
+
+  /*
+   * RIGHT COLUMN
+   *
+   * Blok ditempel ke right edge,
+   * tetapi isi teks tetap left aligned.
+   *
+   * Jadi:
+   *
+   * ELSEWHERE
+   * LinkedIn
+   * Instagram
+   * GitHub
+   *
+   * tetap rata kiri di dalam blok,
+   * sementara sisi kanan blok tetap
+   * sejajar dengan container.
+   */
   .meta:nth-child(3) {
     grid-column:
       2;
 
     grid-row:
       1;
+
+    width:
+      max-content;
+
+    max-width:
+      100%;
+
+    justify-self:
+      end;
+
+    align-items:
+      flex-start;
+
+    text-align:
+      left;
   }
+
+
+  .meta:nth-child(3)
+    .socialLinks {
+    width:
+      100%;
+
+    align-items:
+      flex-start;
+
+    text-align:
+      left;
+  }
+
 
   .profileMeta {
     grid-column:
@@ -773,19 +828,37 @@
     grid-row:
       2;
 
+    width:
+      max-content;
+
+    max-width:
+      100%;
+
     margin-top:
       28px;
+
+    justify-self:
+      end;
+
+    align-items:
+      flex-start;
+
+    text-align:
+      left;
   }
+
 
   .socialLinks {
     gap:
       7px;
   }
 
+
   .metaLink {
     overflow-wrap:
       anywhere;
   }
+
 
   /* =========================
      MOBILE BOTTOM STRIP
@@ -820,6 +893,7 @@
       20px;
   }
 
+
   .copyright {
     display: flex;
 
@@ -836,11 +910,13 @@
       wrap;
   }
 
+
   .backToTop {
     flex:
       0 0 auto;
   }
 }
+
 
 /* =========================
    SMALL MOBILE
@@ -855,6 +931,7 @@
       22px;
   }
 
+
   .top {
     gap:
       26px;
@@ -862,6 +939,7 @@
     padding-bottom:
       28px;
   }
+
 
   .logo {
     width:
@@ -871,15 +949,18 @@
       32px;
   }
 
+
   .navigation {
     gap:
       8px;
   }
 
+
   .navigation a {
     font-size:
       10px;
   }
+
 
   .bottom {
     grid-template-columns:
@@ -896,16 +977,19 @@
       18px;
   }
 
+
   .meta {
     font-size:
       9.75px;
   }
+
 
   .meta:nth-child(2),
   .profileMeta {
     margin-top:
       26px;
   }
+
 
   .right {
     margin-top:
@@ -915,6 +999,7 @@
       17px;
   }
 }
+
 
 /* =========================
    VERY SMALL MOBILE
@@ -926,13 +1011,9 @@
 ) {
   .brandRow {
     gap:
-      16px;
+      0;
   }
 
-  .brandMeta {
-    font-size:
-      7px;
-  }
 
   .logo {
     width:
@@ -942,15 +1023,18 @@
       31px;
   }
 
+
   .navigation {
     gap:
       6px;
   }
 
+
   .navigation a {
     font-size:
       9.25px;
   }
+
 
   .bottom {
     grid-template-columns:
@@ -967,15 +1051,18 @@
       14px;
   }
 
+
   .meta {
     font-size:
       9.1px;
   }
 
+
   .metaLabel {
     font-size:
       7px;
   }
+
 
   .copyright,
   .backToTop {

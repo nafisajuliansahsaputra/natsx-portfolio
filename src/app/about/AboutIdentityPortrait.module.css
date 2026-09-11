@@ -33,6 +33,7 @@
     100%;
 }
 
+
 /* =========================
    STICKY COMPOSITION
 ========================= */
@@ -52,6 +53,7 @@
     100%;
 }
 
+
 /* =========================
    FRAME
 ========================= */
@@ -60,6 +62,7 @@
   isolation:
     isolate;
 }
+
 
 .frame::after {
   content:
@@ -94,6 +97,7 @@
     none;
 }
 
+
 /* =========================
    GEOMETRY
 ========================= */
@@ -117,6 +121,7 @@
     transform;
 }
 
+
 .horizontalAxis {
   opacity:
     0.38;
@@ -133,6 +138,7 @@
   will-change:
     transform;
 }
+
 
 .verticalAxis {
   opacity:
@@ -151,32 +157,10 @@
     transform;
 }
 
+
 /* =========================
    PORTRAIT
 ========================= */
-
-/*
- * Frame size is controlled by:
- *
- * About.module.css
- *
- * .portraitFrame {
- *   aspect-ratio: 0.82;
- * }
- *
- * The uploaded asset no longer controls
- * the visual dimensions.
- *
- * object-fit: cover means:
- *
- * - portrait image → fills frame
- * - square image   → fills frame
- * - landscape      → fills frame
- *
- * Excess area is cropped instead of
- * changing the frame or leaving empty
- * letterbox space.
- */
 
 .portrait {
   z-index:
@@ -211,6 +195,7 @@
     transform;
 }
 
+
 .plus {
   z-index:
     4;
@@ -218,6 +203,7 @@
   opacity:
     0.72;
 }
+
 
 /* =========================
    PROFILE META
@@ -227,6 +213,7 @@
   margin-top:
     18px;
 }
+
 
 /* =========================
    TABLET
@@ -240,6 +227,7 @@
       auto;
   }
 
+
   .sticky {
     position:
       relative;
@@ -248,6 +236,7 @@
       auto;
   }
 }
+
 
 /* =========================
    MOBILE
@@ -261,15 +250,6 @@
       42px;
   }
 
-  /*
-   * Keep exactly the same image-fitting
-   * system as desktop.
-   *
-   * No separate mobile image scale,
-   * aspect ratio, width or height.
-   *
-   * The frame determines composition.
-   */
 
   .portrait {
     object-fit:
@@ -279,11 +259,120 @@
       center center !important;
   }
 
-  .profileMeta {
+
+  /*
+   * MOBILE IDENTITY ROW
+   *
+   * Setiap blok hanya selebar
+   * kontennya sendiri.
+   *
+   * Free space dibagi rata:
+   *
+   * NAME   ---   IDENTITY   ---   BASED IN
+   *
+   * sehingga spacing visual
+   * jauh lebih seimbang.
+   */
+  .root
+    .profileMeta {
+    width:
+      100%;
+
     margin-top:
       16px;
+
+    grid-template-columns:
+      max-content
+      max-content
+      max-content;
+
+    justify-content:
+      space-between;
+
+    column-gap:
+      0;
+
+    row-gap:
+      0;
+  }
+
+
+  .root
+    .profileMeta
+    > div {
+    min-width:
+      0;
+
+    gap:
+      6px;
+
+    align-items:
+      flex-start;
+
+    text-align:
+      left;
+
+    font-size:
+      9.5px;
+
+    line-height:
+      1.4;
+  }
+
+
+  /*
+   * Kiri dan kanan otomatis
+   * menempel pada edge karena
+   * justify-content: space-between.
+   */
+  .root
+    .profileMeta
+    > div:first-child {
+    justify-self:
+      start;
+  }
+
+
+  .root
+    .profileMeta
+    > div:last-child {
+    justify-self:
+      end;
   }
 }
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (
+  max-width: 420px
+) {
+  .root
+    .profileMeta
+    > div {
+    font-size:
+      9px;
+  }
+}
+
+
+/* =========================
+   VERY SMALL MOBILE
+========================= */
+
+@media (
+  max-width: 360px
+) {
+  .root
+    .profileMeta
+    > div {
+    font-size:
+      8.5px;
+  }
+}
+
 
 /* =========================
    REDUCED MOTION
