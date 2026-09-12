@@ -1023,39 +1023,39 @@
 
 /* =========================================================
    PROJECT TITLE — SINGLE LINE
+   DESKTOP + TABLET + MOBILE
 ========================================================= */
 
-@media (
-  min-width: 961px
-) {
-  [data-motion-page="work"]
-    [data-motion-scroll="work-project"]
-    > div:first-of-type
-    > h2 {
-    display:
-      block;
+[data-motion-page="work"]
+  [data-motion-scroll="work-project"]
+  > div:first-of-type
+  > h2 {
+  display:
+    block;
 
-    width:
-      100%;
+  width:
+    100%;
 
-    max-width:
-      100%;
+  max-width:
+    100%;
 
-    white-space:
-      nowrap;
+  min-width:
+    0;
 
-    overflow:
-      hidden !important;
+  white-space:
+    nowrap;
 
-    text-overflow:
-      ellipsis;
+  overflow:
+    hidden !important;
 
-    padding-block:
-      0.12em;
+  text-overflow:
+    ellipsis;
 
-    margin-block:
-      -0.12em;
-  }
+  padding-block:
+    0.12em;
+
+  margin-block:
+    -0.12em;
 }
 
 
