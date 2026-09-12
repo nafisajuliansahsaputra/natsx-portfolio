@@ -1,0 +1,781 @@
+/*
+ * =========================================================
+ * NATSX — WORK ARCHIVE HOMEPAGE PREVIEW
+ * =========================================================
+ *
+ * Reuses homepage artwork inside the /work hover preview.
+ *
+ * Important:
+ *
+ * - same visual language / same home CSS
+ * - different canvas ratio
+ * - no screenshot crop
+ * - no image stretching
+ */
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+.root {
+  --desktop-ui-ratio:
+    16 / 10;
+
+  --mobile-ui-ratio:
+    9 / 19.5;
+
+  --brand-art-ratio:
+    4 / 5;
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  overflow:
+    hidden;
+
+  isolation:
+    isolate;
+
+  pointer-events:
+    none;
+}
+
+
+/*
+ * work-motion-fit.css currently styles every img
+ * inside the preview stage.
+ *
+ * Homepage artwork contains multiple nested images,
+ * so this selector intentionally beats that rule.
+ */
+
+:global(#work-project-list)
+  .root[data-archive-home-preview]
+  img {
+  position:
+    absolute !important;
+
+  inset:
+    0 !important;
+
+  width:
+    100% !important;
+
+  height:
+    100% !important;
+
+  transform:
+    none !important;
+
+  filter:
+    none !important;
+
+  transition:
+    none !important;
+
+  will-change:
+    auto !important;
+
+  object-fit:
+    cover !important;
+
+  object-position:
+    center top !important;
+}
+
+
+/* =========================================================
+   STANDARD FALLBACK PREVIEW
+========================================================= */
+
+:global(#work-project-list)
+  .root[data-archive-home-preview="fallback"]
+  .fallbackImage {
+  object-fit:
+    cover !important;
+
+  object-position:
+    center center !important;
+
+  transform:
+    translate3d(
+      -18px,
+      0,
+      0
+    )
+    scale(
+      1.025
+    ) !important;
+
+  filter:
+    saturate(
+      0.94
+    )
+    contrast(
+      0.98
+    ) !important;
+
+  transition:
+    transform
+      680ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    filter
+      420ms
+      ease !important;
+
+  will-change:
+    transform !important;
+}
+
+
+:global(#work-project-list)
+  :global(
+    [data-motion-scroll="work-project"]:hover
+  )
+  .root[data-archive-home-preview="fallback"]
+  .fallbackImage,
+
+:global(#work-project-list)
+  :global(
+    [data-motion-scroll="work-project"]:focus-visible
+  )
+  .root[data-archive-home-preview="fallback"]
+  .fallbackImage {
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    )
+    scale(
+      1
+    ) !important;
+
+  filter:
+    saturate(
+      1
+    )
+    contrast(
+      1
+    ) !important;
+}
+
+
+/* =========================================================
+   5AM VISION — WIDE ARCHIVE REFLOW
+========================================================= */
+
+/*
+ * Archive canvas lebih kecil daripada
+ * homepage artwork.
+ *
+ * Background + frame tetap full bleed.
+ *
+ * Foreground elements sengaja dikecilkan:
+ * - logo
+ * - big type
+ * - orbit
+ * - Aven
+ * - micro copy
+ *
+ * Supaya hierarchy terasa sama seperti
+ * artwork homepage, bukan zoomed-in.
+ */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-mode="archive"] {
+  --vision-top-side-width:
+    9px;
+}
+
+
+/* =====================================================
+   FRAME
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="frame"] {
+  background-position:
+    center
+    89.4% !important;
+
+  background-size:
+    91%
+    1px !important;
+}
+
+
+/* =====================================================
+   TOP META
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="top-meta"] {
+  top:
+    8.5% !important;
+
+  left:
+    4.6% !important;
+
+  right:
+    4.6% !important;
+
+  gap:
+    7px !important;
+}
+
+
+/* logo */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="top-logo"] {
+  width:
+    9px !important;
+
+  height:
+    9px !important;
+}
+
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="top-logo-image"] {
+  object-fit:
+    contain !important;
+
+  object-position:
+    left center !important;
+}
+
+
+/* index */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="top-index"] {
+  font-size:
+    4px !important;
+
+  letter-spacing:
+    0.16em !important;
+}
+
+
+/* =====================================================
+   BIG TYPE
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="type"] {
+  top:
+    20% !important;
+
+  left:
+    4.5% !important;
+}
+
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="type"]
+  span {
+  font-size:
+    clamp(
+      31px,
+      3.15vw,
+      48px
+    ) !important;
+
+  font-weight:
+    500 !important;
+
+  line-height:
+    0.8 !important;
+
+  letter-spacing:
+    -0.075em !important;
+
+  text-shadow:
+    0
+    5px
+    18px
+    rgba(
+      0,
+      0,
+      0,
+      0.12
+    ) !important;
+}
+
+
+/* =====================================================
+   ORBIT
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="orbit"] {
+  top:
+    44% !important;
+
+  left:
+    61% !important;
+
+  width:
+    37% !important;
+
+  box-shadow:
+    0
+    0
+    56px
+    rgba(
+      88,
+      98,
+      236,
+      0.18
+    ) !important;
+}
+
+
+/* =====================================================
+   LEFT META
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="left-meta"] {
+  left:
+    4.7% !important;
+
+  bottom:
+    13% !important;
+
+  gap:
+    1px !important;
+
+  font-size:
+    2.9px !important;
+
+  line-height:
+    1.48 !important;
+
+  letter-spacing:
+    0.25em !important;
+}
+
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="meta-label"] {
+  margin-bottom:
+    3px !important;
+}
+
+
+/* =====================================================
+   RIGHT STATEMENT
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="right-statement"] {
+  top:
+    45% !important;
+
+  right:
+    4.8% !important;
+
+  width:
+    13% !important;
+
+  font-size:
+    3.2px !important;
+
+  line-height:
+    1.7 !important;
+
+  letter-spacing:
+    0.29em !important;
+}
+
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="right-rule"] {
+  width:
+    13px !important;
+
+  margin-top:
+    5px !important;
+}
+
+
+/* =====================================================
+   TAGLINE
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="tagline"] {
+  right:
+    4.7% !important;
+
+  bottom:
+    5.9% !important;
+
+  font-size:
+    2.8px !important;
+
+  letter-spacing:
+    0.26em !important;
+}
+
+
+/* =====================================================
+   AVEN
+===================================================== */
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="character"] {
+  /*
+   * Center tetap sekitar 58% canvas,
+   * sama seperti homepage.
+   *
+   * Width diturunkan dari 40% → 33.5%.
+   */
+
+  left:
+    41.25% !important;
+
+  bottom:
+    -20% !important;
+
+  width:
+    33.5% !important;
+
+  height:
+    104% !important;
+}
+
+
+.root[data-archive-home-preview="vision"]
+  [data-vision-part="character-image"] {
+  object-fit:
+    contain !important;
+
+  object-position:
+    center bottom !important;
+
+  transform:
+    scale(
+      1
+    ) !important;
+
+  filter:
+    drop-shadow(
+      0
+      10px
+      16px
+      rgba(
+        0,
+        0,
+        0,
+        0.25
+      )
+    ) !important;
+}
+
+
+/* =========================================================
+   SPALL SPILL — ARCHIVE SCALE
+========================================================= */
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-browser-top"] {
+  height:
+    18px !important;
+
+  padding-inline:
+    8px !important;
+
+  gap:
+    3px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-browser-top"]
+  > span {
+  width:
+    3px !important;
+
+  height:
+    3px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-fallback"] {
+  padding:
+    14px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-mini-label"] {
+  font-size:
+    5px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-fallback"]
+  strong {
+  font-size:
+    clamp(
+      18px,
+      2vw,
+      30px
+    ) !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-card"] {
+  padding:
+    8px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-card"]
+  > span {
+  font-size:
+    5px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-card"]
+  > strong {
+  font-size:
+    clamp(
+      10px,
+      1.2vw,
+      17px
+    ) !important;
+}
+
+
+/* -------------------------
+   SPALL PHONE
+------------------------- */
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-phone-device"] {
+  padding:
+    3px !important;
+
+  border-radius:
+    10px !important;
+
+  box-shadow:
+    0
+    10px
+    24px
+    rgba(
+      20,
+      20,
+      20,
+      0.17
+    ) !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-phone-screen"] {
+  border-radius:
+    8px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-phone-hardware"] {
+  top:
+    4px !important;
+
+  height:
+    4px !important;
+
+  gap:
+    2px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-phone-speaker"] {
+  height:
+    2px !important;
+}
+
+
+.root[data-archive-home-preview="spall"]
+  [data-archive-part="spall-phone-camera"] {
+  width:
+    3px !important;
+
+  height:
+    3px !important;
+}
+
+
+/* =========================================================
+   BAST — ARCHIVE SCALE
+========================================================= */
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-grid"] {
+  background-size:
+    20px
+    20px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-index"]
+  span {
+  font-size:
+    4px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-index"]
+  strong {
+  font-size:
+    clamp(
+      20px,
+      1.8vw,
+      27px
+    ) !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-dashboard-top"] {
+  height:
+    18px !important;
+
+  padding-inline:
+    8px !important;
+
+  font-size:
+    4px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-dashboard-top"]
+  > div {
+  gap:
+    3px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-dashboard-top"]
+  > div
+  span {
+  width:
+    3px !important;
+
+  height:
+    3px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-document-fallback"] {
+  gap:
+    8% !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-document-fallback"]
+  > span {
+  font-size:
+    4px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-document-fallback"]
+  strong {
+  font-size:
+    11px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-status"] {
+  min-width:
+    68px !important;
+
+  padding:
+    5px
+    7px !important;
+
+  gap:
+    5px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-status"]
+  > span {
+  width:
+    4px !important;
+
+  height:
+    4px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-status"]
+  small {
+  font-size:
+    3px !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-archive-part="bast-status"]
+  strong {
+  font-size:
+    5px !important;
+}
+
+
+/* =========================================================
+   SHARED VISUAL LABEL
+========================================================= */
+
+.root
+  [data-archive-part="visual-label"] {
+  right:
+    10px !important;
+
+  bottom:
+    8px !important;
+
+  left:
+    auto !important;
+
+  font-size:
+    4.5px !important;
+
+  letter-spacing:
+    0.07em !important;
+}

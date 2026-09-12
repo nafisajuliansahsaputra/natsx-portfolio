@@ -32,6 +32,10 @@ type VisionArtworkCopy = {
 type FiveAmVisionArtworkProps = {
   copy:
     VisionArtworkCopy;
+
+  mode?:
+    | "home"
+    | "archive";
 };
 
 
@@ -50,6 +54,7 @@ function clamp(
 
 export default function FiveAmVisionArtwork({
   copy,
+  mode = "home",
 }: FiveAmVisionArtworkProps) {
   const rootRef =
     useRef<HTMLDivElement>(
@@ -61,7 +66,11 @@ export default function FiveAmVisionArtwork({
       const root =
         rootRef.current;
 
-      if (!root) {
+      if (
+        !root ||
+        mode ===
+          "archive"
+      ) {
         return;
       }
 
@@ -351,8 +360,15 @@ export default function FiveAmVisionArtwork({
         }
       };
     },
-    [],
+    [
+      mode,
+    ],
   );
+
+
+  const eager =
+    mode ===
+    "archive";
 
 
   return (
@@ -363,30 +379,37 @@ export default function FiveAmVisionArtwork({
       className={
         styles.artwork
       }
+      data-vision-mode={
+        mode
+      }
       aria-hidden="true"
     >
       <div
         className={
           styles.ambient
         }
+        data-vision-part="ambient"
       />
 
       <div
         className={
           styles.frame
         }
+        data-vision-part="frame"
       />
 
       <div
         className={
           styles.orbit
         }
+        data-vision-part="orbit"
       />
 
       <div
         className={
           styles.type
         }
+        data-vision-part="type"
       >
         <span>
           5AM
@@ -401,20 +424,32 @@ export default function FiveAmVisionArtwork({
         className={
           styles.topMeta
         }
+        data-vision-part="top-meta"
       >
         <span
           className={
             styles.topLogo
           }
+          data-vision-part="top-logo"
         >
           <Image
             src="/images/projects/5am-vision/5am-logo.png"
             alt=""
             fill
-            sizes="(max-width: 700px) 28px, (max-width: 960px) 34px, 42px"
+            loading={
+              eager
+                ? "eager"
+                : undefined
+            }
+            sizes={
+              eager
+                ? "24px"
+                : "(max-width: 700px) 28px, (max-width: 960px) 34px, 42px"
+            }
             className={
               styles.topLogoImage
             }
+            data-vision-part="top-logo-image"
             unoptimized
           />
         </span>
@@ -423,12 +458,14 @@ export default function FiveAmVisionArtwork({
           className={
             styles.topRule
           }
+          data-vision-part="top-rule"
         />
 
         <span
           className={
             styles.topIndex
           }
+          data-vision-part="top-index"
         >
           02
         </span>
@@ -438,11 +475,13 @@ export default function FiveAmVisionArtwork({
         className={
           styles.leftMeta
         }
+        data-vision-part="left-meta"
       >
         <span
           className={
             styles.metaLabel
           }
+          data-vision-part="meta-label"
         >
           {
             copy.disciplineLabel
@@ -472,6 +511,7 @@ export default function FiveAmVisionArtwork({
         className={
           styles.rightStatement
         }
+        data-vision-part="right-statement"
       >
         <span>
           {
@@ -495,6 +535,7 @@ export default function FiveAmVisionArtwork({
           className={
             styles.rightRule
           }
+          data-vision-part="right-rule"
         />
       </div>
 
@@ -502,6 +543,7 @@ export default function FiveAmVisionArtwork({
         className={
           styles.tagline
         }
+        data-vision-part="tagline"
       >
         {
           copy.tagline
@@ -512,15 +554,26 @@ export default function FiveAmVisionArtwork({
         className={
           styles.character
         }
+        data-vision-part="character"
       >
         <Image
           src="/images/projects/5am-vision/aven-cutout.png"
           alt=""
           fill
-          sizes="(max-width: 700px) 74vw, (max-width: 960px) 56vw, 42vw"
+          loading={
+            eager
+              ? "eager"
+              : undefined
+          }
+          sizes={
+            eager
+              ? "360px"
+              : "(max-width: 700px) 74vw, (max-width: 960px) 56vw, 42vw"
+          }
           className={
             styles.characterImage
           }
+          data-vision-part="character-image"
           unoptimized
         />
       </div>

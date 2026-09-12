@@ -22,7 +22,7 @@ import {
 import FiveAmVisionArtwork from "./FiveAmVisionArtwork";
 import phoneStyles from "./SpallPhone.module.css";
 import styles from "./SelectedWork.module.css";
-
+import FeaturedProjectParallax from "./FeaturedProjectParallax";
 
 type HomeLayout =
   | "wide"
@@ -326,17 +326,38 @@ export default async function SelectedWork({
                       ]
                     }`}
                   >
-                    <ProjectArtwork
-                      project={
-                        project
-                      }
-                      variant={
-                        visual
-                      }
-                      copy={
-                        copy
-                      }
-                    />
+{visual ===
+"vision" ? (
+  <ProjectArtwork
+    project={
+      project
+    }
+    variant={
+      visual
+    }
+    copy={
+      copy
+    }
+  />
+) : (
+  <FeaturedProjectParallax
+    variant={
+      visual
+    }
+  >
+    <ProjectArtwork
+      project={
+        project
+      }
+      variant={
+        visual
+      }
+      copy={
+        copy
+      }
+    />
+  </FeaturedProjectParallax>
+)}
                   </div>
 
                   <div
@@ -559,16 +580,17 @@ function SpallArtwork({
           }
         >
           {primaryVisual ? (
-            <ShowcaseImage
-              src={
-                primaryVisual
-              }
-              alt={`${project.title} desktop interface`}
-              className={
-                styles.spallPrimaryImage
-              }
-              sizes="(max-width: 700px) 79vw, (max-width: 960px) 72vw, 58vw"
-            />
+<ShowcaseImage
+  src={
+    primaryVisual
+  }
+  alt={`${project.title} desktop interface`}
+  className={
+    styles.spallPrimaryImage
+  }
+  sizes="(max-width: 700px) 79vw, (max-width: 960px) 72vw, 58vw"
+  unoptimized
+/>
           ) : (
             <div
               className={
@@ -659,11 +681,12 @@ function SpallPhone({
   image: string;
 }) {
   return (
-    <div
-      className={
-        phoneStyles.stage
-      }
-    >
+<div
+  className={
+    phoneStyles.stage
+  }
+  data-featured-layer="spall-phone"
+>
       <div
         className={
           phoneStyles.phone
@@ -674,16 +697,17 @@ function SpallPhone({
             phoneStyles.screen
           }
         >
-          <ShowcaseImage
-            src={
-              image
-            }
-            alt={`${project.title} mobile interface`}
-            className={
-              phoneStyles.image
-            }
-            sizes="(max-width: 700px) 24vw, (max-width: 960px) 19vw, 17.6vw"
-          />
+<ShowcaseImage
+  src={
+    image
+  }
+  alt={`${project.title} mobile interface`}
+  className={
+    phoneStyles.image
+  }
+  sizes="(max-width: 700px) 24vw, (max-width: 960px) 19vw, 17.6vw"
+  unoptimized
+/>
         </div>
 
         <div
@@ -947,16 +971,17 @@ function BastArtwork({
           }
         >
           {primaryVisual ? (
-            <ShowcaseImage
-              src={
-                primaryVisual
-              }
-              alt={`${project.title} main system interface`}
-              className={
-                styles.bastPrimaryImage
-              }
-              sizes="(max-width: 700px) 78vw, (max-width: 960px) 72vw, 60vw"
-            />
+<ShowcaseImage
+  src={
+    primaryVisual
+  }
+  alt={`${project.title} main system interface`}
+  className={
+    styles.bastPrimaryImage
+  }
+  sizes="(max-width: 700px) 78vw, (max-width: 960px) 72vw, 60vw"
+  unoptimized
+/>
           ) : (
             <BastFallback />
           )}
@@ -969,16 +994,17 @@ function BastArtwork({
         }
       >
         {secondaryVisual ? (
-          <ShowcaseImage
-            src={
-              secondaryVisual
-            }
-            alt={`${project.title} supporting workflow visual`}
-            className={
-              styles.bastSecondaryImage
-            }
-            sizes="(max-width: 700px) 27vw, (max-width: 960px) 26vw, 22vw"
-          />
+<ShowcaseImage
+  src={
+    secondaryVisual
+  }
+  alt={`${project.title} supporting workflow visual`}
+  className={
+    styles.bastSecondaryImage
+  }
+  sizes="(max-width: 700px) 27vw, (max-width: 960px) 26vw, 22vw"
+  unoptimized
+/>
         ) : (
           <div
             className={
@@ -1125,11 +1151,13 @@ function ShowcaseImage({
   alt,
   className,
   sizes,
+  unoptimized = false,
 }: {
   src: string;
   alt: string;
   className: string;
   sizes: string;
+  unoptimized?: boolean;
 }) {
   return (
     <Image
@@ -1145,6 +1173,9 @@ function ShowcaseImage({
       }
       className={
         className
+      }
+      unoptimized={
+        unoptimized
       }
     />
   );

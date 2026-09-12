@@ -12,7 +12,9 @@ import {
   useState,
 } from "react";
 
-import Image from "next/image";
+import WorkArchiveHomepagePreview, {
+  hasHomepageArchiveArtwork,
+} from "./WorkArchiveHomepagePreview";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 
@@ -869,6 +871,17 @@ export default function WorkArchiveFilter({
                 categorySlugs,
               );
 
+              const hasHomepageArtwork =
+  hasHomepageArchiveArtwork(
+    project.slug,
+  );
+
+const hasPreview =
+  hasHomepageArtwork ||
+  Boolean(
+    previewImage,
+  );
+
             const projectStyle = {
               "--row-accent":
                 project.accentColor,
@@ -932,10 +945,10 @@ export default function WorkArchiveFilter({
                     )
                   }
                   data-has-preview={
-                    previewImage
-                      ? "true"
-                      : "false"
-                  }
+  hasPreview
+    ? "true"
+    : "false"
+}
                   data-work-categories={
                     categorySlugs.join(
                       " ",
@@ -989,29 +1002,29 @@ export default function WorkArchiveFilter({
                     </div>
                   </div>
 
-                  {previewImage ? (
-                    <div
-                      className={
-                        styles.previewStage
-                      }
-                      aria-hidden="true"
-                    >
-                      <div
-                        className={
-                          styles.previewFrame
-                        }
-                      >
-                        <Image
-  src={previewImage}
-  alt=""
-  fill
-  loading="eager"
-  sizes="(max-width: 700px) 1px, (max-width: 1200px) 420px, 480px"
-  className={styles.previewImage}
-/>
-                      </div>
-                    </div>
-                  ) : null}
+{hasPreview ? (
+  <div
+    className={
+      styles.previewStage
+    }
+    aria-hidden="true"
+  >
+    <div
+      className={
+        styles.previewFrame
+      }
+    >
+      <WorkArchiveHomepagePreview
+        project={
+          project
+        }
+        fallbackImage={
+          previewImage
+        }
+      />
+    </div>
+  </div>
+) : null}
 
                   <div
                     className={

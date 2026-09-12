@@ -3576,3 +3576,323 @@
       0.01ms !important;
   }
 }
+
+/* =========================================================
+   FEATURED PROJECT — CURSOR MAGNETIC PARALLAX
+========================================================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+
+  /* =====================================================
+     SPALL SPILL
+  ===================================================== */
+
+  :global(
+    [data-featured-parallax="spall"][data-parallax-active="true"]
+  )
+  .spallBrowser {
+    transform:
+      translate3d(
+        var(
+          --featured-mid-x
+        ),
+        var(
+          --featured-mid-y
+        ),
+        0
+      )
+      rotate(
+        var(
+          --featured-tilt-inverse
+        )
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="spall"][data-parallax-active="true"]
+  )
+  .spallCard {
+    transform:
+      translate3d(
+        var(
+          --featured-front-x
+        ),
+        var(
+          --featured-front-y
+        ),
+        0
+      )
+      rotate(
+        var(
+          --featured-tilt
+        )
+      ) !important;
+  }
+
+
+  /*
+   * SpallPhone berasal dari CSS module lain,
+   * jadi selector tetap harus punya local
+   * class dari SelectedWork.module.css agar
+   * lolos CSS Modules purity check.
+   */
+
+  :global(
+    [data-featured-parallax="spall"][data-parallax-active="true"]
+  )
+  .spallArtwork
+  :global(
+    [data-featured-layer="spall-phone"]
+  ) {
+    transform:
+      translate3d(
+        var(
+          --featured-front-x
+        ),
+        var(
+          --featured-front-y
+        ),
+        0
+      )
+      rotate(
+        var(
+          --featured-tilt
+        )
+      ) !important;
+  }
+
+
+  /* =====================================================
+     NUSANTARA STAY
+  ===================================================== */
+
+  :global(
+    [data-featured-parallax="stay"][data-parallax-active="true"]
+  )
+  .stayArch {
+    transform:
+      translate3d(
+        var(
+          --featured-back-x
+        ),
+        var(
+          --featured-back-y
+        ),
+        0
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="stay"][data-parallax-active="true"]
+  )
+  .stayWindow {
+    transform:
+      translate3d(
+        var(
+          --featured-mid-x
+        ),
+        var(
+          --featured-mid-y
+        ),
+        0
+      )
+      rotate(
+        var(
+          --featured-tilt-inverse
+        )
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="stay"][data-parallax-active="true"]
+  )
+  .staySecondary {
+    transform:
+      translate3d(
+        var(
+          --featured-front-x
+        ),
+        var(
+          --featured-front-y
+        ),
+        0
+      )
+      rotate(
+        var(
+          --featured-tilt
+        )
+      ) !important;
+  }
+
+
+  /* =====================================================
+     BAST
+  ===================================================== */
+
+  :global(
+    [data-featured-parallax="bast"][data-parallax-active="true"]
+  )
+  .bastGrid {
+    transform:
+      translate3d(
+        var(
+          --featured-back-x
+        ),
+        var(
+          --featured-back-y
+        ),
+        0
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="bast"][data-parallax-active="true"]
+  )
+  .bastIndex {
+    transform:
+      translate3d(
+        var(
+          --featured-back-x
+        ),
+        var(
+          --featured-back-y
+        ),
+        0
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="bast"][data-parallax-active="true"]
+  )
+  .bastDashboard {
+    transform:
+      translate3d(
+        var(
+          --featured-mid-x
+        ),
+        var(
+          --featured-mid-y
+        ),
+        0
+      )
+      rotate(
+        var(
+          --featured-tilt-inverse
+        )
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="bast"][data-parallax-active="true"]
+  )
+  .bastDocument {
+    transform:
+      translate3d(
+        var(
+          --featured-front-x
+        ),
+        var(
+          --featured-front-y
+        ),
+        0
+      )
+      rotate(
+        calc(
+          1.5deg +
+          var(
+            --featured-tilt
+          )
+        )
+      ) !important;
+  }
+
+
+  :global(
+    [data-featured-parallax="bast"][data-parallax-active="true"]
+  )
+  .bastStatus {
+    transform:
+      translate3d(
+        var(
+          --featured-accent-x
+        ),
+        var(
+          --featured-accent-y
+        ),
+        0
+      ) !important;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  :global(
+    [data-featured-parallax]
+  )
+  .spallBrowser,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .spallCard,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .stayArch,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .stayWindow,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .staySecondary,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .bastGrid,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .bastIndex,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .bastDashboard,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .bastDocument,
+
+  :global(
+    [data-featured-parallax]
+  )
+  .bastStatus {
+    transform:
+      none !important;
+  }
+}
