@@ -1,18 +1,30 @@
 /*
- * =========================
+ * =========================================================
  * NATSX — WORK MOTION FIT
- * =========================
+ * =========================================================
  *
- * Typography-safe reveal bounds for
- * Work archive display text.
+ * Typography-safe reveal bounds
+ * + editorial project archive hover.
  *
- * Motion choreography tetap dimiliki
- * work-motion.css.
+ * Hover direction:
+ *
+ * accent surface
+ *      ↓
+ * left visual panel reveals
+ *      ↓
+ * divider grows center → top / bottom
+ *      ↓
+ * project copy pushed right
+ *      ↓
+ * year + arrow pushed out right
+ *
+ * Desktop only.
  */
 
-/* =========================
-   PROJECT TITLE
-========================= */
+
+/* =========================================================
+   PROJECT TITLE — SAFE REVEAL
+========================================================= */
 
 [data-motion-page="work"]
   [data-motion-scroll="work-project"]
@@ -22,22 +34,7 @@
     visible;
 }
 
-/*
- * Override work-title-slice-in dari
- * work-motion.css.
- *
- * Tight display type bisa punya
- * visual overhang di luar line box,
- * terutama karena:
- *
- * - line-height sangat ketat
- * - negative tracking
- * - bentuk glyph tertentu
- *
- * Reveal horizontal tetap sama,
- * tetapi final mask diberi ruang
- * vertikal + horizontal kecil.
- */
+
 @keyframes
   work-title-slice-in {
   from {
@@ -61,37 +58,10 @@
   }
 }
 
-/* =========================
-   CLOSING DISPLAY TEXT
-========================= */
 
-/*
- * Closing copy memakai reveal vertikal
- * dari work-motion.css.
- *
- * Animation tersebut memakai fill-mode
- * `both`, sehingga clip-path pada frame
- * akhir tetap aktif setelah animasi
- * selesai.
- *
- * Glyph dengan descender seperti:
- *
- * j
- * g
- * p
- * q
- * y
- *
- * dapat turun sedikit melewati line box.
- * Jika final mask berhenti tepat di
- * inset(0), bagian bawah glyph akan
- * terpotong.
- *
- * Beri overscan di sekeliling mask tanpa
- * mengubah ukuran font, line-height,
- * tracking, layout, timing, atau arah
- * animasi.
- */
+/* =========================================================
+   CLOSING DISPLAY TEXT — SAFE REVEAL
+========================================================= */
 
 [data-motion-page="work"]
   [data-motion-scroll="work-closing"]
@@ -100,6 +70,7 @@
   overflow:
     visible;
 }
+
 
 @keyframes
   work-closing-copy-in {
@@ -141,24 +112,957 @@
   }
 }
 
-/* =========================
-   MOBILE PROJECT PREVIEW
-========================= */
 
-/*
- * Desktop archive keeps its floating
- * project preview.
- *
- * Phone archive is intentionally more
- * editorial and compact:
- *
- * number
- * title
- * disciplines
- * arrow
- *
- * No thumbnail / preview image.
- */
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (
+  min-width: 961px
+) and (
+  hover: hover
+) and (
+  pointer: fine
+) {
+
+  /* =====================================================
+     EDITORIAL VARIABLES
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"] {
+    --work-editorial-preview-width:
+      clamp(
+        340px,
+        34vw,
+        540px
+      );
+
+    --work-editorial-title-origin:
+      clamp(
+        86px,
+        7.6vw,
+        116px
+      );
+
+    --work-editorial-preview-gap:
+      clamp(
+        32px,
+        2.8vw,
+        44px
+      );
+
+    --work-editorial-push:
+      calc(
+        var(
+          --work-editorial-preview-width
+        ) -
+        var(
+          --work-editorial-title-origin
+        ) +
+        var(
+          --work-editorial-preview-gap
+        )
+      );
+
+    /*
+     * Arrow berada jauh lebih dekat
+     * dengan batas kanan dibanding year,
+     * jadi jarak exit-nya lebih pendek.
+     */
+
+    --work-editorial-arrow-exit:
+      clamp(
+        120px,
+        12vw,
+        190px
+      );
+
+    --work-editorial-row-radius:
+      0px;
+
+    --work-editorial-frame-inset:
+      10px;
+
+    --work-editorial-frame-radius:
+      0px;
+
+    overflow:
+      clip;
+
+    transition:
+      border-radius
+        460ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ),
+      border-color
+        300ms
+        ease;
+  }
+
+
+  /* =====================================================
+     ACCENT SURFACE
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]::before {
+    content:
+      "";
+
+    position:
+      absolute;
+
+    inset:
+      0;
+
+    z-index:
+      -2;
+
+    background:
+      var(
+        --row-accent
+      ) !important;
+
+    opacity:
+      1 !important;
+
+    transform:
+      scaleX(
+        0
+      ) !important;
+
+    transform-origin:
+      left center !important;
+
+    border-radius:
+      inherit;
+
+    transition:
+      transform
+        500ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ) !important;
+
+    pointer-events:
+      none;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover,
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible {
+    border-radius:
+      var(
+        --work-editorial-row-radius
+      );
+
+    border-bottom-color:
+      transparent !important;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover::before,
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible::before {
+    transform:
+      scaleX(
+        1
+      ) !important;
+  }
+
+
+  /* =====================================================
+     DIVIDER
+     CENTER → TOP + BOTTOM
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]::after {
+    content:
+      "";
+
+    position:
+      absolute;
+
+    top:
+      0;
+
+    bottom:
+      0;
+
+    left:
+      var(
+        --work-editorial-preview-width
+      );
+
+    right:
+      auto;
+
+    z-index:
+      5;
+
+    width:
+      1px;
+
+    background:
+      rgba(
+        255,
+        255,
+        255,
+        0.17
+      ) !important;
+
+    opacity:
+      0 !important;
+
+    transform:
+      scaleY(
+        0
+      ) !important;
+
+    transform-origin:
+      center center !important;
+
+    transition:
+      opacity
+        120ms
+        ease,
+      transform
+        220ms
+        cubic-bezier(
+          0.4,
+          0,
+          1,
+          1
+        ) !important;
+
+    pointer-events:
+      none;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover::after,
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible::after {
+    opacity:
+      1 !important;
+
+    transform:
+      scaleY(
+        1
+      ) !important;
+
+    transition:
+      opacity
+        1ms
+        linear
+        120ms,
+      transform
+        380ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        )
+        120ms !important;
+  }
+
+
+  /* =====================================================
+     LEFT VISUAL PANEL
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div[aria-hidden="true"] {
+    position:
+      absolute !important;
+
+    top:
+      0 !important;
+
+    bottom:
+      0 !important;
+
+    left:
+      0 !important;
+
+    z-index:
+      4 !important;
+
+    width:
+      var(
+        --work-editorial-preview-width
+      ) !important;
+
+    height:
+      100% !important;
+
+    aspect-ratio:
+      auto !important;
+
+    margin:
+      0 !important;
+
+    opacity:
+      1 !important;
+
+    pointer-events:
+      none;
+
+    transform:
+      none !important;
+
+    clip-path:
+      inset(
+        0
+        100%
+        0
+        0
+      );
+
+    -webkit-mask-image:
+      none;
+
+    mask-image:
+      none;
+
+    transition:
+      clip-path
+        500ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ) !important;
+
+    will-change:
+      clip-path;
+  }
+
+
+  /* =====================================================
+     REMOVE LEGACY PREVIEW VARIANTS
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-preview-variant="rise"]
+    > div[aria-hidden="true"],
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-preview-variant="drop"]
+    > div[aria-hidden="true"],
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-preview-variant="center"]
+    > div[aria-hidden="true"] {
+    top:
+      0 !important;
+
+    bottom:
+      0 !important;
+
+    left:
+      0 !important;
+
+    transform:
+      none !important;
+  }
+
+
+  /* =====================================================
+     PREVIEW FRAME
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div[aria-hidden="true"]
+    > div {
+    position:
+      absolute !important;
+
+    inset:
+      var(
+        --work-editorial-frame-inset
+      ) !important;
+
+    width:
+      auto !important;
+
+    height:
+      auto !important;
+
+    overflow:
+      hidden !important;
+
+    border:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.12
+      ) !important;
+
+    border-radius:
+      var(
+        --work-editorial-frame-radius
+      ) !important;
+
+    background:
+      rgba(
+        255,
+        255,
+        255,
+        0.04
+      ) !important;
+
+    box-shadow:
+      none !important;
+
+    transform:
+      none !important;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div[aria-hidden="true"]
+    > div::after {
+    display:
+      none !important;
+  }
+
+
+  /* =====================================================
+     IMAGE
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div[aria-hidden="true"]
+    img {
+    position:
+      absolute !important;
+
+    inset:
+      0 !important;
+
+    width:
+      100% !important;
+
+    height:
+      100% !important;
+
+    object-fit:
+      cover !important;
+
+    object-position:
+      center top !important;
+
+    transform:
+      translate3d(
+        -18px,
+        0,
+        0
+      )
+      scale(
+        1.025
+      ) !important;
+
+    filter:
+      saturate(
+        0.94
+      )
+      contrast(
+        0.98
+      );
+
+    transition:
+      transform
+        680ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ),
+      filter
+        420ms
+        ease !important;
+
+    will-change:
+      transform;
+  }
+
+
+  /* =====================================================
+     ACTIVE PREVIEW
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]:hover
+    > div[aria-hidden="true"],
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]:focus-visible
+    > div[aria-hidden="true"] {
+    clip-path:
+      inset(
+        0
+        0
+        0
+        0
+      );
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]:hover
+    > div[aria-hidden="true"]
+    img,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]:focus-visible
+    > div[aria-hidden="true"]
+    img {
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      )
+      scale(
+        1
+      ) !important;
+
+    filter:
+      saturate(
+        1
+      )
+      contrast(
+        1
+      );
+  }
+
+
+  /* =====================================================
+     PROJECT NUMBER
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > span:first-child {
+    position:
+      relative;
+
+    z-index:
+      2;
+  }
+
+
+  /* =====================================================
+     PROJECT MAIN PUSH
+  ===================================================== */
+
+  /*
+   * Title + disciplines bergerak
+   * sebagai satu group.
+   */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type {
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      ) !important;
+
+    transition:
+      transform
+        540ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ) !important;
+
+    will-change:
+      transform;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]:hover
+    > div:first-of-type,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]:focus-visible
+    > div:first-of-type {
+    transform:
+      translate3d(
+        var(
+          --work-editorial-push
+        ),
+        0,
+        0
+      ) !important;
+  }
+
+
+  /*
+   * Disable legacy +8px movement.
+   */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:first-of-type
+    > h2,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:first-of-type
+    > div,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:first-of-type
+    > h2,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:first-of-type
+    > div {
+    transform:
+      none !important;
+  }
+
+
+  /* =====================================================
+     TITLE
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:first-of-type
+    > h2,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:first-of-type
+    > h2 {
+    color:
+      #f7f5ef !important;
+  }
+
+
+  /* =====================================================
+     DISCIPLINES
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:first-of-type
+    > div,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:first-of-type
+    > div {
+    color:
+      rgba(
+        247,
+        245,
+        239,
+        0.72
+      ) !important;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:first-of-type
+    > div
+    span:not(:last-child)::after,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:first-of-type
+    > div
+    span:not(:last-child)::after {
+    color:
+      rgba(
+        247,
+        245,
+        239,
+        0.38
+      ) !important;
+  }
+
+
+  /* =====================================================
+     YEAR — PUSH OUT RIGHT
+  ===================================================== */
+
+  /*
+   * Tidak ada fade.
+   *
+   * Container year terdorong ke kanan
+   * memakai motion language yang sama
+   * seperti title.
+   *
+   * Jarak menggunakan editorial push
+   * yang sama dengan projectMain.
+   *
+   * Karena year mulai jauh di kanan,
+   * jarak ini cukup untuk membawanya
+   * sepenuhnya keluar row.
+   */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:last-of-type {
+    transform:
+      translate3d(
+        0,
+        0,
+        0
+      ) !important;
+
+    transition:
+      transform
+        540ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ) !important;
+
+    will-change:
+      transform;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:last-of-type,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:last-of-type {
+    transform:
+      translate3d(
+        var(
+          --work-editorial-push
+        ),
+        0,
+        0
+      ) !important;
+  }
+
+
+  /*
+   * Child year tidak bergerak sendiri.
+   * Semua movement dilakukan container.
+   */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > div:last-of-type
+    span,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > div:last-of-type
+    span {
+    opacity:
+      1 !important;
+
+    color:
+      rgba(
+        247,
+        245,
+        239,
+        0.78
+      ) !important;
+
+    transform:
+      none !important;
+  }
+
+
+  /* =====================================================
+     ARROW — PUSH OUT RIGHT
+  ===================================================== */
+
+  /*
+   * Arrow juga tidak fade.
+   *
+   * Circle secara fisik bergerak
+   * melewati batas kanan row.
+   *
+   * Karena row menggunakan
+   * overflow: clip,
+   * disappearing terjadi natural
+   * akibat clipping.
+   */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > span:last-child {
+    opacity:
+      1 !important;
+
+    transition:
+      background
+        300ms
+        ease,
+      color
+        300ms
+        ease,
+      border-color
+        300ms
+        ease,
+      transform
+        540ms
+        cubic-bezier(
+          0.16,
+          1,
+          0.3,
+          1
+        ) !important;
+
+    will-change:
+      transform;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:hover
+    > span:last-child,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible
+    > span:last-child {
+    opacity:
+      1 !important;
+
+    background:
+      var(
+        --row-accent
+      ) !important;
+
+    border:
+      1px solid
+      var(
+        --background,
+        #f7f5ef
+      ) !important;
+
+    color:
+      var(
+        --background,
+        #f7f5ef
+      ) !important;
+
+    transform:
+      translate3d(
+        var(
+          --work-editorial-arrow-exit
+        ),
+        0,
+        0
+      )
+      rotate(
+        45deg
+      )
+      scale(
+        1.02
+      ) !important;
+  }
+
+
+  /* =====================================================
+     FOCUS
+  ===================================================== */
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]:focus-visible {
+    outline:
+      1px solid
+      rgba(
+        247,
+        245,
+        239,
+        0.72
+      ) !important;
+
+    outline-offset:
+      -4px !important;
+  }
+}
+
+
+/* =========================================================
+   PROJECT TITLE — SINGLE LINE
+========================================================= */
+
+@media (
+  min-width: 961px
+) {
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type
+    > h2 {
+    display:
+      block;
+
+    width:
+      100%;
+
+    max-width:
+      100%;
+
+    white-space:
+      nowrap;
+
+    overflow:
+      hidden !important;
+
+    text-overflow:
+      ellipsis;
+
+    padding-block:
+      0.12em;
+
+    margin-block:
+      -0.12em;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (
   max-width: 700px
 ) {
@@ -166,6 +1070,41 @@
     [data-motion-scroll="work-project"][data-has-preview="true"]
     > div[aria-hidden="true"] {
     display:
+      none !important;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  min-width: 961px
+) and (
+  prefers-reduced-motion:
+    reduce
+) {
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-has-preview="true"]
+    > div[aria-hidden="true"] {
+    display:
+      none !important;
+  }
+
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:last-of-type,
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > span:last-child {
+    transform:
       none !important;
   }
 }

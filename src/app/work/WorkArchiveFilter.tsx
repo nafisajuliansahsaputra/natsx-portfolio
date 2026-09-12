@@ -106,6 +106,7 @@ function getProjectMatchesCategory(
 }
 
 
+
 export default function WorkArchiveFilter({
   projects,
   categories,
@@ -1001,16 +1002,13 @@ export default function WorkArchiveFilter({
                         }
                       >
                         <Image
-                          src={
-                            previewImage
-                          }
-                          alt=""
-                          fill
-                          sizes="(max-width: 700px) 74vw, 340px"
-                          className={
-                            styles.previewImage
-                          }
-                        />
+  src={previewImage}
+  alt=""
+  fill
+  loading="eager"
+  sizes="(max-width: 700px) 1px, (max-width: 1200px) 420px, 480px"
+  className={styles.previewImage}
+/>
                       </div>
                     </div>
                   ) : null}
