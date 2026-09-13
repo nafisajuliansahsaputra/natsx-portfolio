@@ -35,25 +35,30 @@
 }
 
 
+/*
+ * Lebihkan bottom reveal supaya glyph dengan
+ * descender seperti y / g / p / q tidak kena mask.
+ */
+
 @keyframes
   work-title-slice-in {
   from {
     clip-path:
       inset(
-        -0.22em
+        -0.3em
         100%
-        -0.22em
-        -0.12em
+        -0.44em
+        -0.18em
       );
   }
 
   to {
     clip-path:
       inset(
-        -0.22em
-        -0.12em
-        -0.22em
-        -0.12em
+        -0.3em
+        -0.18em
+        -0.44em
+        -0.18em
       );
   }
 }
@@ -164,12 +169,6 @@
           --work-editorial-preview-gap
         )
       );
-
-    /*
-     * Arrow berada jauh lebih dekat
-     * dengan batas kanan dibanding year,
-     * jadi jarak exit-nya lebih pendek.
-     */
 
     --work-editorial-arrow-exit:
       clamp(
@@ -679,11 +678,6 @@
      PROJECT MAIN PUSH
   ===================================================== */
 
-  /*
-   * Title + disciplines bergerak
-   * sebagai satu group.
-   */
-
   [data-motion-page="work"]
     [data-motion-scroll="work-project"]
     > div:first-of-type {
@@ -726,10 +720,6 @@
       ) !important;
   }
 
-
-  /*
-   * Disable legacy +8px movement.
-   */
 
   [data-motion-page="work"]
     [data-motion-scroll="work-project"]:hover
@@ -821,21 +811,6 @@
      YEAR — PUSH OUT RIGHT
   ===================================================== */
 
-  /*
-   * Tidak ada fade.
-   *
-   * Container year terdorong ke kanan
-   * memakai motion language yang sama
-   * seperti title.
-   *
-   * Jarak menggunakan editorial push
-   * yang sama dengan projectMain.
-   *
-   * Karena year mulai jauh di kanan,
-   * jarak ini cukup untuk membawanya
-   * sepenuhnya keluar row.
-   */
-
   [data-motion-page="work"]
     [data-motion-scroll="work-project"]
     > div:last-of-type {
@@ -879,11 +854,6 @@
   }
 
 
-  /*
-   * Child year tidak bergerak sendiri.
-   * Semua movement dilakukan container.
-   */
-
   [data-motion-page="work"]
     [data-motion-scroll="work-project"]:hover
     > div:last-of-type
@@ -912,18 +882,6 @@
   /* =====================================================
      ARROW — PUSH OUT RIGHT
   ===================================================== */
-
-  /*
-   * Arrow juga tidak fade.
-   *
-   * Circle secara fisik bergerak
-   * melewati batas kanan row.
-   *
-   * Karena row menggunakan
-   * overflow: clip,
-   * disappearing terjadi natural
-   * akibat clipping.
-   */
 
   [data-motion-page="work"]
     [data-motion-scroll="work-project"]
@@ -1026,6 +984,14 @@
    DESKTOP + TABLET + MOBILE
 ========================================================= */
 
+/*
+ * overflow hidden tetap diperlukan agar ellipsis bekerja.
+ *
+ * Solusinya bukan membuka overflow, tapi memperbesar ruang
+ * vertikal h2. Negative margin menjaga tinggi row tidak ikut
+ * membesar.
+ */
+
 [data-motion-page="work"]
   [data-motion-scroll="work-project"]
   > div:first-of-type
@@ -1051,11 +1017,17 @@
   text-overflow:
     ellipsis;
 
-  padding-block:
-    0.12em;
+  padding-top:
+    0.14em;
 
-  margin-block:
-    -0.12em;
+  padding-bottom:
+    0.34em;
+
+  margin-top:
+    -0.14em;
+
+  margin-bottom:
+    -0.34em;
 }
 
 

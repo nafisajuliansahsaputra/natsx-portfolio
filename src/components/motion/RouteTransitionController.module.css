@@ -56,14 +56,6 @@
   background:
     var(--accent);
 
-  /*
-   * Cover fractional-grid / GPU
-   * raster seams between slices.
-   *
-   * Same-color horizontal bleed only,
-   * so shutter choreography stays
-   * exactly the same.
-   */
   box-shadow:
     -1px 0 0 var(--accent),
     1px 0 0 var(--accent);
@@ -79,15 +71,6 @@
     transform;
 }
 
-/*
- * Vertical slice separators removed.
- *
- * The shutter segmentation is already
- * communicated by motion. Permanent
- * full-height lines made mobile look
- * like a grid and introduced unwanted
- * visual noise on desktop.
- */
 .slice:not(
   :first-child
 )::before {
@@ -95,10 +78,6 @@
     none;
 }
 
-/*
- * Thin ink edge that travels with each
- * shutter. Horizontal accent stays.
- */
 .slice::after {
   content: "";
 
@@ -135,6 +114,7 @@
   pointer-events:
     auto;
 }
+
 
 /* =========================
    COVER — V3 RHYTHM
@@ -239,6 +219,7 @@
       155ms;
 }
 
+
 /* =========================
    REVEAL — PAGE FIRST GAP
 ========================= */
@@ -340,6 +321,7 @@
       115ms
       ease;
 }
+
 
 /* =========================
    EDITORIAL CONTENT
@@ -517,6 +499,11 @@
     );
 }
 
+
+/* =====================================================
+   TITLE INDEX
+===================================================== */
+
 .titleIndex {
   align-self:
     start;
@@ -543,6 +530,19 @@
   opacity: 0;
 }
 
+
+/* =====================================================
+   TITLE GLYPH SAFE AREA
+===================================================== */
+
+/*
+ * Font besar + negative tracking membuat glyph terakhir
+ * bisa punya optical overhang di luar advance box.
+ *
+ * Tambahan inline breathing-room ini dikompensasi dengan
+ * negative margin sehingga posisi visual teks tidak berubah.
+ */
+
 .titleWrap {
   min-width: 0;
 
@@ -550,14 +550,39 @@
     visible;
 
   padding-block:
-    0.18em;
+    0.24em;
+
+  padding-inline:
+    0.18em
+    0.3em;
+
+  margin-inline:
+    -0.18em
+    -0.3em;
 }
 
+/* =========================================================
+   TITLE — GLYPH SAFE AREA
+========================================================= */
+
+.titleWrap {
+  min-width:
+    0;
+
+  overflow:
+    visible;
+
+  padding-block:
+    0.2em;
+}
+
+
 .title {
-  display: block;
+  display:
+    block;
 
   width:
-    fit-content;
+    max-content;
 
   max-width:
     100%;
@@ -581,14 +606,18 @@
   text-transform:
     uppercase;
 
-  opacity: 0;
+  overflow:
+    visible;
+
+  opacity:
+    0;
 
   clip-path:
     inset(
-      -0.22em
+      -0.32em
       100%
-      -0.22em
-      -0.12em
+      -0.36em
+      -0.24em
     );
 
   transform:
@@ -603,13 +632,44 @@
     center;
 }
 
+
+/*
+ * REAL GLYPH SAFE SPACE
+ *
+ * A / K / X punya diagonal optical overhang.
+ * Negative tracking membuat visual glyph terakhir
+ * bisa keluar dari advance-width teks.
+ *
+ * Pseudo-element ini benar-benar memperpanjang
+ * inline box setelah huruf terakhir.
+ */
+
+.title::after {
+  content:
+    "";
+
+  display:
+    inline-block;
+
+  width:
+    0.24em;
+
+  height:
+    1px;
+
+  flex:
+    0
+    0
+    auto;
+}
+
 .backward
   .title {
   clip-path:
     inset(
-      -0.22em
-      -0.12em
-      -0.22em
+      -0.3em
+      -0.3em
+      -0.34em
       100%
     );
 
@@ -672,6 +732,11 @@
     anywhere;
 }
 
+
+/* =========================
+   COVER CONTENT
+========================= */
+
 .covering
   .top,
 .covering
@@ -732,16 +797,22 @@
       188ms;
 }
 
+
+/*
+ * Final clip-path sekarang punya ruang ekstra
+ * di kanan untuk glyph terakhir seperti A.
+ */
+
 .covering
   .title {
   opacity: 1;
 
   clip-path:
     inset(
-      -0.22em
-      -0.12em
-      -0.22em
-      -0.12em
+      -0.3em
+      -0.3em
+      -0.34em
+      -0.24em
     );
 
   transform:
@@ -792,6 +863,11 @@
       )
       165ms;
 }
+
+
+/* =========================
+   REVEAL CONTENT
+========================= */
 
 .revealing
   .top {
@@ -859,9 +935,9 @@
 
   clip-path:
     inset(
-      -0.22em
-      -0.12em
-      -0.22em
+      -0.3em
+      -0.3em
+      -0.34em
       100%
     );
 
@@ -900,10 +976,10 @@
 
   clip-path:
     inset(
-      -0.22em
+      -0.3em
       100%
-      -0.22em
-      -0.12em
+      -0.34em
+      -0.24em
     );
 
   transform:
@@ -950,6 +1026,7 @@
         1
       );
 }
+
 
 /* =========================
    MOBILE
@@ -1176,6 +1253,7 @@
       138ms;
   }
 }
+
 
 /* =========================
    REDUCED MOTION
