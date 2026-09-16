@@ -1,2106 +1,345 @@
 .artwork {
-  --spall-green:
-    var(
-      --accent,
-      #234233
-    );
+  --paper: #eeeade;
+  --ink: #243c30;
+  --green: #244637;
+  --muted: #707669;
 
-  --spall-ivory:
-    var(
-      --project-secondary,
-      #f4efe6
-    );
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  container-type: inline-size;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-  --spall-ink:
-    #17241e;
+.artwork,
+.artwork * {
+  box-sizing: border-box;
+}
 
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  overflow:
-    hidden;
-
-  isolation:
-    isolate;
-
+/* The second page provides contrast behind the phone. */
+.greenPage {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 0 66%;
   background:
+    linear-gradient(
+      90deg,
+      rgb(12 31 22 / 20%),
+      transparent 10%
+    ),
     linear-gradient(
       145deg,
-      #dedbd2 0%,
-      #e7e3da 48%,
-      #d8d7d0 100%
+      #315341,
+      var(--green) 65%,
+      #1d392c
     );
-
-  color:
-    var(
-      --spall-ink
-    );
+  pointer-events: none;
 }
 
-/* =========================================================
-   ATMOSPHERE
-========================================================= */
-
-.atmosphere {
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  z-index:
-    0;
-
-  overflow:
-    hidden;
-
-  pointer-events:
-    none;
-}
-
-.atmosphere::before {
-  content:
-    "";
-
-  position:
-    absolute;
-
-  width:
-    54%;
-
-  aspect-ratio:
-    1;
-
-  top:
-    -29%;
-
-  right:
-    -9%;
-
-  border-radius:
-    50%;
-
+/* Broad studio light, kept away from the text hierarchy. */
+.pageLight {
+  position: absolute;
+  z-index: 0;
+  inset: 0 34% 0 0;
   background:
     radial-gradient(
-      circle,
-      color-mix(
-        in srgb,
-        var(
-          --spall-green
-        )
-        20%,
-        transparent
-      )
-      0%,
-      color-mix(
-        in srgb,
-        var(
-          --spall-green
-        )
-        7%,
-        transparent
-      )
-      40%,
-      transparent
-      72%
-    );
-
-  filter:
-    blur(
-      7px
-    );
-}
-
-.atmosphere::after {
-  content:
-    "";
-
-  position:
-    absolute;
-
-  left:
-    -13%;
-
-  bottom:
-    -40%;
-
-  width:
-    58%;
-
-  aspect-ratio:
-    1;
-
-  border:
-    1px solid
-    color-mix(
-      in srgb,
-      var(
-        --spall-green
-      )
-      16%,
-      transparent
-    );
-
-  border-radius:
-    50%;
-}
-
-.grid {
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  opacity:
-    0.28;
-
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(
-        35,
-        66,
-        51,
-        0.05
-      )
-      1px,
-      transparent
-      1px
+      ellipse at 75% 35%,
+      rgb(255 255 255 / 65%),
+      transparent 60%
     ),
     linear-gradient(
-      to bottom,
-      rgba(
-        35,
-        66,
-        51,
-        0.05
-      )
-      1px,
-      transparent
-      1px
+      115deg,
+      transparent 50%,
+      rgb(179 174 153 / 12%) 100%
     );
-
-  background-size:
-    clamp(
-      40px,
-      4.25vw,
-      68px
-    )
-    clamp(
-      40px,
-      4.25vw,
-      68px
-    );
-
-  mask-image:
-    linear-gradient(
-      110deg,
-      #000
-      0%,
-      rgba(
-        0,
-        0,
-        0,
-        0.8
-      )
-      55%,
-      transparent
-      98%
-    );
+  pointer-events: none;
 }
 
-/* =========================================================
-   LARGE TYPOGRAPHY
-========================================================= */
-
-.indexMark {
-  position:
-    absolute;
-
-  top:
-    7.2%;
-
-  left:
-    4%;
-
-  color:
-    var(
-      --spall-green
-    );
-
-  font-size:
-    clamp(
-      8px,
-      0.72vw,
-      12px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.08em;
+.identity {
+  position: absolute;
+  z-index: 3;
+  top: 7.5%;
+  left: 5.5%;
 }
 
-.backgroundWord {
-  position:
-    absolute;
-
-  right:
-    0.8%;
-
-  top:
-    -3.5%;
-
-  color:
-    color-mix(
-      in srgb,
-      var(
-        --spall-green
-      )
-      6%,
-      transparent
-    );
-
-  font-size:
-    clamp(
-      88px,
-      11vw,
-      184px
-    );
-
-  font-weight:
-    700;
-
-  line-height:
-    0.8;
-
-  letter-spacing:
-    -0.085em;
+.wordmark {
+  display: block;
+  font-size: 2.45cqw;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.09em;
 }
 
-.coordinate {
-  position:
-    absolute;
-
-  left:
-    4%;
-
-  top:
-    20.5%;
-
-  color:
-    color-mix(
-      in srgb,
-      var(
-        --spall-green
-      )
-      36%,
-      transparent
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.46vw,
-      7px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.14em;
-
-  writing-mode:
-    vertical-rl;
-
-  transform:
-    rotate(
-      180deg
-    );
+.wordmark > span {
+  font-weight: 400;
 }
 
-/* =========================================================
-   MAIN BROWSER
-========================================================= */
-
-.browser {
-  position:
-    absolute;
-
-  top:
-    7.5%;
-
-  left:
-    7%;
-
-  z-index:
-    4;
-
-  width:
-    72.8%;
-
-  overflow:
-    hidden;
-
-  border:
-    1px solid
-    rgba(
-      22,
-      37,
-      29,
-      0.085
-    );
-
-  background:
-    #f5f2ea;
-
-  box-shadow:
-    0
-    34px
-    76px
-    rgba(
-      20,
-      31,
-      25,
-      0.13
-    ),
-    0
-    8px
-    22px
-    rgba(
-      20,
-      31,
-      25,
-      0.065
-    );
-
-  transform:
-    translate3d(
-      var(
-        --featured-mid-x,
-        0px
-      ),
-      var(
-        --featured-mid-y,
-        0px
-      ),
-      0
-    )
-    rotate(
-      -0.18deg
-    );
-
-  transform-origin:
-    center;
-
-  transition:
-    box-shadow
-    700ms
-    cubic-bezier(
-      0.16,
-      1,
-      0.3,
-      1
-    );
+.identityCaption {
+  display: block;
+  margin-top: 1.4cqw;
+  color: var(--muted);
+  font-size: 0.62cqw;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.13em;
 }
 
-.browserTop {
-  position:
-    relative;
-
-  z-index:
-    3;
-
-  height:
-    clamp(
-      32px,
-      3vw,
-      47px
-    );
-
-  padding-inline:
-    clamp(
-      12px,
-      1.45vw,
-      22px
-    );
-
-  display:
-    grid;
-
-  grid-template-columns:
-    auto
-    1fr
-    auto;
-
-  align-items:
-    center;
-
-  gap:
-    14px;
-
-  border-bottom:
-    1px solid
-    rgba(
-      22,
-      37,
-      29,
-      0.075
-    );
-
-  background:
-    rgba(
-      247,
-      244,
-      236,
-      0.98
-    );
+.edition {
+  position: absolute;
+  z-index: 3;
+  top: 8%;
+  right: 4%;
+  color: rgb(242 239 224 / 63%);
+  font-size: 0.6cqw;
+  letter-spacing: 0.13em;
+  white-space: nowrap;
 }
 
-.browserDots {
-  display:
-    flex;
-
-  gap:
-    5px;
+/* A compact editorial column, rather than a giant project title. */
+.editorialCopy {
+  position: absolute;
+  z-index: 3;
+  top: 43%;
+  left: 5.5%;
+  width: 32%;
 }
 
-.browserDots span {
-  width:
-    6px;
-
-  height:
-    6px;
-
-  border-radius:
-    50%;
-
-  background:
-    rgba(
-      35,
-      66,
-      51,
-      0.27
-    );
+.eyebrow {
+  display: block;
+  margin-bottom: 1.8cqw;
+  color: var(--muted);
+  font-size: 0.57cqw;
+  font-weight: 600;
+  letter-spacing: 0.12em;
 }
 
-.browserAddress,
-.browserState {
-  color:
-    rgba(
-      23,
-      36,
-      30,
-      0.47
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.46vw,
-      8px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.11em;
+.statement {
+  margin: 0;
+  font-size: 5.05cqw;
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.075em;
 }
 
-.browserAddress {
-  overflow:
-    hidden;
-
-  text-overflow:
-    ellipsis;
-
-  white-space:
-    nowrap;
+.statement em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.075em;
 }
 
-.browserState {
-  color:
-    var(
-      --spall-green
-    );
+.description {
+  margin: 1.8cqw 0 0;
+  color: var(--muted);
+  font-size: 0.95cqw;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
 }
 
-.browserViewport {
-  position:
-    relative;
-
-  width:
-    100%;
-
-  aspect-ratio:
-    16 /
-    9.2;
-
-  overflow:
-    hidden;
-
-  background:
-    var(
-      --spall-ivory
-    );
-}
-
-.browserImage {
-  object-fit:
-    contain;
-
-  object-position:
-    top center;
-
-  transform:
-    scale(
-      1
-    );
-
-  transition:
-    transform
-    1200ms
-    cubic-bezier(
-      0.16,
-      1,
-      0.3,
-      1
-    );
-}
-
-.browserWash {
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  z-index:
-    2;
-
-  pointer-events:
-    none;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(
-        255,
-        255,
-        255,
-        0.02
-      )
-      0%,
-      transparent
-      50%,
-      rgba(
-        35,
-        66,
-        51,
-        0.028
-      )
-      100%
-    );
-}
-
-.browserFoot {
-  min-height:
-    clamp(
-      23px,
-      2vw,
-      32px
-    );
-
-  padding-inline:
-    clamp(
-      12px,
-      1.45vw,
-      22px
-    );
-
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    space-between;
-
-  gap:
-    12px;
-
-  background:
-    #f5f2ea;
-
-  color:
-    rgba(
-      23,
-      36,
-      30,
-      0.43
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.43vw,
-      7px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.12em;
-}
-
-/* =========================================================
-   BROWSER FALLBACK
-========================================================= */
-
-.desktopFallback {
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  padding:
-    9%;
-
-  display:
-    flex;
-
-  flex-direction:
-    column;
-
-  justify-content:
-    space-between;
-
-  background:
-    linear-gradient(
-      135deg,
-      var(
-        --spall-ivory
-      ),
-      #e3e0d7
-    );
-}
-
-.desktopFallback span,
-.desktopFallback small {
-  color:
-    var(
-      --spall-green
-    );
-
-  font-size:
-    clamp(
-      7px,
-      0.7vw,
-      11px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.12em;
-}
-
-.desktopFallback strong {
-  max-width:
-    70%;
-
-  color:
-    var(
-      --spall-ink
-    );
-
-  font-size:
-    clamp(
-      38px,
-      5vw,
-      80px
-    );
-
-  font-weight:
-    650;
-
-  line-height:
-    0.9;
-
-  letter-spacing:
-    -0.07em;
-}
-
-/* =========================================================
-   DISCOVERY CARD
-========================================================= */
-
-.discoveryCard {
-  position:
-    absolute;
-
-  left:
-    4.15%;
-
-  bottom:
-    5.7%;
-
-  z-index:
-    7;
-
-  width:
-    17.9%;
-
-  min-width:
-    140px;
-
-  padding:
-    clamp(
-      15px,
-      1.65vw,
-      24px
-    );
-
-  display:
-    flex;
-
-  flex-direction:
-    column;
-
-  background:
-    var(
-      --spall-green
-    );
-
-  color:
-    var(
-      --spall-ivory
-    );
-
-  box-shadow:
-    0
-    19px
-    44px
-    rgba(
-      24,
-      45,
-      35,
-      0.17
-    );
-
-  transform:
-    translate3d(
-      var(
-        --featured-accent-x,
-        0px
-      ),
-      var(
-        --featured-accent-y,
-        0px
-      ),
-      0
-    )
-    rotate(
-      -0.75deg
-    );
-
-  transform-origin:
-    center;
-}
-
-.discoveryEyebrow {
-  margin-bottom:
-    clamp(
-      26px,
-      2.8vw,
-      44px
-    );
-
-  color:
-    rgba(
-      244,
-      239,
-      230,
-      0.53
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.47vw,
-      8px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.13em;
-}
-
-.discoveryCard strong {
-  font-size:
-    clamp(
-      18px,
-      2.15vw,
-      34px
-    );
-
-  font-weight:
-    600;
-
-  line-height:
-    0.86;
-
-  letter-spacing:
-    -0.062em;
-}
-
-.discoveryRule {
-  height:
-    1px;
-
-  margin-block:
-    clamp(
-      16px,
-      1.65vw,
-      24px
-    )
-    10px;
-
-  background:
-    rgba(
-      244,
-      239,
-      230,
-      0.18
-    );
-}
-
-.discoveryMeta {
-  display:
-    flex;
-
-  flex-wrap:
-    wrap;
-
-  gap:
-    5px
-    9px;
-
-  color:
-    rgba(
-      244,
-      239,
-      230,
-      0.6
-    );
-
-  font-size:
-    clamp(
-      4px,
-      0.42vw,
-      7px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.1em;
-}
-
-/* =========================================================
-   PHONE
-========================================================= */
-
-.phoneStage {
-  position:
-    absolute;
-
-  right:
-    5.4%;
-
-  bottom:
-    3.2%;
-
-  z-index:
-    9;
-
-  width:
-    17.2%;
-
-  transform:
-    translate3d(
-      var(
-        --featured-front-x,
-        0px
-      ),
-      var(
-        --featured-front-y,
-        0px
-      ),
-      0
-    )
-    rotate(
-      calc(
-        -1.2deg +
-        var(
-          --featured-tilt,
-          0deg
-        )
-      )
-    );
-
-  transform-origin:
-    center bottom;
+/*
+ * Keep the stage untransformed.
+ * Perspective and pointer movement belong to the WebGL component.
+ */
+.webglStage {
+  position: absolute;
+  z-index: 2;
+  top: 1%;
+  left: 33%;
+  width: 46%;
+  height: 98%;
+  pointer-events: none;
 }
 
 .phoneShadow {
-  position:
-    absolute;
-
-  left:
-    9%;
-
-  right:
-    9%;
-
-  bottom:
-    -3.5%;
-
-  height:
-    10%;
-
-  border-radius:
-    50%;
-
-  background:
-    rgba(
-      21,
-      34,
-      27,
-      0.23
-    );
-
-  filter:
-    blur(
-      17px
-    );
-
-  transform:
-    scaleX(
-      0.88
-    );
-
-  pointer-events:
-    none;
+  position: absolute;
+  z-index: 1;
+  left: 43%;
+  bottom: 9%;
+  width: 25%;
+  height: 5%;
+  border-radius: 50%;
+  background: rgb(21 34 24 / 22%);
+  filter: blur(1.5cqw);
+  transform: rotate(-8deg);
+  pointer-events: none;
 }
 
-.phone {
-  position:
-    relative;
-
-  width:
-    100%;
-
-  aspect-ratio:
-    9 /
-    19.5;
-
-  padding:
-    clamp(
-      4px,
-      0.46vw,
-      7px
-    );
-
-  overflow:
-    hidden;
-
-  border:
-    1px solid
-    rgba(
-      19,
-      29,
-      24,
-      0.11
-    );
-
-  border-radius:
-    clamp(
-      22px,
-      1.9vw,
-      31px
-    );
-
-  background:
-    #f7f4ed;
-
-  box-shadow:
-    0
-    29px
-    61px
-    rgba(
-      20,
-      31,
-      25,
-      0.18
-    ),
-    0
-    6px
-    16px
-    rgba(
-      20,
-      31,
-      25,
-      0.08
-    );
+/* Editorial contents on the green page; these are not UI cards. */
+.contents {
+  position: absolute;
+  z-index: 3;
+  top: 29%;
+  right: 4%;
+  width: 17%;
+  color: #f0eddf;
 }
 
-.phoneScreen {
-  position:
-    relative;
-
-  width:
-    100%;
-
-  height:
-    100%;
-
-  overflow:
-    hidden;
-
-  border-radius:
-    clamp(
-      17px,
-      1.55vw,
-      25px
-    );
-
-  background:
-    var(
-      --spall-ivory
-    );
+.contentsLabel {
+  display: block;
+  margin-bottom: 2.4cqw;
+  color: rgb(242 239 224 / 57%);
+  font-size: 0.57cqw;
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
-.phoneImage {
-  object-fit:
-    cover;
-
-  object-position:
-    top center;
-
-  transition:
-    transform
-    1100ms
-    cubic-bezier(
-      0.16,
-      1,
-      0.3,
-      1
-    );
+.chapter {
+  position: relative;
+  padding: 1.4cqw 0 1.9cqw;
+  border-top: 1px solid rgb(242 239 224 / 23%);
 }
 
-.phoneHardware {
-  position:
-    absolute;
-
-  top:
-    clamp(
-      7px,
-      0.72vw,
-      11px
-    );
-
-  left:
-    50%;
-
-  z-index:
-    5;
-
-  width:
-    40%;
-
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  gap:
-    5px;
-
-  transform:
-    translateX(
-      -50%
-    );
-
-  pointer-events:
-    none;
+.chapterNumber {
+  display: block;
+  margin-bottom: 0.7cqw;
+  color: rgb(242 239 224 / 55%);
+  font-size: 0.63cqw;
+  font-variant-numeric: tabular-nums;
 }
 
-.phoneSpeaker {
-  width:
-    57%;
-
-  height:
-    5px;
-
-  border-radius:
-    999px;
-
-  background:
-    rgba(
-      20,
-      20,
-      20,
-      0.52
-    );
+.chapter strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.7cqw;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.055em;
 }
 
-.phoneCamera {
-  width:
-    6px;
-
-  height:
-    6px;
-
-  border-radius:
-    50%;
-
-  background:
-    rgba(
-      20,
-      20,
-      20,
-      0.67
-    );
+.chapter p {
+  margin: 0.9cqw 0 0;
+  color: rgb(242 239 224 / 70%);
+  font-size: 0.78cqw;
+  line-height: 1.5;
 }
 
-/* =========================================================
-   PHONE FALLBACK
-========================================================= */
-
-.phoneFallback {
-  position:
-    absolute;
-
-  inset:
-    0;
-
-  padding:
-    14%;
-
-  display:
-    flex;
-
-  flex-direction:
-    column;
-
-  justify-content:
-    center;
-
-  background:
-    var(
-      --spall-green
-    );
-
-  color:
-    var(
-      --spall-ivory
-    );
+.endMark {
+  display: block;
+  margin-top: 0.4cqw;
+  color: rgb(242 239 224 / 75%);
+  font-size: 2.2cqw;
+  line-height: 1;
 }
 
-.phoneFallback span {
-  margin-bottom:
-    auto;
-
-  font-size:
-    7px;
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.12em;
+.colophon {
+  position: absolute;
+  z-index: 3;
+  bottom: 6%;
+  left: 5.5%;
+  width: 28%;
 }
 
-.phoneFallback strong {
-  font-size:
-    clamp(
-      22px,
-      2vw,
-      34px
-    );
-
-  line-height:
-    0.88;
-
-  letter-spacing:
-    -0.06em;
+.colophonLabel {
+  display: block;
+  padding-top: 1cqw;
+  border-top: 1px solid rgb(36 60 48 / 22%);
+  font-size: 0.59cqw;
+  font-weight: 600;
+  letter-spacing: 0.12em;
 }
 
-/* =========================================================
-   CATEGORY RAIL
-========================================================= */
-
-.categoryRail {
-  position:
-    absolute;
-
-  top:
-    7.7%;
-
-  right:
-    3.3%;
-
-  z-index:
-    3;
-
-  width:
-    13.8%;
-
-  display:
-    flex;
-
-  flex-direction:
-    column;
-
-  gap:
-    9px;
-
-  transform:
-    translate3d(
-      var(
-        --featured-back-x,
-        0px
-      ),
-      var(
-        --featured-back-y,
-        0px
-      ),
-      0
-    );
+.disciplines {
+  display: block;
+  margin-top: 0.6cqw;
+  color: var(--muted);
+  font-size: 0.56cqw;
+  line-height: 1.5;
 }
 
-.categoryRailLabel {
-  color:
-    color-mix(
-      in srgb,
-      var(
-        --spall-green
-      )
-      54%,
-      transparent
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.44vw,
-      7px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.13em;
+.pageNumber {
+  position: absolute;
+  z-index: 3;
+  right: 4%;
+  bottom: 6%;
+  color: rgb(242 239 224 / 55%);
+  font-size: 0.56cqw;
+  letter-spacing: 0.1em;
 }
 
-.categoryItems {
-  display:
-    flex;
-
-  flex-direction:
-    column;
-
-  border-top:
-    1px solid
-    rgba(
-      35,
-      66,
-      51,
-      0.11
-    );
-}
-
-.categoryItems > span {
-  min-height:
-    clamp(
-      24px,
-      2vw,
-      33px
-    );
-
-  display:
-    grid;
-
-  grid-template-columns:
-    20px
-    minmax(
-      0,
-      1fr
-    );
-
-  align-items:
-    center;
-
-  gap:
-    5px;
-
-  border-bottom:
-    1px solid
-    rgba(
-      35,
-      66,
-      51,
-      0.11
-    );
-
-  color:
-    rgba(
-      23,
-      36,
-      30,
-      0.54
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.5vw,
-      8px
-    );
-
-  font-weight:
-    700;
-
-  line-height:
-    1.2;
-}
-
-.categoryItems small {
-  color:
-    var(
-      --spall-green
-    );
-
-  font-size:
-    0.82em;
-
-  font-weight:
-    800;
-}
-
-/* =========================================================
-   ACTIVE SIGNAL
-========================================================= */
-
-.signal {
-  position:
-    absolute;
-
-  top:
-    13.7%;
-
-  left:
-    3.9%;
-
-  z-index:
-    5;
-
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  gap:
-    6px;
-
-  color:
-    rgba(
-      23,
-      36,
-      30,
-      0.34
-    );
-
-  font-size:
-    clamp(
-      4px,
-      0.39vw,
-      6px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.105em;
-}
-
-.signalDot {
-  width:
-    4px;
-
-  height:
-    4px;
-
-  border-radius:
-    50%;
-
-  background:
-    color-mix(
-      in srgb,
-      var(
-        --spall-green
-      )
-      74%,
-      transparent
-    );
-
-  box-shadow:
-    0
-    0
-    0
-    3px
-    color-mix(
-      in srgb,
-      var(
-        --spall-green
-      )
-      7%,
-      transparent
-    );
-}
-
-.signal i {
-  width:
-    clamp(
-      20px,
-      2.3vw,
-      36px
-    );
-
-  height:
-    1px;
-
-  margin-left:
-    1px;
-
-  background:
-    rgba(
-      35,
-      66,
-      51,
-      0.14
-    );
-}
-
-/* =========================================================
-   VISUAL LABEL
-========================================================= */
-
-.visualLabel {
-  position:
-    absolute;
-
-  right:
-    22.3%;
-
-  bottom:
-    2.35%;
-
-  z-index:
-    20;
-
-  max-width:
-    34%;
-
-  color:
-    rgba(
-      23,
-      36,
-      30,
-      0.51
-    );
-
-  font-size:
-    clamp(
-      5px,
-      0.52vw,
-      8px
-    );
-
-  font-weight:
-    800;
-
-  letter-spacing:
-    0.075em;
-
-  line-height:
-    1.25;
-
-  text-align:
-    right;
-
-  text-transform:
-    uppercase;
-}
-
-/* =========================================================
-   DESKTOP HOVER
-========================================================= */
-
-@media (
-  hover:
-    hover
-) and (
-  pointer:
-    fine
-) {
-  .artwork:hover
-    .browser {
-    box-shadow:
-      0
-      40px
-      86px
-      rgba(
-        20,
-        31,
-        25,
-        0.17
-      ),
-      0
-      9px
-      25px
-      rgba(
-        20,
-        31,
-        25,
-        0.085
-      );
+/*
+ * On smaller covers, simplify the editorial details.
+ * Keep the phone and main message at comparable visual weight.
+ */
+@container (max-width: 600px) {
+  .identity {
+    top: 8%;
   }
 
-  .artwork:hover
-    .browserImage {
-    transform:
-      scale(
-        1.012
-      );
+  .wordmark {
+    font-size: 3.1cqw;
   }
 
-  .artwork:hover
-    .phoneImage {
-    transform:
-      scale(
-        1.025
-      );
-  }
-}
-
-/* =========================================================
-   AMBIENT MOTION
-========================================================= */
-
-@media (
-  prefers-reduced-motion:
-    no-preference
-) {
-  .signalDot {
-    animation:
-      spall-signal-pulse
-      3.4s
-      ease-in-out
-      infinite;
+  .identityCaption {
+    font-size: 0.85cqw;
+    margin-top: 1.6cqw;
   }
 
-  .phone {
-    animation:
-      spall-phone-breathe
-      8.4s
-      ease-in-out
-      infinite;
+  .edition {
+    font-size: 0.82cqw;
   }
 
-  .discoveryCard {
-    animation:
-      spall-card-drift
-      9.8s
-      ease-in-out
-      infinite;
-  }
-}
-
-@keyframes spall-signal-pulse {
-  0%,
-  100% {
-    opacity:
-      0.56;
+  .editorialCopy {
+    top: 44%;
+    width: 32%;
   }
 
-  50% {
-    opacity:
-      0.82;
-
-    box-shadow:
-      0
-      0
-      0
-      5px
-      color-mix(
-        in srgb,
-        var(
-          --spall-green
-        )
-        4%,
-        transparent
-      );
-  }
-}
-
-@keyframes spall-phone-breathe {
-  0%,
-  100% {
-    translate:
-      0
-      0;
+  .eyebrow {
+    display: none;
   }
 
-  50% {
-    translate:
-      0
-      -5px;
-  }
-}
-
-@keyframes spall-card-drift {
-  0%,
-  100% {
-    translate:
-      0
-      0;
+  .statement {
+    font-size: 5.4cqw;
   }
 
-  50% {
-    translate:
-      2px
-      -3px;
-  }
-}
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (
-  max-width:
-    960px
-) {
-  .browser {
-    left:
-      6%;
-
-    width:
-      74%;
+  .description {
+    margin-top: 2cqw;
+    font-size: 1.3cqw;
+    line-height: 1.4;
   }
 
-  .coordinate {
-    left:
-      3.3%;
-
-    top:
-      21%;
+  .webglStage {
+    top: 3%;
+    left: 32%;
+    width: 47%;
+    height: 94%;
   }
 
-  .discoveryCard {
-    left:
-      3.5%;
-
-    bottom:
-      5.2%;
-
-    width:
-      18.8%;
-
-    min-width:
-      132px;
+  .contents {
+    top: 31%;
   }
 
-  .phoneStage {
-    right:
-      4.7%;
-
-    width:
-      18.3%;
+  .contentsLabel {
+    display: none;
   }
 
-  .categoryRail {
-    right:
-      2.8%;
-
-    width:
-      14.5%;
+  .chapter {
+    padding: 1.8cqw 0 2.4cqw;
   }
 
-  .visualLabel {
-    right:
-      24.5%;
-
-    bottom:
-      2.2%;
-  }
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (
-  max-width:
-    700px
-) {
-  .backgroundWord {
-    top:
-      0%;
-
-    right:
-      -2%;
-
-    font-size:
-      20vw;
+  .chapterNumber {
+    font-size: 0.95cqw;
   }
 
-  .indexMark {
-    top:
-      5.2%;
-
-    left:
-      4%;
-
-    font-size:
-      7px;
+  .chapter strong {
+    font-size: 3.1cqw;
   }
 
-  .coordinate {
-    display:
-      none;
+  .chapter p {
+    font-size: 1.05cqw;
   }
 
-  .grid {
-    background-size:
-      26px
-      26px;
+  .endMark {
+    font-size: 3cqw;
   }
 
-  .browser {
-    top:
-      7%;
-
-    left:
-      4.5%;
-
-    width:
-      84%;
-
-    transform:
-      translate3d(
-        var(
-          --featured-mid-x,
-          0px
-        ),
-        var(
-          --featured-mid-y,
-          0px
-        ),
-        0
-      )
-      rotate(
-        -0.25deg
-      );
+  .colophonLabel,
+  .pageNumber {
+    font-size: 0.8cqw;
   }
 
-  .browserTop {
-    height:
-      22px;
-
-    padding-inline:
-      8px;
-
-    gap:
-      7px;
-  }
-
-  .browserDots {
-    gap:
-      3px;
-  }
-
-  .browserDots span {
-    width:
-      4px;
-
-    height:
-      4px;
-  }
-
-  .browserAddress,
-  .browserState {
-    font-size:
-      3.8px;
-  }
-
-  .browserViewport {
-    aspect-ratio:
-      16 /
-      9.6;
-  }
-
-  .browserFoot {
-    min-height:
-      17px;
-
-    padding-inline:
-      8px;
-
-    font-size:
-      3.5px;
-  }
-
-  .discoveryCard {
-    left:
-      3.5%;
-
-    bottom:
-      4.8%;
-
-    width:
-      26.5%;
-
-    min-width:
-      0;
-
-    padding:
-      9px;
-  }
-
-  .discoveryEyebrow {
-    margin-bottom:
-      16px;
-
-    font-size:
-      3.6px;
-  }
-
-  .discoveryCard strong {
-    font-size:
-      clamp(
-        11px,
-        3.8vw,
-        16px
-      );
-  }
-
-  .discoveryRule {
-    margin-block:
-      9px
-      6px;
-  }
-
-  .discoveryMeta {
-    gap:
-      3px
-      5px;
-
-    font-size:
-      3.2px;
-  }
-
-  .phoneStage {
-    right:
-      4.2%;
-
-    bottom:
-      3.2%;
-
-    width:
-      22.5%;
-  }
-
-  .phone {
-    padding:
-      3px;
-
-    border-radius:
-      17px;
-  }
-
-  .phoneScreen {
-    border-radius:
-      14px;
-  }
-
-  .phoneHardware {
-    top:
-      6px;
-
-    gap:
-      3px;
-  }
-
-  .phoneSpeaker {
-    height:
-      3px;
-  }
-
-  .phoneCamera {
-    width:
-      4px;
-
-    height:
-      4px;
-  }
-
-  .categoryRail {
-    display:
-      none;
-  }
-
-  .signal {
-    top:
-      11.7%;
-
-    left:
-      3.7%;
-
-    gap:
-      4px;
-
-    font-size:
-      3px;
-  }
-
-  .signalDot {
-    width:
-      3px;
-
-    height:
-      3px;
-
-    box-shadow:
-      0
-      0
-      0
-      2px
-      color-mix(
-        in srgb,
-        var(
-          --spall-green
-        )
-        7%,
-        transparent
-      );
-  }
-
-  .signal i {
-    width:
-      17px;
-  }
-
-  .visualLabel {
-    right:
-      27.5%;
-
-    bottom:
-      2.2%;
-
-    max-width:
-      42%;
-
-    font-size:
-      4.2px;
-
-    line-height:
-      1.2;
-
-    text-align:
-      right;
-  }
-}
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (
-  max-width:
-    420px
-) {
-  .browser {
-    width:
-      85%;
-  }
-
-  .discoveryCard {
-    width:
-      27.5%;
-  }
-
-  .phoneStage {
-    right:
-      3.8%;
-
-    width:
-      23%;
-  }
-
-  .browserFoot
-    span:nth-child(
-      2
-    ) {
-    display:
-      none;
-  }
-}
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (
-  prefers-reduced-motion:
-    reduce
-) {
-  .browser,
-  .browserImage,
-  .phoneStage,
-  .phone,
-  .phoneImage,
-  .discoveryCard,
-  .signalDot {
-    animation:
-      none
-      !important;
-
-    transition-duration:
-      0.01ms
-      !important;
+  .disciplines {
+    display: none;
   }
 }
