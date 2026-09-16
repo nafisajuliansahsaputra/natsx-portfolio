@@ -3896,3 +3896,9 @@
       none !important;
   }
 }
+
+/* SpallSpill uses the reference artwork's 4:3 composition. */
+.layout_wide .visual.visual_spall {
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+}

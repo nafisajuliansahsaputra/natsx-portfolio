@@ -1,17 +1,12 @@
 .artwork {
-  --paper: #eeeade;
-  --ink: #243c30;
-  --green: #244637;
-  --muted: #707669;
-
   position: absolute;
   inset: 0;
   isolation: isolate;
   container-type: inline-size;
   overflow: hidden;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #081b13;
+  background: #f3f0e8;
+  font-family: inherit;
 }
 
 .artwork,
@@ -19,327 +14,188 @@
   box-sizing: border-box;
 }
 
-/* The second page provides contrast behind the phone. */
-.greenPage {
+.light {
   position: absolute;
   z-index: 0;
-  inset: 0 0 0 66%;
-  background:
-    linear-gradient(
-      90deg,
-      rgb(12 31 22 / 20%),
-      transparent 10%
-    ),
-    linear-gradient(
-      145deg,
-      #315341,
-      var(--green) 65%,
-      #1d392c
-    );
+  inset: 0;
   pointer-events: none;
-}
-
-/* Broad studio light, kept away from the text hierarchy. */
-.pageLight {
-  position: absolute;
-  z-index: 0;
-  inset: 0 34% 0 0;
   background:
     radial-gradient(
-      ellipse at 75% 35%,
-      rgb(255 255 255 / 65%),
-      transparent 60%
+      ellipse at 18% 16%,
+      #fffef9 0%,
+      rgb(255 254 249 / 70%) 30%,
+      transparent 65%
     ),
-    linear-gradient(
-      115deg,
-      transparent 50%,
-      rgb(179 174 153 / 12%) 100%
-    );
+    radial-gradient(
+      ellipse at 85% 73%,
+      rgb(155 169 146 / 17%),
+      transparent 52%
+    ),
+    linear-gradient(125deg, #f7f4ec, #ebe8df);
+}
+
+/* Atmospheric foreground; deliberately outside the main focal area. */
+.artwork::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  right: -7%;
+  bottom: -13%;
+  width: 20%;
+  aspect-ratio: 0.85;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 22%,
+    #729181 0%,
+    #355c48 33%,
+    #153a28 67%,
+    #102d20 100%
+  );
+  filter: blur(1.5cqw);
+  transform: rotate(-24deg);
+  opacity: 0.78;
   pointer-events: none;
 }
 
-.identity {
+.copy {
   position: absolute;
   z-index: 3;
-  top: 7.5%;
+  top: 20%;
   left: 5.5%;
+  width: 30%;
+  pointer-events: none;
+}
+
+.headline {
+  margin: 0;
+  font-size: 8.4cqw;
+  font-weight: 800;
+  line-height: 0.84;
+  letter-spacing: -0.085em;
+}
+
+.headline span {
+  display: block;
+}
+
+.subline {
+  margin: 0.8cqw 0 0;
+  color: #193f2d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 5.8cqw;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.075em;
+  white-space: nowrap;
+}
+
+.description {
+  margin: 4.7cqw 0 0;
+  color: #6a7369;
+  font-size: 0.88cqw;
+  font-weight: 600;
+  line-height: 1.8;
+  letter-spacing: 0.24em;
+}
+
+.rule {
+  display: block;
+  width: 2.2cqw;
+  height: 1px;
+  margin-top: 3.7cqw;
+  background: #244735;
 }
 
 .wordmark {
   display: block;
-  font-size: 2.45cqw;
+  margin-top: 2.7cqw;
+  font-size: 2cqw;
   font-weight: 700;
-  line-height: 0.9;
-  letter-spacing: -0.09em;
+  line-height: 1;
+  letter-spacing: -0.08em;
 }
 
-.wordmark > span {
-  font-weight: 400;
-}
-
-.identityCaption {
-  display: block;
-  margin-top: 1.4cqw;
-  color: var(--muted);
-  font-size: 0.62cqw;
-  font-weight: 500;
-  line-height: 1.6;
-  letter-spacing: 0.13em;
-}
-
-.edition {
-  position: absolute;
-  z-index: 3;
-  top: 8%;
-  right: 4%;
-  color: rgb(242 239 224 / 63%);
-  font-size: 0.6cqw;
-  letter-spacing: 0.13em;
-  white-space: nowrap;
-}
-
-/* A compact editorial column, rather than a giant project title. */
-.editorialCopy {
-  position: absolute;
-  z-index: 3;
-  top: 43%;
-  left: 5.5%;
-  width: 32%;
-}
-
-.eyebrow {
-  display: block;
-  margin-bottom: 1.8cqw;
-  color: var(--muted);
-  font-size: 0.57cqw;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-}
-
-.statement {
-  margin: 0;
-  font-size: 5.05cqw;
-  font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: -0.075em;
-}
-
-.statement em {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 400;
-  letter-spacing: -0.075em;
-}
-
-.description {
-  margin: 1.8cqw 0 0;
-  color: var(--muted);
-  font-size: 0.95cqw;
-  line-height: 1.5;
-  letter-spacing: -0.015em;
-}
-
-/*
- * Keep the stage untransformed.
- * Perspective and pointer movement belong to the WebGL component.
- */
-.webglStage {
+/* Actual camera perspective belongs entirely to the 3D scene. */
+.scene {
   position: absolute;
   z-index: 2;
-  top: 1%;
-  left: 33%;
-  width: 46%;
-  height: 98%;
+  top: -1%;
+  left: 24%;
+  width: 79%;
+  height: 103%;
   pointer-events: none;
 }
 
-.phoneShadow {
-  position: absolute;
-  z-index: 1;
-  left: 43%;
-  bottom: 9%;
-  width: 25%;
-  height: 5%;
-  border-radius: 50%;
-  background: rgb(21 34 24 / 22%);
-  filter: blur(1.5cqw);
-  transform: rotate(-8deg);
-  pointer-events: none;
-}
-
-/* Editorial contents on the green page; these are not UI cards. */
-.contents {
+.topNote {
   position: absolute;
   z-index: 3;
-  top: 29%;
+  top: 6%;
   right: 4%;
-  width: 17%;
-  color: #f0eddf;
+  color: #6a7369;
+  font-size: 0.6cqw;
+  font-weight: 600;
+  line-height: 1.8;
+  letter-spacing: 0.2em;
+  pointer-events: none;
 }
 
-.contentsLabel {
-  display: block;
-  margin-bottom: 2.4cqw;
-  color: rgb(242 239 224 / 57%);
-  font-size: 0.57cqw;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-}
-
-.chapter {
-  position: relative;
-  padding: 1.4cqw 0 1.9cqw;
-  border-top: 1px solid rgb(242 239 224 / 23%);
-}
-
-.chapterNumber {
-  display: block;
-  margin-bottom: 0.7cqw;
-  color: rgb(242 239 224 / 55%);
-  font-size: 0.63cqw;
-  font-variant-numeric: tabular-nums;
-}
-
-.chapter strong {
-  display: block;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2.7cqw;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.055em;
-}
-
-.chapter p {
-  margin: 0.9cqw 0 0;
-  color: rgb(242 239 224 / 70%);
-  font-size: 0.78cqw;
-  line-height: 1.5;
-}
-
-.endMark {
-  display: block;
-  margin-top: 0.4cqw;
-  color: rgb(242 239 224 / 75%);
-  font-size: 2.2cqw;
-  line-height: 1;
-}
-
-.colophon {
+.footer {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
+  right: 4%;
   bottom: 6%;
   left: 5.5%;
-  width: 28%;
-}
-
-.colophonLabel {
-  display: block;
-  padding-top: 1cqw;
-  border-top: 1px solid rgb(36 60 48 / 22%);
-  font-size: 0.59cqw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  color: #6a7369;
+  font-size: 0.55cqw;
   font-weight: 600;
-  letter-spacing: 0.12em;
-}
-
-.disciplines {
-  display: block;
-  margin-top: 0.6cqw;
-  color: var(--muted);
-  font-size: 0.56cqw;
   line-height: 1.5;
+  letter-spacing: 0.18em;
+  pointer-events: none;
 }
 
-.pageNumber {
-  position: absolute;
-  z-index: 3;
-  right: 4%;
-  bottom: 6%;
-  color: rgb(242 239 224 / 55%);
-  font-size: 0.56cqw;
-  letter-spacing: 0.1em;
+.footer > span:last-child {
+  display: none;
 }
 
-/*
- * On smaller covers, simplify the editorial details.
- * Keep the phone and main message at comparable visual weight.
- */
-@container (max-width: 600px) {
-  .identity {
-    top: 8%;
+@container (max-width: 650px) {
+  .copy {
+    top: 21%;
   }
 
-  .wordmark {
-    font-size: 3.1cqw;
+  .headline {
+    font-size: 8.5cqw;
   }
 
-  .identityCaption {
-    font-size: 0.85cqw;
-    margin-top: 1.6cqw;
-  }
-
-  .edition {
-    font-size: 0.82cqw;
-  }
-
-  .editorialCopy {
-    top: 44%;
-    width: 32%;
-  }
-
-  .eyebrow {
-    display: none;
-  }
-
-  .statement {
-    font-size: 5.4cqw;
+  .subline {
+    font-size: 5.9cqw;
   }
 
   .description {
-    margin-top: 2cqw;
-    font-size: 1.3cqw;
-    line-height: 1.4;
+    font-size: 1.15cqw;
+    letter-spacing: 0.13em;
+    margin-top: 4cqw;
   }
 
-  .webglStage {
-    top: 3%;
-    left: 32%;
-    width: 47%;
-    height: 94%;
+  .rule {
+    margin-top: 3cqw;
   }
 
-  .contents {
-    top: 31%;
+  .wordmark {
+    font-size: 2.6cqw;
+    margin-top: 2.4cqw;
   }
 
-  .contentsLabel {
+  .topNote {
     display: none;
   }
 
-  .chapter {
-    padding: 1.8cqw 0 2.4cqw;
-  }
-
-  .chapterNumber {
-    font-size: 0.95cqw;
-  }
-
-  .chapter strong {
-    font-size: 3.1cqw;
-  }
-
-  .chapter p {
-    font-size: 1.05cqw;
-  }
-
-  .endMark {
-    font-size: 3cqw;
-  }
-
-  .colophonLabel,
-  .pageNumber {
+  .footer {
     font-size: 0.8cqw;
-  }
-
-  .disciplines {
-    display: none;
+    letter-spacing: 0.09em;
   }
 }

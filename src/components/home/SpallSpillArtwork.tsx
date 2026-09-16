@@ -1,15 +1,15 @@
 "use client";
 
 import dynamic from "next/dynamic";
-
 import type { PublicProject } from "@/lib/public-projects";
 import styles from "./SpallSpillArtwork.module.css";
 
-const SpallPhone3D = dynamic(() => import("./SpallPhone3D"), {
-  ssr: false,
-});
+const SpallEditorialScene = dynamic(
+  () => import("./SpallEditorialScene"),
+  { ssr: false },
+);
 
-type SpallSpillArtworkProps = {
+type Props = {
   project: PublicProject;
   primaryVisual: string | null;
   secondaryVisual: string | null;
@@ -19,90 +19,50 @@ type SpallSpillArtworkProps = {
 export default function SpallSpillArtwork({
   project,
   secondaryVisual,
-  visualLabel,
-}: SpallSpillArtworkProps) {
+}: Props) {
   return (
     <div className={styles.artwork} data-spall-featured="true">
-      <div className={styles.greenPage} aria-hidden="true" />
-      <div className={styles.pageLight} aria-hidden="true" />
+      <div className={styles.light} aria-hidden="true" />
 
-      <div className={styles.identity} aria-hidden="true">
-        <span className={styles.wordmark}>
-          spall<span>spill.</span>
-        </span>
-
-        <span className={styles.identityCaption}>
-          A PERSONAL SPACE,
-          <br />
-          MADE TO BE SHARED.
-        </span>
-      </div>
-
-      <span className={styles.edition} aria-hidden="true">
-        DIGITAL EXPERIENCE / {project.number}
-      </span>
-
-      <div className={styles.editorialCopy} aria-hidden="true">
-        <span className={styles.eyebrow}>
-          YOUR OWN CORNER OF THE INTERNET
-        </span>
-
-        <p className={styles.statement}>
-          Your space.
-          <br />
-          Your <em>spill.</em>
+      <div className={styles.copy} aria-hidden="true">
+        <p className={styles.headline}>
+          <span>YOUR</span>
+          <span>SPACE.</span>
         </p>
+
+        <p className={styles.subline}>your spill.</p>
 
         <p className={styles.description}>
-          A place for who you are
+          ONE IDENTITY.
           <br />
-          and what you want to share.
+          MANY THINGS
+          <br />
+          TO DISCOVER.
         </p>
+
+        <span className={styles.rule} />
+        <span className={styles.wordmark}>spall spill.</span>
       </div>
 
-      <div className={styles.phoneShadow} aria-hidden="true" />
-
-      <div className={styles.webglStage}>
-        <SpallPhone3D
+      <div className={styles.scene}>
+        <SpallEditorialScene
           screenUrl={secondaryVisual}
-          label={`${project.title} — tampilan mobile pada iPhone 17 Pro Max`}
+          label={`${project.title} — iPhone, identitas, berbagi, dan discovery dalam satu komposisi 3D`}
         />
       </div>
 
-      <div className={styles.contents} aria-hidden="true">
-        <span className={styles.contentsLabel}>INSIDE YOUR SPACE</span>
-
-        <div className={styles.chapter}>
-          <span className={styles.chapterNumber}>01</span>
-          <strong>Identity</strong>
-          <p>
-            Your profile.
-            <br />
-            Your connections.
-          </p>
-        </div>
-
-        <div className={styles.chapter}>
-          <span className={styles.chapterNumber}>02</span>
-          <strong>Spill</strong>
-          <p>
-            Your finds.
-            <br />
-            Worth sharing.
-          </p>
-        </div>
-
-        <span className={styles.endMark}>↗</span>
-      </div>
-
-      <div className={styles.colophon} aria-hidden="true">
-        <span className={styles.colophonLabel}>DESIGNED FOR THE HAND.</span>
-        <span className={styles.disciplines}>{visualLabel}</span>
-      </div>
-
-      <span className={styles.pageNumber} aria-hidden="true">
-        SPALL SPILL — {project.year}
+      <span className={styles.topNote} aria-hidden="true">
+        A MORE
+        <br />
+        CONNECTED
+        <br />
+        YOU
       </span>
+
+      <div className={styles.footer} aria-hidden="true">
+        <span>IDENTITY / SPILL / PRODUCT / RESOURCE</span>
+        <span>{project.number} — {project.year}</span>
+      </div>
     </div>
   );
 }
