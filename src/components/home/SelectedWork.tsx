@@ -1,12 +1,16 @@
-import type { CSSProperties } from "react";
-
-import Image from "next/image";
+import type {
+  CSSProperties,
+} from "react";
 
 import LocaleLink from "@/components/i18n/LocaleLink";
 
-import type { Locale } from "@/i18n/config";
+import type {
+  Locale,
+} from "@/i18n/config";
 
-import { getHomeMessages } from "@/i18n/home-messages";
+import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
 
 import {
   getProjectPrimaryVisualUrl,
@@ -19,10 +23,13 @@ import {
   type PublicProject,
 } from "@/lib/public-projects";
 
-import FiveAmVisionArtwork from "./FiveAmVisionArtwork";
-import phoneStyles from "./SpallPhone.module.css";
-import styles from "./SelectedWork.module.css";
+import AttendanceSystemArtwork from "./AttendanceSystemArtwork";
+import BastManagementArtwork from "./BastManagementArtwork";
 import FeaturedProjectParallax from "./FeaturedProjectParallax";
+import FiveAmVisionArtwork from "./FiveAmVisionArtwork";
+import SpallSpillArtwork from "./SpallSpillArtwork";
+
+import styles from "./SelectedWork.module.css";
 
 type HomeLayout =
   | "wide"
@@ -30,48 +37,48 @@ type HomeLayout =
   | "left"
   | "finale";
 
-
 type HomeVisual =
   | "spall"
   | "vision"
-  | "stay"
-  | "bast";
-
+  | "bast"
+  | "attendance";
 
 type SelectedWorkProps = {
-  locale: Locale;
+  locale:
+    Locale;
 };
-
 
 type SelectedWorkCopy =
   ReturnType<
     typeof getHomeMessages
   >["selectedWork"];
 
-
 const FALLBACK_LAYOUTS:
   HomeLayout[] = [
     "wide",
     "right",
-    "left",
     "finale",
+    "left",
   ];
-
 
 const FALLBACK_VISUALS:
   HomeVisual[] = [
     "spall",
     "vision",
-    "stay",
     "bast",
+    "attendance",
   ];
 
-
 function getProjectPresentation(
-  project: PublicProject,
-  index: number,
+  project:
+    PublicProject,
+
+  index:
+    number,
 ) {
-  switch (project.slug) {
+  switch (
+    project.slug
+  ) {
     case "spall-spill":
       return {
         layout:
@@ -90,15 +97,6 @@ function getProjectPresentation(
           "vision" as const,
       };
 
-    case "nusantara-stay":
-      return {
-        layout:
-          "left" as const,
-
-        visual:
-          "stay" as const,
-      };
-
     case "bast-management-system":
       return {
         layout:
@@ -106,6 +104,27 @@ function getProjectPresentation(
 
         visual:
           "bast" as const,
+      };
+
+    /*
+     * Legacy project slot.
+     *
+     * Nusantara Stay sedang digantikan
+     * menjadi Smart Attendance System.
+     *
+     * Slug database masih lama untuk
+     * sementara, sehingga presentation
+     * layer diarahkan ke Attendance.
+     */
+    case "nusantara-stay":
+    case "attendance-system":
+    case "smart-attendance-system":
+      return {
+        layout:
+          "left" as const,
+
+        visual:
+          "attendance" as const,
       };
 
     default:
@@ -124,7 +143,6 @@ function getProjectPresentation(
       };
   }
 }
-
 
 export default async function SelectedWork({
   locale,
@@ -216,8 +234,10 @@ export default async function SelectedWork({
                 styles.yearRange
               }
             >
-              {yearRange ||
-                copy.current}
+              {
+                yearRange ||
+                copy.current
+              }
             </span>
 
             <LocaleLink
@@ -242,201 +262,231 @@ export default async function SelectedWork({
             styles.projects
           }
         >
-          {featuredProjects.map(
-            (
-              project,
-              index,
-            ) => {
-              const {
-                layout,
-                visual,
-              } =
-                getProjectPresentation(
-                  project,
-                  index,
-                );
+          {
+            featuredProjects.map(
+              (
+                project,
+                index,
+              ) => {
+                const {
+                  layout,
+                  visual,
+                } =
+                  getProjectPresentation(
+                    project,
+                    index,
+                  );
 
-              const projectStyle = {
-                "--accent":
-                  project.accentColor,
+                const projectStyle = {
+                  "--accent":
+                    project.accentColor,
 
-                "--project-secondary":
-                  project.secondaryColor ??
-                  "#deddd7",
-              } as CSSProperties;
+                  "--project-secondary":
+                    project.secondaryColor ??
+                    "#deddd7",
+                } as CSSProperties;
 
-              return (
-                <article
-                  className={`${styles.project} ${
-                    styles[
-                      `layout_${layout}`
-                    ]
-                  }`}
-                  key={
-                    project.id
-                  }
-                  style={
-                    projectStyle
-                  }
-                  data-motion-scroll="project"
-                  data-project-visual={
-                    visual
-                  }
-                >
-                  <div
-                    className={
-                      styles.projectHeader
-                    }
-                  >
-                    <span
-                      className={
-                        styles.projectNumber
-                      }
-                    >
-                      {
-                        project.number
-                      }
-                    </span>
+                const isLegacyAttendance =
+                  visual ===
+                  "attendance";
 
-                    <h3
-                      className={
-                        styles.projectTitle
-                      }
-                    >
-                      {
-                        project.title
-                      }
-                    </h3>
+                const displayNumber =
+                  isLegacyAttendance
+                    ? "04"
+                    : project.number;
 
-                    <span
-                      className={
-                        styles.projectYear
-                      }
-                    >
-                      {
-                        project.year
-                      }
-                    </span>
-                  </div>
+                const displayTitle =
+                  isLegacyAttendance
+                    ? "Smart Attendance System"
+                    : project.title;
 
-                  <div
-                    className={`${styles.visual} ${
+                return (
+                  <article
+                    className={`${styles.project} ${
                       styles[
-                        `visual_${visual}`
+                        `layout_${layout}`
                       ]
                     }`}
-                  >
-{visual ===
-"vision" ? (
-  <ProjectArtwork
-    project={
-      project
-    }
-    variant={
-      visual
-    }
-    copy={
-      copy
-    }
-  />
-) : (
-  <FeaturedProjectParallax
-    variant={
-      visual
-    }
-  >
-    <ProjectArtwork
-      project={
-        project
-      }
-      variant={
-        visual
-      }
-      copy={
-        copy
-      }
-    />
-  </FeaturedProjectParallax>
-)}
-                  </div>
-
-                  <div
-                    className={
-                      styles.projectFooter
+                    key={
+                      project.id
+                    }
+                    style={
+                      projectStyle
+                    }
+                    data-motion-scroll="project"
+                    data-project-visual={
+                      visual
                     }
                   >
                     <div
                       className={
-                        styles.categories
+                        styles.projectHeader
                       }
                     >
-                      {project.disciplines.map(
-                        (
-                          discipline,
-                        ) => (
-                          <span
-                            key={
-                              discipline
-                            }
-                          >
-                            {
-                              discipline
-                            }
-                          </span>
-                        ),
-                      )}
+                      <span
+                        className={
+                          styles.projectNumber
+                        }
+                      >
+                        {
+                          displayNumber
+                        }
+                      </span>
+
+                      <h3
+                        className={
+                          styles.projectTitle
+                        }
+                      >
+                        {
+                          displayTitle
+                        }
+                      </h3>
+
+                      <span
+                        className={
+                          styles.projectYear
+                        }
+                      >
+                        {
+                          project.year
+                        }
+                      </span>
                     </div>
 
-                    <LocaleLink
-                      href={`/work/${project.slug}`}
+                    <div
                       className={
-                        styles.projectLink
+                        styles.visual
                       }
                     >
                       {
-                        copy.viewProject
+                        visual ===
+                        "vision"
+                          ? (
+                            <ProjectArtwork
+                              project={
+                                project
+                              }
+                              variant={
+                                visual
+                              }
+                              copy={
+                                copy
+                              }
+                            />
+                          )
+                          : (
+                            <FeaturedProjectParallax
+                              variant={
+                                visual ===
+                                "attendance"
+                                  ? "stay"
+                                  : visual
+                              }
+                            >
+                              <ProjectArtwork
+                                project={
+                                  project
+                                }
+                                variant={
+                                  visual
+                                }
+                                copy={
+                                  copy
+                                }
+                              />
+                            </FeaturedProjectParallax>
+                          )
                       }
+                    </div>
 
-                      <span>
-                        ↗
-                      </span>
-                    </LocaleLink>
-                  </div>
-                </article>
-              );
-            },
-          )}
+                    <div
+                      className={
+                        styles.projectFooter
+                      }
+                    >
+                      <div
+                        className={
+                          styles.categories
+                        }
+                      >
+                        {
+                          isLegacyAttendance
+                            ? (
+                              <>
+                                <span>
+                                  Full-Stack Development
+                                </span>
+
+                                <span>
+                                  Computer Vision
+                                </span>
+
+                                <span>
+                                  System Design
+                                </span>
+                              </>
+                            )
+                            : (
+                              project.disciplines.map(
+                                (
+                                  discipline,
+                                ) => (
+                                  <span
+                                    key={
+                                      discipline
+                                    }
+                                  >
+                                    {
+                                      discipline
+                                    }
+                                  </span>
+                                ),
+                              )
+                            )
+                        }
+                      </div>
+
+                      <LocaleLink
+                        href={`/work/${project.slug}`}
+                        className={
+                          styles.projectLink
+                        }
+                      >
+                        {
+                          copy.viewProject
+                        }
+
+                        <span>
+                          ↗
+                        </span>
+                      </LocaleLink>
+                    </div>
+                  </article>
+                );
+              },
+            )
+          }
         </div>
       </div>
     </section>
   );
 }
 
-
 function ProjectArtwork({
   project,
   variant,
   copy,
 }: {
-  project: PublicProject;
-  variant: HomeVisual;
-  copy: SelectedWorkCopy;
-}) {
-  const visualLabel =
-    project.disciplines
-      .slice(
-        0,
-        2,
-      )
-      .join(" / ") ||
-    copy.selectedProject;
+  project:
+    PublicProject;
 
-  /*
-   * 5AM Vision memiliki dedicated
-   * coded artwork.
-   *
-   * Tidak mengambil visual Admin.
-   */
+  variant:
+    HomeVisual;
+
+  copy:
+    SelectedWorkCopy;
+}) {
   if (
     variant ===
     "vision"
@@ -450,10 +500,6 @@ function ProjectArtwork({
     );
   }
 
-  /*
-   * Project lainnya tetap menggunakan
-   * image Admin / Supabase.
-   */
   const primaryVisual =
     getProjectPrimaryVisualUrl(
       project,
@@ -464,12 +510,21 @@ function ProjectArtwork({
       project,
     );
 
+  const visualLabel =
+    project.disciplines
+      .slice(
+        0,
+        2,
+      )
+      .join(" / ") ||
+    copy.selectedProject;
+
   if (
     variant ===
-    "stay"
+    "spall"
   ) {
     return (
-      <StayArtwork
+      <SpallSpillArtwork
         project={
           project
         }
@@ -481,9 +536,6 @@ function ProjectArtwork({
         }
         visualLabel={
           visualLabel
-        }
-        copy={
-          copy
         }
       />
     );
@@ -494,7 +546,7 @@ function ProjectArtwork({
     "bast"
   ) {
     return (
-      <BastArtwork
+      <BastManagementArtwork
         project={
           project
         }
@@ -512,7 +564,7 @@ function ProjectArtwork({
   }
 
   return (
-    <SpallArtwork
+    <AttendanceSystemArtwork
       project={
         project
       }
@@ -522,700 +574,6 @@ function ProjectArtwork({
       secondaryVisual={
         secondaryVisual
       }
-      visualLabel={
-        visualLabel
-      }
     />
   );
-}
-
-
-/* =========================================================
-   SPALL SPILL
-========================================================= */
-
-function SpallArtwork({
-  project,
-  primaryVisual,
-  secondaryVisual,
-  visualLabel,
-}: {
-  project: PublicProject;
-
-  primaryVisual:
-    | string
-    | null;
-
-  secondaryVisual:
-    | string
-    | null;
-
-  visualLabel: string;
-}) {
-  const titleLines =
-    getTitleLines(
-      project.title,
-    );
-
-  return (
-    <div
-      className={
-        styles.spallArtwork
-      }
-    >
-      <div
-        className={
-          styles.spallBrowser
-        }
-      >
-        <BrowserChrome
-          className={
-            styles.spallBrowserTop
-          }
-        />
-
-        <div
-          className={
-            styles.spallBrowserBody
-          }
-        >
-          {primaryVisual ? (
-<ShowcaseImage
-  src={
-    primaryVisual
-  }
-  alt={`${project.title} desktop interface`}
-  className={
-    styles.spallPrimaryImage
-  }
-  sizes="(max-width: 700px) 79vw, (max-width: 960px) 72vw, 58vw"
-  unoptimized
-/>
-          ) : (
-            <div
-              className={
-                styles.spallFallback
-              }
-            >
-              <span
-                className={
-                  styles.spallMiniLabel
-                }
-              >
-                {
-                  project.number
-                }{" "}
-                / NATSX
-              </span>
-
-              <strong>
-                {
-                  titleLines[0]
-                }
-
-                {titleLines[1] ? (
-                  <>
-                    <br />
-
-                    {
-                      titleLines[1]
-                    }
-                  </>
-                ) : null}
-              </strong>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {secondaryVisual ? (
-        <SpallPhone
-          project={
-            project
-          }
-          image={
-            secondaryVisual
-          }
-        />
-      ) : (
-        <div
-          className={
-            styles.spallCard
-          }
-        >
-          <span>
-            {
-              project.number
-            }
-          </span>
-
-          <strong>
-            SELECTED
-          </strong>
-
-          <strong>
-            WORK
-          </strong>
-        </div>
-      )}
-
-      <span
-        className={
-          styles.visualLabel
-        }
-      >
-        {
-          visualLabel
-        }
-      </span>
-    </div>
-  );
-}
-
-
-function SpallPhone({
-  project,
-  image,
-}: {
-  project: PublicProject;
-  image: string;
-}) {
-  return (
-<div
-  className={
-    phoneStyles.stage
-  }
-  data-featured-layer="spall-phone"
->
-      <div
-        className={
-          phoneStyles.phone
-        }
-      >
-        <div
-          className={
-            phoneStyles.screen
-          }
-        >
-<ShowcaseImage
-  src={
-    image
-  }
-  alt={`${project.title} mobile interface`}
-  className={
-    phoneStyles.image
-  }
-  sizes="(max-width: 700px) 24vw, (max-width: 960px) 19vw, 17.6vw"
-  unoptimized
-/>
-        </div>
-
-        <div
-          className={
-            phoneStyles.hardware
-          }
-          aria-hidden="true"
-        >
-          <span
-            className={
-              phoneStyles.speaker
-            }
-          />
-
-          <span
-            className={
-              phoneStyles.camera
-            }
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-/* =========================================================
-   NUSANTARA STAY
-========================================================= */
-
-function StayArtwork({
-  project,
-  primaryVisual,
-  secondaryVisual,
-  visualLabel,
-  copy,
-}: {
-  project: PublicProject;
-
-  primaryVisual:
-    | string
-    | null;
-
-  secondaryVisual:
-    | string
-    | null;
-
-  visualLabel: string;
-
-  copy:
-    SelectedWorkCopy;
-}) {
-  const titleLines =
-    getTitleLines(
-      project.title,
-    );
-
-  return (
-    <div
-      className={
-        styles.stayArtwork
-      }
-    >
-      <div
-        className={
-          styles.stayArch
-        }
-      >
-        <span
-          aria-hidden="true"
-        />
-      </div>
-
-      <div
-        className={
-          styles.stayWindow
-        }
-      >
-        <BrowserChrome
-          className={
-            styles.stayWindowTop
-          }
-        />
-
-        <div
-          className={
-            styles.stayWindowContent
-          }
-        >
-          {primaryVisual ? (
-            <ShowcaseImage
-              src={
-                primaryVisual
-              }
-              alt={`${project.title} desktop booking interface`}
-              className={
-                styles.stayPrimaryImage
-              }
-              sizes="(max-width: 700px) 78vw, (max-width: 960px) 68vw, 46vw"
-            />
-          ) : (
-            <>
-              <p>
-                {
-                  titleLines[0]
-                }
-
-                {titleLines[1] ? (
-                  <>
-                    <br />
-
-                    {
-                      titleLines[1]
-                    }
-                  </>
-                ) : null}
-              </p>
-
-              <span>
-                {
-                  copy.viewCaseStudy
-                }{" "}
-                ↗
-              </span>
-            </>
-          )}
-        </div>
-      </div>
-
-      {secondaryVisual ? (
-        <div
-          className={
-            styles.staySecondary
-          }
-        >
-          <div
-            className={
-              styles.staySecondaryBar
-            }
-          >
-            <span>
-              ID
-            </span>
-
-            <span>
-              STAY
-            </span>
-          </div>
-
-          <div
-            className={
-              styles.staySecondaryViewport
-            }
-          >
-            <ShowcaseImage
-              src={
-                secondaryVisual
-              }
-              alt={`${project.title} mobile booking interface`}
-              className={
-                styles.staySecondaryImage
-              }
-              sizes="(max-width: 700px) 27vw, (max-width: 960px) 23vw, 18vw"
-            />
-          </div>
-        </div>
-      ) : null}
-
-      <span
-        className={
-          styles.visualLabel
-        }
-      >
-        {
-          visualLabel
-        }
-      </span>
-    </div>
-  );
-}
-
-
-/* =========================================================
-   BAST
-========================================================= */
-
-function BastArtwork({
-  project,
-  primaryVisual,
-  secondaryVisual,
-  visualLabel,
-}: {
-  project: PublicProject;
-
-  primaryVisual:
-    | string
-    | null;
-
-  secondaryVisual:
-    | string
-    | null;
-
-  visualLabel: string;
-}) {
-  return (
-    <div
-      className={
-        styles.bastArtwork
-      }
-    >
-      <div
-        className={
-          styles.bastGrid
-        }
-        aria-hidden="true"
-      />
-
-      <div
-        className={
-          styles.bastIndex
-        }
-        aria-hidden="true"
-      >
-        <span>
-          SYSTEM
-        </span>
-
-        <strong>
-          BAST
-        </strong>
-
-        <span>
-          2024—26
-        </span>
-      </div>
-
-      <div
-        className={
-          styles.bastDashboard
-        }
-      >
-        <div
-          className={
-            styles.bastDashboardTop
-          }
-        >
-          <div>
-            <span />
-            <span />
-            <span />
-          </div>
-
-          <span>
-            MANAGEMENT SYSTEM
-          </span>
-        </div>
-
-        <div
-          className={
-            styles.bastDashboardViewport
-          }
-        >
-          {primaryVisual ? (
-<ShowcaseImage
-  src={
-    primaryVisual
-  }
-  alt={`${project.title} main system interface`}
-  className={
-    styles.bastPrimaryImage
-  }
-  sizes="(max-width: 700px) 78vw, (max-width: 960px) 72vw, 60vw"
-  unoptimized
-/>
-          ) : (
-            <BastFallback />
-          )}
-        </div>
-      </div>
-
-      <div
-        className={
-          styles.bastDocument
-        }
-      >
-        {secondaryVisual ? (
-<ShowcaseImage
-  src={
-    secondaryVisual
-  }
-  alt={`${project.title} supporting workflow visual`}
-  className={
-    styles.bastSecondaryImage
-  }
-  sizes="(max-width: 700px) 27vw, (max-width: 960px) 26vw, 22vw"
-  unoptimized
-/>
-        ) : (
-          <div
-            className={
-              styles.bastDocumentFallback
-            }
-          >
-            <span>
-              BAST / DOC
-            </span>
-
-            <div />
-            <div />
-            <div />
-
-            <strong>
-              VERIFIED
-            </strong>
-          </div>
-        )}
-      </div>
-
-      <div
-        className={
-          styles.bastStatus
-        }
-        aria-hidden="true"
-      >
-        <span />
-
-        <div>
-          <small>
-            STATUS
-          </small>
-
-          <strong>
-            ACTIVE
-          </strong>
-        </div>
-      </div>
-
-      <span
-        className={
-          styles.visualLabel
-        }
-      >
-        {
-          visualLabel
-        }
-      </span>
-    </div>
-  );
-}
-
-
-function BastFallback() {
-  return (
-    <div
-      className={
-        styles.bastFallback
-      }
-    >
-      <aside>
-        <span>
-          NATSX
-        </span>
-
-        <i />
-        <i />
-        <i />
-        <i />
-      </aside>
-
-      <div
-        className={
-          styles.bastFallbackMain
-        }
-      >
-        <div
-          className={
-            styles.bastFallbackHeader
-          }
-        >
-          <span>
-            Dashboard
-          </span>
-
-          <span>
-            ●
-          </span>
-        </div>
-
-        <div
-          className={
-            styles.bastFallbackCards
-          }
-        >
-          <span />
-          <span />
-          <span />
-        </div>
-
-        <div
-          className={
-            styles.bastFallbackTable
-          }
-        >
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-/* =========================================================
-   SHARED
-========================================================= */
-
-function BrowserChrome({
-  className,
-}: {
-  className: string;
-}) {
-  return (
-    <div
-      className={
-        className
-      }
-      aria-hidden="true"
-    >
-      <span />
-      <span />
-      <span />
-    </div>
-  );
-}
-
-
-function ShowcaseImage({
-  src,
-  alt,
-  className,
-  sizes,
-  unoptimized = false,
-}: {
-  src: string;
-  alt: string;
-  className: string;
-  sizes: string;
-  unoptimized?: boolean;
-}) {
-  return (
-    <Image
-      src={
-        src
-      }
-      alt={
-        alt
-      }
-      fill
-      sizes={
-        sizes
-      }
-      className={
-        className
-      }
-      unoptimized={
-        unoptimized
-      }
-    />
-  );
-}
-
-
-function getTitleLines(
-  title: string,
-) {
-  const words =
-    title
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
-
-  if (
-    words.length <= 1
-  ) {
-    return [
-      title.trim(),
-    ];
-  }
-
-  const midpoint =
-    Math.ceil(
-      words.length / 2,
-    );
-
-  return [
-    words
-      .slice(
-        0,
-        midpoint,
-      )
-      .join(" "),
-
-    words
-      .slice(
-        midpoint,
-      )
-      .join(" "),
-  ].filter(Boolean);
 }

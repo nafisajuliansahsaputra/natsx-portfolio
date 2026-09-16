@@ -1,0 +1,2170 @@
+.artwork {
+  --bast-blue:
+    var(
+      --accent,
+      #1f5c9a
+    );
+
+  --bast-surface:
+    color-mix(
+      in srgb,
+      var(
+        --project-secondary,
+        #eef4fb
+      )
+      82%,
+      white
+    );
+
+  --bast-ink:
+    #183045;
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  overflow:
+    hidden;
+
+  isolation:
+    isolate;
+
+  background:
+    linear-gradient(
+      180deg,
+      #eff4fa 0%,
+      #e8eff7 52%,
+      #e3ebf4 100%
+    );
+
+  color:
+    var(
+      --bast-ink
+    );
+}
+
+/* =========================================================
+   BACKGROUND SYSTEM
+========================================================= */
+
+.grid {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  z-index:
+    0;
+
+  opacity:
+    0.62;
+
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(
+        67,
+        112,
+        155,
+        0.065
+      )
+      1px,
+      transparent
+      1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(
+        67,
+        112,
+        155,
+        0.065
+      )
+      1px,
+      transparent
+      1px
+    );
+
+  background-size:
+    clamp(
+      34px,
+      3.8vw,
+      56px
+    )
+    clamp(
+      34px,
+      3.8vw,
+      56px
+    );
+}
+
+.blueprint {
+  position:
+    absolute;
+
+  top:
+    6.6%;
+
+  left:
+    3.7%;
+
+  z-index:
+    2;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    4px;
+}
+
+.blueprint span,
+.blueprint small {
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.44
+    );
+
+  font-size:
+    clamp(
+      6px,
+      0.53vw,
+      9px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.13em;
+}
+
+.blueprint strong {
+  color:
+    var(
+      --bast-blue
+    );
+
+  font-size:
+    clamp(
+      21px,
+      2.65vw,
+      37px
+    );
+
+  font-weight:
+    700;
+
+  line-height:
+    0.9;
+
+  letter-spacing:
+    -0.058em;
+}
+
+.systemTag {
+  position:
+    absolute;
+
+  top:
+    7.2%;
+
+  right:
+    3.8%;
+
+  z-index:
+    2;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+
+  padding:
+    9px 13px;
+
+  border:
+    1px solid
+    rgba(
+      40,
+      89,
+      140,
+      0.11
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.58
+    );
+
+  backdrop-filter:
+    blur(
+      8px
+    );
+
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.5
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.47vw,
+      8px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.systemTagDot {
+  width:
+    6px;
+
+  height:
+    6px;
+
+  border-radius:
+    999px;
+
+  background:
+    var(
+      --bast-blue
+    );
+
+  box-shadow:
+    0
+    0
+    0
+    4px
+    rgba(
+      31,
+      92,
+      154,
+      0.08
+    );
+}
+
+.controlRail {
+  position:
+    absolute;
+
+  left:
+    3.8%;
+
+  bottom:
+    6.4%;
+
+  z-index:
+    2;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    8px;
+
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.46
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.48vw,
+      8px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.14em;
+}
+
+.controlRail span {
+  position:
+    relative;
+
+  padding-left:
+    16px;
+}
+
+.controlRail span::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    0;
+
+  top:
+    50%;
+
+  width:
+    8px;
+
+  height:
+    1px;
+
+  background:
+    rgba(
+      24,
+      48,
+      69,
+      0.3
+    );
+
+  transform:
+    translateY(
+      -50%
+    );
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboardShell {
+  position:
+    absolute;
+
+  left:
+    8%;
+
+  top:
+    12.6%;
+
+  z-index:
+    3;
+
+  width:
+    69%;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    rgba(
+      53,
+      96,
+      139,
+      0.12
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.72
+    );
+
+  box-shadow:
+    0
+    30px
+    70px
+    rgba(
+      39,
+      74,
+      110,
+      0.13
+    ),
+    0
+    9px
+    22px
+    rgba(
+      39,
+      74,
+      110,
+      0.07
+    );
+
+  transform:
+    translate3d(
+      var(
+        --featured-mid-x,
+        0px
+      ),
+      var(
+        --featured-mid-y,
+        0px
+      ),
+      0
+    );
+}
+
+.dashboardTop {
+  position:
+    relative;
+
+  z-index:
+    2;
+
+  height:
+    clamp(
+      34px,
+      3.1vw,
+      48px
+    );
+
+  padding-inline:
+    clamp(
+      12px,
+      1.45vw,
+      22px
+    );
+
+  display:
+    grid;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+
+  align-items:
+    center;
+
+  gap:
+    14px;
+
+  border-bottom:
+    1px solid
+    rgba(
+      53,
+      96,
+      139,
+      0.09
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+}
+
+.windowDots {
+  display:
+    flex;
+
+  gap:
+    5px;
+}
+
+.windowDots span {
+  width:
+    6px;
+
+  height:
+    6px;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.25
+    );
+}
+
+.dashboardAddress,
+.dashboardMode {
+  font-size:
+    clamp(
+      5px,
+      0.46vw,
+      8px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.dashboardAddress {
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.45
+    );
+}
+
+.dashboardMode {
+  color:
+    var(
+      --bast-blue
+    );
+}
+
+.dashboardViewport {
+  position:
+    relative;
+
+  width:
+    100%;
+
+  aspect-ratio:
+    16 /
+    9.25;
+
+  overflow:
+    hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7fbff 0%,
+      #eef4fb 100%
+    );
+}
+
+.dashboardImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center center;
+
+  transform:
+    scale(
+      1.01
+    );
+
+  transition:
+    transform
+    1100ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.dashboardOverlay {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  z-index:
+    2;
+
+  pointer-events:
+    none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(
+        255,
+        255,
+        255,
+        0.035
+      )
+      0%,
+      transparent
+      55%,
+      rgba(
+        31,
+        92,
+        154,
+        0.03
+      )
+      100%
+    );
+}
+
+/* =========================================================
+   DASHBOARD FALLBACK
+========================================================= */
+
+.dashboardFallback {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    88px
+    minmax(
+      0,
+      1fr
+    );
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7fbff 0%,
+      #edf4fb 100%
+    );
+}
+
+.dashboardAside {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    14px;
+
+  padding:
+    18px 16px;
+
+  border-right:
+    1px solid
+    rgba(
+      53,
+      96,
+      139,
+      0.1
+    );
+
+  background:
+    rgba(
+      29,
+      84,
+      134,
+      0.96
+    );
+}
+
+.dashboardAside span {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.84
+    );
+
+  font-size:
+    10px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.dashboardAside i {
+  width:
+    100%;
+
+  height:
+    12px;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.18
+    );
+}
+
+.dashboardMain {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    16px;
+
+  padding:
+    22px;
+}
+
+.dashboardFallbackHeader {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+}
+
+.dashboardFallbackHeader strong {
+  color:
+    var(
+      --bast-ink
+    );
+
+  font-size:
+    clamp(
+      18px,
+      2vw,
+      30px
+    );
+
+  font-weight:
+    650;
+
+  letter-spacing:
+    -0.04em;
+}
+
+.dashboardFallbackHeader span {
+  padding:
+    6px 10px;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.12
+    );
+
+  color:
+    var(
+      --bast-blue
+    );
+
+  font-size:
+    10px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.1em;
+}
+
+.dashboardStats {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      4,
+      1fr
+    );
+
+  gap:
+    10px;
+}
+
+.dashboardStats span {
+  height:
+    64px;
+
+  border-radius:
+    14px;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.09
+    );
+}
+
+.dashboardChart {
+  display:
+    flex;
+
+  align-items:
+    end;
+
+  gap:
+    10px;
+
+  height:
+    110px;
+
+  padding:
+    14px;
+
+  border-radius:
+    18px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.68
+    );
+}
+
+.dashboardChart span {
+  flex:
+    1
+    1
+    0;
+
+  border-radius:
+    12px
+    12px
+    6px
+    6px;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.22
+    );
+}
+
+.dashboardChart span:nth-child(1) {
+  height:
+    32%;
+}
+
+.dashboardChart span:nth-child(2) {
+  height:
+    58%;
+}
+
+.dashboardChart span:nth-child(3) {
+  height:
+    44%;
+}
+
+.dashboardChart span:nth-child(4) {
+  height:
+    74%;
+}
+
+.dashboardChart span:nth-child(5) {
+  height:
+    52%;
+}
+
+.dashboardTable {
+  display:
+    grid;
+
+  gap:
+    8px;
+}
+
+.dashboardTable span {
+  height:
+    14px;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.11
+    );
+}
+
+/* =========================================================
+   METRICS CARD
+========================================================= */
+
+.metricsCard {
+  position:
+    absolute;
+
+  left:
+    4.2%;
+
+  bottom:
+    13.8%;
+
+  z-index:
+    5;
+
+  width:
+    15.8%;
+
+  min-width:
+    138px;
+
+  padding:
+    clamp(
+      14px,
+      1.5vw,
+      21px
+    );
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    12px;
+
+  border:
+    1px solid
+    rgba(
+      53,
+      96,
+      139,
+      0.085
+    );
+
+  background:
+    rgba(
+      247,
+      251,
+      255,
+      0.76
+    );
+
+  backdrop-filter:
+    blur(
+      12px
+    );
+
+  box-shadow:
+    0
+    18px
+    42px
+    rgba(
+      39,
+      74,
+      110,
+      0.095
+    );
+
+  transform:
+    translate3d(
+      var(
+        --featured-accent-x,
+        0px
+      ),
+      var(
+        --featured-accent-y,
+        0px
+      ),
+      0
+    );
+}
+
+.metricsLabel {
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.46
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.45vw,
+      7px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.metricsRows {
+  display:
+    grid;
+
+  gap:
+    8px;
+}
+
+.metricsRows div {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    10px;
+}
+
+.metricsRows small {
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.38
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.42vw,
+      7px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.metricsRows strong {
+  color:
+    var(
+      --bast-ink
+    );
+
+  font-size:
+    clamp(
+      13px,
+      1.15vw,
+      18px
+    );
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    -0.04em;
+}
+
+.metricsBars {
+  display:
+    flex;
+
+  align-items:
+    end;
+
+  gap:
+    5px;
+
+  height:
+    48px;
+}
+
+.metricsBars span {
+  flex:
+    1
+    1
+    0;
+
+  border-radius:
+    8px
+    8px
+    3px
+    3px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(
+        31,
+        92,
+        154,
+        0.15
+      )
+      0%,
+      rgba(
+        31,
+        92,
+        154,
+        0.39
+      )
+      100%
+    );
+}
+
+.metricsBars span:nth-child(1) {
+  height:
+    38%;
+}
+
+.metricsBars span:nth-child(2) {
+  height:
+    58%;
+}
+
+.metricsBars span:nth-child(3) {
+  height:
+    82%;
+}
+
+.metricsBars span:nth-child(4) {
+  height:
+    49%;
+}
+
+/* =========================================================
+   DOCUMENT STAGE
+========================================================= */
+
+.documentStage {
+  position:
+    absolute;
+
+  right:
+    6.8%;
+
+  bottom:
+    10%;
+
+  z-index:
+    7;
+
+  width:
+    21.2%;
+
+  transform:
+    translate3d(
+      var(
+        --featured-front-x,
+        0px
+      ),
+      var(
+        --featured-front-y,
+        0px
+      ),
+      0
+    )
+    rotate(
+      calc(
+        -4.4deg +
+        var(
+          --featured-tilt,
+          0deg
+        )
+      )
+    );
+
+  transform-origin:
+    center bottom;
+}
+
+.documentBadge {
+  position:
+    absolute;
+
+  top:
+    -10px;
+
+  left:
+    14px;
+
+  z-index:
+    3;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  padding:
+    7px 10px;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      23,
+      80,
+      134,
+      0.95
+    );
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.92
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.43vw,
+      7px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.11em;
+
+  box-shadow:
+    0
+    10px
+    22px
+    rgba(
+      27,
+      67,
+      104,
+      0.15
+    );
+}
+
+.documentBadgeDot {
+  width:
+    6px;
+
+  height:
+    6px;
+
+  border-radius:
+    999px;
+
+  background:
+    #94f1b4;
+}
+
+.documentSheet {
+  position:
+    relative;
+
+  width:
+    100%;
+
+  aspect-ratio:
+    0.73 /
+    1;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    rgba(
+      38,
+      82,
+      123,
+      0.11
+    );
+
+  background:
+    white;
+
+  box-shadow:
+    0
+    24px
+    52px
+    rgba(
+      39,
+      74,
+      110,
+      0.14
+    ),
+    0
+    8px
+    20px
+    rgba(
+      39,
+      74,
+      110,
+      0.065
+    );
+}
+
+.documentSheet::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  pointer-events:
+    none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(
+        255,
+        255,
+        255,
+        0.04
+      )
+      0%,
+      transparent
+      62%,
+      rgba(
+        24,
+        48,
+        69,
+        0.02
+      )
+      100%
+    );
+}
+
+.documentImage {
+  object-fit:
+    contain;
+
+  object-position:
+    center center;
+}
+
+/* =========================================================
+   DOCUMENT FALLBACK
+========================================================= */
+
+.documentFallback {
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  padding:
+    16%
+    14%;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f7fbff 100%
+    );
+}
+
+.documentFallback span {
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.5
+    );
+
+  font-size:
+    10px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.documentFallback div {
+  height:
+    10px;
+
+  margin-top:
+    10px;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.1
+    );
+}
+
+.documentFallback strong {
+  margin-top:
+    auto;
+
+  align-self:
+    flex-start;
+
+  padding:
+    8px 12px;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      31,
+      92,
+      154,
+      0.1
+    );
+
+  color:
+    var(
+      --bast-blue
+    );
+
+  font-size:
+    10px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.1em;
+}
+
+/* =========================================================
+   AUDIT STRIP
+========================================================= */
+
+.auditStrip {
+  position:
+    absolute;
+
+  left:
+    31.5%;
+
+  bottom:
+    4.7%;
+
+  z-index:
+    2;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    11px;
+
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.32
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.43vw,
+      7px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+}
+
+.auditStrip strong {
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.5
+    );
+
+  font-weight:
+    800;
+}
+
+/* =========================================================
+   SIDE META
+========================================================= */
+
+.footerMeta {
+  position:
+    absolute;
+
+  right:
+    4%;
+
+  top:
+    18.2%;
+
+  z-index:
+    1;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    7px;
+
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.31
+    );
+
+  font-size:
+    clamp(
+      5px,
+      0.43vw,
+      7px
+    );
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.11em;
+}
+
+.footerMeta span {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+}
+
+.footerMeta small {
+  color:
+    var(
+      --bast-blue
+    );
+
+  font-size:
+    0.9em;
+
+  font-weight:
+    800;
+}
+
+/* =========================================================
+   VISUAL LABEL
+========================================================= */
+
+.visualLabel {
+  position:
+    absolute;
+
+  right:
+    4.3%;
+
+  bottom:
+    5.2%;
+
+  z-index:
+    10;
+
+  max-width:
+    25%;
+
+  color:
+    rgba(
+      24,
+      48,
+      69,
+      0.5
+    );
+
+  font-size:
+    clamp(
+      6px,
+      0.52vw,
+      8px
+    );
+
+  font-weight:
+    800;
+
+  line-height:
+    1.24;
+
+  letter-spacing:
+    0.08em;
+
+  text-align:
+    right;
+
+  text-transform:
+    uppercase;
+}
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+@media (
+  hover:
+    hover
+) and (
+  pointer:
+    fine
+) {
+  .artwork:hover
+    .dashboardImage {
+    transform:
+      scale(
+        1.015
+      );
+  }
+
+  .artwork:hover
+    .documentSheet {
+    box-shadow:
+      0
+      29px
+      58px
+      rgba(
+        39,
+        74,
+        110,
+        0.16
+      ),
+      0
+      10px
+      23px
+      rgba(
+        39,
+        74,
+        110,
+        0.075
+      );
+  }
+}
+
+/* =========================================================
+   AMBIENT MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    no-preference
+) {
+  .documentStage {
+    animation:
+      bast-document-breathe
+      8.8s
+      ease-in-out
+      infinite;
+  }
+
+  .metricsCard {
+    animation:
+      bast-card-drift
+      9.2s
+      ease-in-out
+      infinite;
+  }
+
+  .systemTagDot {
+    animation:
+      bast-dot-pulse
+      3.2s
+      ease-in-out
+      infinite;
+  }
+}
+
+@keyframes bast-document-breathe {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  50% {
+    translate:
+      0
+      -4px;
+  }
+}
+
+@keyframes bast-card-drift {
+  0%,
+  100% {
+    translate:
+      0
+      0;
+  }
+
+  50% {
+    translate:
+      1px
+      -3px;
+  }
+}
+
+@keyframes bast-dot-pulse {
+  0%,
+  100% {
+    opacity:
+      0.72;
+  }
+
+  50% {
+    opacity:
+      1;
+
+    box-shadow:
+      0
+      0
+      0
+      5px
+      rgba(
+        31,
+        92,
+        154,
+        0.06
+      );
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (
+  max-width:
+    960px
+) {
+  .blueprint {
+    left:
+      3.4%;
+  }
+
+  .dashboardShell {
+    left:
+      6.8%;
+
+    width:
+      71%;
+  }
+
+  .metricsCard {
+    left:
+      3.8%;
+
+    width:
+      17%;
+
+    min-width:
+      128px;
+  }
+
+  .documentStage {
+    right:
+      5.5%;
+
+    width:
+      22.8%;
+  }
+
+  .footerMeta {
+    right:
+      3.5%;
+
+    top:
+      17.8%;
+  }
+
+  .visualLabel {
+    right:
+      3.8%;
+
+    bottom:
+      4.8%;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+  max-width:
+    700px
+) {
+  .blueprint {
+    top:
+      5.4%;
+
+    left:
+      4%;
+  }
+
+  .blueprint span,
+  .blueprint small {
+    font-size:
+      4px;
+  }
+
+  .blueprint strong {
+    font-size:
+      clamp(
+        16px,
+        5vw,
+        24px
+      );
+  }
+
+  .systemTag {
+    top:
+      5.3%;
+
+    right:
+      3.5%;
+
+    gap:
+      5px;
+
+    padding:
+      6px
+      8px;
+
+    font-size:
+      3.8px;
+  }
+
+  .systemTagDot {
+    width:
+      4px;
+
+    height:
+      4px;
+  }
+
+  .controlRail {
+    left:
+      3.8%;
+
+    bottom:
+      5.4%;
+
+    gap:
+      5px;
+
+    font-size:
+      3.8px;
+
+    color:
+      rgba(
+        24,
+        48,
+        69,
+        0.42
+      );
+  }
+
+  .controlRail span {
+    padding-left:
+      10px;
+  }
+
+  .controlRail span::before {
+    width:
+      5px;
+  }
+
+  .dashboardShell {
+    left:
+      5%;
+
+    top:
+      11.5%;
+
+    width:
+      82.5%;
+  }
+
+  .dashboardTop {
+    height:
+      23px;
+
+    padding-inline:
+      8px;
+
+    gap:
+      8px;
+  }
+
+  .windowDots {
+    gap:
+      3px;
+  }
+
+  .windowDots span {
+    width:
+      4px;
+
+    height:
+      4px;
+  }
+
+  .dashboardAddress,
+  .dashboardMode {
+    font-size:
+      3.7px;
+  }
+
+  .metricsCard {
+    left:
+      3.5%;
+
+    bottom:
+      10.2%;
+
+    width:
+      21.5%;
+
+    min-width:
+      0;
+
+    padding:
+      9px;
+
+    gap:
+      7px;
+
+    background:
+      rgba(
+        247,
+        251,
+        255,
+        0.72
+      );
+  }
+
+  .metricsLabel {
+    font-size:
+      3.6px;
+  }
+
+  .metricsRows {
+    gap:
+      6px;
+  }
+
+  .metricsRows small {
+    font-size:
+      3.4px;
+  }
+
+  .metricsRows strong {
+    font-size:
+      9px;
+  }
+
+  .metricsBars {
+    height:
+      30px;
+
+    gap:
+      3px;
+  }
+
+  .documentStage {
+    right:
+      4%;
+
+    bottom:
+      9.3%;
+
+    width:
+      27%;
+  }
+
+  .documentBadge {
+    top:
+      -7px;
+
+    left:
+      9px;
+
+    gap:
+      4px;
+
+    padding:
+      5px
+      7px;
+
+    font-size:
+      3.6px;
+  }
+
+  .documentBadgeDot {
+    width:
+      4px;
+
+    height:
+      4px;
+  }
+
+  .auditStrip {
+    left:
+      28%;
+
+    bottom:
+      3.4%;
+
+    gap:
+      8px;
+
+    font-size:
+      3.5px;
+  }
+
+  .auditStrip
+    span:first-child {
+    display:
+      none;
+  }
+
+  .footerMeta {
+    display:
+      none;
+  }
+
+  .visualLabel {
+    right:
+      3.8%;
+
+    bottom:
+      4.2%;
+
+    max-width:
+      28%;
+
+    font-size:
+      4.1px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (
+  max-width:
+    420px
+) {
+  .dashboardShell {
+    width:
+      83%;
+  }
+
+  .metricsCard {
+    width:
+      22%;
+  }
+
+  .documentStage {
+    width:
+      28%;
+  }
+
+  .auditStrip {
+    left:
+      26%;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .dashboardImage,
+  .documentStage,
+  .metricsCard,
+  .systemTagDot {
+    animation:
+      none
+      !important;
+
+    transition-duration:
+      0.01ms
+      !important;
+  }
+}
