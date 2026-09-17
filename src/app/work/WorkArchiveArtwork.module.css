@@ -1,0 +1,895 @@
+/*
+ * =========================================================
+ * NATSX — WORK ARCHIVE ARTWORK
+ * =========================================================
+ *
+ * Archive-owned base composition for the coded Spall Spill
+ * and BAST previews used by WorkArchiveHomepagePreview.
+ *
+ * These styles intentionally live beside /work instead of
+ * depending on the homepage SelectedWork CSS module.
+ */
+
+
+/* =========================================================
+   SHARED VISUAL LABEL
+========================================================= */
+
+.visualLabel {
+  position: absolute;
+
+  right: 28px;
+  bottom: 25px;
+
+  z-index: 20;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   SPALL SPILL
+========================================================= */
+
+.visual_spall {
+  background: #d7d4cd;
+}
+
+.spallArtwork {
+  position: absolute;
+
+  inset: 0;
+}
+
+.spallBrowser {
+  position: absolute;
+
+  left: 9%;
+  top: 9%;
+
+  z-index: 2;
+
+  width: 64%;
+  height: auto;
+
+  overflow: hidden;
+
+  background: #f5f4ef;
+
+  box-shadow:
+    0 20px 60px
+    rgba(17, 17, 17, 0.08);
+}
+
+.spallBrowserTop {
+  position: relative;
+
+  z-index: 3;
+
+  height: 42px;
+
+  padding-inline: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  background: #f5f4ef;
+
+  border-bottom:
+    1px solid
+    #deddd7;
+}
+
+.spallBrowserTop span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #a9a8a2;
+}
+
+.spallBrowserBody {
+  position: relative;
+
+  width: 100%;
+  height: auto;
+
+  aspect-ratio:
+    var(--desktop-ui-ratio);
+
+  overflow: hidden;
+
+  background: #f5f4ef;
+}
+
+.spallPrimaryImage {
+  object-fit: cover;
+
+  object-position:
+    top center;
+
+  transition:
+    transform
+    1200ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.spallFallback {
+  position: absolute;
+
+  inset: 0;
+
+  padding:
+    clamp(30px, 4vw, 58px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(
+        88,
+        98,
+        236,
+        0.035
+      ),
+      transparent 45%
+    ),
+    #f5f4ef;
+}
+
+.spallMiniLabel {
+  color: var(--accent);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.spallFallback strong {
+  max-width: 600px;
+
+  font-size:
+    clamp(38px, 4.6vw, 76px);
+
+  font-weight: 600;
+
+  line-height: 0.95;
+
+  letter-spacing: -0.06em;
+}
+
+.spallCard {
+  position: absolute;
+
+  right: 8.8%;
+  bottom: 8.3%;
+
+  z-index: 5;
+
+  width: 25.5%;
+
+  aspect-ratio: 0.78;
+
+  padding:
+    clamp(18px, 2.2vw, 30px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      #2c2c31 0%,
+      #232328 100%
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 26px 70px
+    rgba(17, 17, 17, 0.16);
+}
+
+.spallCard > span {
+  margin-bottom: auto;
+
+  color: #a5a8ff;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.spallCard > strong {
+  font-size:
+    clamp(24px, 3vw, 48px);
+
+  font-weight: 600;
+
+  line-height: 0.9;
+
+  letter-spacing: -0.05em;
+}
+
+.visual_spall .visualLabel {
+  color: #595953;
+}
+
+
+/* =========================================================
+   BAST
+========================================================= */
+
+.visual_bast {
+  background: #edf1f4;
+}
+
+.bastArtwork {
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  color: #163d5c;
+}
+
+.bastGrid {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  opacity: 0.34;
+
+  background-image:
+    linear-gradient(
+      rgba(
+        29,
+        93,
+        143,
+        0.12
+      )
+      1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(
+        29,
+        93,
+        143,
+        0.12
+      )
+      1px,
+      transparent 1px
+    );
+
+  background-size:
+    44px 44px;
+}
+
+.bastIndex {
+  position: absolute;
+
+  top: 9%;
+  left: 4%;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  color: #1d5d8f;
+}
+
+.bastIndex span {
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 0.11em;
+}
+
+.bastIndex strong {
+  font-size:
+    clamp(34px, 4vw, 62px);
+
+  font-weight: 600;
+
+  line-height: 0.85;
+
+  letter-spacing: -0.06em;
+}
+
+.bastDashboard {
+  position: absolute;
+
+  top: 10%;
+  left: 13%;
+
+  z-index: 3;
+
+  width: 64%;
+  height: auto;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 25px 70px
+    rgba(
+      20,
+      54,
+      79,
+      0.13
+    );
+}
+
+.bastDashboardTop {
+  position: relative;
+
+  z-index: 2;
+
+  height: 40px;
+
+  padding-inline: 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  border-bottom:
+    1px solid
+    #dbe5ec;
+
+  background: #ffffff;
+
+  color: #668093;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.bastDashboardTop > div {
+  display: flex;
+
+  gap: 5px;
+}
+
+.bastDashboardTop > div span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #9fb0bc;
+}
+
+.bastDashboardViewport {
+  position: relative;
+
+  width: 100%;
+  height: auto;
+
+  aspect-ratio:
+    var(--desktop-ui-ratio);
+
+  overflow: hidden;
+}
+
+.bastPrimaryImage {
+  object-fit: cover;
+
+  object-position:
+    top center;
+
+  transition:
+    transform
+    1200ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.bastDocument {
+  position: absolute;
+
+  right: 7%;
+  bottom: 7%;
+
+  z-index: 6;
+
+  width: 24%;
+
+  aspect-ratio: 0.76;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 30px 72px
+    rgba(
+      20,
+      54,
+      79,
+      0.18
+    );
+
+  transform:
+    rotate(1.5deg);
+}
+
+.bastSecondaryImage {
+  object-fit: cover;
+
+  object-position:
+    top center;
+
+  transition:
+    transform
+    1300ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.bastDocumentFallback {
+  position: absolute;
+
+  inset: 0;
+
+  padding: 14%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10%;
+
+  color: #1d5d8f;
+}
+
+.bastDocumentFallback > span {
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.bastDocumentFallback > div {
+  height: 1px;
+
+  background: #d7e1e7;
+}
+
+.bastDocumentFallback strong {
+  margin-top: auto;
+
+  font-size:
+    clamp(18px, 2vw, 30px);
+
+  line-height: 0.9;
+
+  letter-spacing: -0.05em;
+}
+
+.bastStatus {
+  position: absolute;
+
+  left: 8%;
+  bottom: 9%;
+
+  z-index: 7;
+
+  min-width: 126px;
+
+  padding:
+    12px 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  background: #143d5c;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 18px 45px
+    rgba(
+      20,
+      54,
+      79,
+      0.16
+    );
+}
+
+.bastStatus > span {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: #8ee0ac;
+}
+
+.bastStatus div {
+  display: grid;
+
+  gap: 2px;
+}
+
+.bastStatus small {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.55
+    );
+
+  font-size: 6px;
+
+  letter-spacing: 0.1em;
+}
+
+.bastStatus strong {
+  font-size: 9px;
+
+  letter-spacing: 0.06em;
+}
+
+.bastFallback {
+  position: absolute;
+
+  inset: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    17% 1fr;
+
+  background: #f7f9fa;
+}
+
+.bastFallback aside {
+  padding:
+    15% 18%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  background: #1d5d8f;
+}
+
+.bastFallback aside span {
+  margin-bottom: 10px;
+
+  color: #ffffff;
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.bastFallback aside i {
+  width: 75%;
+  height: 4px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.28
+    );
+}
+
+.bastFallbackMain {
+  padding: 7%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10%;
+}
+
+.bastFallbackHeader {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  color: #274b65;
+
+  font-size:
+    clamp(
+      11px,
+      1.2vw,
+      18px
+    );
+
+  font-weight: 700;
+}
+
+.bastFallbackCards {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 4%;
+}
+
+.bastFallbackCards span {
+  aspect-ratio: 2.4;
+
+  background: #e7edf1;
+}
+
+.bastFallbackTable {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.bastFallbackTable span {
+  height: 7px;
+
+  background: #e3e9ed;
+}
+
+.visual_bast .visualLabel {
+  color: #597385;
+}
+
+
+/* =========================================================
+   ARCHIVE RESPONSIVE PARITY
+========================================================= */
+
+@media (
+  min-width: 961px
+) and (
+  max-width: 1320px
+) {
+  .visualLabel {
+    right: auto;
+    left: 24px;
+
+    max-width:
+      calc(100% - 48px);
+
+    text-align: left;
+  }
+}
+
+@media (max-width: 700px) {
+  .visualLabel {
+    right: 12px;
+    bottom: 10px;
+
+    font-size: 6px;
+
+    letter-spacing: 0.07em;
+
+    opacity: 0.82;
+  }
+
+  .spallBrowser {
+    left: 5.5%;
+    top: 8%;
+
+    width: 87%;
+  }
+
+  .spallBrowserTop {
+    height: 24px;
+
+    padding-inline: 9px;
+
+    gap: 4px;
+  }
+
+  .spallBrowserTop span {
+    width: 4px;
+    height: 4px;
+  }
+
+  .spallFallback {
+    padding: 18px;
+  }
+
+  .spallMiniLabel {
+    font-size: 7px;
+  }
+
+  .spallFallback strong {
+    font-size:
+      clamp(
+        22px,
+        6.6vw,
+        28px
+      );
+
+    line-height: 0.93;
+  }
+
+  .spallCard {
+    right: 5.5%;
+    bottom: 6%;
+
+    width: 28%;
+
+    padding: 10px;
+  }
+
+  .spallCard > span {
+    font-size: 6px;
+  }
+
+  .spallCard > strong {
+    font-size:
+      clamp(
+        13px,
+        4vw,
+        18px
+      );
+  }
+
+  .bastGrid {
+    background-size:
+      26px 26px;
+  }
+
+  .bastIndex {
+    top: 6%;
+    left: 4%;
+  }
+
+  .bastIndex span {
+    font-size: 5px;
+  }
+
+  .bastIndex strong {
+    font-size: 23px;
+  }
+
+  .bastDashboard {
+    top: 9%;
+    left: 7%;
+
+    width: 86%;
+  }
+
+  .bastDashboardTop {
+    height: 24px;
+
+    padding-inline: 9px;
+
+    font-size: 5px;
+  }
+
+  .bastDashboardTop
+    > div {
+    gap: 3px;
+  }
+
+  .bastDashboardTop
+    > div
+    span {
+    width: 4px;
+    height: 4px;
+  }
+
+  .bastDocument {
+    right: 5%;
+    bottom: 6%;
+
+    width: 29%;
+  }
+
+  .bastStatus {
+    left: 4%;
+    bottom: 6%;
+
+    min-width: 82px;
+
+    padding:
+      7px 8px;
+
+    gap: 7px;
+  }
+
+  .bastStatus > span {
+    width: 5px;
+    height: 5px;
+  }
+
+  .bastStatus small {
+    font-size: 4px;
+  }
+
+  .bastStatus strong {
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .visualLabel {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .spallBrowser,
+  .spallCard,
+  .spallPrimaryImage,
+  .bastDashboard,
+  .bastDocument,
+  .bastStatus,
+  .bastGrid,
+  .bastPrimaryImage,
+  .bastSecondaryImage {
+    animation:
+      none !important;
+
+    transition-duration:
+      0.01ms !important;
+  }
+}

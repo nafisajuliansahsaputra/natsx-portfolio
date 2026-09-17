@@ -12,7 +12,7 @@ import {
 
 import FiveAmVisionArtwork from "@/components/home/FiveAmVisionArtwork";
 
-import homeStyles from "@/components/home/SelectedWork.module.css";
+import artworkStyles from "./WorkArchiveArtwork.module.css";
 import phoneStyles from "@/components/home/SpallPhone.module.css";
 
 import {
@@ -246,7 +246,7 @@ export default function WorkArchiveHomepagePreview({
 
     return (
       <div
-        className={`${styles.root} ${homeStyles.visual_spall}`}
+        className={`${styles.root} ${artworkStyles.visual_spall}`}
         data-archive-home-preview="spall"
         style={
           rootStyle
@@ -254,25 +254,25 @@ export default function WorkArchiveHomepagePreview({
       >
         <div
           className={
-            homeStyles.spallArtwork
+            artworkStyles.spallArtwork
           }
         >
           <div
             className={
-              homeStyles.spallBrowser
+              artworkStyles.spallBrowser
             }
             data-archive-part="spall-browser"
           >
             <BrowserChrome
               className={
-                homeStyles.spallBrowserTop
+                artworkStyles.spallBrowserTop
               }
               part="spall-browser-top"
             />
 
             <div
               className={
-                homeStyles.spallBrowserBody
+                artworkStyles.spallBrowserBody
               }
             >
               {primaryVisual ? (
@@ -282,7 +282,7 @@ export default function WorkArchiveHomepagePreview({
   }
   alt={`${project.title} desktop interface`}
   className={
-    homeStyles.spallPrimaryImage
+    artworkStyles.spallPrimaryImage
   }
   part="spall-primary-image"
   sizes="420px"
@@ -291,13 +291,13 @@ export default function WorkArchiveHomepagePreview({
               ) : (
                 <div
                   className={
-                    homeStyles.spallFallback
+                    artworkStyles.spallFallback
                   }
                   data-archive-part="spall-fallback"
                 >
                   <span
                     className={
-                      homeStyles.spallMiniLabel
+                      artworkStyles.spallMiniLabel
                     }
                     data-archive-part="spall-mini-label"
                   >
@@ -339,7 +339,7 @@ export default function WorkArchiveHomepagePreview({
           ) : (
             <div
               className={
-                homeStyles.spallCard
+                artworkStyles.spallCard
               }
               data-archive-part="spall-card"
             >
@@ -361,7 +361,7 @@ export default function WorkArchiveHomepagePreview({
 
           <span
             className={
-              homeStyles.visualLabel
+              artworkStyles.visualLabel
             }
             data-archive-part="visual-label"
           >
@@ -383,7 +383,7 @@ export default function WorkArchiveHomepagePreview({
 
   return (
     <div
-      className={`${styles.root} ${homeStyles.visual_bast}`}
+      className={`${styles.root} ${artworkStyles.visual_bast}`}
       data-archive-home-preview="bast"
       style={
         rootStyle
@@ -391,12 +391,12 @@ export default function WorkArchiveHomepagePreview({
     >
       <div
         className={
-          homeStyles.bastArtwork
+          artworkStyles.bastArtwork
         }
       >
         <div
           className={
-            homeStyles.bastGrid
+            artworkStyles.bastGrid
           }
           data-archive-part="bast-grid"
           aria-hidden="true"
@@ -404,7 +404,7 @@ export default function WorkArchiveHomepagePreview({
 
         <div
           className={
-            homeStyles.bastIndex
+            artworkStyles.bastIndex
           }
           data-archive-part="bast-index"
           aria-hidden="true"
@@ -424,13 +424,13 @@ export default function WorkArchiveHomepagePreview({
 
         <div
           className={
-            homeStyles.bastDashboard
+            artworkStyles.bastDashboard
           }
           data-archive-part="bast-dashboard"
         >
           <div
             className={
-              homeStyles.bastDashboardTop
+              artworkStyles.bastDashboardTop
             }
             data-archive-part="bast-dashboard-top"
           >
@@ -447,7 +447,7 @@ export default function WorkArchiveHomepagePreview({
 
           <div
             className={
-              homeStyles.bastDashboardViewport
+              artworkStyles.bastDashboardViewport
             }
           >
             {primaryVisual ? (
@@ -457,7 +457,7 @@ export default function WorkArchiveHomepagePreview({
   }
   alt={`${project.title} main system interface`}
   className={
-    homeStyles.bastPrimaryImage
+    artworkStyles.bastPrimaryImage
   }
   part="bast-primary-image"
   sizes="420px"
@@ -471,7 +471,7 @@ export default function WorkArchiveHomepagePreview({
 
         <div
           className={
-            homeStyles.bastDocument
+            artworkStyles.bastDocument
           }
           data-archive-part="bast-document"
         >
@@ -482,7 +482,7 @@ export default function WorkArchiveHomepagePreview({
   }
   alt={`${project.title} supporting workflow visual`}
   className={
-    homeStyles.bastSecondaryImage
+    artworkStyles.bastSecondaryImage
   }
   part="bast-secondary-image"
   sizes="140px"
@@ -491,7 +491,7 @@ export default function WorkArchiveHomepagePreview({
           ) : (
             <div
               className={
-                homeStyles.bastDocumentFallback
+                artworkStyles.bastDocumentFallback
               }
               data-archive-part="bast-document-fallback"
             >
@@ -512,7 +512,7 @@ export default function WorkArchiveHomepagePreview({
 
         <div
           className={
-            homeStyles.bastStatus
+            artworkStyles.bastStatus
           }
           data-archive-part="bast-status"
           aria-hidden="true"
@@ -532,7 +532,7 @@ export default function WorkArchiveHomepagePreview({
 
         <span
           className={
-            homeStyles.visualLabel
+            artworkStyles.visualLabel
           }
           data-archive-part="visual-label"
         >
@@ -701,7 +701,7 @@ function BastFallback() {
   return (
     <div
       className={
-        homeStyles.bastFallback
+        artworkStyles.bastFallback
       }
       data-archive-part="bast-fallback"
     >
@@ -718,12 +718,12 @@ function BastFallback() {
 
       <div
         className={
-          homeStyles.bastFallbackMain
+          artworkStyles.bastFallbackMain
         }
       >
         <div
           className={
-            homeStyles.bastFallbackHeader
+            artworkStyles.bastFallbackHeader
           }
         >
           <span>
@@ -737,7 +737,7 @@ function BastFallback() {
 
         <div
           className={
-            homeStyles.bastFallbackCards
+            artworkStyles.bastFallbackCards
           }
         >
           <span />
@@ -747,7 +747,7 @@ function BastFallback() {
 
         <div
           className={
-            homeStyles.bastFallbackTable
+            artworkStyles.bastFallbackTable
           }
         >
           <span />
