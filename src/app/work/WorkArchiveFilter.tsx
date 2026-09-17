@@ -939,6 +939,12 @@ const hasPreview =
                     styles.project
                   }
                   data-motion-scroll="work-project"
+                  data-route-transition-project-title={
+                    project.title
+                  }
+                  data-route-transition-project-number={
+                    project.number
+                  }
                   data-preview-variant={
                     getPreviewVariant(
                       index,

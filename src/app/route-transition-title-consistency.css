@@ -20,11 +20,7 @@
 ) {
   /* Base frame — shared by every route label. */
   [data-route-transition-layer]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(2)
-    > div:nth-child(2)
-    > span {
+    [data-route-transition-part="title"] {
     opacity:
       0 !important;
 
@@ -37,11 +33,7 @@
 
   /* Cover — identical perceived tempo for every word length. */
   [data-route-transition-layer][data-route-transition-phase="covering"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(2)
-    > div:nth-child(2)
-    > span {
+    [data-route-transition-part="title"] {
     opacity:
       1 !important;
 
@@ -71,11 +63,7 @@
    * this with the shutter-attached split.
    */
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(2)
-    > div:nth-child(2)
-    > span {
+    [data-route-transition-part="title"] {
     opacity:
       0 !important;
 
@@ -105,21 +93,13 @@
       700px
   ) {
     [data-route-transition-layer]
-      > div:nth-child(3)
-      > div
-      > div:nth-child(2)
-      > div:nth-child(2)
-      > span {
+      [data-route-transition-part="title"] {
       transform:
         translate3d(0, 24px, 0) !important;
     }
 
     [data-route-transition-layer][data-route-transition-phase="covering"]
-      > div:nth-child(3)
-      > div
-      > div:nth-child(2)
-      > div:nth-child(2)
-      > span {
+      [data-route-transition-part="title"] {
       transform:
         translate3d(0, 0, 0) !important;
 
@@ -139,11 +119,7 @@
     }
 
     [data-route-transition-layer][data-route-transition-phase="revealing"]
-      > div:nth-child(3)
-      > div
-      > div:nth-child(2)
-      > div:nth-child(2)
-      > span {
+      [data-route-transition-part="title"] {
       transform:
         translate3d(0, -22px, 0) !important;
 
@@ -227,7 +203,7 @@
    * removes it from view.
    */
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3) {
+    [data-route-transition-part="content"] {
     opacity:
       1 !important;
 
@@ -278,7 +254,7 @@
   }
 
   [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="forward"]
-    > div:nth-child(3) {
+    [data-route-transition-part="content"] {
     animation:
       rt-content-piece-1-out
         435ms
@@ -303,7 +279,7 @@
   }
 
   [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="backward"]
-    > div:nth-child(3) {
+    [data-route-transition-part="content"] {
     animation:
       rt-content-piece-1-out
         435ms
@@ -329,13 +305,9 @@
 
   /* Freeze every editorial piece at its fully-revealed state. */
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:first-child,
+    [data-route-transition-part="top"],
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(3) {
+    [data-route-transition-part="bottom"] {
     opacity:
       1 !important;
 
@@ -347,13 +319,9 @@
   }
 
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:first-child::after,
+    [data-route-transition-part="top"]::after,
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(3)::before {
+    [data-route-transition-part="bottom"]::before {
     transform:
       scaleX(1) !important;
 
@@ -362,10 +330,7 @@
   }
 
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(2)
-    > span:first-child {
+    [data-route-transition-part="title-index"] {
     opacity:
       0.68 !important;
 
@@ -374,11 +339,7 @@
   }
 
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(2)
-    > div:nth-child(2)
-    > span {
+    [data-route-transition-part="title"] {
     opacity:
       1 !important;
 
@@ -393,10 +354,7 @@
   }
 
   [data-route-transition-layer][data-route-transition-phase="revealing"]
-    > div:nth-child(3)
-    > div
-    > div:nth-child(2)
-    > span:nth-child(3) {
+    [data-route-transition-part="axis"] {
     transform:
       scaleX(1) !important;
 
@@ -409,7 +367,7 @@
       700px
   ) {
     [data-route-transition-layer][data-route-transition-phase="revealing"]
-      > div:nth-child(3) {
+      [data-route-transition-part="content"] {
       -webkit-mask-size:
         23vw 100vh,
         28vw 100vh,
@@ -436,7 +394,7 @@
     }
 
     [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="forward"]
-      > div:nth-child(3) {
+      [data-route-transition-part="content"] {
       animation:
         rt-content-piece-1-out
           365ms
@@ -461,7 +419,7 @@
     }
 
     [data-route-transition-layer][data-route-transition-phase="revealing"][data-route-transition-direction="backward"]
-      > div:nth-child(3) {
+      [data-route-transition-part="content"] {
       animation:
         rt-content-piece-1-out
           365ms

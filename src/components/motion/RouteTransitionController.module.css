@@ -11,29 +11,11 @@
   contain: paint;
 }
 
-.rail,
 .slices,
 .content {
   position: absolute;
 
   inset: 0;
-}
-
-.rail {
-  z-index: 1;
-
-  background:
-    var(--foreground);
-
-  transform:
-    translate3d(
-      0,
-      104%,
-      0
-    );
-
-  will-change:
-    transform;
 }
 
 .slices {
@@ -121,26 +103,6 @@
 ========================= */
 
 .covering
-  .rail {
-  transform:
-    translate3d(
-      0,
-      0,
-      0
-    );
-
-  transition:
-    transform
-      270ms
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      );
-}
-
-.covering
   .slice {
   transform:
     translate3d(
@@ -223,26 +185,6 @@
 /* =========================
    REVEAL — PAGE FIRST GAP
 ========================= */
-
-.revealing
-  .rail {
-  transform:
-    translate3d(
-      0,
-      -104%,
-      0
-    );
-
-  transition:
-    transform
-      250ms
-      cubic-bezier(
-        0.76,
-        0,
-        0.24,
-        1
-      );
-}
 
 .revealing
   .slice {
@@ -544,28 +486,6 @@
  */
 
 .titleWrap {
-  min-width: 0;
-
-  overflow:
-    visible;
-
-  padding-block:
-    0.24em;
-
-  padding-inline:
-    0.18em
-    0.3em;
-
-  margin-inline:
-    -0.18em
-    -0.3em;
-}
-
-/* =========================================================
-   TITLE — GLYPH SAFE AREA
-========================================================= */
-
-.titleWrap {
   min-width:
     0;
 
@@ -574,6 +494,14 @@
 
   padding-block:
     0.2em;
+
+  padding-inline:
+    0.18em
+    0.3em;
+
+  margin-inline:
+    -0.18em
+    -0.3em;
 }
 
 
@@ -1050,12 +978,6 @@
   }
 
   .covering
-    .rail {
-    transition-duration:
-      235ms;
-  }
-
-  .covering
     .slice {
     transition-duration:
       350ms;
@@ -1107,12 +1029,6 @@
     .slice:nth-child(4) {
     transition-delay:
       7ms;
-  }
-
-  .revealing
-    .rail {
-    transition-duration:
-      215ms;
   }
 
   .revealing
@@ -1264,7 +1180,6 @@
     reduce
 ) {
   .root,
-  .rail,
   .slice,
   .content,
   .top,

@@ -729,64 +729,32 @@ function getProjectTransitionHint(
     TransitionMeta,
 ): ProjectTransitionHint {
   /*
-   * Work archive / Next Project
-   * punya title di dalam link.
-   */
-  const directTitle =
-    anchor
-      .querySelector(
-        "h2",
-      )
-      ?.textContent
-      ?.trim();
-
-  /*
-   * Homepage SelectedWork:
+   * Homepage SelectedWork dan Work Archive
+   * mengekspos metadata transisi secara eksplisit.
    *
-   * tombol "Lihat Proyek" berada
-   * di footer, sementara judul
-   * project berada di header article.
+   * Ini menghindari coupling ke struktur DOM visual
+   * seperti div:first-child / h3 / span:first-child.
    */
-  const selectedWorkProject =
+  const projectMetaSource =
     anchor.closest<HTMLElement>(
-      '[data-motion-scroll="project"]',
+      "[data-route-transition-project-title]",
     );
 
-  const selectedWorkTitle =
-    selectedWorkProject
-      ?.querySelector(
-        ":scope > div:first-child > h3",
-      )
-      ?.textContent
+  const explicitProjectTitle =
+    projectMetaSource
+      ?.dataset
+      .routeTransitionProjectTitle
       ?.trim();
 
-  const selectedWorkNumber =
-    selectedWorkProject
-      ?.querySelector(
-        ":scope > div:first-child > span:first-child",
-      )
-      ?.textContent
+  const explicitProjectNumber =
+    projectMetaSource
+      ?.dataset
+      .routeTransitionProjectNumber
       ?.trim();
 
   /*
-   * Work archive number.
-   *
-   * Hanya dibaca jika memang anchor
-   * work archive, supaya arrow ↗ dari
-   * CTA homepage tidak dianggap nomor.
+   * Next Project sudah punya semantic hooks sendiri.
    */
-  const archiveNumber =
-    anchor.matches(
-      '[data-motion-scroll="work-project"]',
-    )
-      ? anchor
-          .querySelector(
-            ":scope > span",
-          )
-          ?.textContent
-          ?.trim()
-      : undefined;
-
   const nextProjectSection =
     anchor.closest<HTMLElement>(
       "[data-next-project-handoff]",
@@ -798,15 +766,22 @@ function getProjectTransitionHint(
       .nextProjectNumber
       ?.trim();
 
+  const nextProjectTitle =
+    anchor
+      .querySelector<HTMLElement>(
+        "[data-next-project-title]",
+      )
+      ?.textContent
+      ?.trim();
+
   const number =
     nextProjectNumber ||
-    selectedWorkNumber ||
-    archiveNumber ||
+    explicitProjectNumber ||
     fallbackMeta.index;
 
   const title =
-    directTitle ||
-    selectedWorkTitle ||
+    nextProjectTitle ||
+    explicitProjectTitle ||
     fallbackMeta.label;
 
   const accent =
@@ -1610,12 +1585,6 @@ export default function RouteTransitionController() {
     >
       <div
         className={
-          styles.rail
-        }
-      />
-
-      <div
-        className={
           styles.slices
         }
       >
@@ -1630,6 +1599,7 @@ export default function RouteTransitionController() {
               className={
                 styles.slice
               }
+              data-route-transition-part="slice"
             />
           ),
         )}
@@ -1639,6 +1609,7 @@ export default function RouteTransitionController() {
         className={
           styles.content
         }
+        data-route-transition-part="content"
       >
         <div
           className={`site-container ${styles.inner}`}
@@ -1647,6 +1618,7 @@ export default function RouteTransitionController() {
             className={
               styles.top
             }
+            data-route-transition-part="top"
           >
             <span>
               {
@@ -1672,11 +1644,12 @@ export default function RouteTransitionController() {
             className={
               styles.titleStage
             }
-          >
+              >
             <span
               className={
                 styles.titleIndex
               }
+              data-route-transition-part="title-index"
             >
               {
                 meta.index
@@ -1687,11 +1660,12 @@ export default function RouteTransitionController() {
               className={
                 styles.titleWrap
               }
-            >
+                  >
               <span
                 className={
                   styles.title
                 }
+                data-route-transition-part="title"
               >
                 {
                   meta.label
@@ -1703,6 +1677,7 @@ export default function RouteTransitionController() {
               className={
                 styles.axis
               }
+              data-route-transition-part="axis"
             />
           </div>
 
@@ -1710,6 +1685,7 @@ export default function RouteTransitionController() {
             className={
               styles.bottom
             }
+            data-route-transition-part="bottom"
           >
             <span>
               DIGITAL CREATOR

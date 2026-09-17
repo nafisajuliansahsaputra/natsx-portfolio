@@ -314,6 +314,12 @@ export default async function SelectedWork({
                       projectStyle
                     }
                     data-motion-scroll="project"
+                    data-route-transition-project-title={
+                      displayTitle
+                    }
+                    data-route-transition-project-number={
+                      displayNumber
+                    }
                     data-project-visual={
                       visual
                     }
