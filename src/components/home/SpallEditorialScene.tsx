@@ -13,831 +13,2144 @@ type Props = {
 
 type IconKind = "identity" | "explore" | "share";
 
+type ShadowOptions = {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  z: number;
+  opacity?: number;
+  rotation?: number;
+};
+
 const MODEL_URL = "/models/iphone-17-pro-max.glb";
 
-function roundedRect(w: number, h: number, r: number) {
-  const s = new THREE.Shape();
-  const x = -w / 2;
-  const y = -h / 2;
+function roundedRect(
+  width: number,
+  height: number,
+  radius: number,
+) {
+  const shape = new THREE.Shape();
 
-  r = Math.min(r, w / 2, h / 2);
+  const x = -width / 2;
+  const y = -height / 2;
 
-  s.moveTo(x + r, y);
-  s.lineTo(x + w - r, y);
-  s.quadraticCurveTo(x + w, y, x + w, y + r);
-  s.lineTo(x + w, y + h - r);
-  s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  s.lineTo(x + r, y + h);
-  s.quadraticCurveTo(x, y + h, x, y + h - r);
-  s.lineTo(x, y + r);
-  s.quadraticCurveTo(x, y, x + r, y);
-  s.closePath();
+  const r = Math.min(
+    radius,
+    width / 2,
+    height / 2,
+  );
 
-  return s;
+  shape.moveTo(x + r, y);
+  shape.lineTo(x + width - r, y);
+
+  shape.quadraticCurveTo(
+    x + width,
+    y,
+    x + width,
+    y + r,
+  );
+
+  shape.lineTo(
+    x + width,
+    y + height - r,
+  );
+
+  shape.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - r,
+    y + height,
+  );
+
+  shape.lineTo(
+    x + r,
+    y + height,
+  );
+
+  shape.quadraticCurveTo(
+    x,
+    y + height,
+    x,
+    y + height - r,
+  );
+
+  shape.lineTo(
+    x,
+    y + r,
+  );
+
+  shape.quadraticCurveTo(
+    x,
+    y,
+    x + r,
+    y,
+  );
+
+  shape.closePath();
+
+  return shape;
 }
 
 function canvasTexture(
-  draw: (ctx: CanvasRenderingContext2D) => void,
+  draw: (
+    context: CanvasRenderingContext2D,
+  ) => void,
 ) {
-  const canvas = document.createElement("canvas");
+  const canvas =
+    document.createElement("canvas");
+
   canvas.width = 512;
   canvas.height = 512;
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Canvas 2D unavailable.");
+  const context =
+    canvas.getContext("2d");
 
-  draw(ctx);
+  if (!context) {
+    throw new Error(
+      "Canvas 2D unavailable.",
+    );
+  }
 
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
+  draw(context);
+
+  const texture =
+    new THREE.CanvasTexture(canvas);
+
+  texture.colorSpace =
+    THREE.SRGBColorSpace;
 
   return texture;
 }
 
-function iconTexture(kind: IconKind, light = false) {
-  return canvasTexture((ctx) => {
-    ctx.strokeStyle = light ? "#e2e7d8" : "#234633";
-    ctx.fillStyle = ctx.strokeStyle;
-    ctx.lineWidth = 8;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+function iconTexture(
+  kind: IconKind,
+  light = false,
+) {
+  return canvasTexture(
+    (context) => {
+      const color =
+        light
+          ? "#e2e7d8"
+          : "#234633";
 
-    if (kind === "identity") {
-      ctx.beginPath();
-      ctx.arc(256, 153, 34, 0, Math.PI * 2);
-      ctx.stroke();
+      context.strokeStyle =
+        color;
 
-      ctx.beginPath();
-      ctx.moveTo(191, 272);
-      ctx.lineTo(191, 251);
-      ctx.bezierCurveTo(191, 195, 321, 195, 321, 251);
-      ctx.lineTo(321, 272);
-      ctx.closePath();
-      ctx.stroke();
-    }
+      context.fillStyle =
+        color;
 
-    if (kind === "explore") {
-      for (let i = 0; i < 3; i++) {
-        const y = 159 + i * 35;
+      context.lineWidth = 8;
+      context.lineCap = "round";
+      context.lineJoin = "round";
 
-        ctx.beginPath();
-        ctx.moveTo(177, y);
-        ctx.lineTo(256, y + 41);
-        ctx.lineTo(335, y);
+      if (
+        kind ===
+        "identity"
+      ) {
+        context.beginPath();
 
-        if (i === 0) {
-          ctx.lineTo(256, y - 41);
-          ctx.closePath();
-        }
+        context.arc(
+          256,
+          153,
+          34,
+          0,
+          Math.PI * 2,
+        );
 
-        ctx.stroke();
+        context.stroke();
+
+        context.beginPath();
+
+        context.moveTo(
+          191,
+          272,
+        );
+
+        context.lineTo(
+          191,
+          251,
+        );
+
+        context.bezierCurveTo(
+          191,
+          195,
+          321,
+          195,
+          321,
+          251,
+        );
+
+        context.lineTo(
+          321,
+          272,
+        );
+
+        context.closePath();
+
+        context.stroke();
       }
-    }
 
-    if (kind === "share") {
-      ctx.save();
-      ctx.translate(256, 203);
-      ctx.rotate(-Math.PI / 4);
+      if (
+        kind ===
+        "explore"
+      ) {
+        for (
+          let index = 0;
+          index < 3;
+          index++
+        ) {
+          const y =
+            159 +
+            index * 35;
 
-      ctx.beginPath();
-      ctx.roundRect(-94, -30, 116, 60, 30);
-      ctx.stroke();
+          context.beginPath();
 
-      ctx.beginPath();
-      ctx.roundRect(-22, -30, 116, 60, 30);
-      ctx.stroke();
+          context.moveTo(
+            177,
+            y,
+          );
 
-      ctx.restore();
-    }
+          context.lineTo(
+            256,
+            y + 41,
+          );
 
-    ctx.font = "500 31px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(kind.toUpperCase(), 256, 369);
-  });
-}
+          context.lineTo(
+            335,
+            y,
+          );
 
-function shadowTexture() {
-  return canvasTexture((ctx) => {
-    const gradient = ctx.createRadialGradient(
-      256, 256, 5,
-      256, 256, 250,
-    );
+          if (
+            index === 0
+          ) {
+            context.lineTo(
+              256,
+              y - 41,
+            );
 
-    gradient.addColorStop(0, "rgba(29,39,28,0.38)");
-    gradient.addColorStop(0.35, "rgba(29,39,28,0.17)");
-    gradient.addColorStop(0.7, "rgba(29,39,28,0.04)");
-    gradient.addColorStop(1, "rgba(29,39,28,0)");
+            context.closePath();
+          }
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 512, 512);
-  });
-}
+          context.stroke();
+        }
+      }
 
-const ORBIT_WIDTH = 0.46;
-const ORBIT_DEPTH = 0.075;
-const ORBIT_U = new THREE.Vector3(0.918, 0.397, 0).normalize();
-const ORBIT_V = new THREE.Vector3()
-  .crossVectors(new THREE.Vector3(0, 0, 1), ORBIT_U)
-  .multiplyScalar(-0.48)
-  .add(new THREE.Vector3(0, 0, 0.87726849))
-  .normalize();
-const ORBIT_NORMAL = new THREE.Vector3()
-  .crossVectors(ORBIT_U, ORBIT_V)
-  .normalize();
+      if (
+        kind ===
+        "share"
+      ) {
+        context.save();
 
-function ribbonFrame(t: number) {
-  const center = ORBIT_U.clone().multiplyScalar(3.12 * Math.cos(t))
-    .addScaledVector(ORBIT_V, 1.72 * Math.sin(t));
-  const tangent = ORBIT_U.clone().multiplyScalar(-3.12 * Math.sin(t))
-    .addScaledVector(ORBIT_V, 1.72 * Math.cos(t)).normalize();
-  const widthAxis = new THREE.Vector3()
-    .crossVectors(tangent, ORBIT_NORMAL).normalize();
-  widthAxis.applyAxisAngle(tangent, 0.48 * Math.cos(t + 0.4) + 0.16 * Math.sin(2 * t));
-  const depthAxis = new THREE.Vector3().crossVectors(widthAxis, tangent).normalize();
-  return { center, widthAxis, depthAxis };
-}
+        context.translate(
+          256,
+          203,
+        );
 
-function ribbonGeometry() {
-  const profile = roundedRect(ORBIT_WIDTH, ORBIT_DEPTH, 0.025).getPoints(8);
-  if (profile[0].distanceTo(profile[profile.length - 1]) < 0.00001) profile.pop();
-  const segments = 192;
-  const count = profile.length;
-  const positions: number[] = [];
-  const indices: number[] = [];
+        context.rotate(
+          -Math.PI / 4,
+        );
 
-  for (let i = 0; i < segments; i++) {
-    const { center, widthAxis, depthAxis } = ribbonFrame(i / segments * Math.PI * 2);
-    for (const point of profile) {
-      const p = center.clone().addScaledVector(widthAxis, point.x)
-        .addScaledVector(depthAxis, point.y);
-      positions.push(p.x, p.y, p.z);
-    }
-  }
+        context.beginPath();
 
-  for (let i = 0; i < segments; i++) {
-    for (let j = 0; j < count; j++) {
-      const nextRing = (i + 1) % segments;
-      const nextPoint = (j + 1) % count;
-      const a = i * count + j;
-      const b = nextRing * count + j;
-      const c = nextRing * count + nextPoint;
-      const d = i * count + nextPoint;
-      indices.push(a, b, c, a, c, d);
-    }
-  }
+        context.roundRect(
+          -94,
+          -30,
+          116,
+          60,
+          30,
+        );
 
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  geometry.computeBoundingSphere();
-  return geometry;
-}
+        context.stroke();
 
-function ribbonEdge(offset: number) {
-  const points: THREE.Vector3[] = [];
-  for (let i = 0; i < 192; i++) {
-    const { center, widthAxis } = ribbonFrame(i / 192 * Math.PI * 2);
-    points.push(center.addScaledVector(widthAxis, offset));
-  }
-  return new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3(points, true), 192, 0.006, 6, true,
+        context.beginPath();
+
+        context.roundRect(
+          -22,
+          -30,
+          116,
+          60,
+          30,
+        );
+
+        context.stroke();
+
+        context.restore();
+      }
+
+      context.font =
+        "500 31px Arial";
+
+      context.textAlign =
+        "center";
+
+      context.fillText(
+        kind.toUpperCase(),
+        256,
+        369,
+      );
+    },
   );
 }
 
-function orbitEnvironment() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Canvas 2D unavailable.');
-  const base = ctx.createLinearGradient(0, 0, 0, 512);
-  base.addColorStop(0, '#faf8f0');
-  base.addColorStop(0.42, '#83988a');
-  base.addColorStop(0.55, '#13251d');
-  base.addColorStop(0.8, '#516a59');
-  base.addColorStop(1, '#eae6d9');
-  ctx.fillStyle = base;
-  ctx.fillRect(0, 0, 1024, 512);
-  for (const [x, width] of [[100, 100], [440, 32], [740, 160]]) {
-    const panel = ctx.createLinearGradient(x, 0, x + width, 0);
-    panel.addColorStop(0, 'rgba(255,253,241,0)');
-    panel.addColorStop(0.18, 'rgba(255,253,241,1)');
-    panel.addColorStop(0.82, 'rgba(255,253,241,1)');
-    panel.addColorStop(1, 'rgba(255,253,241,0)');
-    ctx.fillStyle = panel;
-    ctx.fillRect(x, 40, width, 360);
-  }
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.mapping = THREE.EquirectangularReflectionMapping;
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
+function shadowTexture() {
+  return canvasTexture(
+    (context) => {
+      const gradient =
+        context.createRadialGradient(
+          256,
+          256,
+          5,
+          256,
+          256,
+          250,
+        );
+
+      gradient.addColorStop(
+        0,
+        "rgba(24,34,24,0.42)",
+      );
+
+      gradient.addColorStop(
+        0.34,
+        "rgba(24,34,24,0.18)",
+      );
+
+      gradient.addColorStop(
+        0.68,
+        "rgba(24,34,24,0.045)",
+      );
+
+      gradient.addColorStop(
+        1,
+        "rgba(24,34,24,0)",
+      );
+
+      context.fillStyle =
+        gradient;
+
+      context.fillRect(
+        0,
+        0,
+        512,
+        512,
+      );
+    },
+  );
 }
 
-
-export default function SpallEditorialScene(props: Props) {
-  return <Scene key={props.screenUrl ?? "original"} {...props} />;
+export default function SpallEditorialScene(
+  props: Props,
+) {
+  return (
+    <Scene
+      key={
+        props.screenUrl ??
+        "original"
+      }
+      {...props}
+    />
+  );
 }
 
-function Scene({ screenUrl, label }: Props) {
-  const hostRef = useRef<HTMLDivElement>(null);
-  const [ready, setReady] = useState(false);
+function Scene({
+  screenUrl,
+  label,
+}: Props) {
+  const hostRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  const [
+    ready,
+    setReady,
+  ] =
+    useState(false);
 
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
+    const hostNode =
+      hostRef.current;
 
-    let disposed = false;
-    let renderer: THREE.WebGLRenderer | undefined;
-    let environment: THREE.WebGLRenderTarget | undefined;
-    let resizeObserver: ResizeObserver | undefined;
-    let visibilityObserver: IntersectionObserver | undefined;
-    let cleanupMotion: (() => void) | undefined;
+    if (
+      hostNode === null
+    ) {
+      return;
+    }
 
-    const geometries = new Set<THREE.BufferGeometry>();
-    const materials = new Set<THREE.Material>();
-    const textures = new Set<THREE.Texture>();
+    const host:
+      HTMLDivElement =
+      hostNode;
 
-    function keepMaterial<T extends THREE.Material>(value: T): T {
-      materials.add(value);
+    let disposed =
+      false;
 
-      for (const property of Object.values(value)) {
-        if (property instanceof THREE.Texture) textures.add(property);
+    let renderer:
+      | THREE.WebGLRenderer
+      | undefined;
+
+    let environment:
+      | THREE.WebGLRenderTarget
+      | undefined;
+
+    let resizeObserver:
+      | ResizeObserver
+      | undefined;
+
+    let visibilityObserver:
+      | IntersectionObserver
+      | undefined;
+
+    let cleanupMotion:
+      | (() => void)
+      | undefined;
+
+    const geometries =
+      new Set<
+        THREE.BufferGeometry
+      >();
+
+    const materials =
+      new Set<
+        THREE.Material
+      >();
+
+    const textures =
+      new Set<
+        THREE.Texture
+      >();
+
+    function keepMaterial<
+      T extends THREE.Material,
+    >(
+      material: T,
+    ): T {
+      materials.add(
+        material,
+      );
+
+      for (
+        const value of
+        Object.values(
+          material,
+        )
+      ) {
+        if (
+          value instanceof
+          THREE.Texture
+        ) {
+          textures.add(
+            value,
+          );
+        }
       }
 
-      return value;
+      return material;
     }
 
     function makeMesh(
-      geometry: THREE.BufferGeometry,
-      material: THREE.Material,
+      geometry:
+        THREE.BufferGeometry,
+      material:
+        THREE.Material,
     ) {
-      geometries.add(geometry);
-      keepMaterial(material);
-      return new THREE.Mesh(geometry, material);
+      geometries.add(
+        geometry,
+      );
+
+      keepMaterial(
+        material,
+      );
+
+      return new THREE.Mesh(
+        geometry,
+        material,
+      );
     }
 
-    function collect(model: THREE.Object3D) {
-      model.traverse((object) => {
-        if (!(object instanceof THREE.Mesh)) return;
+    function collect(
+      model:
+        THREE.Object3D,
+    ) {
+      model.traverse(
+        (object) => {
+          if (
+            !(
+              object instanceof
+              THREE.Mesh
+            )
+          ) {
+            return;
+          }
 
-        geometries.add(object.geometry);
+          geometries.add(
+            object.geometry,
+          );
 
-        const list = Array.isArray(object.material)
-          ? object.material
-          : [object.material];
+          const materialList =
+            Array.isArray(
+              object.material,
+            )
+              ? object.material
+              : [
+                  object.material,
+                ];
 
-        list.forEach(keepMaterial);
-      });
+          materialList.forEach(
+            keepMaterial,
+          );
+        },
+      );
     }
 
     function disposeAssets() {
-      textures.forEach((value) => value.dispose());
-      materials.forEach((value) => value.dispose());
-      geometries.forEach((value) => value.dispose());
+      textures.forEach(
+        (texture) =>
+          texture.dispose(),
+      );
+
+      materials.forEach(
+        (material) =>
+          material.dispose(),
+      );
+
+      geometries.forEach(
+        (geometry) =>
+          geometry.dispose(),
+      );
 
       textures.clear();
       materials.clear();
       geometries.clear();
     }
 
-    function contextLost() {
+    function handleContextLost() {
       cleanupMotion?.();
-      if (!disposed) setReady(false);
+
+      if (!disposed) {
+        setReady(
+          false,
+        );
+      }
     }
 
     function release() {
       cleanupMotion?.();
-      cleanupMotion = undefined;
+
+      cleanupMotion =
+        undefined;
 
       resizeObserver?.disconnect();
+
       visibilityObserver?.disconnect();
 
       environment?.dispose();
-      environment = undefined;
+
+      environment =
+        undefined;
 
       disposeAssets();
 
       if (renderer) {
         renderer.domElement.removeEventListener(
           "webglcontextlost",
-          contextLost,
+          handleContextLost,
         );
+
         renderer.dispose();
+
         renderer.domElement.remove();
-        renderer = undefined;
+
+        renderer =
+          undefined;
       }
     }
 
     async function initialize() {
       try {
-        const gltf = await new GLTFLoader().loadAsync(MODEL_URL);
-        const model = gltf.scene;
-        collect(model);
+        const gltf =
+          await new GLTFLoader().loadAsync(
+            MODEL_URL,
+          );
+
+        const model =
+          gltf.scene;
+
+        collect(
+          model,
+        );
 
         if (disposed) {
           disposeAssets();
+
           return;
         }
 
-        let screenshot: THREE.Texture | undefined;
+        let screenshot:
+          | THREE.Texture
+          | undefined;
 
         if (screenUrl) {
-          screenshot = await new THREE.TextureLoader().loadAsync(screenUrl);
-          textures.add(screenshot);
+          screenshot =
+            await new THREE.TextureLoader().loadAsync(
+              screenUrl,
+            );
+
+          textures.add(
+            screenshot,
+          );
 
           if (disposed) {
             disposeAssets();
+
             return;
           }
 
-          screenshot.colorSpace = THREE.SRGBColorSpace;
-          screenshot.flipY = true;
+          screenshot.colorSpace =
+            THREE.SRGBColorSpace;
+
+          screenshot.flipY =
+            true;
         }
 
-        renderer = new THREE.WebGLRenderer({
-          alpha: true,
-          antialias: true,
-          powerPreference: "low-power",
-        });
+        renderer =
+          new THREE.WebGLRenderer(
+            {
+              alpha: true,
+              antialias:
+                true,
+              powerPreference:
+                "low-power",
+            },
+          );
 
-        const webgl = renderer;
+        const webgl =
+          renderer;
 
-        webgl.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-        webgl.setClearColor("#f3f0e8", 0);
-        webgl.outputColorSpace = THREE.SRGBColorSpace;
-        webgl.toneMapping = THREE.ACESFilmicToneMapping;
-        webgl.toneMappingExposure = 1;
-
-        Object.assign(webgl.domElement.style, {
-          display: "block",
-          width: "100%",
-          height: "100%",
-        });
-
-        host!.appendChild(webgl.domElement);
-        webgl.domElement.addEventListener(
-          "webglcontextlost",
-          contextLost,
+        webgl.setPixelRatio(
+          Math.min(
+            window.devicePixelRatio,
+            1.75,
+          ),
         );
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-        camera.position.set(0, 0, 14);
+        webgl.setClearColor(
+          "#f3f0e8",
+          0,
+        );
 
-        const room = new RoomEnvironment();
+        webgl.outputColorSpace =
+          THREE.SRGBColorSpace;
 
-        // Reflection panels give glass a defined bright edge.
-        const softboxMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(5, 5, 5),
-          side: THREE.DoubleSide,
-        });
+        webgl.toneMapping =
+          THREE.ACESFilmicToneMapping;
 
-        const softboxGeometry = new THREE.PlaneGeometry(3, 7);
-        const softbox = new THREE.Mesh(softboxGeometry, softboxMaterial);
-        softbox.position.set(-4, 3, 5);
-        softbox.lookAt(0, 0, 0);
-        room.add(softbox);
+        webgl.toneMappingExposure =
+          1;
 
-        const pmrem = new THREE.PMREMGenerator(webgl);
+        Object.assign(
+          webgl.domElement
+            .style,
+          {
+            display:
+              "block",
+            width:
+              "100%",
+            height:
+              "100%",
+          },
+        );
+
+        host.appendChild(
+          webgl.domElement,
+        );
+
+        webgl.domElement.addEventListener(
+          "webglcontextlost",
+          handleContextLost,
+        );
+
+        const scene =
+          new THREE.Scene();
+
+        const camera =
+          new THREE.PerspectiveCamera(
+            32,
+            1,
+            0.1,
+            100,
+          );
+
+        camera.position.set(
+          0,
+          0,
+          14,
+        );
+
+        const room =
+          new RoomEnvironment();
+
+        const softboxMaterial =
+          new THREE.MeshBasicMaterial(
+            {
+              color:
+                new THREE.Color(
+                  5,
+                  5,
+                  5,
+                ),
+              side:
+                THREE.DoubleSide,
+            },
+          );
+
+        const softboxGeometry =
+          new THREE.PlaneGeometry(
+            3,
+            7,
+          );
+
+        const softbox =
+          new THREE.Mesh(
+            softboxGeometry,
+            softboxMaterial,
+          );
+
+        softbox.position.set(
+          -4,
+          3,
+          5,
+        );
+
+        softbox.lookAt(
+          0,
+          0,
+          0,
+        );
+
+        room.add(
+          softbox,
+        );
+
+        const pmrem =
+          new THREE.PMREMGenerator(
+            webgl,
+          );
 
         try {
-          environment = pmrem.fromScene(room, 0.035);
-          scene.environment = environment.texture;
+          environment =
+            pmrem.fromScene(
+              room,
+              0.035,
+            );
+
+          scene.environment =
+            environment.texture;
         } finally {
           room.dispose();
           pmrem.dispose();
+          softboxGeometry.dispose();
+          softboxMaterial.dispose();
         }
 
-        const key = new THREE.DirectionalLight("#fff7ea", 1.1);
-        key.position.set(-4, 6, 8);
-        scene.add(key);
+        const key =
+          new THREE.DirectionalLight(
+            "#fff7ea",
+            1.1,
+          );
 
-        const rim = new THREE.DirectionalLight("#e6eee6", 0.7);
-        rim.position.set(5, 3, -4);
-        scene.add(rim);
-
-        const rig = new THREE.Group();
-        scene.add(rig);
-
-        let foundScreen = false;
-
-        model.traverse((object) => {
-          if (!(object instanceof THREE.Mesh)) return;
-
-          const list: THREE.Material[] = Array.isArray(object.material)
-            ? object.material
-            : [object.material];
-
-          const next = list.map((material) => {
-            if (
-              material.name === "17ProMax_color" &&
-              material instanceof THREE.MeshStandardMaterial
-            ) {
-              material.color.set("#7b887d");
-              material.metalness = 1;
-              material.roughness = 0.21;
-              material.envMapIntensity = 1;
-            }
-
-            if (
-              material.name === "17ProMax_glass" &&
-              material instanceof THREE.MeshPhysicalMaterial
-            ) {
-              material.color.set("#ffffff");
-              material.transmission = 0;
-              material.transparent = true;
-              material.opacity = 0.025;
-              material.depthWrite = false;
-              material.roughness = 0.13;
-              material.clearcoat = 0.4;
-              material.needsUpdate = true;
-            }
-
-            if (
-              material.name === "17ProMax_2112" ||
-              material.name === "17ProMax_Lens2"
-            ) {
-              return keepMaterial(new THREE.MeshBasicMaterial({
-                name: material.name,
-                color: "#050608",
-                side: THREE.DoubleSide,
-                toneMapped: false,
-              }));
-            }
-
-            if (material.name !== "17ProMax_Screen") return material;
-
-            foundScreen = true;
-            if (!screenshot) return material;
-
-            const geometry = object.geometry;
-            geometry.computeBoundingBox();
-
-            const bounds = geometry.boundingBox!;
-            const width = bounds.max.x - bounds.min.x;
-            const height = bounds.max.y - bounds.min.y;
-            const positions = geometry.getAttribute("position");
-            const uv = new Float32Array(positions.count * 2);
-
-            for (let i = 0; i < positions.count; i++) {
-              uv[i * 2] =
-                1 - (positions.getX(i) - bounds.min.x) / width;
-              uv[i * 2 + 1] =
-                (positions.getY(i) - bounds.min.y) / height;
-            }
-
-            geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-
-            const image = screenshot.image as {
-              width: number;
-              height: number;
-            };
-
-            const imageAspect = image.width / image.height;
-            const screenAspect = width / height;
-
-            if (imageAspect > screenAspect) {
-              screenshot.repeat.x = screenAspect / imageAspect;
-              screenshot.offset.x = (1 - screenshot.repeat.x) / 2;
-            } else {
-              screenshot.repeat.y = imageAspect / screenAspect;
-              screenshot.offset.y = 1 - screenshot.repeat.y;
-            }
-
-            screenshot.anisotropy = Math.min(
-              webgl.capabilities.getMaxAnisotropy(),
-              8,
-            );
-
-            return keepMaterial(new THREE.MeshBasicMaterial({
-              name: "17ProMax_Screen",
-              map: screenshot,
-              toneMapped: false,
-              side: THREE.DoubleSide,
-            }));
-          });
-
-          object.material = Array.isArray(object.material) ? next : next[0];
-        });
-
-        if (!foundScreen) throw new Error("Material layar tidak ditemukan.");
-
-        // Corrected front camera.
-        const island = makeMesh(
-          new THREE.ShapeGeometry(roundedRect(0.0232, 0.00625, 0.003125), 32),
-          new THREE.MeshBasicMaterial({
-            color: "#050608",
-            side: THREE.DoubleSide,
-            toneMapped: false,
-          }),
-        );
-        island.position.set(-0.0000973, 0.1546617, -0.00496);
-        model.add(island);
-
-        const lens = makeMesh(
-          new THREE.CircleGeometry(0.0009, 24),
-          new THREE.MeshBasicMaterial({
-            color: "#101822",
-            side: THREE.DoubleSide,
-            toneMapped: false,
-          }),
-        );
-        lens.position.set(-0.0084687, 0.1546617, -0.00498);
-        model.add(lens);
-
-        model.rotation.y = Math.PI;
-        model.updateMatrixWorld(true);
-
-        const bounds = new THREE.Box3().setFromObject(model);
-        const size = bounds.getSize(new THREE.Vector3());
-
-        if (size.y <= 0) throw new Error("Dimensi model tidak valid.");
-
-        model.position.sub(bounds.getCenter(new THREE.Vector3()));
-
-        const phone = new THREE.Group();
-        phone.add(model);
-        phone.scale.setScalar(5.5 / size.y);
-        phone.rotation.set(0.07, -0.38, -0.22);
-        phone.position.set(0.1, 0.02, 0);
-        rig.add(phone);
-
-        // Glass belt: dielectric material, not metallic flat green.
-        const ribbon = new THREE.Group();
-        ribbon.position.set(0.03, 0.78, 0);
-        rig.add(ribbon);
-
-        const beltMaterial = keepMaterial(new THREE.MeshPhysicalMaterial({
-          color: "#c5dacc",
-          envMap: orbitEnvironment(),
-          metalness: 0,
-          roughness: 0.065,
-          transmission: 0.95,
-          thickness: 0.11,
-          ior: 1.46,
-          attenuationColor: new THREE.Color("#235138"),
-          attenuationDistance: 0.65,
-          clearcoat: 1,
-          clearcoatRoughness: 0.065,
-          envMapIntensity: 1.25,
-          side: THREE.DoubleSide,
-        }));
-
-        ribbon.add(makeMesh(ribbonGeometry(), beltMaterial));
-
-        const edgeMaterial = keepMaterial(new THREE.MeshStandardMaterial({
-          color: "#a8baac",
-          metalness: 0.95,
-          roughness: 0.16,
-          envMapIntensity: 1.2,
-        }));
-
-        ribbon.add(makeMesh(ribbonEdge(ORBIT_WIDTH / 2 - 0.015), edgeMaterial));
-        ribbon.add(makeMesh(ribbonEdge(-ORBIT_WIDTH / 2 + 0.015), edgeMaterial));
-
-        const glassTileMaterial = keepMaterial(
-          new THREE.MeshPhysicalMaterial({
-            color: "#faf6e9",
-            metalness: 0,
-            roughness: 0.16,
-            transmission: 0.58,
-            thickness: 0.15,
-            ior: 1.46,
-            clearcoat: 1,
-            clearcoatRoughness: 0.07,
-            envMapIntensity: 1,
-          }),
+        key.position.set(
+          -4,
+          6,
+          8,
         );
 
-        const greenMaterial = keepMaterial(new THREE.MeshPhysicalMaterial({
-          color: "#123c29",
-          metalness: 0.45,
-          roughness: 0.18,
-          clearcoat: 1,
-          clearcoatRoughness: 0.06,
-        }));
+        scene.add(
+          key,
+        );
+
+        const rim =
+          new THREE.DirectionalLight(
+            "#e6eee6",
+            0.7,
+          );
+
+        rim.position.set(
+          5,
+          3,
+          -4,
+        );
+
+        scene.add(
+          rim,
+        );
+
+        const rig =
+          new THREE.Group();
+
+        scene.add(
+          rig,
+        );
+
+        let foundScreen =
+          false;
+
+        model.traverse(
+          (object) => {
+            if (
+              !(
+                object instanceof
+                THREE.Mesh
+              )
+            ) {
+              return;
+            }
+
+            const materialList:
+              THREE.Material[] =
+              Array.isArray(
+                object.material,
+              )
+                ? object.material
+                : [
+                    object.material,
+                  ];
+
+            const nextMaterials =
+              materialList.map(
+                (
+                  material,
+                ) => {
+                  if (
+                    material.name ===
+                      "17ProMax_color" &&
+                    material instanceof
+                      THREE.MeshStandardMaterial
+                  ) {
+                    material.color.set(
+                      "#7b887d",
+                    );
+
+                    material.metalness =
+                      1;
+
+                    material.roughness =
+                      0.21;
+
+                    material.envMapIntensity =
+                      1;
+                  }
+
+                  if (
+                    material.name ===
+                      "17ProMax_glass" &&
+                    material instanceof
+                      THREE.MeshPhysicalMaterial
+                  ) {
+                    material.color.set(
+                      "#ffffff",
+                    );
+
+                    material.transmission =
+                      0;
+
+                    material.transparent =
+                      true;
+
+                    material.opacity =
+                      0.025;
+
+                    material.depthWrite =
+                      false;
+
+                    material.roughness =
+                      0.13;
+
+                    material.clearcoat =
+                      0.4;
+
+                    material.needsUpdate =
+                      true;
+                  }
+
+                  if (
+                    material.name ===
+                      "17ProMax_2112" ||
+                    material.name ===
+                      "17ProMax_Lens2"
+                  ) {
+                    return keepMaterial(
+                      new THREE.MeshBasicMaterial(
+                        {
+                          name:
+                            material.name,
+                          color:
+                            "#050608",
+                          side:
+                            THREE.DoubleSide,
+                          toneMapped:
+                            false,
+                        },
+                      ),
+                    );
+                  }
+
+                  if (
+                    material.name !==
+                    "17ProMax_Screen"
+                  ) {
+                    return material;
+                  }
+
+                  foundScreen =
+                    true;
+
+                  if (!screenshot) {
+                    return material;
+                  }
+
+                  const geometry =
+                    object.geometry;
+
+                  geometry.computeBoundingBox();
+
+                  const bounds =
+                    geometry.boundingBox!;
+
+                  const width =
+                    bounds.max.x -
+                    bounds.min.x;
+
+                  const height =
+                    bounds.max.y -
+                    bounds.min.y;
+
+                  const positions =
+                    geometry.getAttribute(
+                      "position",
+                    );
+
+                  const uv =
+                    new Float32Array(
+                      positions.count *
+                        2,
+                    );
+
+                  for (
+                    let index = 0;
+                    index <
+                    positions.count;
+                    index++
+                  ) {
+                    uv[
+                      index * 2
+                    ] =
+                      1 -
+                      (
+                        positions.getX(
+                          index,
+                        ) -
+                        bounds.min.x
+                      ) /
+                        width;
+
+                    uv[
+                      index * 2 +
+                        1
+                    ] =
+                      (
+                        positions.getY(
+                          index,
+                        ) -
+                        bounds.min.y
+                      ) /
+                      height;
+                  }
+
+                  geometry.setAttribute(
+                    "uv",
+                    new THREE.BufferAttribute(
+                      uv,
+                      2,
+                    ),
+                  );
+
+                  const image =
+                    screenshot.image as {
+                      width: number;
+                      height: number;
+                    };
+
+                  const imageAspect =
+                    image.width /
+                    image.height;
+
+                  const screenAspect =
+                    width /
+                    height;
+
+                  screenshot.repeat.set(
+                    1,
+                    1,
+                  );
+
+                  screenshot.offset.set(
+                    0,
+                    0,
+                  );
+
+                  if (
+                    imageAspect >
+                    screenAspect
+                  ) {
+                    screenshot.repeat.x =
+                      screenAspect /
+                      imageAspect;
+
+                    screenshot.offset.x =
+                      (
+                        1 -
+                        screenshot.repeat
+                          .x
+                      ) /
+                      2;
+                  } else {
+                    screenshot.repeat.y =
+                      imageAspect /
+                      screenAspect;
+
+                    screenshot.offset.y =
+                      1 -
+                      screenshot.repeat
+                        .y;
+                  }
+
+                  screenshot.anisotropy =
+                    Math.min(
+                      webgl.capabilities.getMaxAnisotropy(),
+                      8,
+                    );
+
+                  return keepMaterial(
+                    new THREE.MeshBasicMaterial(
+                      {
+                        name:
+                          "17ProMax_Screen",
+                        map:
+                          screenshot,
+                        toneMapped:
+                          false,
+                        side:
+                          THREE.DoubleSide,
+                      },
+                    ),
+                  );
+                },
+              );
+
+            object.material =
+              Array.isArray(
+                object.material,
+              )
+                ? nextMaterials
+                : nextMaterials[0];
+          },
+        );
+
+        if (!foundScreen) {
+          throw new Error(
+            "Material layar tidak ditemukan.",
+          );
+        }
+
+        const island =
+          makeMesh(
+            new THREE.ShapeGeometry(
+              roundedRect(
+                0.0232,
+                0.00625,
+                0.003125,
+              ),
+              32,
+            ),
+            new THREE.MeshBasicMaterial(
+              {
+                color:
+                  "#050608",
+                side:
+                  THREE.DoubleSide,
+                toneMapped:
+                  false,
+              },
+            ),
+          );
+
+        island.position.set(
+          -0.0000973,
+          0.1546617,
+          -0.00496,
+        );
+
+        model.add(
+          island,
+        );
+
+        const lens =
+          makeMesh(
+            new THREE.CircleGeometry(
+              0.0009,
+              24,
+            ),
+            new THREE.MeshBasicMaterial(
+              {
+                color:
+                  "#101822",
+                side:
+                  THREE.DoubleSide,
+                toneMapped:
+                  false,
+              },
+            ),
+          );
+
+        lens.position.set(
+          -0.0084687,
+          0.1546617,
+          -0.00498,
+        );
+
+        model.add(
+          lens,
+        );
+
+        model.rotation.y =
+          Math.PI;
+
+        model.updateMatrixWorld(
+          true,
+        );
+
+        const modelBounds =
+          new THREE.Box3().setFromObject(
+            model,
+          );
+
+        const modelSize =
+          modelBounds.getSize(
+            new THREE.Vector3(),
+          );
+
+        if (
+          modelSize.y <= 0
+        ) {
+          throw new Error(
+            "Dimensi model tidak valid.",
+          );
+        }
+
+        model.position.sub(
+          modelBounds.getCenter(
+            new THREE.Vector3(),
+          ),
+        );
+
+        const phone =
+          new THREE.Group();
+
+        phone.add(
+          model,
+        );
+
+        phone.scale.setScalar(
+          5.5 /
+            modelSize.y,
+        );
+
+        phone.rotation.set(
+          0.07,
+          -0.38,
+          -0.22,
+        );
+
+        phone.position.set(
+          0.1,
+          0.02,
+          0,
+        );
+
+        rig.add(
+          phone,
+        );
+
+        const glassTileMaterial =
+          keepMaterial(
+            new THREE.MeshPhysicalMaterial(
+              {
+                color:
+                  "#faf6e9",
+                metalness:
+                  0,
+                roughness:
+                  0.16,
+                transmission:
+                  0.58,
+                thickness:
+                  0.15,
+                ior:
+                  1.46,
+                clearcoat:
+                  1,
+                clearcoatRoughness:
+                  0.07,
+                envMapIntensity:
+                  1,
+              },
+            ),
+          );
+
+        const glassTileSideMaterial =
+          keepMaterial(
+            new THREE.MeshPhysicalMaterial(
+              {
+                color:
+                  "#c5d1c7",
+                metalness:
+                  0.03,
+                roughness:
+                  0.12,
+                transmission:
+                  0.36,
+                thickness:
+                  0.22,
+                ior:
+                  1.46,
+                clearcoat:
+                  1,
+                clearcoatRoughness:
+                  0.045,
+                envMapIntensity:
+                  1.25,
+              },
+            ),
+          );
+
+        const greenMaterial =
+          keepMaterial(
+            new THREE.MeshPhysicalMaterial(
+              {
+                color:
+                  "#123c29",
+                metalness:
+                  0.45,
+                roughness:
+                  0.18,
+                clearcoat:
+                  1,
+                clearcoatRoughness:
+                  0.06,
+              },
+            ),
+          );
 
         function tile(
           kind: IconKind,
-          position: [number, number, number],
-          angles: [number, number, number],
+          position: [
+            number,
+            number,
+            number,
+          ],
+          angles: [
+            number,
+            number,
+            number,
+          ],
           round = false,
         ) {
-          const group = new THREE.Group();
+          const group =
+            new THREE.Group();
 
-          const shape = round
-            ? new THREE.Shape()
-            : roundedRect(1.02, 1.05, 0.12);
+          const shape =
+            round
+              ? new THREE.Shape()
+              : roundedRect(
+                  1.02,
+                  1.05,
+                  0.12,
+                );
 
-          if (round) shape.absarc(0, 0, 0.52, 0, Math.PI * 2, false);
+          if (round) {
+            shape.absarc(
+              0,
+              0,
+              0.52,
+              0,
+              Math.PI * 2,
+              false,
+            );
+          }
 
-          group.add(makeMesh(
-            new THREE.ExtrudeGeometry(shape, {
-              depth: 0.12,
-              steps: 1,
-              curveSegments: 32,
-              bevelEnabled: true,
-              bevelSize: 0.027,
-              bevelThickness: 0.027,
-              bevelSegments: 5,
-            }),
-            round ? greenMaterial : glassTileMaterial,
-          ));
+          const tileDepth =
+            round
+              ? 0.12
+              : 0.24;
 
-          const texture = iconTexture(kind, round);
-          textures.add(texture);
+          const tileBevel =
+            round
+              ? 0.027
+              : 0.045;
 
-          const print = makeMesh(
-            new THREE.PlaneGeometry(0.9, 0.9),
-            new THREE.MeshBasicMaterial({
-              map: texture,
-              transparent: true,
-              depthWrite: false,
-              toneMapped: false,
-            }),
+          const geometry =
+            new THREE.ExtrudeGeometry(
+              shape,
+              {
+                depth:
+                  tileDepth,
+                steps:
+                  1,
+                curveSegments:
+                  32,
+                bevelEnabled:
+                  true,
+                bevelSize:
+                  tileBevel,
+                bevelThickness:
+                  tileBevel,
+                bevelSegments:
+                  7,
+              },
+            );
+
+          geometries.add(
+            geometry,
           );
 
-          print.position.z = 0.151;
-          group.add(print);
-          group.position.set(...position);
-          group.rotation.set(...angles);
-          rig.add(group);
+          const body =
+            new THREE.Mesh(
+              geometry,
+              round
+                ? greenMaterial
+                : [
+                    glassTileMaterial,
+                    glassTileSideMaterial,
+                  ],
+            );
+
+          group.add(
+            body,
+          );
+
+          const texture =
+            iconTexture(
+              kind,
+              round,
+            );
+
+          textures.add(
+            texture,
+          );
+
+          const print =
+            makeMesh(
+              new THREE.PlaneGeometry(
+                0.9,
+                0.9,
+              ),
+              new THREE.MeshBasicMaterial(
+                {
+                  map:
+                    texture,
+                  transparent:
+                    true,
+                  depthWrite:
+                    false,
+                  toneMapped:
+                    false,
+                },
+              ),
+            );
+
+          print.position.z =
+            round
+              ? 0.151
+              : 0.292;
+
+          group.add(
+            print,
+          );
+
+          group.position.set(
+            ...position,
+          );
+
+          group.rotation.set(
+            ...angles,
+          );
+
+          rig.add(
+            group,
+          );
 
           return group;
         }
 
-        const identity = tile(
-          "identity",
-          [-1.9, 1.9, 0.45],
-          [0.09, 0.28, -0.17],
-        );
+        /*
+         * POSISI OBJECT TIDAK DIUBAH.
+         */
 
-        const share = tile(
-          "share",
-          [2.27, 0.92, 0.48],
-          [0.04, -0.27, 0.14],
-          true,
-        );
-
-        const explore = tile(
-          "explore",
-          [2.04, -1.45, 0.8],
-          [0.12, -0.22, 0.25],
-        );
-
-        const marble = makeMesh(
-          new THREE.SphereGeometry(0.57, 40, 28),
-          new THREE.MeshStandardMaterial({
-            color: "#e3dfd0",
-            roughness: 0.62,
-            metalness: 0,
-          }),
-        );
-        marble.position.set(-2.22, -1.64, 0.7);
-        rig.add(marble);
-
-        const marbleText = canvasTexture((ctx) => {
-          ctx.fillStyle = "#697467";
-          ctx.font = "500 35px Arial";
-          ctx.textAlign = "center";
-          ctx.fillText("YOUR", 256, 192);
-          ctx.fillText("PEOPLE", 256, 248);
-          ctx.fillText("ANYWHERE", 256, 304);
-        });
-        textures.add(marbleText);
-
-        const marbleLabel = makeMesh(
-          new THREE.PlaneGeometry(0.68, 0.68),
-          new THREE.MeshBasicMaterial({
-            map: marbleText,
-            transparent: true,
-            depthWrite: false,
-            toneMapped: false,
-          }),
-        );
-        marbleLabel.position.set(-2.22, -1.64, 1.28);
-        rig.add(marbleLabel);
-
-        const greenPearl = makeMesh(
-          new THREE.SphereGeometry(0.14, 28, 20),
-          greenMaterial,
-        );
-        greenPearl.position.set(-2.35, -0.32, 0.85);
-        rig.add(greenPearl);
-
-        const glassPearl = makeMesh(
-          new THREE.SphereGeometry(0.19, 28, 20),
-          new THREE.MeshPhysicalMaterial({
-            color: "#eef2e6",
-            transmission: 0.85,
-            thickness: 0.4,
-            ior: 1.46,
-            roughness: 0.025,
-            metalness: 0,
-            clearcoat: 1,
-          }),
-        );
-        glassPearl.position.set(1.95, 2.45, -0.4);
-        rig.add(glassPearl);
-
-        // Shared grounding shadows.
-        const shadowMap = shadowTexture();
-        textures.add(shadowMap);
-
-        function addShadow(
-          width: number,
-          height: number,
-          x: number,
-          y: number,
-        ) {
-          const shadow = makeMesh(
-            new THREE.PlaneGeometry(width, height),
-            new THREE.MeshBasicMaterial({
-              map: shadowMap,
-              transparent: true,
-              depthWrite: false,
-              toneMapped: false,
-            }),
+        const identity =
+          tile(
+            "identity",
+            [
+              -1.95,
+              1.9,
+              0.18,
+            ],
+            [
+              0.09,
+              0.28,
+              -0.17,
+            ],
           );
-          shadow.position.set(x, y, -2);
-          scene.add(shadow);
+
+        const share =
+          tile(
+            "share",
+            [
+              2.2,
+              0.92,
+              0.38,
+            ],
+            [
+              0.04,
+              -0.27,
+              0.14,
+            ],
+            true,
+          );
+
+        const explore =
+          tile(
+            "explore",
+            [
+              2.13,
+              -1.45,
+              1,
+            ],
+            [
+              0.12,
+              -0.22,
+              0.25,
+            ],
+          );
+
+        /*
+         * ====================================================
+         * MARBLE
+         *
+         * Posisi sama.
+         * Material dibuat sedikit lebih berisi.
+         * ====================================================
+         */
+
+        const marble =
+          makeMesh(
+            new THREE.SphereGeometry(
+              0.57,
+              48,
+              36,
+            ),
+            new THREE.MeshPhysicalMaterial(
+              {
+                color:
+                  "#dfdacd",
+                roughness:
+                  0.44,
+                metalness:
+                  0,
+                clearcoat:
+                  0.18,
+                clearcoatRoughness:
+                  0.4,
+                envMapIntensity:
+                  0.72,
+              },
+            ),
+          );
+
+        marble.position.set(
+          -2.05,
+          -1.64,
+          0.9,
+        );
+
+        rig.add(
+          marble,
+        );
+
+        const marbleText =
+          canvasTexture(
+            (context) => {
+              context.fillStyle =
+                "#58645b";
+
+              context.font =
+                "600 38px Arial";
+
+              context.textAlign =
+                "center";
+
+              context.fillText(
+                "YOUR",
+                256,
+                188,
+              );
+
+              context.fillText(
+                "PEOPLE",
+                256,
+                246,
+              );
+
+              context.fillText(
+                "ANYWHERE",
+                256,
+                304,
+              );
+
+              context.fillStyle =
+                "#7c857d";
+
+              context.fillRect(
+                224,
+                350,
+                64,
+                4,
+              );
+            },
+          );
+
+        textures.add(
+          marbleText,
+        );
+
+        const marbleLabel =
+          makeMesh(
+            new THREE.PlaneGeometry(
+              0.68,
+              0.68,
+            ),
+            new THREE.MeshBasicMaterial(
+              {
+                map:
+                  marbleText,
+                transparent:
+                  true,
+                depthWrite:
+                  false,
+                toneMapped:
+                  false,
+              },
+            ),
+          );
+
+        marbleLabel.position.set(
+          -2.05,
+          -1.64,
+          1.5,
+        );
+
+        rig.add(
+          marbleLabel,
+        );
+
+        /*
+         * ====================================================
+         * PEARLS
+         * ====================================================
+         */
+
+        const greenPearl =
+          makeMesh(
+            new THREE.SphereGeometry(
+              0.14,
+              32,
+              24,
+            ),
+            greenMaterial,
+          );
+
+        greenPearl.position.set(
+          -2.18,
+          -0.46,
+          1.05,
+        );
+
+        rig.add(
+          greenPearl,
+        );
+
+        const glassPearl =
+          makeMesh(
+            new THREE.SphereGeometry(
+              0.16,
+              32,
+              24,
+            ),
+            new THREE.MeshPhysicalMaterial(
+              {
+                color:
+                  "#e8eee5",
+                transmission:
+                  0.96,
+                thickness:
+                  0.32,
+                ior:
+                  1.46,
+                roughness:
+                  0.04,
+                metalness:
+                  0,
+                clearcoat:
+                  1,
+                clearcoatRoughness:
+                  0.02,
+                transparent:
+                  true,
+                opacity:
+                  0.9,
+                envMapIntensity:
+                  0.95,
+              },
+            ),
+          );
+
+        glassPearl.position.set(
+          1.95,
+          2.32,
+          0.48,
+        );
+
+        rig.add(
+          glassPearl,
+        );
+
+        /*
+         * ====================================================
+         * SHADOW SYSTEM
+         * ====================================================
+         */
+
+        const shadowMap =
+          shadowTexture();
+
+        textures.add(
+          shadowMap,
+        );
+
+        function addShadow({
+          width,
+          height,
+          x,
+          y,
+          z,
+          opacity = 1,
+          rotation = 0,
+        }: ShadowOptions) {
+          const shadow =
+            makeMesh(
+              new THREE.PlaneGeometry(
+                width,
+                height,
+              ),
+              new THREE.MeshBasicMaterial(
+                {
+                  map:
+                    shadowMap,
+                  transparent:
+                    true,
+                  opacity,
+                  depthWrite:
+                    false,
+                  depthTest:
+                    true,
+                  toneMapped:
+                    false,
+                },
+              ),
+            );
+
+          shadow.position.set(
+            x,
+            y,
+            z,
+          );
+
+          shadow.rotation.z =
+            rotation;
+
+          rig.add(
+            shadow,
+          );
+
+          return shadow;
         }
 
-        addShadow(4.4, 0.58, 0.25, -3.02);
-        addShadow(1.5, 0.3, -2.22, -2.4);
+        /*
+         * PHONE SHADOW
+         *
+         * Ambient dilebarin sedikit ke kiri
+         * tetapi dibuat lebih soft.
+         * Contact shadow tetap rapat.
+         */
 
-        let visible = true;
+        const phoneAmbientShadow =
+          addShadow({
+            width:
+              2.78,
+            height:
+              0.5,
+            x:
+              0.58,
+            y:
+              -2.47,
+            z:
+              -1.08,
+            opacity:
+              0.24,
+            rotation:
+              -0.18,
+          });
+
+        const phoneContactShadow =
+          addShadow({
+            width:
+              1.12,
+            height:
+              0.13,
+            x:
+              0.79,
+            y:
+              -2.31,
+            z:
+              -0.87,
+            opacity:
+              0.54,
+            rotation:
+              -0.22,
+          });
+
+        /*
+         * IDENTITY
+         */
+
+        const identityShadow =
+          addShadow({
+            width:
+              0.98,
+            height:
+              0.25,
+            x:
+              -1.9,
+            y:
+              1.68,
+            z:
+              -0.03,
+            opacity:
+              0.19,
+            rotation:
+              -0.16,
+          });
+
+        /*
+         * SHARE
+         */
+
+        const shareShadow =
+          addShadow({
+            width:
+              0.9,
+            height:
+              0.24,
+            x:
+              2.22,
+            y:
+              0.72,
+            z:
+              0.08,
+            opacity:
+              0.26,
+            rotation:
+              0.12,
+          });
+
+        /*
+         * EXPLORE
+         */
+
+        const exploreShadow =
+          addShadow({
+            width:
+              0.92,
+            height:
+              0.19,
+            x:
+              2.13,
+            y:
+              -1.67,
+            z:
+              0.51,
+            opacity:
+              0.38,
+            rotation:
+              0.23,
+          });
+
+        /*
+         * MARBLE
+         */
+
+        const marbleShadow =
+          addShadow({
+            width:
+              0.92,
+            height:
+              0.22,
+            x:
+              -2.03,
+            y:
+              -1.99,
+            z:
+              0.27,
+            opacity:
+              0.29,
+            rotation:
+              -0.02,
+          });
+
+        /*
+         * GREEN PEARL
+         */
+
+        const greenPearlShadow =
+          addShadow({
+            width:
+              0.29,
+            height:
+              0.085,
+            x:
+              -2.16,
+            y:
+              -0.62,
+            z:
+              0.56,
+            opacity:
+              0.26,
+            rotation:
+              -0.03,
+          });
+
+        /*
+         * GLASS PEARL
+         */
+
+        const glassPearlShadow =
+          addShadow({
+            width:
+              0.3,
+            height:
+              0.075,
+            x:
+              2,
+            y:
+              2.14,
+            z:
+              0.06,
+            opacity:
+              0.11,
+            rotation:
+              0.02,
+          });
+
+        /*
+         * ====================================================
+         * RENDER
+         * ====================================================
+         */
+
+        let visible =
+          true;
 
         function render() {
-          if (!disposed && visible && !webgl.getContext().isContextLost()) {
-            webgl.render(scene, camera);
+          if (
+            !disposed &&
+            visible &&
+            !webgl
+              .getContext()
+              .isContextLost()
+          ) {
+            webgl.render(
+              scene,
+              camera,
+            );
           }
         }
 
         function resize() {
-          const width = host!.clientWidth;
-          const height = host!.clientHeight;
-          if (!width || !height) return;
+          const width =
+            host.clientWidth;
 
-          webgl.setSize(width, height, false);
-          camera.aspect = width / height;
+          const height =
+            host.clientHeight;
 
-          const tangent = Math.tan(
-            THREE.MathUtils.degToRad(camera.fov) / 2,
+          if (
+            !width ||
+            !height
+          ) {
+            return;
+          }
+
+          webgl.setSize(
+            width,
+            height,
+            false,
           );
 
-          camera.position.z = Math.max(
-            3.45 / tangent,
-            3.5 / (tangent * camera.aspect),
-          );
+          camera.aspect =
+            width /
+            height;
+
+          const tangent =
+            Math.tan(
+              THREE.MathUtils.degToRad(
+                camera.fov,
+              ) / 2,
+            );
+
+          camera.position.z =
+            Math.max(
+              3.45 /
+                tangent,
+              3.5 /
+                (
+                  tangent *
+                  camera.aspect
+                ),
+            );
 
           camera.updateProjectionMatrix();
+
           render();
         }
 
-        resizeObserver = new ResizeObserver(resize);
-        resizeObserver.observe(host!);
+        resizeObserver =
+          new ResizeObserver(
+            resize,
+          );
 
-        const cover = host!.closest<HTMLElement>(
-          '[data-spall-featured="true"]',
+        resizeObserver.observe(
+          host,
         );
 
-        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const target = new THREE.Vector2();
-        const current = new THREE.Vector2();
+        const cover =
+          host.closest<HTMLElement>(
+            '[data-spall-featured="true"]',
+          );
+
+        const reduced =
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          );
+
+        const target =
+          new THREE.Vector2();
+
+        const current =
+          new THREE.Vector2();
 
         let frame = 0;
         let previous = 0;
 
+        /*
+         * MOTION ASLI DIPERTAHANKAN.
+         */
+
         function applyPose() {
-          rig.rotation.x = current.y * 0.025;
-          rig.rotation.y = current.x * 0.045;
+          rig.rotation.x =
+            current.y *
+            0.025;
 
-          phone.rotation.x = 0.07 + current.y * 0.025;
-          phone.rotation.y = -0.38 + current.x * 0.07;
+          rig.rotation.y =
+            current.x *
+            0.045;
 
-          identity.position.y = 1.9 - current.y * 0.035;
-          explore.position.y = -1.45 + current.y * 0.035;
-          share.rotation.z = 0.14 + current.x * 0.018;
+          phone.rotation.x =
+            0.07 +
+            current.y *
+              0.025;
+
+          phone.rotation.y =
+            -0.38 +
+            current.x *
+              0.07;
+
+          /*
+           * SHADOW HP
+           *
+           * Formula motion tetap sama.
+           * Hanya base position mengikuti
+           * shadow baru.
+           */
+
+          phoneAmbientShadow.position.x =
+            0.58 +
+            current.x *
+              0.018;
+
+          phoneAmbientShadow.position.y =
+            -2.47 +
+            current.y *
+              0.008;
+
+          phoneContactShadow.position.x =
+            0.79 +
+            current.x *
+              0.012;
+
+          phoneContactShadow.position.y =
+            -2.31 +
+            current.y *
+              0.005;
+
+          /*
+           * IDENTITY
+           */
+
+          identity.position.y =
+            1.9 -
+            current.y *
+              0.035;
+
+          identityShadow.position.y =
+            1.68 -
+            current.y *
+              0.035;
+
+          identityShadow.position.x =
+            -1.9 -
+            current.x *
+              0.02;
+
+          /*
+           * EXPLORE
+           */
+
+          explore.position.y =
+            -1.45 +
+            current.y *
+              0.035;
+
+          exploreShadow.position.y =
+            -1.67 +
+            current.y *
+              0.035;
+
+          /*
+           * SHARE
+           */
+
+          share.rotation.z =
+            0.14 +
+            current.x *
+              0.018;
+
+          shareShadow.rotation.z =
+            0.12 +
+            current.x *
+              0.018;
+
+          /*
+           * MARBLE
+           */
+
+          marbleShadow.position.x =
+            -2.03 -
+            current.x *
+              0.01;
+
+          /*
+           * GREEN PEARL
+           */
+
+          greenPearlShadow.position.x =
+            -2.16 -
+            current.x *
+              0.01;
+
+          /*
+           * GLASS PEARL
+           */
+
+          glassPearlShadow.position.x =
+            2 -
+            current.x *
+              0.008;
         }
 
-        function tick(time: number) {
+        function tick(
+          time: number,
+        ) {
           frame = 0;
-          if (disposed || !visible || webgl.getContext().isContextLost()) return;
 
-          const delta = previous
-            ? Math.min((time - previous) / 1000, 0.05)
-            : 1 / 60;
+          if (
+            disposed ||
+            !visible ||
+            webgl
+              .getContext()
+              .isContextLost()
+          ) {
+            return;
+          }
 
-          previous = time;
-          current.lerp(target, 1 - Math.exp(-7 * delta));
+          const delta =
+            previous
+              ? Math.min(
+                  (
+                    time -
+                    previous
+                  ) /
+                    1000,
+                  0.05,
+                )
+              : 1 / 60;
 
-          if (current.distanceTo(target) < 0.0005) {
-            current.copy(target);
+          previous =
+            time;
+
+          current.lerp(
+            target,
+            1 -
+              Math.exp(
+                -7 *
+                  delta,
+              ),
+          );
+
+          if (
+            current.distanceTo(
+              target,
+            ) <
+            0.0005
+          ) {
+            current.copy(
+              target,
+            );
+
             previous = 0;
           } else {
-            frame = requestAnimationFrame(tick);
+            frame =
+              requestAnimationFrame(
+                tick,
+              );
           }
 
           applyPose();
@@ -845,26 +2158,68 @@ function Scene({ screenUrl, label }: Props) {
         }
 
         function schedule() {
-          if (!frame && visible && !disposed) {
+          if (
+            !frame &&
+            visible &&
+            !disposed
+          ) {
             previous = 0;
-            frame = requestAnimationFrame(tick);
+
+            frame =
+              requestAnimationFrame(
+                tick,
+              );
           }
         }
 
-        function move(event: PointerEvent) {
-          if (!cover || event.pointerType === "touch" || reduced.matches) return;
+        function move(
+          event: PointerEvent,
+        ) {
+          if (
+            !cover ||
+            event.pointerType ===
+              "touch" ||
+            reduced.matches
+          ) {
+            return;
+          }
 
-          const rect = cover.getBoundingClientRect();
-          if (!rect.width || !rect.height) return;
+          const rect =
+            cover.getBoundingClientRect();
+
+          if (
+            !rect.width ||
+            !rect.height
+          ) {
+            return;
+          }
 
           target.set(
             THREE.MathUtils.clamp(
-              ((event.clientX - rect.left) / rect.width) * 2 - 1,
-              -1, 1,
+              (
+                (
+                  event.clientX -
+                  rect.left
+                ) /
+                rect.width
+              ) *
+                2 -
+                1,
+              -1,
+              1,
             ),
             THREE.MathUtils.clamp(
-              ((event.clientY - rect.top) / rect.height) * 2 - 1,
-              -1, 1,
+              (
+                (
+                  event.clientY -
+                  rect.top
+                ) /
+                rect.height
+              ) *
+                2 -
+                1,
+              -1,
+              1,
             ),
           );
 
@@ -872,12 +2227,25 @@ function Scene({ screenUrl, label }: Props) {
         }
 
         function reset() {
-          target.set(0, 0);
+          target.set(
+            0,
+            0,
+          );
 
-          if (reduced.matches) {
-            cancelAnimationFrame(frame);
+          if (
+            reduced.matches
+          ) {
+            cancelAnimationFrame(
+              frame,
+            );
+
             frame = 0;
-            current.set(0, 0);
+
+            current.set(
+              0,
+              0,
+            );
+
             applyPose();
             render();
           } else {
@@ -885,44 +2253,113 @@ function Scene({ screenUrl, label }: Props) {
           }
         }
 
-        cover?.addEventListener("pointermove", move, { passive: true });
-        cover?.addEventListener("pointerleave", reset);
-        cover?.addEventListener("pointercancel", reset);
-        reduced.addEventListener("change", reset);
-        window.addEventListener("blur", reset);
+        cover?.addEventListener(
+          "pointermove",
+          move,
+          {
+            passive:
+              true,
+          },
+        );
 
-        cleanupMotion = () => {
-          cancelAnimationFrame(frame);
-          frame = 0;
-          cover?.removeEventListener("pointermove", move);
-          cover?.removeEventListener("pointerleave", reset);
-          cover?.removeEventListener("pointercancel", reset);
-          reduced.removeEventListener("change", reset);
-          window.removeEventListener("blur", reset);
-        };
+        cover?.addEventListener(
+          "pointerleave",
+          reset,
+        );
 
-        visibilityObserver = new IntersectionObserver(([entry]) => {
-          visible = entry.isIntersecting;
+        cover?.addEventListener(
+          "pointercancel",
+          reset,
+        );
 
-          if (visible) {
-            schedule();
-          } else {
-            cancelAnimationFrame(frame);
+        reduced.addEventListener(
+          "change",
+          reset,
+        );
+
+        window.addEventListener(
+          "blur",
+          reset,
+        );
+
+        cleanupMotion =
+          () => {
+            cancelAnimationFrame(
+              frame,
+            );
+
             frame = 0;
-            previous = 0;
-          }
-        });
 
-        visibilityObserver.observe(host!);
+            cover?.removeEventListener(
+              "pointermove",
+              move,
+            );
+
+            cover?.removeEventListener(
+              "pointerleave",
+              reset,
+            );
+
+            cover?.removeEventListener(
+              "pointercancel",
+              reset,
+            );
+
+            reduced.removeEventListener(
+              "change",
+              reset,
+            );
+
+            window.removeEventListener(
+              "blur",
+              reset,
+            );
+          };
+
+        visibilityObserver =
+          new IntersectionObserver(
+            ([entry]) => {
+              visible =
+                entry.isIntersecting;
+
+              if (visible) {
+                schedule();
+              } else {
+                cancelAnimationFrame(
+                  frame,
+                );
+
+                frame = 0;
+                previous = 0;
+              }
+            },
+          );
+
+        visibilityObserver.observe(
+          host,
+        );
+
         resize();
+        applyPose();
         render();
 
-        if (!disposed) setReady(true);
+        if (!disposed) {
+          setReady(
+            true,
+          );
+        }
       } catch (error) {
         if (!disposed) {
-          console.error("[SpallEditorialScene]", error);
-          setReady(false);
+          console.error(
+            "[SpallEditorialScene]",
+            error,
+          );
+
+          setReady(
+            false,
+          );
         }
+
         release();
       }
     }
@@ -930,7 +2367,9 @@ function Scene({ screenUrl, label }: Props) {
     void initialize();
 
     return () => {
-      disposed = true;
+      disposed =
+        true;
+
       release();
     };
   }, [screenUrl]);
@@ -939,39 +2378,62 @@ function Scene({ screenUrl, label }: Props) {
     <div
       role="img"
       aria-label={label}
-      style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+      style={{
+        position:
+          "absolute",
+        inset: 0,
+        pointerEvents:
+          "none",
+      }}
     >
-      {!ready && screenUrl && (
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            inset: "14% 30%",
-            overflow: "hidden",
-            border: "5px solid #25362b",
-            borderRadius: "12% / 6%",
-            background: "#f2eee5",
-            transform: "rotate(12deg)",
-          }}
-        >
-          <Image
-            src={screenUrl}
-            alt=""
-            fill
-            unoptimized
-            sizes="(max-width: 700px) 30vw, 28vw"
-            style={{ objectFit: "cover", objectPosition: "top" }}
-          />
-        </div>
-      )}
+      {!ready &&
+        screenUrl && (
+          <div
+            aria-hidden="true"
+            style={{
+              position:
+                "absolute",
+              inset:
+                "14% 30%",
+              overflow:
+                "hidden",
+              border:
+                "5px solid #25362b",
+              borderRadius:
+                "12% / 6%",
+              background:
+                "#f2eee5",
+              transform:
+                "rotate(12deg)",
+            }}
+          >
+            <Image
+              src={screenUrl}
+              alt=""
+              fill
+              unoptimized
+              sizes="(max-width: 700px) 30vw, 28vw"
+              style={{
+                objectFit:
+                  "cover",
+                objectPosition:
+                  "top",
+              }}
+            />
+          </div>
+        )}
 
       <div
         ref={hostRef}
         aria-hidden="true"
         style={{
-          position: "absolute",
+          position:
+            "absolute",
           inset: 0,
-          opacity: ready ? 1 : 0,
+          opacity:
+            ready
+              ? 1
+              : 0,
         }}
       />
     </div>
