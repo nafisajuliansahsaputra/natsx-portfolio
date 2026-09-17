@@ -424,7 +424,7 @@
     rgba(17, 17, 17, 0.08);
 }
 
-.spallBrowserTop{
+.spallBrowserTop {
   position: relative;
 
   z-index: 3;
@@ -1627,138 +1627,231 @@
       );
   }
 
-  /* SPALL */
+    /* =======================================================
+     BAST
+  ======================================================= */
 
-  .spallBrowser {
-    transition:
-      transform
-      900ms
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      );
-  }
-
-  .spallCard {
-    transition:
-      transform
-      950ms
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      );
-  }
-
-  .project:hover
-    .spallBrowser {
-    transform:
-      translate3d(
-        -7px,
-        -7px,
-        0
-      )
-      rotate(-0.25deg);
-  }
-
-  .project:hover
-    .spallCard {
-    transform:
-      translate3d(
-        10px,
-        -9px,
-        0
-      )
-      rotate(1deg);
-  }
-
-  .project:hover
-    .spallPrimaryImage {
-    transform:
-      scale(1.025);
-  }
-
-  .project:hover
-    .spallSecondaryImage {
-    transform:
-      scale(1.035);
-  }
-
-  /* BAST */
-
-  .bastDashboard,
-  .bastDocument,
-  .bastStatus,
   .bastGrid {
-    transition:
-      transform
-      950ms
-      cubic-bezier(
-        0.16,
-        1,
-        0.3,
-        1
-      );
+    background-size:
+      26px 26px;
   }
 
-  .project:hover
-    .bastDashboard {
-    transform:
-      translate3d(
-        -7px,
-        -7px,
-        0
-      )
-      scale(0.995);
+  .bastIndex {
+    top: 6%;
+    left: 4%;
   }
 
-  .project:hover
-    .bastDocument {
-    transform:
-      translate3d(
-        10px,
-        -13px,
-        0
-      )
-      rotate(2.6deg);
+  .bastIndex span {
+    font-size: 5px;
   }
 
-  .project:hover
-    .bastStatus {
-    transform:
-      translate3d(
-        -4px,
-        -7px,
-        0
-      );
+  .bastIndex strong {
+    font-size: 23px;
   }
 
-  .project:hover
-    .bastGrid {
-    transform:
-      translate3d(
-        4px,
-        3px,
-        0
-      );
+  .bastDashboard {
+    top: 9%;
+    left: 7%;
+
+    width: 86%;
   }
 
-  .project:hover
-    .bastPrimaryImage {
-    transform:
-      scale(1.02);
+  .bastDashboardTop {
+    height: 24px;
+
+    padding-inline: 9px;
+
+    font-size: 5px;
   }
 
-  .project:hover
-    .bastSecondaryImage {
-    transform:
-      scale(1.035);
+  .bastDashboardTop
+    > div {
+    gap: 3px;
+  }
+
+  .bastDashboardTop
+    > div
+    span {
+    width: 4px;
+    height: 4px;
+  }
+
+  .bastDocument {
+    right: 5%;
+    bottom: 6%;
+
+    width: 29%;
+  }
+
+  .bastStatus {
+    left: 4%;
+    bottom: 6%;
+
+    min-width: 82px;
+
+    padding:
+      7px 8px;
+
+    gap: 7px;
+  }
+
+  .bastStatus > span {
+    width: 5px;
+    height: 5px;
+  }
+
+  .bastStatus small {
+    font-size: 4px;
+  }
+
+  .bastStatus strong {
+    font-size: 6px;
   }
 }
 
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+  .section {
+    padding-block:
+      72px
+      96px;
+  }
+
+  .header {
+    margin-bottom: 54px;
+  }
+
+  .projects {
+    gap: 78px;
+  }
+
+  .projectHeader {
+    grid-template-columns:
+      21px
+      minmax(0, 1fr)
+      auto;
+
+    gap: 7px;
+  }
+
+  .projectTitle {
+    font-size:
+      clamp(
+        27px,
+        8.4vw,
+        31px
+      );
+  }
+
+  .visual,
+  .layout_wide .visual,
+  .layout_right .visual,
+  .layout_left .visual,
+  .layout_finale .visual {
+    aspect-ratio: 1.06;
+  }
+
+  .categories span {
+    font-size: 9px;
+  }
+
+  .projectLink {
+    font-size: 10px;
+  }
+
+  .visualLabel {
+    display: none;
+  }
+}
+
+/* =========================================================
+   HOVER / MICROINTERACTION
+========================================================= */
+
+@media (
+  hover: hover
+) and (
+  pointer: fine
+) {
+  .visual {
+    transition:
+      transform
+      700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+      box-shadow
+      700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+  }
+
+  .project:hover .visual {
+    transform:
+      translate3d(
+        0,
+        -6px,
+        0
+      );
+
+    box-shadow:
+      0 28px 70px
+      rgba(
+        17,
+        17,
+        17,
+        0.08
+      );
+  }
+
+  .projectTitle,
+  .projectNumber,
+  .projectYear,
+  .categories {
+    transition:
+      transform
+      650ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+      color
+      300ms
+      ease;
+  }
+
+  .project:hover
+    .projectTitle {
+    transform:
+      translate3d(
+        5px,
+        0,
+        0
+      );
+  }
+
+  .project:hover
+    .projectNumber {
+    transform:
+      translate3d(
+        0,
+        -2px,
+        0
+      );
+  }
+}
 /* =========================================================
    AMBIENT MOTION — DESKTOP / TABLET
 ========================================================= */
