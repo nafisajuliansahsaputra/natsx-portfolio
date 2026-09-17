@@ -133,103 +133,107 @@ function shadowTexture() {
   });
 }
 
-/*
- * A closed glass belt with a rounded rectangular cross section.
- * It has a vertical face, thickness, and curved edges.
- *
- * Positive Z passes in front of the phone.
- * Negative Z passes behind it.
- */
+const ORBIT_WIDTH = 0.46;
+const ORBIT_DEPTH = 0.075;
+const ORBIT_U = new THREE.Vector3(0.918, 0.397, 0).normalize();
+const ORBIT_V = new THREE.Vector3()
+  .crossVectors(new THREE.Vector3(0, 0, 1), ORBIT_U)
+  .multiplyScalar(-0.48)
+  .add(new THREE.Vector3(0, 0, 0.87726849))
+  .normalize();
+const ORBIT_NORMAL = new THREE.Vector3()
+  .crossVectors(ORBIT_U, ORBIT_V)
+  .normalize();
+
 function ribbonFrame(t: number) {
-  const center = new THREE.Vector3(
-    3.05 * Math.cos(t),
-    0.78 * Math.cos(t) - 0.8 * Math.sin(t),
-    1.65 * Math.sin(t),
-  );
-
-  const tangent = new THREE.Vector3(
-    -3.05 * Math.sin(t),
-    -0.78 * Math.sin(t) - 0.8 * Math.cos(t),
-    1.65 * Math.cos(t),
-  ).normalize();
-
-  const radial = new THREE.Vector3()
-    .crossVectors(new THREE.Vector3(0, 1, 0), tangent)
-    .normalize();
-
-  const vertical = new THREE.Vector3()
-    .crossVectors(tangent, radial)
-    .normalize();
-
-  return { center, radial, vertical };
+  const center = ORBIT_U.clone().multiplyScalar(3.12 * Math.cos(t))
+    .addScaledVector(ORBIT_V, 1.72 * Math.sin(t));
+  const tangent = ORBIT_U.clone().multiplyScalar(-3.12 * Math.sin(t))
+    .addScaledVector(ORBIT_V, 1.72 * Math.cos(t)).normalize();
+  const widthAxis = new THREE.Vector3()
+    .crossVectors(tangent, ORBIT_NORMAL).normalize();
+  widthAxis.applyAxisAngle(tangent, 0.48 * Math.cos(t + 0.4) + 0.16 * Math.sin(2 * t));
+  const depthAxis = new THREE.Vector3().crossVectors(widthAxis, tangent).normalize();
+  return { center, widthAxis, depthAxis };
 }
 
 function ribbonGeometry() {
-  const profile = roundedRect(0.09, 0.43, 0.04).getPoints(7);
-
-  if (profile[0].distanceTo(profile[profile.length - 1]) < 0.00001) {
-    profile.pop();
-  }
-
+  const profile = roundedRect(ORBIT_WIDTH, ORBIT_DEPTH, 0.025).getPoints(8);
+  if (profile[0].distanceTo(profile[profile.length - 1]) < 0.00001) profile.pop();
   const segments = 192;
   const count = profile.length;
   const positions: number[] = [];
   const indices: number[] = [];
 
-  for (let i = 0; i <= segments; i++) {
-    const t = (i / segments) * Math.PI * 2;
-    const { center, radial, vertical } = ribbonFrame(t);
-
+  for (let i = 0; i < segments; i++) {
+    const { center, widthAxis, depthAxis } = ribbonFrame(i / segments * Math.PI * 2);
     for (const point of profile) {
-      const vertex = center.clone()
-        .addScaledVector(radial, point.x)
-        .addScaledVector(vertical, point.y);
-
-      positions.push(vertex.x, vertex.y, vertex.z);
+      const p = center.clone().addScaledVector(widthAxis, point.x)
+        .addScaledVector(depthAxis, point.y);
+      positions.push(p.x, p.y, p.z);
     }
   }
 
   for (let i = 0; i < segments; i++) {
     for (let j = 0; j < count; j++) {
-      const next = (j + 1) % count;
+      const nextRing = (i + 1) % segments;
+      const nextPoint = (j + 1) % count;
       const a = i * count + j;
-      const b = (i + 1) * count + j;
-      const c = (i + 1) * count + next;
-      const d = i * count + next;
-
-      indices.push(a, c, b, a, d, c);
+      const b = nextRing * count + j;
+      const c = nextRing * count + nextPoint;
+      const d = i * count + nextPoint;
+      indices.push(a, b, c, a, c, d);
     }
   }
 
   const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(positions, 3),
-  );
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
-
+  geometry.computeBoundingSphere();
   return geometry;
 }
 
 function ribbonEdge(offset: number) {
   const points: THREE.Vector3[] = [];
-
-  for (let i = 0; i < 128; i++) {
-    const frame = ribbonFrame((i / 128) * Math.PI * 2);
-    points.push(
-      frame.center.addScaledVector(frame.vertical, offset),
-    );
+  for (let i = 0; i < 192; i++) {
+    const { center, widthAxis } = ribbonFrame(i / 192 * Math.PI * 2);
+    points.push(center.addScaledVector(widthAxis, offset));
   }
-
   return new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3(points, true),
-    192,
-    0.009,
-    6,
-    true,
+    new THREE.CatmullRomCurve3(points, true), 192, 0.006, 6, true,
   );
 }
+
+function orbitEnvironment() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D unavailable.');
+  const base = ctx.createLinearGradient(0, 0, 0, 512);
+  base.addColorStop(0, '#faf8f0');
+  base.addColorStop(0.42, '#83988a');
+  base.addColorStop(0.55, '#13251d');
+  base.addColorStop(0.8, '#516a59');
+  base.addColorStop(1, '#eae6d9');
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, 1024, 512);
+  for (const [x, width] of [[100, 100], [440, 32], [740, 160]]) {
+    const panel = ctx.createLinearGradient(x, 0, x + width, 0);
+    panel.addColorStop(0, 'rgba(255,253,241,0)');
+    panel.addColorStop(0.18, 'rgba(255,253,241,1)');
+    panel.addColorStop(0.82, 'rgba(255,253,241,1)');
+    panel.addColorStop(1, 'rgba(255,253,241,0)');
+    ctx.fillStyle = panel;
+    ctx.fillRect(x, 40, width, 360);
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 
 export default function SpallEditorialScene(props: Props) {
   return <Scene key={props.screenUrl ?? "original"} {...props} />;
@@ -561,18 +565,19 @@ function Scene({ screenUrl, label }: Props) {
 
         // Glass belt: dielectric material, not metallic flat green.
         const ribbon = new THREE.Group();
-        ribbon.position.set(0.03, 0.06, 0);
+        ribbon.position.set(0.03, 0.78, 0);
         rig.add(ribbon);
 
         const beltMaterial = keepMaterial(new THREE.MeshPhysicalMaterial({
-          color: "#b9cdbb",
+          color: "#c5dacc",
+          envMap: orbitEnvironment(),
           metalness: 0,
-          roughness: 0.085,
-          transmission: 0.88,
-          thickness: 0.22,
+          roughness: 0.065,
+          transmission: 0.95,
+          thickness: 0.11,
           ior: 1.46,
           attenuationColor: new THREE.Color("#235138"),
-          attenuationDistance: 0.8,
+          attenuationDistance: 0.65,
           clearcoat: 1,
           clearcoatRoughness: 0.065,
           envMapIntensity: 1.25,
@@ -588,8 +593,8 @@ function Scene({ screenUrl, label }: Props) {
           envMapIntensity: 1.2,
         }));
 
-        ribbon.add(makeMesh(ribbonEdge(0.205), edgeMaterial));
-        ribbon.add(makeMesh(ribbonEdge(-0.205), edgeMaterial));
+        ribbon.add(makeMesh(ribbonEdge(ORBIT_WIDTH / 2 - 0.015), edgeMaterial));
+        ribbon.add(makeMesh(ribbonEdge(-ORBIT_WIDTH / 2 + 0.015), edgeMaterial));
 
         const glassTileMaterial = keepMaterial(
           new THREE.MeshPhysicalMaterial({
