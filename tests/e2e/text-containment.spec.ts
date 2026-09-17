@@ -4,6 +4,7 @@ import {
   type Page,
 } from "@playwright/test";
 
+
 test.beforeEach(
   async ({
     page,
@@ -18,6 +19,7 @@ test.beforeEach(
     );
   },
 );
+
 
 const routes = [
   "/",
@@ -41,6 +43,7 @@ const routes = [
   "/de/contact",
   "/de/cv",
 ] as const;
+
 
 const viewports = [
   {
@@ -132,9 +135,11 @@ const viewports = [
   },
 ] as const;
 
+
 type MotionMode =
   | "normal"
   | "reduced";
+
 
 const motionModes:
   MotionMode[] = [
@@ -142,14 +147,21 @@ const motionModes:
     "reduced",
   ];
 
+
 type TextRect = {
   left: number;
+
   right: number;
+
   top: number;
+
   bottom: number;
+
   width: number;
+
   height: number;
 };
+
 
 type ClippedTextIssue = {
   text: string;
@@ -178,6 +190,7 @@ type ClippedTextIssue = {
   clipPath:
     string;
 };
+
 
 async function navigate(
   page: Page,
@@ -220,9 +233,9 @@ async function navigate(
   );
 
   /*
-   * Normal motion needs time for the
-   * above-fold entrance choreography
-   * to settle before measuring text.
+   * Normal motion needs enough time for
+   * above-fold entrance choreography to
+   * reach its settled visual state.
    */
   if (
     motionMode ===
@@ -234,17 +247,18 @@ async function navigate(
   }
 }
 
+
 async function finishFiniteAnimations(
   page: Page,
 ) {
   await page.evaluate(
     async () => {
       /*
-       * Geometry audits should inspect the
-       * settled state of finite entrance /
-       * reveal animations.
+       * Geometry audits inspect the final
+       * state of finite entrance/reveal
+       * animations.
        *
-       * Infinite ambient motion is left
+       * Infinite ambient animations remain
        * untouched.
        */
       for (
@@ -267,7 +281,7 @@ async function finishFiniteAnimations(
         } catch {
           /*
            * Some animations cannot be
-           * finished in their current
+           * finished from their current
            * playback state.
            */
         }
@@ -291,6 +305,7 @@ async function finishFiniteAnimations(
     },
   );
 }
+
 
 async function settleWholePage(
   page: Page,
@@ -334,8 +349,10 @@ async function settleWholePage(
 
   for (
     let y = 0;
-    y < scrollMetrics.maxScroll;
-    y += scrollMetrics.step
+    y <
+    scrollMetrics.maxScroll;
+    y +=
+      scrollMetrics.step
   ) {
     positions.push(
       y,
@@ -347,7 +364,8 @@ async function settleWholePage(
   );
 
   const collected:
-    ClippedTextIssue[] = [];
+    ClippedTextIssue[] =
+    [];
 
   const seen =
     new Set<string>();
@@ -426,6 +444,7 @@ async function settleWholePage(
   return collected;
 }
 
+
 async function findClippedText(
   page: Page,
 ): Promise<
@@ -462,6 +481,7 @@ async function findClippedText(
       ].join(
         ",",
       );
+
 
       function isTreeVisible(
         element: HTMLElement,
@@ -513,6 +533,7 @@ async function findClippedText(
         return true;
       }
 
+
       function isVisible(
         element: HTMLElement,
       ) {
@@ -529,13 +550,11 @@ async function findClippedText(
 
         /*
          * Horizontal intersection is
-         * intentionally NOT required.
+         * intentionally not required.
          *
-         * We need to detect accidental
-         * horizontal text overflow.
-         *
-         * Intentional horizontal scrollers
-         * are handled separately below.
+         * Content outside the viewport may
+         * itself be the bug we are looking
+         * for.
          */
         const intersectsViewport =
           rect.bottom >
@@ -553,6 +572,7 @@ async function findClippedText(
         );
       }
 
+
       function hasText(
         element: HTMLElement,
       ) {
@@ -568,6 +588,7 @@ async function findClippedText(
           .length >
           0;
       }
+
 
       function rectToObject(
         rect:
@@ -602,19 +623,102 @@ async function findClippedText(
         };
       }
 
+
+      /*
+       * =========================
+       * INTENTIONAL TRUNCATION
+       * =========================
+       *
+       * CSS ellipsis is deliberate visual
+       * truncation, not accidental clipping.
+       *
+       * Range.getClientRects() returns the
+       * geometry of the complete underlying
+       * text node even when the rendered UI
+       * only paints:
+       *
+       * "Some very long project tit..."
+       *
+       * Without this guard the auditor sees
+       * the invisible remainder of the text
+       * as extending outside the viewport.
+       */
+      function isIntentionalEllipsis(
+        element: HTMLElement,
+      ) {
+        const style =
+          window.getComputedStyle(
+            element,
+          );
+
+        const clipsHorizontally =
+          style.overflowX ===
+            "hidden" ||
+          style.overflowX ===
+            "clip";
+
+        return (
+          style.textOverflow ===
+            "ellipsis" &&
+          style.whiteSpace ===
+            "nowrap" &&
+          clipsHorizontally
+        );
+      }
+
+
+      function isInsideIntentionalEllipsis(
+        element: HTMLElement,
+        measurementRoot: HTMLElement,
+      ) {
+        let current:
+          HTMLElement |
+          null =
+          element;
+
+        while (
+          current
+        ) {
+          if (
+            isIntentionalEllipsis(
+              current,
+            )
+          ) {
+            return true;
+          }
+
+          if (
+            current ===
+            measurementRoot
+          ) {
+            break;
+          }
+
+          current =
+            current.parentElement;
+        }
+
+        return false;
+      }
+
+
       function getTextRect(
         element: HTMLElement,
       ):
         | TextRect
         | null {
         /*
-         * Measure only text that is
-         * actually painted.
+         * Measure only text that is actually
+         * relevant to containment.
          *
-         * A Range over the whole element
-         * would include opacity: 0 reveal
-         * children and create false
-         * clipping reports.
+         * Text underneath:
+         *
+         * - aria-hidden content
+         * - opacity/display-hidden content
+         * - intentional CSS ellipsis
+         *
+         * must not contribute its raw Range
+         * geometry to an ancestor.
          */
         const walker =
           document.createTreeWalker(
@@ -635,14 +739,16 @@ async function findClippedText(
             node.textContent ??
             "";
 
-          if (
+          const normalized =
             value
               .replace(
                 /\s+/g,
                 " ",
               )
-              .trim()
-              .length >
+              .trim();
+
+          if (
+            normalized.length >
             0
           ) {
             const parent =
@@ -652,6 +758,10 @@ async function findClippedText(
               parent &&
               isTreeVisible(
                 parent,
+              ) &&
+              !isInsideIntentionalEllipsis(
+                parent,
+                element,
               )
             ) {
               const range =
@@ -744,6 +854,7 @@ async function findClippedText(
         };
       }
 
+
       function isClippingOverflow(
         value: string,
       ) {
@@ -757,6 +868,7 @@ async function findClippedText(
         );
       }
 
+
       /*
        * =========================
        * INTENTIONAL X SCROLL
@@ -764,17 +876,9 @@ async function findClippedText(
        *
        * Work category filters and other
        * horizontal tracks are allowed to
-       * contain items that currently sit
-       * outside the viewport.
-       *
-       * A container qualifies only when:
-       *
-       * - overflow-x is auto / scroll
-       * - scrollWidth is genuinely larger
-       *   than clientWidth
-       *
-       * overflow:hidden / clip still count
-       * as real clipping.
+       * contain items outside the current
+       * viewport when they are genuinely
+       * scrollable.
        */
       function isIntentionalHorizontalScroller(
         element: HTMLElement,
@@ -797,6 +901,7 @@ async function findClippedText(
               1
         );
       }
+
 
       function getHorizontalScrollAncestor(
         element: HTMLElement,
@@ -829,6 +934,7 @@ async function findClippedText(
 
         return null;
       }
+
 
       function getSelector(
         element: HTMLElement,
@@ -883,6 +989,7 @@ async function findClippedText(
             }.${classes}`
           : element.tagName.toLowerCase();
       }
+
 
       function addIssue(
         issues:
@@ -946,6 +1053,7 @@ async function findClippedText(
         });
       }
 
+
       const issues:
         ClippedTextIssue[] =
         [];
@@ -956,6 +1064,7 @@ async function findClippedText(
             selectors,
           ),
         );
+
 
       for (
         const element
@@ -973,6 +1082,22 @@ async function findClippedText(
             element,
           ) ||
           !hasText(
+            element,
+          )
+        ) {
+          continue;
+        }
+
+        /*
+         * An element whose own visual
+         * contract is ellipsis is already
+         * intentionally bounded by CSS.
+         *
+         * Its raw text width is therefore
+         * not accidental overflow.
+         */
+        if (
+          isIntentionalEllipsis(
             element,
           )
         ) {
@@ -1003,17 +1128,11 @@ async function findClippedText(
             element,
           );
 
+
         /*
          * =========================
          * VIEWPORT CLIPPING
          * =========================
-         *
-         * An item inside a genuine
-         * horizontal scroller may sit
-         * outside the current viewport.
-         *
-         * That is scrollable content,
-         * not accidental clipping.
          */
         if (
           !horizontalScrollAncestor &&
@@ -1034,6 +1153,7 @@ async function findClippedText(
 
           continue;
         }
+
 
         /*
          * =========================
@@ -1099,6 +1219,7 @@ async function findClippedText(
           continue;
         }
 
+
         /*
          * =========================
          * ANCESTOR CLIPPING
@@ -1106,16 +1227,14 @@ async function findClippedText(
          *
          * Inner ancestors before an
          * intentional horizontal scroller
-         * are still fully audited.
+         * remain fully audited.
          *
          * Once the intentional scroller is
          * reached, horizontal clipping from
          * that point outward is expected.
          *
-         * Vertical clipping is NEVER
-         * ignored.
+         * Vertical clipping is never ignored.
          */
-
         let ancestor:
           HTMLElement |
           null =
@@ -1211,11 +1330,12 @@ async function findClippedText(
         }
       }
 
+
       /*
-       * Deduplicate nested text reports.
+       * Deduplicate nested reports.
        *
-       * Keep the most useful first report
-       * for each text + reason pair.
+       * Keep the first useful report for
+       * each text + reason pair.
        */
       return issues.filter(
         (
@@ -1237,6 +1357,7 @@ async function findClippedText(
     },
   );
 }
+
 
 test.describe(
   "global text containment",

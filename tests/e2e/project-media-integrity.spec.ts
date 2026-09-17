@@ -36,26 +36,18 @@ test(
      * SOURCE CONTRACT
      * =========================
      *
-     * Visual regression awal:
+     * Project gallery sekarang punya
+     * dua composition mode:
      *
-     * wide screenshot
-     * +
-     * mobile 4:5 frame
-     * +
-     * object-fit: cover
+     * GRID
+     * - legacy editorial pattern
+     * - index 0, 3, 6, ... adalah wide
+     * - wide screenshot memakai contain
      *
-     * =
-     *
-     * screenshot terpotong.
-     *
-     * Browser geometry dari media
-     * offscreen/lazy-loaded ternyata
-     * bukan signal yang deterministic
-     * untuk test ini.
-     *
-     * Jadi kita jaga contract CSS
-     * yang secara langsung menentukan
-     * crop behavior.
+     * BENTO
+     * - ukuran item ditentukan data-size
+     * - nth-child bukan lagi source of truth
+     * - smart packer menentukan placement
      */
 
     const projectFitCss =
@@ -82,64 +74,82 @@ test(
         "utf8",
       );
 
+    const bentoCss =
+      readFileSync(
+        join(
+          process.cwd(),
+          "src",
+          "app",
+          "work",
+          "[slug]",
+          "ProjectGalleryBento.module.css",
+        ),
+        "utf8",
+      );
+
     /*
-     * Wide frame harus mempertahankan
-     * landscape 16:9.
+     * Grid mode masih harus mempertahankan
+     * anti-crop contract untuk legacy wide
+     * slots.
      */
     expect(
       projectFitCss,
-      "wide gallery slot must keep a 16:9 media frame",
+      "grid wide gallery slot must keep a 16:9 media frame",
     ).toMatch(
       /figure:nth-child\(\s*3n\s*\+\s*1\s*\)[\s\S]*?>\s*div\s*\{[\s\S]*?aspect-ratio\s*:\s*16\s*\/\s*9\s*!important\s*;/,
     );
 
-    /*
-     * Wide image harus memakai contain.
-     *
-     * Ini adalah core anti-crop rule.
-     */
     expect(
       projectFitCss,
-      "wide gallery image must use contain instead of cover",
+      "grid wide gallery image must use contain instead of cover",
     ).toMatch(
       /figure:nth-child\(\s*3n\s*\+\s*1\s*\)[\s\S]*?img\s*\{[\s\S]*?object-fit\s*:\s*contain\s*!important\s*;/,
     );
 
-    /*
-     * Image juga harus tetap centered
-     * saat ada letterboxing.
-     */
     expect(
       projectFitCss,
-      "wide gallery image must stay centered",
+      "grid wide gallery image must stay centered",
     ).toMatch(
       /figure:nth-child\(\s*3n\s*\+\s*1\s*\)[\s\S]*?img\s*\{[\s\S]*?object-position\s*:\s*center center\s*!important\s*;/,
     );
 
     /*
-     * Existing portrait treatment
-     * jangan ikut diratakan menjadi
-     * contain.
-     *
-     * Normal gallery masih cover.
+     * Normal gallery media tetap punya
+     * baseline cover treatment.
      */
     expect(
       projectMediaCss,
-      "portrait gallery media should retain its existing cover treatment",
+      "gallery media should retain its baseline cover treatment",
     ).toMatch(
       /\.galleryMedia\s*\{[\s\S]*?object-fit\s*:\s*cover\s*!important\s*;/,
+    );
+
+    /*
+     * Bento harus secara eksplisit
+     * me-reset legacy nth-child sizing.
+     *
+     * Ini penting supaya smart bento
+     * tidak dianggap mengikuti pola
+     * grid 01 / 04 / 07 lagi.
+     */
+    expect(
+      bentoCss,
+      "bento gallery must reset legacy nth-child layout",
+    ).toMatch(
+      /\.galleryGrid\[data-layout="bento"\][\s\S]*?\.galleryItem:nth-child\([\s\S]*?3n\s*\+\s*1[\s\S]*?\)[\s\S]*?\{[\s\S]*?grid-column\s*:\s*auto\s*!important\s*;/,
+    );
+
+    expect(
+      bentoCss,
+      "bento gallery must size items from data-size",
+    ).toMatch(
+      /\.galleryItem\[data-size="wide"\][\s\S]*?grid-column\s*:\s*span\s*2\s*!important\s*;/,
     );
 
     /*
      * =========================
      * RUNTIME STRUCTURE
      * =========================
-     *
-     * CSS contract saja belum cukup.
-     *
-     * Kita pastikan actual BAST page
-     * memang masih menghasilkan wide
-     * dan portrait gallery slots.
      */
 
     await page.setViewportSize({
@@ -180,63 +190,210 @@ test(
     ).toBeAttached();
 
     /*
-     * BAST saat ini punya 6 gallery
-     * images.
+     * Gallery grid lives inside the
+     * project-gallery section.
      *
-     * Pattern:
-     *
-     * 01 wide
-     * 02 portrait
-     * 03 portrait
-     * 04 wide
-     * 05 portrait
-     * 06 portrait
+     * data-layout adalah source of truth
+     * runtime untuk menentukan contract
+     * mana yang harus diuji.
      */
-    const wideItems =
+    const galleryGrid =
       gallery.locator(
-        "figure:nth-child(3n + 1)",
-      );
-
-    const portraitItems =
-      gallery.locator(
-        "figure:not(:nth-child(3n + 1))",
+        "[data-layout]",
       );
 
     await expect(
-      wideItems,
+      galleryGrid,
     ).toHaveCount(
-      2,
+      1,
     );
 
-    await expect(
-      portraitItems,
-    ).toHaveCount(
-      4,
+    const layout =
+      await galleryGrid.getAttribute(
+        "data-layout",
+      );
+
+    expect(
+      layout,
+    ).not.toBeNull();
+
+    const items =
+      galleryGrid.locator(
+        "figure",
+      );
+
+    const itemCount =
+      await items.count();
+
+    expect(
+      itemCount,
+      "BAST gallery must contain media items",
+    ).toBeGreaterThan(
+      0,
     );
 
     /*
-     * Wide renderer memang memberi
-     * sizes="100vw".
-     *
-     * Jadi wide screenshot diperlakukan
-     * sebagai full-width media slot.
+     * =========================
+     * GRID CONTRACT
+     * =========================
      */
+
+    if (
+      layout ===
+      "grid"
+    ) {
+      const wideItems =
+        galleryGrid.locator(
+          "figure:nth-child(3n + 1)",
+        );
+
+      const portraitItems =
+        galleryGrid.locator(
+          "figure:not(:nth-child(3n + 1))",
+        );
+
+      const expectedWideCount =
+        Math.ceil(
+          itemCount /
+            3,
+        );
+
+      const expectedPortraitCount =
+        itemCount -
+        expectedWideCount;
+
+      await expect(
+        wideItems,
+      ).toHaveCount(
+        expectedWideCount,
+      );
+
+      await expect(
+        portraitItems,
+      ).toHaveCount(
+        expectedPortraitCount,
+      );
+
+      for (
+        let index =
+          0;
+        index <
+        expectedWideCount;
+        index +=
+          1
+      ) {
+        const image =
+          wideItems
+            .nth(
+              index,
+            )
+            .locator(
+              "img",
+            );
+
+        await expect(
+          image,
+        ).toBeAttached();
+
+        await expect(
+          image,
+        ).toHaveAttribute(
+          "sizes",
+          "100vw",
+        );
+
+        await expect(
+          image,
+        ).toHaveAttribute(
+          "src",
+          /.+/,
+        );
+      }
+
+      if (
+        expectedPortraitCount >
+        0
+      ) {
+        const firstPortraitImage =
+          portraitItems
+            .first()
+            .locator(
+              "img",
+            );
+
+        await expect(
+          firstPortraitImage,
+        ).toBeAttached();
+
+        await expect(
+          firstPortraitImage,
+        ).toHaveAttribute(
+          "sizes",
+          "(max-width: 700px) 100vw, 50vw",
+        );
+      }
+
+      return;
+    }
+
+    /*
+     * =========================
+     * BENTO CONTRACT
+     * =========================
+     *
+     * Bento tidak menggunakan index
+     * sebagai ukuran visual.
+     *
+     * data-size adalah source of truth:
+     *
+     * small / tall
+     * -> half-width delivery
+     *
+     * wide / large
+     * -> full-width delivery on mobile
+     */
+
+    expect(
+      layout,
+      "gallery layout must be grid or bento",
+    ).toBe(
+      "bento",
+    );
+
     for (
       let index =
         0;
       index <
-      2;
+      itemCount;
       index +=
         1
     ) {
+      const item =
+        items.nth(
+          index,
+        );
+
+      const size =
+        await item.getAttribute(
+          "data-size",
+        );
+
+      expect(
+        [
+          "small",
+          "wide",
+          "tall",
+          "large",
+        ],
+        `gallery item ${index + 1} has invalid data-size`,
+      ).toContain(
+        size,
+      );
+
       const image =
-        wideItems
-          .nth(
-            index,
-          )
-          .locator(
-            "img",
-          );
+        item.locator(
+          "img",
+        );
 
       await expect(
         image,
@@ -245,43 +402,58 @@ test(
       await expect(
         image,
       ).toHaveAttribute(
-        "sizes",
-        "100vw",
+        "src",
+        /.+/,
       );
 
+      if (
+        size ===
+          "small" ||
+        size ===
+          "tall"
+      ) {
+        await expect(
+          image,
+        ).toHaveAttribute(
+          "sizes",
+          "(max-width: 700px) 50vw, (max-width: 960px) 34vw, 25vw",
+        );
+
+        continue;
+      }
+
+      /*
+       * wide / large bento tiles
+       * menjadi full-width candidates
+       * pada mobile, tapi tetap punya
+       * responsive tablet/desktop sizes.
+       */
       await expect(
         image,
       ).toHaveAttribute(
-        "src",
-        /.+/,
+        "sizes",
+        "(max-width: 700px) 100vw, (max-width: 960px) 67vw, 50vw",
       );
     }
 
     /*
-     * Portrait slot masih memakai
-     * responsive two-column delivery
-     * pada desktop.
-     *
-     * Ini membantu memastikan renderer
-     * masih membedakan wide dan normal
-     * item secara struktural.
+     * Pastikan BAST benar-benar punya
+     * setidaknya satu wide/large bento
+     * tile sehingga branch full-width
+     * di atas memang diuji.
      */
-    const firstPortraitImage =
-      portraitItems
-        .first()
-        .locator(
-          "img",
-        );
+    const fullWidthBentoItems =
+      galleryGrid.locator(
+        'figure[data-size="wide"], figure[data-size="large"]',
+      );
 
-    await expect(
-      firstPortraitImage,
-    ).toBeAttached();
-
-    await expect(
-      firstPortraitImage,
-    ).toHaveAttribute(
-      "sizes",
-      "(max-width: 700px) 100vw, 50vw",
-    );
+    await expect
+      .poll(
+        async () =>
+          fullWidthBentoItems.count(),
+      )
+      .toBeGreaterThan(
+        0,
+      );
   },
 );

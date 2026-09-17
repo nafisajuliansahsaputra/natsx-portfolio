@@ -24,9 +24,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    timeout-minutes: 20
+    timeout-minutes: 45
 
     env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       NEXT_PUBLIC_SITE_URL: https://portfolio.natsx.my.id
@@ -61,3 +63,32 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  deploy-production:
+    name: Trigger verified production deployment
+
+    needs:
+      - verify
+
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 5
+
+    env:
+      VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+
+    steps:
+      - name: Trigger Vercel production deploy
+        shell: bash
+        run: |
+          test -n "$VERCEL_DEPLOY_HOOK_URL"
+          curl \
+            --fail-with-body \
+            --silent \
+            --show-error \
+            --request POST \
+            "$VERCEL_DEPLOY_HOOK_URL"

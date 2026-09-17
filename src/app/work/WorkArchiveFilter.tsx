@@ -1003,12 +1003,13 @@ const hasPreview =
                   </div>
 
 {hasPreview ? (
-  <div
-    className={
-      styles.previewStage
-    }
-    aria-hidden="true"
-  >
+<div
+  className={
+    styles.previewStage
+  }
+  data-work-preview-stage="true"
+  aria-hidden="true"
+>
     <div
       className={
         styles.previewFrame

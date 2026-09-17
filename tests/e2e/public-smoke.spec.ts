@@ -197,11 +197,23 @@ test.describe(
               ),
             ).toBeVisible();
 
-            await expect(
+            const documentRoot =
               page.locator(
-                `[data-locale="${locale}"]`,
-              ),
-            ).toBeVisible();
+                `html[data-locale="${locale}"]`,
+              );
+
+            await expect(
+              documentRoot,
+            ).toHaveCount(
+              1,
+            );
+
+            await expect(
+              documentRoot,
+            ).toHaveAttribute(
+              "lang",
+              locale,
+            );
 
             await expect(
               page
@@ -394,11 +406,23 @@ test.describe(
             ),
           ).toBeVisible();
 
-          await expect(
+          const documentRoot =
             page.locator(
-              `[data-locale="${locale}"]`,
-            ),
-          ).toBeVisible();
+              `html[data-locale="${locale}"]`,
+            );
+
+          await expect(
+            documentRoot,
+          ).toHaveCount(
+            1,
+          );
+
+          await expect(
+            documentRoot,
+          ).toHaveAttribute(
+            "lang",
+            locale,
+          );
 
           await expect(
             page.getByRole(

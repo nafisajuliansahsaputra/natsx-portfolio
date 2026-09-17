@@ -94,9 +94,6 @@
    * Tablet masih boleh punya emergency
    * wrapping pada email karena column
    * composition-nya berbeda dari mobile.
-   *
-   * Mobile akan mengambil alih dengan
-   * optical sizing khusus di bawah.
    */
   [data-locale="id"]
     [data-motion-page="contact"]
@@ -164,6 +161,47 @@
   /* =========================
      WORK
   ========================= */
+
+  /*
+   * work-motion-fit.css intentionally keeps
+   * the archive baseline single-line.
+   *
+   * Localized project titles can be much
+   * longer, so ID / DE restore natural
+   * wrapping on mobile.
+   *
+   * Important:
+   * #main-content and data-motion-page="work"
+   * live on the SAME element.
+   */
+  [data-locale="id"]
+    #main-content[data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type
+    > h2,
+  [data-locale="de"]
+    #main-content[data-motion-page="work"]
+    [data-motion-scroll="work-project"]
+    > div:first-of-type
+    > h2 {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    white-space: normal !important;
+
+    overflow: visible !important;
+
+    text-overflow: clip !important;
+
+    overflow-wrap: normal;
+    word-break: normal;
+
+    -webkit-hyphens: none;
+    hyphens: none;
+  }
 
   [data-locale="de"]
     [data-motion-page="work"]
@@ -338,20 +376,6 @@
      CONTACT — PRIMARY EMAIL
   ========================= */
 
-  /*
-   * Email sudah punya explicit <br>
-   * antara local-part dan domain:
-   *
-   * nafisajuliansahsaputra
-   * @gmail.com
-   *
-   * Jadi mobile tidak boleh lagi
-   * memecah local-part sendiri.
-   *
-   * Kita scale typography sampai
-   * local-part muat utuh, daripada
-   * memakai emergency word break.
-   */
   [data-locale="id"]
     [data-motion-page="contact"]
     [data-motion-scroll="contact-email"]

@@ -10,6 +10,7 @@ import {
   Analytics,
 } from "@vercel/analytics/next";
 
+import DocumentLocaleController from "@/components/i18n/DocumentLocaleController";
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import InnerFooter from "@/components/layout/InnerFooter";
 import MotionController from "@/components/motion/MotionController";
@@ -19,6 +20,11 @@ import RouteTransitionHandoff from "@/components/motion/RouteTransitionHandoff";
 import {
   site,
 } from "@/data/site";
+
+import {
+  defaultLocale,
+  localizedLocales,
+} from "@/i18n/config";
 
 import {
   getSiteUrl,
@@ -115,14 +121,39 @@ const description =
  *      ↓
  * Portfolio Intro
  *
- * Both motion state and intro state are
- * therefore resolved before the page is
- * visually exposed.
+ * It also resolves the document locale
+ * before body content is exposed.
  */
 
-const motionBootstrapScript = `
-  document.documentElement.dataset.motion =
-    "enabled";
+const documentBootstrapScript = `
+  (() => {
+    const root =
+      document.documentElement;
+
+    root.dataset.motion =
+      "enabled";
+
+    const segment =
+      window.location.pathname
+        .split("/")
+        .filter(Boolean)[0];
+
+    const localizedLocales =
+      ${JSON.stringify(localizedLocales)};
+
+    const locale =
+      localizedLocales.includes(
+        segment
+      )
+        ? segment
+        : ${JSON.stringify(defaultLocale)};
+
+    root.lang =
+      locale;
+
+    root.dataset.locale =
+      locale;
+  })();
 `;
 
 const introBootstrapScript = `
@@ -309,7 +340,12 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang={
+        defaultLocale
+      }
+      data-locale={
+        defaultLocale
+      }
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
@@ -326,7 +362,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              motionBootstrapScript,
+              documentBootstrapScript,
           }}
         />
 
@@ -343,6 +379,8 @@ export default function RootLayout({
           plusJakartaSans.variable
         }
       >
+        <DocumentLocaleController />
+
         <PortfolioIntro />
 
         <MotionController />

@@ -288,7 +288,7 @@ export default function AboutIdentityPortrait({
           />
 
           <Image
-            src="/images/natsx-abt.png"
+            src="/images/natsx-abt.webp"
             alt={
               site.person
             }

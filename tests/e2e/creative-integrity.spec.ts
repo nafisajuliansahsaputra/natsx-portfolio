@@ -306,178 +306,325 @@ test.describe(
       },
     );
 
-test(
-  "work archive keeps floating visual previews",
-  async ({
-    page,
-  }) => {
-    await page.setViewportSize({
-      width:
-        1440,
+    test(
+      "work archive keeps floating visual previews",
+      async ({
+        page,
+      }) => {
+        await page.setViewportSize({
+          width:
+            1440,
 
-      height:
-        900,
-    });
+          height:
+            900,
+        });
 
-    await openPublicPage(
-      page,
-      "/work",
-    );
+        await openPublicPage(
+          page,
+          "/work",
+        );
 
-    const visualProjects =
-      page.locator(
-        '[data-has-preview="true"]',
-      );
+        const visualProjects =
+          page.locator(
+            '[data-has-preview="true"]',
+          );
 
-    await expect
-      .poll(
-        async () =>
-          visualProjects.count(),
-      )
-      .toBeGreaterThan(
-        0,
-      );
+        await expect
+          .poll(
+            async () =>
+              visualProjects.count(),
+          )
+          .toBeGreaterThan(
+            0,
+          );
 
-    const project =
-      visualProjects.first();
+        const project =
+          visualProjects.first();
 
-    await project.scrollIntoViewIfNeeded();
+        await project.scrollIntoViewIfNeeded();
 
-    /*
-     * MotionController reveals Work rows
-     * asynchronously after IntersectionObserver
-     * sees them.
-     *
-     * Cold production starts can take longer
-     * than warm runs, so do not hover while
-     * the row is still entering.
-     */
-    await expect(
-      project,
-    ).toHaveAttribute(
-      "data-motion-visible",
-      "true",
-    );
+        /*
+         * MotionController reveals Work rows
+         * asynchronously after IntersectionObserver
+         * sees them.
+         */
+        await expect(
+          project,
+        ).toHaveAttribute(
+          "data-motion-visible",
+          "true",
+        );
 
-    /*
-     * Wait until entrance animations/transitions
-     * affecting this project have settled.
-     *
-     * This is lifecycle-based instead of using
-     * an arbitrary sleep, so the test remains
-     * stable on both fast and slow machines.
-     */
-    await expect
-      .poll(
-        async () =>
-          project.evaluate(
-            (
-              element,
-            ) => {
-              const animations =
-                element.getAnimations({
-                  subtree:
-                    true,
-                });
-
-return animations.filter(
-  (
-    animation,
-  ) =>
-    animation.pending ||
-    animation.playState ===
-      "running",
-).length;
-            },
-          ),
-        {
-          timeout:
-            5000,
-        },
-      )
-      .toBe(
-        0,
-      );
-
-    const previewImage =
-      project
-        .locator(
-          "img",
-        )
-        .first();
-
-    await expect(
-      previewImage,
-    ).toBeAttached();
-
-    const previewStage =
-      previewImage.locator(
-        "xpath=../..",
-      );
-
-    const initialOpacity =
-      await previewStage.evaluate(
-        (
-          element,
-        ) =>
-          Number.parseFloat(
-            window.getComputedStyle(
-              element,
-            ).opacity,
-          ),
-      );
-
-    expect(
-      initialOpacity,
-    ).toBeLessThanOrEqual(
-      0.05,
-    );
-
-    await project.hover();
-
-    /*
-     * Confirm the pointer really owns the row
-     * before asserting the visual result.
-     */
-    await expect
-      .poll(
-        async () =>
-          project.evaluate(
-            (
-              element,
-            ) =>
-              element.matches(
-                ":hover",
-              ),
-          ),
-      )
-      .toBe(
-        true,
-      );
-
-    await expect
-      .poll(
-        async () =>
-          previewStage.evaluate(
-            (
-              element,
-            ) =>
-              Number.parseFloat(
-                window.getComputedStyle(
+        /*
+         * Wait until entrance animations affecting
+         * the project row have settled before testing
+         * the editorial hover state.
+         */
+        await expect
+          .poll(
+            async () =>
+              project.evaluate(
+                (
                   element,
-                ).opacity,
+                ) => {
+                  const animations =
+                    element.getAnimations({
+                      subtree:
+                        true,
+                    });
+
+                  return animations.filter(
+                    (
+                      animation,
+                    ) =>
+                      animation.pending ||
+                      animation.playState ===
+                        "running",
+                  ).length;
+                },
               ),
-          ),
-        {
-          timeout:
-            5000,
-        },
-      )
-      .toBeGreaterThanOrEqual(
-        0.95,
-      );
-  },
-);
+            {
+              timeout:
+                5000,
+            },
+          )
+          .toBe(
+            0,
+          );
+
+        /*
+         * Desktop work-motion-fit keeps the visual
+         * panel at opacity: 1 and hides/reveals it
+         * using clip-path.
+         *
+         * Select the direct visual panel rather than
+         * depending on internal artwork/image markup.
+         */
+        const previewStage =
+          project.locator(
+            ':scope > div[aria-hidden="true"]:has([data-archive-home-preview])',
+          );
+
+        await expect(
+          previewStage,
+        ).toHaveCount(
+          1,
+        );
+
+        const projectBox =
+          await project.boundingBox();
+
+        expect(
+          projectBox,
+        ).not.toBeNull();
+
+        const viewport =
+          page.viewportSize();
+
+        expect(
+          viewport,
+        ).not.toBeNull();
+
+        if (
+          !projectBox ||
+          !viewport
+        ) {
+          return;
+        }
+
+        const outsideCandidates = [
+          {
+            x:
+              4,
+
+            y:
+              4,
+          },
+          {
+            x:
+              viewport.width -
+              4,
+
+            y:
+              4,
+          },
+          {
+            x:
+              4,
+
+            y:
+              viewport.height -
+              4,
+          },
+          {
+            x:
+              viewport.width -
+              4,
+
+            y:
+              viewport.height -
+              4,
+          },
+        ];
+
+        const outsidePoint =
+          outsideCandidates.find(
+            ({
+              x,
+              y,
+            }) =>
+              x <
+                projectBox.x ||
+              x >
+                projectBox.x +
+                  projectBox.width ||
+              y <
+                projectBox.y ||
+              y >
+                projectBox.y +
+                  projectBox.height,
+          );
+
+        expect(
+          outsidePoint,
+        ).toBeDefined();
+
+        if (
+          !outsidePoint
+        ) {
+          return;
+        }
+
+        /*
+         * Clear keyboard focus and guarantee a neutral
+         * pointer state before checking the hidden
+         * editorial panel.
+         */
+        await page.evaluate(
+          () => {
+            const activeElement =
+              document.activeElement;
+
+            if (
+              activeElement instanceof
+              HTMLElement
+            ) {
+              activeElement.blur();
+            }
+          },
+        );
+
+        await page.mouse.move(
+          outsidePoint.x,
+          outsidePoint.y,
+        );
+
+        await expect
+          .poll(
+            async () =>
+              project.evaluate(
+                (
+                  element,
+                ) => ({
+                  hover:
+                    element.matches(
+                      ":hover",
+                    ),
+
+                  focusVisible:
+                    element.matches(
+                      ":focus-visible",
+                    ),
+                }),
+              ),
+          )
+          .toEqual({
+            hover:
+              false,
+
+            focusVisible:
+              false,
+          });
+
+        /*
+         * work-motion-fit.css deliberately keeps
+         * opacity at 1 on desktop. The neutral panel
+         * is visually hidden by clipping its right
+         * edge by 100%.
+         */
+        await expect
+          .poll(
+            async () =>
+              previewStage.evaluate(
+                (
+                  element,
+                ) =>
+                  window
+                    .getComputedStyle(
+                      element,
+                    )
+                    .clipPath.includes(
+                      "100%",
+                    ),
+              ),
+            {
+              timeout:
+                3000,
+            },
+          )
+          .toBe(
+            true,
+          );
+
+        await project.hover();
+
+        await expect
+          .poll(
+            async () =>
+              project.evaluate(
+                (
+                  element,
+                ) =>
+                  element.matches(
+                    ":hover",
+                  ),
+              ),
+          )
+          .toBe(
+            true,
+          );
+
+        /*
+         * Hover opens the editorial visual panel.
+         * Once its clip transition settles, the
+         * computed clip-path must no longer contain
+         * the 100% closed edge.
+         */
+        await expect
+          .poll(
+            async () =>
+              previewStage.evaluate(
+                (
+                  element,
+                ) =>
+                  window
+                    .getComputedStyle(
+                      element,
+                    )
+                    .clipPath.includes(
+                      "100%",
+                    ),
+              ),
+            {
+              timeout:
+                5000,
+            },
+          )
+          .toBe(
+            false,
+          );
+      },
+    );
 
     test(
       "playground magnetic field remains physically reactive",
