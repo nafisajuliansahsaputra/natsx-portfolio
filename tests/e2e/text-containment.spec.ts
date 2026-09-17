@@ -397,10 +397,29 @@ async function settleWholePage(
       page,
     );
 
-    const sample =
-      await findClippedText(
-        page,
-      );
+let sample =
+  await findClippedText(
+    page,
+  );
+
+if (
+  sample.length > 0 &&
+  motionMode ===
+    "normal"
+) {
+  await page.waitForTimeout(
+    120,
+  );
+
+  await finishFiniteAnimations(
+    page,
+  );
+
+  sample =
+    await findClippedText(
+      page,
+    );
+}
 
     for (
       const issue

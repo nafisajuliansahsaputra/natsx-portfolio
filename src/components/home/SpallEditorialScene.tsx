@@ -5,339 +5,26 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import {
+  createSceneResources,
+} from "./spall-editorial/resources";
+import {
+  canvasTexture,
+  roundedRect,
+  shadowTexture,
+} from "./spall-editorial/textures";
+
+import {
+  createShadowFactory,
+  createTileFactory,
+} from "./spall-editorial/builders";
 
 type Props = {
   screenUrl: string | null;
   label: string;
 };
 
-type IconKind = "identity" | "explore" | "share";
-
-type ShadowOptions = {
-  width: number;
-  height: number;
-  x: number;
-  y: number;
-  z: number;
-  opacity?: number;
-  rotation?: number;
-};
-
 const MODEL_URL = "/models/iphone-17-pro-max.glb";
-
-function roundedRect(
-  width: number,
-  height: number,
-  radius: number,
-) {
-  const shape = new THREE.Shape();
-
-  const x = -width / 2;
-  const y = -height / 2;
-
-  const r = Math.min(
-    radius,
-    width / 2,
-    height / 2,
-  );
-
-  shape.moveTo(x + r, y);
-  shape.lineTo(x + width - r, y);
-
-  shape.quadraticCurveTo(
-    x + width,
-    y,
-    x + width,
-    y + r,
-  );
-
-  shape.lineTo(
-    x + width,
-    y + height - r,
-  );
-
-  shape.quadraticCurveTo(
-    x + width,
-    y + height,
-    x + width - r,
-    y + height,
-  );
-
-  shape.lineTo(
-    x + r,
-    y + height,
-  );
-
-  shape.quadraticCurveTo(
-    x,
-    y + height,
-    x,
-    y + height - r,
-  );
-
-  shape.lineTo(
-    x,
-    y + r,
-  );
-
-  shape.quadraticCurveTo(
-    x,
-    y,
-    x + r,
-    y,
-  );
-
-  shape.closePath();
-
-  return shape;
-}
-
-function canvasTexture(
-  draw: (
-    context: CanvasRenderingContext2D,
-  ) => void,
-) {
-  const canvas =
-    document.createElement("canvas");
-
-  canvas.width = 512;
-  canvas.height = 512;
-
-  const context =
-    canvas.getContext("2d");
-
-  if (!context) {
-    throw new Error(
-      "Canvas 2D unavailable.",
-    );
-  }
-
-  draw(context);
-
-  const texture =
-    new THREE.CanvasTexture(canvas);
-
-  texture.colorSpace =
-    THREE.SRGBColorSpace;
-
-  return texture;
-}
-
-function iconTexture(
-  kind: IconKind,
-  light = false,
-) {
-  return canvasTexture(
-    (context) => {
-      const color =
-        light
-          ? "#e2e7d8"
-          : "#234633";
-
-      context.strokeStyle =
-        color;
-
-      context.fillStyle =
-        color;
-
-      context.lineWidth = 8;
-      context.lineCap = "round";
-      context.lineJoin = "round";
-
-      if (
-        kind ===
-        "identity"
-      ) {
-        context.beginPath();
-
-        context.arc(
-          256,
-          153,
-          34,
-          0,
-          Math.PI * 2,
-        );
-
-        context.stroke();
-
-        context.beginPath();
-
-        context.moveTo(
-          191,
-          272,
-        );
-
-        context.lineTo(
-          191,
-          251,
-        );
-
-        context.bezierCurveTo(
-          191,
-          195,
-          321,
-          195,
-          321,
-          251,
-        );
-
-        context.lineTo(
-          321,
-          272,
-        );
-
-        context.closePath();
-
-        context.stroke();
-      }
-
-      if (
-        kind ===
-        "explore"
-      ) {
-        for (
-          let index = 0;
-          index < 3;
-          index++
-        ) {
-          const y =
-            159 +
-            index * 35;
-
-          context.beginPath();
-
-          context.moveTo(
-            177,
-            y,
-          );
-
-          context.lineTo(
-            256,
-            y + 41,
-          );
-
-          context.lineTo(
-            335,
-            y,
-          );
-
-          if (
-            index === 0
-          ) {
-            context.lineTo(
-              256,
-              y - 41,
-            );
-
-            context.closePath();
-          }
-
-          context.stroke();
-        }
-      }
-
-      if (
-        kind ===
-        "share"
-      ) {
-        context.save();
-
-        context.translate(
-          256,
-          203,
-        );
-
-        context.rotate(
-          -Math.PI / 4,
-        );
-
-        context.beginPath();
-
-        context.roundRect(
-          -94,
-          -30,
-          116,
-          60,
-          30,
-        );
-
-        context.stroke();
-
-        context.beginPath();
-
-        context.roundRect(
-          -22,
-          -30,
-          116,
-          60,
-          30,
-        );
-
-        context.stroke();
-
-        context.restore();
-      }
-
-      context.font =
-        "500 31px Arial";
-
-      context.textAlign =
-        "center";
-
-      context.fillText(
-        kind.toUpperCase(),
-        256,
-        369,
-      );
-    },
-  );
-}
-
-function shadowTexture() {
-  return canvasTexture(
-    (context) => {
-      const gradient =
-        context.createRadialGradient(
-          256,
-          256,
-          5,
-          256,
-          256,
-          250,
-        );
-
-      gradient.addColorStop(
-        0,
-        "rgba(24,34,24,0.42)",
-      );
-
-      gradient.addColorStop(
-        0.34,
-        "rgba(24,34,24,0.18)",
-      );
-
-      gradient.addColorStop(
-        0.68,
-        "rgba(24,34,24,0.045)",
-      );
-
-      gradient.addColorStop(
-        1,
-        "rgba(24,34,24,0)",
-      );
-
-      context.fillStyle =
-        gradient;
-
-      context.fillRect(
-        0,
-        0,
-        512,
-        512,
-      );
-    },
-  );
-}
 
 export default function SpallEditorialScene(
   props: Props,
@@ -405,124 +92,15 @@ function Scene({
       | (() => void)
       | undefined;
 
-    const geometries =
-      new Set<
-        THREE.BufferGeometry
-      >();
-
-    const materials =
-      new Set<
-        THREE.Material
-      >();
-
-    const textures =
-      new Set<
-        THREE.Texture
-      >();
-
-    function keepMaterial<
-      T extends THREE.Material,
-    >(
-      material: T,
-    ): T {
-      materials.add(
-        material,
-      );
-
-      for (
-        const value of
-        Object.values(
-          material,
-        )
-      ) {
-        if (
-          value instanceof
-          THREE.Texture
-        ) {
-          textures.add(
-            value,
-          );
-        }
-      }
-
-      return material;
-    }
-
-    function makeMesh(
-      geometry:
-        THREE.BufferGeometry,
-      material:
-        THREE.Material,
-    ) {
-      geometries.add(
-        geometry,
-      );
-
-      keepMaterial(
-        material,
-      );
-
-      return new THREE.Mesh(
-        geometry,
-        material,
-      );
-    }
-
-    function collect(
-      model:
-        THREE.Object3D,
-    ) {
-      model.traverse(
-        (object) => {
-          if (
-            !(
-              object instanceof
-              THREE.Mesh
-            )
-          ) {
-            return;
-          }
-
-          geometries.add(
-            object.geometry,
-          );
-
-          const materialList =
-            Array.isArray(
-              object.material,
-            )
-              ? object.material
-              : [
-                  object.material,
-                ];
-
-          materialList.forEach(
-            keepMaterial,
-          );
-        },
-      );
-    }
-
-    function disposeAssets() {
-      textures.forEach(
-        (texture) =>
-          texture.dispose(),
-      );
-
-      materials.forEach(
-        (material) =>
-          material.dispose(),
-      );
-
-      geometries.forEach(
-        (geometry) =>
-          geometry.dispose(),
-      );
-
-      textures.clear();
-      materials.clear();
-      geometries.clear();
-    }
+const {
+  geometries,
+  textures,
+  keepMaterial,
+  makeMesh,
+  collect,
+  disposeAssets,
+} =
+  createSceneResources();
 
     function handleContextLost() {
       cleanupMotion?.();
@@ -1252,146 +830,16 @@ function Scene({
             ),
           );
 
-        function tile(
-          kind: IconKind,
-          position: [
-            number,
-            number,
-            number,
-          ],
-          angles: [
-            number,
-            number,
-            number,
-          ],
-          round = false,
-        ) {
-          const group =
-            new THREE.Group();
-
-          const shape =
-            round
-              ? new THREE.Shape()
-              : roundedRect(
-                  1.02,
-                  1.05,
-                  0.12,
-                );
-
-          if (round) {
-            shape.absarc(
-              0,
-              0,
-              0.52,
-              0,
-              Math.PI * 2,
-              false,
-            );
-          }
-
-          const tileDepth =
-            round
-              ? 0.12
-              : 0.24;
-
-          const tileBevel =
-            round
-              ? 0.027
-              : 0.045;
-
-          const geometry =
-            new THREE.ExtrudeGeometry(
-              shape,
-              {
-                depth:
-                  tileDepth,
-                steps:
-                  1,
-                curveSegments:
-                  32,
-                bevelEnabled:
-                  true,
-                bevelSize:
-                  tileBevel,
-                bevelThickness:
-                  tileBevel,
-                bevelSegments:
-                  7,
-              },
-            );
-
-          geometries.add(
-            geometry,
-          );
-
-          const body =
-            new THREE.Mesh(
-              geometry,
-              round
-                ? greenMaterial
-                : [
-                    glassTileMaterial,
-                    glassTileSideMaterial,
-                  ],
-            );
-
-          group.add(
-            body,
-          );
-
-          const texture =
-            iconTexture(
-              kind,
-              round,
-            );
-
-          textures.add(
-            texture,
-          );
-
-          const print =
-            makeMesh(
-              new THREE.PlaneGeometry(
-                0.9,
-                0.9,
-              ),
-              new THREE.MeshBasicMaterial(
-                {
-                  map:
-                    texture,
-                  transparent:
-                    true,
-                  depthWrite:
-                    false,
-                  toneMapped:
-                    false,
-                },
-              ),
-            );
-
-          print.position.z =
-            round
-              ? 0.151
-              : 0.292;
-
-          group.add(
-            print,
-          );
-
-          group.position.set(
-            ...position,
-          );
-
-          group.rotation.set(
-            ...angles,
-          );
-
-          rig.add(
-            group,
-          );
-
-          return group;
-        }
+const tile =
+  createTileFactory({
+    rig,
+    geometries,
+    textures,
+    makeMesh,
+    glassTileMaterial,
+    glassTileSideMaterial,
+    greenMaterial,
+  });
 
         /*
          * POSISI OBJECT TIDAK DIUBAH.
@@ -1647,53 +1095,12 @@ function Scene({
           shadowMap,
         );
 
-        function addShadow({
-          width,
-          height,
-          x,
-          y,
-          z,
-          opacity = 1,
-          rotation = 0,
-        }: ShadowOptions) {
-          const shadow =
-            makeMesh(
-              new THREE.PlaneGeometry(
-                width,
-                height,
-              ),
-              new THREE.MeshBasicMaterial(
-                {
-                  map:
-                    shadowMap,
-                  transparent:
-                    true,
-                  opacity,
-                  depthWrite:
-                    false,
-                  depthTest:
-                    true,
-                  toneMapped:
-                    false,
-                },
-              ),
-            );
-
-          shadow.position.set(
-            x,
-            y,
-            z,
-          );
-
-          shadow.rotation.z =
-            rotation;
-
-          rig.add(
-            shadow,
-          );
-
-          return shadow;
-        }
+const addShadow =
+  createShadowFactory({
+    rig,
+    makeMesh,
+    shadowMap,
+  });
 
         /*
          * PHONE SHADOW
