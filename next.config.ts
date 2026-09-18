@@ -66,6 +66,14 @@ if (
 
 const connectSources = [
   "'self'",
+
+  /*
+   * GLTFLoader turns embedded GLB images
+   * into blob URLs. Three.js may load those
+   * through ImageBitmapLoader/fetch, so the
+   * URLs must be allowed by connect-src.
+   */
+  "blob:",
 ];
 
 if (
