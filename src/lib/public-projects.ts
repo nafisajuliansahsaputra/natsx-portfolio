@@ -22,6 +22,9 @@ import {
 const PUBLIC_PROJECT_FIELDS =
   "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,hero_image_path,card_image_path,updated_at,published_at";
 
+const PUBLIC_PROJECT_NAVIGATION_FIELDS =
+  "id,slug,title,project_number,categories,sort_order,accent_color";
+
 const PUBLIC_SECTION_FIELDS =
   "id,project_id,section_type,eyebrow,heading,body,content,theme,sort_order,is_visible,created_at";
 
@@ -80,6 +83,23 @@ type PublicProjectRow = {
   updated_at: string;
 
   published_at:
+    | string
+    | null;
+};
+
+type PublicProjectNavigationRow = {
+  id: string;
+  slug: string;
+  title: string;
+  project_number: string;
+
+  categories:
+    | unknown[]
+    | null;
+
+  sort_order: number;
+
+  accent_color:
     | string
     | null;
 };
@@ -210,6 +230,16 @@ export type PublicProject = {
     | null;
 };
 
+export type PublicProjectNavigation = {
+  id: string;
+  slug: string;
+  number: string;
+  title: string;
+  disciplines: string[];
+  sortOrder: number;
+  accentColor: string;
+};
+
 export type PublicProjectSection = {
   id: string;
   projectId: string;
@@ -234,7 +264,7 @@ export type PublicProjectPageData = {
     PublicProjectSection[];
 
   nextProject:
-    | PublicProject
+    | PublicProjectNavigation
     | null;
 
   totalProjects: number;
@@ -698,6 +728,61 @@ function normalizeProject(
 
     publishedAt:
       project.published_at,
+  };
+}
+
+function normalizeProjectNavigation(
+  project:
+    PublicProjectNavigationRow,
+
+  translations?: ProjectTranslationBucket,
+): PublicProjectNavigation {
+  const requested =
+    translations
+      ?.requested;
+
+  const english =
+    translations
+      ?.english;
+
+  return {
+    id:
+      project.id,
+
+    slug:
+      project.slug,
+
+    number:
+      project.project_number,
+
+    title:
+      pickTranslatedTitle(
+        requested
+          ?.title,
+
+        english
+          ?.title,
+
+        project.title,
+      ),
+
+    disciplines:
+      pickTranslatedList(
+        requested
+          ?.categories,
+
+        english
+          ?.categories,
+
+        project.categories,
+      ),
+
+    sortOrder:
+      project.sort_order,
+
+    accentColor:
+      project.accent_color ||
+      "#5961ED",
   };
 }
 
@@ -1203,7 +1288,7 @@ async function loadPublishedProjectPage(
           "projects",
         )
         .select(
-          PUBLIC_PROJECT_FIELDS,
+          PUBLIC_PROJECT_NAVIGATION_FIELDS,
         )
         .eq(
           "status",
@@ -1242,7 +1327,7 @@ async function loadPublishedProjectPage(
   const rawProjects =
     (projectListResult.data ??
       []) as unknown as
-      PublicProjectRow[];
+      PublicProjectNavigationRow[];
 
   const [
     projectTranslations,
@@ -1308,7 +1393,7 @@ async function loadPublishedProjectPage(
       (
         item,
       ) =>
-        normalizeProject(
+        normalizeProjectNavigation(
           item,
           projectLookup.get(
             item.id,
@@ -1324,7 +1409,7 @@ async function loadPublishedProjectPage(
     );
 
   let nextProject:
-    | PublicProject
+    | PublicProjectNavigation
     | null =
     null;
 
