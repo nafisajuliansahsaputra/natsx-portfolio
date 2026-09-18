@@ -369,3 +369,68 @@ test(
     );
   },
 );
+
+/*
+ * =========================================================
+ * 5AM VISION IMAGE DELIVERY
+ * =========================================================
+ */
+test(
+  "5AM Vision artwork uses optimized Next.js image delivery",
+  async ({
+    page,
+  }) => {
+    await page.goto(
+      "/",
+    );
+
+    const selectors = [
+      '[data-vision-part="top-logo"] img',
+      '[data-vision-part="character"] img',
+    ] as const;
+
+    for (
+      const selector of
+      selectors
+    ) {
+      const image =
+        page
+          .locator(
+            selector,
+          )
+          .first();
+
+      await expect(
+        image,
+      ).toHaveCount(
+        1,
+      );
+
+      const src =
+        await image.getAttribute(
+          "src",
+        );
+
+      const srcSet =
+        await image.getAttribute(
+          "srcset",
+        );
+
+      expect(
+        src,
+      ).toContain(
+        "/_next/image",
+      );
+
+      expect(
+        srcSet,
+      ).toBeTruthy();
+
+      expect(
+        srcSet,
+      ).toContain(
+        "/_next/image",
+      );
+    }
+  },
+);

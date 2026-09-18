@@ -450,7 +450,6 @@ export default function FiveAmVisionArtwork({
               styles.topLogoImage
             }
             data-vision-part="top-logo-image"
-            unoptimized
           />
         </span>
 
@@ -574,7 +573,6 @@ export default function FiveAmVisionArtwork({
             styles.characterImage
           }
           data-vision-part="character-image"
-          unoptimized
         />
       </div>
     </div>
