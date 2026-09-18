@@ -986,3 +986,8 @@
       0.01ms !important;
   }
 }
+
+/* Preserve the BAST editorial composition on smaller screens. */
+.visual:has([data-bast-featured="true"]) {
+  aspect-ratio: 16 / 9;
+}

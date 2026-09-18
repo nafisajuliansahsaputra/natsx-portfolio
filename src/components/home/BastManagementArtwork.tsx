@@ -1,4 +1,13 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import Image from "next/image";
+
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import type {
   PublicProject,
@@ -6,18 +15,32 @@ import type {
 
 import styles from "./BastManagementArtwork.module.css";
 
-type BastManagementArtworkProps = {
-  project: PublicProject;
+const BastEditorialScene =
+  dynamic(
+    () =>
+      import(
+        "./BastEditorialScene"
+      ),
+    {
+      ssr: false,
+    },
+  );
+
+const SCENE_PRELOAD_MARGIN =
+  "500px 0px";
+
+type Props = {
+  project:
+    PublicProject;
 
   primaryVisual:
-    | string
-    | null;
+    string | null;
 
   secondaryVisual:
-    | string
-    | null;
+    string | null;
 
-  visualLabel: string;
+  visualLabel:
+    string;
 };
 
 export default function BastManagementArtwork({
@@ -25,21 +48,95 @@ export default function BastManagementArtwork({
   primaryVisual,
   secondaryVisual,
   visualLabel,
-}: BastManagementArtworkProps) {
-  const disciplines =
-    project.disciplines
-      .slice(
-        0,
-        3,
+}: Props) {
+  const artworkRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  const [
+    shouldLoadScene,
+    setShouldLoadScene,
+  ] =
+    useState(false);
+
+  useEffect(
+    () => {
+      const artwork =
+        artworkRef.current;
+
+      if (!artwork) {
+        return;
+      }
+
+      if (
+        typeof IntersectionObserver ===
+        "undefined"
+      ) {
+        const frame =
+          window.requestAnimationFrame(
+            () =>
+              setShouldLoadScene(
+                true,
+              ),
+          );
+
+        return () =>
+          window.cancelAnimationFrame(
+            frame,
+          );
+      }
+
+      const observer =
+        new IntersectionObserver(
+          (entries) => {
+            if (
+              !entries[0]
+                ?.isIntersecting
+            ) {
+              return;
+            }
+
+            setShouldLoadScene(
+              true,
+            );
+
+            observer.disconnect();
+          },
+          {
+            rootMargin:
+              SCENE_PRELOAD_MARGIN,
+
+            threshold:
+              0.01,
+          },
+        );
+
+      observer.observe(
+        artwork,
       );
+
+      return () =>
+        observer.disconnect();
+    },
+    [],
+  );
 
   return (
     <div
+      ref={artworkRef}
       className={
         styles.artwork
       }
       data-bast-featured="true"
     >
+      <div
+        className={
+          styles.light
+        }
+        aria-hidden="true"
+      />
+
       <div
         className={
           styles.grid
@@ -49,394 +146,352 @@ export default function BastManagementArtwork({
 
       <div
         className={
-          styles.blueprint
+          styles.orbit
         }
         aria-hidden="true"
-      >
-        <span>
-          {
-            project.number
-          }
-        </span>
-        <strong>
-          BAST
-        </strong>
-        <small>
-          SYSTEM / WORKFLOW
-        </small>
-      </div>
+      />
 
       <div
         className={
-          styles.systemTag
+          styles.orbitBubble
+        }
+        aria-hidden="true"
+      />
+
+      {/* LEFT COPY */}
+
+      <div
+        className={
+          styles.copy
         }
         aria-hidden="true"
       >
+        <h4
+          className={
+            styles.headline
+          }
+        >
+          BAST
+        </h4>
+
         <span
           className={
-            styles.systemTagDot
+            styles.titleRule
           }
         />
-        <span>
-          DOCUMENT FLOW
-        </span>
-      </div>
 
-      <div
-        className={
-          styles.controlRail
-        }
-        aria-hidden="true"
-      >
-        <span>
-          VERIFIED
-        </span>
-        <span>
-          TRACKED
-        </span>
-        <span>
-          ACTIVE
-        </span>
-      </div>
-
-      <div
-        className={
-          styles.dashboardShell
-        }
-        data-featured-layer="bast-dashboard"
-      >
-        <div
+        <p
           className={
-            styles.dashboardTop
-          }
-          aria-hidden="true"
-        >
-          <div
-            className={
-              styles.windowDots
-            }
-          >
-            <span />
-            <span />
-            <span />
-          </div>
-
-          <span
-            className={
-              styles.dashboardAddress
-            }
-          >
-            BAST / MANAGEMENT SYSTEM
-          </span>
-
-          <span
-            className={
-              styles.dashboardMode
-            }
-          >
-            LIVE PANEL
-          </span>
-        </div>
-
-        <div
-          className={
-            styles.dashboardViewport
+            styles.systemName
           }
         >
-          {primaryVisual ? (
-            <Image
-              src={
-                primaryVisual
-              }
-              alt={`${project.title} dashboard interface`}
-              fill
-              sizes="(max-width: 700px) 83vw, (max-width: 960px) 74vw, 62vw"
-              className={
-                styles.dashboardImage
-              }
-              unoptimized
-            />
-          ) : (
-            <DashboardFallback
-              title={
-                project.title
-              }
-            />
-          )}
+          BERITA ACARA
+          <br />
 
-          <div
-            className={
-              styles.dashboardOverlay
-            }
-            aria-hidden="true"
-          />
-        </div>
+          SERAH TERIMA
+          <br />
+
+          MANAGEMENT SYSTEM
+        </p>
+
+        <span
+          className={
+            styles.copyRule
+          }
+        />
+
+        <p
+          className={
+            styles.description
+          }
+        >
+          FROM PROCESS
+          <br />
+
+          TO PROOF.
+          <br />
+
+          ALL IN ONE SYSTEM.
+        </p>
       </div>
+
+      {/* FLOATING DOCUMENT ICON */}
 
       <div
         className={
-          styles.metricsCard
+          styles.documentIconCard
         }
-        data-featured-layer="bast-metrics"
         aria-hidden="true"
       >
         <span
           className={
-            styles.metricsLabel
+            styles.documentIcon
           }
         >
-          SYSTEM STATUS
-        </span>
-
-        <div
-          className={
-            styles.metricsRows
-          }
-        >
-          <div>
-            <small>
-              DOCS
-            </small>
-            <strong>
-              128
-            </strong>
-          </div>
-
-          <div>
-            <small>
-              FLOW
-            </small>
-            <strong>
-              OK
-            </strong>
-          </div>
-
-          <div>
-            <small>
-              QUEUE
-            </small>
-            <strong>
-              03
-            </strong>
-          </div>
-        </div>
-
-        <div
-          className={
-            styles.metricsBars
-          }
-        >
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-
-      <div
-        className={
-          styles.documentStage
-        }
-        data-featured-layer="bast-document"
-      >
-        <div
-          className={
-            styles.documentBadge
-          }
-          aria-hidden="true"
-        >
-          <span
-            className={
-              styles.documentBadgeDot
-            }
-          />
-          <span>
-            APPROVED
-          </span>
-        </div>
-
-        <div
-          className={
-            styles.documentSheet
-          }
-        >
-          {secondaryVisual ? (
-            <Image
-              src={
-                secondaryVisual
-              }
-              alt={`${project.title} document output`}
-              fill
-              sizes="(max-width: 700px) 30vw, (max-width: 960px) 28vw, 24vw"
-              className={
-                styles.documentImage
-              }
-              unoptimized
-            />
-          ) : (
-            <DocumentFallback />
-          )}
-        </div>
-      </div>
-
-      <div
-        className={
-          styles.auditStrip
-        }
-        aria-hidden="true"
-      >
-        <span>
-          DOCUMENT CODE
-        </span>
-        <strong>
-          BAST-2026-014
-        </strong>
-        <span>
-          VERIFIED OUTPUT
+          <i />
+          <i />
+          <i />
         </span>
       </div>
 
+      {/* THREE.JS */}
+
       <div
         className={
-          styles.footerMeta
-        }
-        aria-hidden="true"
-      >
-        {disciplines.map(
-          (
-            discipline,
-            index,
-          ) => (
-            <span
-              key={
-                discipline
-              }
-            >
-              <small>
-                0{
-                  index + 1
-                }
-              </small>
-              {
-                discipline
-              }
-            </span>
-          ),
-        )}
-      </div>
-
-      <span
-        className={
-          styles.visualLabel
+          styles.scene
         }
       >
         {
-          visualLabel
+          shouldLoadScene
+            ? (
+              <BastEditorialScene
+                screenUrl={
+                  primaryVisual
+                }
+                documentUrl={
+                  secondaryVisual
+                }
+                label={`${project.title} — ${visualLabel}`}
+              />
+            )
+            : null
         }
-      </span>
-    </div>
-  );
-}
+      </div>
 
-function DashboardFallback({
-  title,
-}: {
-  title: string;
-}) {
-  return (
-    <div
-      className={
-        styles.dashboardFallback
+      {/* FOREGROUND DOCUMENT */}
+
+      {
+        secondaryVisual
+          ? (
+            <div
+              className={
+                styles.documentStage
+              }
+              aria-hidden="true"
+            >
+              <div
+                className={
+                  styles.documentShadow
+                }
+              />
+
+              <div
+                className={
+                  styles.documentSheet
+                }
+              >
+                <Image
+                  src={
+                    secondaryVisual
+                  }
+                  alt=""
+                  fill
+                  sizes="24vw"
+                  className={
+                    styles.documentImage
+                  }
+                  unoptimized
+                />
+              </div>
+            </div>
+          )
+          : null
       }
-    >
-      <aside
-        className={
-          styles.dashboardAside
-        }
-      >
-        <span>
-          BAST
-        </span>
-        <i />
-        <i />
-        <i />
-        <i />
-      </aside>
+
+      {/* TOP RIGHT NOTE */}
 
       <div
         className={
-          styles.dashboardMain
+          styles.topNote
         }
+        aria-hidden="true"
       >
-        <header
+        <span>
+          DOKUMEN
+        </span>
+
+        <span>
+          LEBIH TERATUR
+        </span>
+
+        <span>
+          KINERJA LEBIH MAJU
+        </span>
+
+        <i />
+      </div>
+
+      {/* SUCCESS */}
+
+      <div
+        className={
+          styles.successCard
+        }
+        aria-hidden="true"
+      >
+        <span
           className={
-            styles.dashboardFallbackHeader
+            styles.successIcon
+          }
+        >
+          ✓
+        </span>
+
+        <div>
+          <strong>
+            Dokumen Berhasil Dicetak
+          </strong>
+
+          <small>
+            BAST-2026-014
+          </small>
+        </div>
+      </div>
+
+      {/* TOTAL */}
+
+      <div
+        className={
+          styles.totalCard
+        }
+        aria-hidden="true"
+      >
+        <div
+          className={
+            styles.totalDocumentIcon
+          }
+        >
+          <i />
+          <i />
+        </div>
+
+        <div
+          className={
+            styles.totalCopy
           }
         >
           <strong>
-            {title}
+            128
           </strong>
-          <span>
-            ACTIVE
-          </span>
-        </header>
 
-        <div
-          className={
-            styles.dashboardStats
-          }
-        >
-          <span />
-          <span />
-          <span />
-          <span />
+          <small>
+            Total BAST
+          </small>
         </div>
 
         <div
           className={
-            styles.dashboardChart
+            styles.miniChart
           }
         >
-          <span />
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
-
-        <div
-          className={
-            styles.dashboardTable
-          }
-        >
-          <span />
           <span />
           <span />
           <span />
         </div>
       </div>
+
+      {/* WORKFLOW */}
+
+      <div
+        className={
+          styles.workflow
+        }
+        aria-hidden="true"
+      >
+        <div
+          className={
+            styles.workflowTrack
+          }
+        />
+
+        <WorkflowItem
+          symbol="+"
+          text="Buat & Ajukan"
+        />
+
+        <WorkflowItem
+          symbol="✓"
+          text="Verifikasi"
+        />
+
+        <WorkflowItem
+          symbol="✓"
+          text="Selesai"
+          active
+        />
+      </div>
+
+      {/* FOOTER */}
+
+      <div
+        className={
+          styles.bottomLeft
+        }
+        aria-hidden="true"
+      >
+        <span>
+          DIGITAL WORKFLOW
+        </span>
+
+        <span>
+          REAL IMPACT
+        </span>
+
+        <i />
+      </div>
+
+      <div
+        className={
+          styles.bottomRight
+        }
+        aria-hidden="true"
+      >
+        <span>
+          PEMERINTAH
+        </span>
+
+        <span>
+          LEBIH EFISIEN
+        </span>
+
+        <span>
+          MASA DEPAN LEBIH BAIK
+        </span>
+
+        <i />
+      </div>
     </div>
   );
 }
 
-function DocumentFallback() {
+function WorkflowItem({
+  symbol,
+  text,
+  active = false,
+}: {
+  symbol:
+    string;
+
+  text:
+    string;
+
+  active?:
+    boolean;
+}) {
   return (
     <div
-      className={
-        styles.documentFallback
-      }
+      className={`${styles.workflowItem} ${
+        active
+          ? styles.workflowActive
+          : ""
+      }`}
     >
       <span>
-        BERITA ACARA
+        {symbol}
       </span>
 
-      <div />
-      <div />
-      <div />
-      <div />
-
       <strong>
-        VERIFIED
+        {text}
       </strong>
     </div>
   );
