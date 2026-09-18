@@ -4,7 +4,7 @@ import {
 } from "@playwright/test";
 
 test(
-  "public responses include production security headers",
+  "public responses include hardened production security headers",
   async ({
     request,
   }) => {
@@ -60,28 +60,33 @@ test(
       "strict-origin-when-cross-origin",
     );
 
-    expect(
+    const permissionsPolicy =
       headers[
         "permissions-policy"
-      ],
+      ];
+
+    expect(
+      permissionsPolicy,
     ).toContain(
       "camera=()",
     );
 
     expect(
-      headers[
-        "permissions-policy"
-      ],
+      permissionsPolicy,
     ).toContain(
       "microphone=()",
     );
 
     expect(
-      headers[
-        "permissions-policy"
-      ],
+      permissionsPolicy,
     ).toContain(
       "geolocation=()",
+    );
+
+    expect(
+      permissionsPolicy,
+    ).toContain(
+      "browsing-topics=()",
     );
 
     expect(
@@ -99,6 +104,82 @@ test(
 
     expect(
       contentSecurityPolicy,
+    ).toBeTruthy();
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "default-src 'self'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "script-src 'self' 'unsafe-inline'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).not.toContain(
+      "'unsafe-eval'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "style-src 'self' 'unsafe-inline'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "img-src 'self' data: blob:",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "media-src 'self' blob:",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "connect-src 'self'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "font-src 'self' data:",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "worker-src 'self' blob:",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "frame-src 'self'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "object-src 'self'",
+    );
+
+    expect(
+      contentSecurityPolicy,
+    ).toContain(
+      "manifest-src 'self'",
+    );
+
+    expect(
+      contentSecurityPolicy,
     ).toContain(
       "base-uri 'self'",
     );
@@ -106,13 +187,13 @@ test(
     expect(
       contentSecurityPolicy,
     ).toContain(
-      "frame-ancestors 'self'",
+      "form-action 'self'",
     );
 
     expect(
       contentSecurityPolicy,
     ).toContain(
-      "object-src 'self'",
+      "frame-ancestors 'self'",
     );
   },
 );

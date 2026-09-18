@@ -10,14 +10,136 @@ const supabaseUrl =
 const remotePatterns: URL[] =
   [];
 
+let supabaseOrigin:
+  | string
+  | null = null;
+
+let supabaseWebSocketOrigin:
+  | string
+  | null = null;
+
 if (supabaseUrl) {
+  const parsedSupabaseUrl =
+    new URL(
+      supabaseUrl,
+    );
+
+  supabaseOrigin =
+    parsedSupabaseUrl.origin;
+
+  supabaseWebSocketOrigin =
+    parsedSupabaseUrl.protocol ===
+    "https:"
+      ? `wss://${parsedSupabaseUrl.host}`
+      : `ws://${parsedSupabaseUrl.host}`;
+
   remotePatterns.push(
     new URL(
       "/storage/v1/object/public/**",
-      supabaseUrl,
+      parsedSupabaseUrl,
     ),
   );
 }
+
+const isDevelopment =
+  process.env.NODE_ENV !==
+  "production";
+
+const scriptSources = [
+  "'self'",
+  "'unsafe-inline'",
+];
+
+if (
+  isDevelopment
+) {
+  /*
+   * Turbopack / React development tooling
+   * may require eval-based source execution.
+   *
+   * Never included in production CSP.
+   */
+  scriptSources.push(
+    "'unsafe-eval'",
+  );
+}
+
+const connectSources = [
+  "'self'",
+];
+
+if (
+  isDevelopment
+) {
+  /*
+   * Next.js dev HMR uses WebSocket.
+   *
+   * This development-only allowance is
+   * intentionally absent from production.
+   */
+  connectSources.push(
+    "ws:",
+    "wss:",
+  );
+}
+
+if (
+  supabaseOrigin
+) {
+  connectSources.push(
+    supabaseOrigin,
+  );
+}
+
+if (
+  supabaseWebSocketOrigin
+) {
+  connectSources.push(
+    supabaseWebSocketOrigin,
+  );
+}
+
+const externalMediaSources =
+  supabaseOrigin
+    ? ` ${supabaseOrigin}`
+    : "";
+
+const contentSecurityPolicy =
+  [
+    "default-src 'self'",
+
+    `script-src ${scriptSources.join(
+      " ",
+    )}`,
+
+    "style-src 'self' 'unsafe-inline'",
+
+    `img-src 'self' data: blob:${externalMediaSources}`,
+
+    `media-src 'self' blob:${externalMediaSources}`,
+
+    `connect-src ${connectSources.join(
+      " ",
+    )}`,
+
+    "font-src 'self' data:",
+
+    "worker-src 'self' blob:",
+
+    "frame-src 'self'",
+
+    "object-src 'self'",
+
+    "manifest-src 'self'",
+
+    "base-uri 'self'",
+
+    "form-action 'self'",
+
+    "frame-ancestors 'self'",
+  ].join(
+    "; ",
+  );
 
 const securityHeaders = [
   {
@@ -81,13 +203,7 @@ const securityHeaders = [
       "Content-Security-Policy",
 
     value:
-      [
-        "base-uri 'self'",
-        "frame-ancestors 'self'",
-        "object-src 'self'",
-      ].join(
-        "; ",
-      ),
+      contentSecurityPolicy,
   },
 ];
 
