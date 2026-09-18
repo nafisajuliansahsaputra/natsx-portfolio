@@ -25,6 +25,9 @@ const PUBLIC_PROJECT_FIELDS =
 const PUBLIC_PROJECT_NAVIGATION_FIELDS =
   "id,slug,title,project_number,categories,sort_order,accent_color";
 
+const PUBLIC_PROJECT_SITEMAP_FIELDS =
+  "slug,updated_at";
+
 const PUBLIC_SECTION_FIELDS =
   "id,project_id,section_type,eyebrow,heading,body,content,theme,sort_order,is_visible,created_at";
 
@@ -85,6 +88,11 @@ type PublicProjectRow = {
   published_at:
     | string
     | null;
+};
+
+type PublicProjectSitemapRow = {
+  slug: string;
+  updated_at: string;
 };
 
 type PublicProjectNavigationRow = {
@@ -228,6 +236,11 @@ export type PublicProject = {
   publishedAt:
     | string
     | null;
+};
+
+export type PublicProjectSitemapEntry = {
+  slug: string;
+  updatedAt: string;
 };
 
 export type PublicProjectNavigation = {
@@ -1092,6 +1105,82 @@ export async function getPublishedProjects(
   return getCachedPublishedProjects(
     locale,
   );
+}
+
+async function loadPublishedProjectSitemapEntries():
+  Promise<
+    PublicProjectSitemapEntry[]
+  > {
+  const supabase =
+    createPublicClient();
+
+  const {
+    data,
+    error,
+  } = await supabase
+    .from(
+      "projects",
+    )
+    .select(
+      PUBLIC_PROJECT_SITEMAP_FIELDS,
+    )
+    .eq(
+      "status",
+      "published",
+    )
+    .order(
+      "sort_order",
+      {
+        ascending:
+          true,
+      },
+    );
+
+  if (error) {
+    throw new Error(
+      `Gagal memuat published project sitemap entries: ${error.message}`,
+    );
+  }
+
+  const rows =
+    (data ??
+      []) as unknown as
+      PublicProjectSitemapRow[];
+
+  return rows.map(
+    (
+      project,
+    ) => ({
+      slug:
+        project.slug,
+
+      updatedAt:
+        project.updated_at,
+    }),
+  );
+}
+
+const getCachedPublishedProjectSitemapEntries =
+  unstable_cache(
+    loadPublishedProjectSitemapEntries,
+    [
+      "natsx-published-project-sitemap-v1",
+    ],
+    {
+      tags: [
+        PUBLIC_PORTFOLIO_CACHE_TAG,
+      ],
+
+      revalidate:
+        PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    },
+  );
+
+export async function getPublishedProjectSitemapEntries():
+  Promise<
+    PublicProjectSitemapEntry[]
+  > {
+  return getCachedPublishedProjectSitemapEntries();
 }
 
 async function loadFeaturedProjects(

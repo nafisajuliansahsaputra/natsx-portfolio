@@ -9,7 +9,7 @@ import {
 } from "@/i18n/config";
 
 import {
-  getPublishedProjects,
+  getPublishedProjectSitemapEntries,
 } from "@/lib/public-projects";
 
 import {
@@ -131,9 +131,7 @@ function getLanguageAlternates(
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects =
-    await getPublishedProjects(
-      "en",
-    );
+    await getPublishedProjectSitemapEntries();
 
   const staticRoutes:
     MetadataRoute.Sitemap =
