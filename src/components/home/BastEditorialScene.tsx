@@ -636,6 +636,28 @@ function Scene({
         );
       }
 
+      function freezeStaticDescendants(
+        root:
+          THREE.Object3D,
+      ) {
+        root.traverse(
+          (
+            object,
+          ) => {
+            if (
+              object ===
+              root
+            ) {
+              return;
+            }
+
+            object.updateMatrix();
+            object.matrixAutoUpdate =
+              false;
+          },
+        );
+      }
+
       /* =====================================================
          FIND SCREEN
       ===================================================== */
@@ -2726,7 +2748,7 @@ group.rotation.set(
           webgl.setPixelRatio(
             Math.min(
               window.devicePixelRatio,
-              1.75,
+              1.6,
             ),
           );
 
@@ -2945,6 +2967,10 @@ group.rotation.set(
             macbook,
           );
 
+          freezeStaticDescendants(
+            macbookRig,
+          );
+
           composition.add(
             macbookRig,
           );
@@ -2977,6 +3003,10 @@ printerRig.add(
   printer,
 );
 
+freezeStaticDescendants(
+  printerRig,
+);
+
 composition.add(
   printerRig,
 );
@@ -2989,6 +3019,18 @@ const successCard =
 
 const statsCard =
   createStatsCard();
+
+freezeStaticDescendants(
+  floatingDocCard,
+);
+
+freezeStaticDescendants(
+  successCard,
+);
+
+freezeStaticDescendants(
+  statsCard,
+);
 
 composition.add(
   floatingDocCard,
