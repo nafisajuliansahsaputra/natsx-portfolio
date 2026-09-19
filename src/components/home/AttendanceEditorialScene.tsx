@@ -754,6 +754,17 @@ function createNormalizedModel(source: THREE.Object3D, targetSize: number) {
   return root;
 }
 
+function freezeStaticDescendants(root: THREE.Object3D) {
+  root.traverse((object) => {
+    if (object === root) {
+      return;
+    }
+
+    object.updateMatrix();
+    object.matrixAutoUpdate = false;
+  });
+}
+
 function createFloatingCard(
   width: number,
   height: number,
@@ -1240,10 +1251,12 @@ useEffect(() => {
   let disposed = false;
   
     let resizeObserver: ResizeObserver | undefined;
+    let visibilityObserver: IntersectionObserver | undefined;
     let renderer: THREE.WebGLRenderer | undefined;
     let environment: THREE.WebGLRenderTarget | undefined;
     let animationFrameId = 0;
     let cleanupPointerMotion: (() => void) | undefined;
+    let visible = true;
 
     const geometries = new Set<THREE.BufferGeometry>();
     const materials = new Set<THREE.Material>();
@@ -1341,7 +1354,7 @@ useEffect(() => {
 
         const webgl = renderer;
 
-        webgl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+        webgl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
         webgl.outputColorSpace = THREE.SRGBColorSpace;
         webgl.toneMapping = THREE.ACESFilmicToneMapping;
         webgl.toneMappingExposure = 1.06;
@@ -1424,6 +1437,8 @@ useEffect(() => {
           trackTexture(screenOverlayResources.texture);
         }
 
+        freezeStaticDescendants(imac);
+
         imac.position.set(
           IMAC_POSITION.x,
           IMAC_POSITION.y,
@@ -1461,6 +1476,7 @@ useEffect(() => {
           SCANNER_ROTATION.z,
         );
 
+        freezeStaticDescendants(scanner);
         composition.add(scanner);
 
         const scannerShadow = createShadowSprite(shadowTexture, 1.9, 0.9, 0.22);
@@ -1492,6 +1508,7 @@ useEffect(() => {
           BADGE_ROTATION.z,
         );
 
+        freezeStaticDescendants(badge);
         composition.add(badge);
 
         const badgeShadow = createShadowSprite(shadowTexture, 1.2, 0.58, 0.1);
@@ -1531,6 +1548,7 @@ useEffect(() => {
           TOTAL_CARD_ROTATION.z,
         );
 
+        freezeStaticDescendants(totalCardData.group);
         composition.add(totalCardData.group);
 
         totalCardData.resources.geometries.forEach(trackGeometry);
@@ -1569,6 +1587,7 @@ useEffect(() => {
           QUOTE_CARD_ROTATION.z,
         );
 
+        freezeStaticDescendants(quoteCardData.group);
         composition.add(quoteCardData.group);
 
         quoteCardData.resources.geometries.forEach(trackGeometry);
@@ -1607,6 +1626,7 @@ useEffect(() => {
           CONNECT_CARD_ROTATION.z,
         );
 
+        freezeStaticDescendants(connectCardData.group);
         composition.add(connectCardData.group);
 
         connectCardData.resources.geometries.forEach(trackGeometry);
@@ -1645,6 +1665,7 @@ const checkInCardData = createFloatingCard(
           CHECKIN_CARD_ROTATION.z,
         );
 
+        freezeStaticDescendants(checkInCardData.group);
         composition.add(checkInCardData.group);
 
         checkInCardData.resources.geometries.forEach(trackGeometry);
@@ -1839,7 +1860,9 @@ const checkInCardData = createFloatingCard(
         };
 
         function renderFrame(time: number) {
-          if (disposed) {
+          if (disposed || !visible) {
+            animationFrameId = 0;
+            previousMotionFrameTime = 0;
             return;
           }
 
@@ -1938,6 +1961,38 @@ const checkInCardData = createFloatingCard(
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(hostElement);
 
+        if (typeof IntersectionObserver !== "undefined") {
+          visibilityObserver = new IntersectionObserver(
+            ([entry]) => {
+              visible = Boolean(entry?.isIntersecting);
+
+              if (!visible) {
+                if (animationFrameId) {
+                  window.cancelAnimationFrame(animationFrameId);
+                  animationFrameId = 0;
+                }
+
+                previousMotionFrameTime = 0;
+                return;
+              }
+
+              webgl.render(scene, camera);
+
+              if (!animationFrameId) {
+                animationFrameId =
+                  window.requestAnimationFrame(renderFrame);
+              }
+            },
+            {
+              root: null,
+              rootMargin: "120px 0px",
+              threshold: 0.01,
+            },
+          );
+
+          visibilityObserver.observe(hostElement);
+        }
+
         resize();
         animationFrameId = window.requestAnimationFrame(renderFrame);
       } catch {
@@ -1958,6 +2013,7 @@ const checkInCardData = createFloatingCard(
 
       cleanupPointerMotion?.();
       resizeObserver?.disconnect();
+      visibilityObserver?.disconnect();
 
       if (renderer) {
         renderer.dispose();
