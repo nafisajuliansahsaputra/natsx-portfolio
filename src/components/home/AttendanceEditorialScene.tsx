@@ -19,10 +19,10 @@ const BADGE_MODEL_URL = "/models/attendance/badge.glb";
 ========================================================= */
 
 const CAMERA_FOV = 30;
-const CAMERA_TARGET = { x: 0.9, y: -0.08, z: 0 };
-const CAMERA_POSITION = { x: 0.98, y: 0.68, z: 13.45 };
-const CAMERA_FIT_HALF_WIDTH = 5.58;
-const CAMERA_FIT_HALF_HEIGHT = 3.58;
+const CAMERA_TARGET = { x: 1.05, y: -0.12, z: 0 };
+const CAMERA_POSITION = { x: 1.12, y: 0.82, z: 13.62 };
+const CAMERA_FIT_HALF_WIDTH = 5.9;
+const CAMERA_FIT_HALF_HEIGHT = 4.05;
 
 const CAMERA_BASE_DISTANCE = Math.hypot(
   CAMERA_POSITION.x - CAMERA_TARGET.x,
@@ -35,29 +35,29 @@ const CAMERA_BASE_DISTANCE = Math.hypot(
  * iMac is the calm, near-frontal hero.
  * Supporting hardware/cards orbit around it instead of competing with it.
  */
-const IMAC_TARGET_SIZE = 7.38;
-const IMAC_POSITION = { x: 0.76, y: -0.16, z: -0.7 };
-const IMAC_ROTATION = { x: -0.035, y: -0.08, z: -0.012 };
+const IMAC_TARGET_SIZE = 6.92;
+const IMAC_POSITION = { x: 1.05, y: -0.08, z: -0.62 };
+const IMAC_ROTATION = { x: -0.055, y: -0.12, z: -0.025 };
 
-const SCANNER_TARGET_SIZE = 2.28;
-const SCANNER_POSITION = { x: 2.44, y: -2.5, z: 3.92 };
-const SCANNER_ROTATION = { x: -0.12, y: -0.11, z: -0.03 };
+const SCANNER_TARGET_SIZE = 2.48;
+const SCANNER_POSITION = { x: 2.62, y: -2.42, z: 3.72 };
+const SCANNER_ROTATION = { x: -0.16, y: -0.16, z: -0.045 };
 
-const BADGE_TARGET_SIZE = 1.34;
-const BADGE_POSITION = { x: -0.96, y: -2.16, z: 3.12 };
-const BADGE_ROTATION = { x: -0.05, y: 0.08, z: -0.11 };
+const BADGE_TARGET_SIZE = 1.48;
+const BADGE_POSITION = { x: -0.82, y: -2.02, z: 2.92 };
+const BADGE_ROTATION = { x: -0.08, y: 0.12, z: -0.105 };
 
-const TOTAL_CARD_POSITION = { x: -1.62, y: 3.08, z: 1.48 };
-const TOTAL_CARD_ROTATION = { x: 0.025, y: 0.11, z: 0.065 };
+const TOTAL_CARD_POSITION = { x: -1.45, y: 3.08, z: 1.08 };
+const TOTAL_CARD_ROTATION = { x: 0.035, y: 0.16, z: 0.075 };
 
-const QUOTE_CARD_POSITION = { x: 4.42, y: 2.67, z: 1.72 };
-const QUOTE_CARD_ROTATION = { x: -0.008, y: -0.085, z: 0.045 };
+const QUOTE_CARD_POSITION = { x: 4.62, y: 2.72, z: 1.62 };
+const QUOTE_CARD_ROTATION = { x: -0.01, y: -0.11, z: 0.055 };
 
-const CONNECT_CARD_POSITION = { x: 4.48, y: 0.2, z: 1.84 };
-const CONNECT_CARD_ROTATION = { x: 0.008, y: -0.065, z: -0.018 };
+const CONNECT_CARD_POSITION = { x: 4.58, y: 0.32, z: 1.72 };
+const CONNECT_CARD_ROTATION = { x: 0.01, y: -0.08, z: -0.025 };
 
-const CHECKIN_CARD_POSITION = { x: 3.34, y: -1.12, z: 4.28 };
-const CHECKIN_CARD_ROTATION = { x: 0, y: -0.055, z: -0.012 };
+const CHECKIN_CARD_POSITION = { x: 3.42, y: -1.02, z: 4.18 };
+const CHECKIN_CARD_ROTATION = { x: 0, y: -0.075, z: -0.018 };
 
 /* =========================================================
    CANVAS HELPERS
@@ -823,26 +823,26 @@ function createFloatingCard(
 
   const frontMaterial = new THREE.MeshPhysicalMaterial({
     color: "#fbfffd",
-    roughness: 0.28,
-    metalness: 0.01,
-    transmission: 0.02,
-    thickness: 0.08,
+    roughness: 0.17,
+    metalness: 0,
+    transmission: 0.22,
+    thickness: 0.09,
     ior: 1.44,
-    clearcoat: 0.72,
-    clearcoatRoughness: 0.11,
-    envMapIntensity: 0.92,
+    clearcoat: 1,
+    clearcoatRoughness: 0.075,
+    envMapIntensity: 1.05,
   });
 
   const sideMaterial = new THREE.MeshPhysicalMaterial({
-    color: "#d6e9e1",
-    roughness: 0.31,
-    metalness: 0.05,
-    transmission: 0.015,
-    thickness: 0.1,
+    color: "#d8eee5",
+    roughness: 0.2,
+    metalness: 0.04,
+    transmission: 0.14,
+    thickness: 0.12,
     ior: 1.44,
-    clearcoat: 0.66,
-    clearcoatRoughness: 0.12,
-    envMapIntensity: 1.02,
+    clearcoat: 1,
+    clearcoatRoughness: 0.065,
+    envMapIntensity: 1.18,
   });
 
   const body = new THREE.Mesh(bodyGeometry, [
@@ -1390,8 +1390,8 @@ useEffect(() => {
         rimLight.position.set(2.6, 4.6, -4.2);
         scene.add(rimLight);
 
-        const sceneGlow = createGlowSprite(glowTexture, 8.15, 5.45, 0.42);
-        sceneGlow.sprite.position.set(1.72, 0.08, -0.88);
+        const sceneGlow = createGlowSprite(glowTexture, 8.55, 5.72, 0.47);
+        sceneGlow.sprite.position.set(1.92, 0.18, -0.85);
         scene.add(sceneGlow.sprite);
         trackMaterial(sceneGlow.material);
 
@@ -1437,8 +1437,8 @@ useEffect(() => {
 
         composition.add(imac);
 
-        const imacShadow = createShadowSprite(shadowTexture, 5.08, 1.3, 0.22);
-        imacShadow.sprite.position.set(0.92, -2.42, -0.72);
+        const imacShadow = createShadowSprite(shadowTexture, 4.9, 1.32, 0.24);
+        imacShadow.sprite.position.set(1.18, -2.38, -0.7);
         composition.add(imacShadow.sprite);
         trackMaterial(imacShadow.material);
 
@@ -1463,8 +1463,8 @@ useEffect(() => {
         freezeStaticDescendants(scanner);
         composition.add(scanner);
 
-        const scannerShadow = createShadowSprite(shadowTexture, 1.98, 0.66, 0.2);
-        scannerShadow.sprite.position.set(2.5, -2.78, 1.5);
+        const scannerShadow = createShadowSprite(shadowTexture, 2.08, 0.72, 0.2);
+        scannerShadow.sprite.position.set(2.76, -2.72, 1.38);
         composition.add(scannerShadow.sprite);
         trackMaterial(scannerShadow.material);
 
@@ -1495,8 +1495,8 @@ useEffect(() => {
         freezeStaticDescendants(badge);
         composition.add(badge);
 
-        const badgeShadow = createShadowSprite(shadowTexture, 1.18, 0.38, 0.12);
-        badgeShadow.sprite.position.set(-1.02, -2.34, 1.54);
+        const badgeShadow = createShadowSprite(shadowTexture, 1.28, 0.42, 0.12);
+        badgeShadow.sprite.position.set(-0.92, -2.22, 1.42);
         composition.add(badgeShadow.sprite);
         trackMaterial(badgeShadow.material);
 
@@ -1511,8 +1511,8 @@ useEffect(() => {
 
         /* TOTAL ATTENDANCE */
         const totalCardData = createFloatingCard(
-          2.26,
-          1.0,
+          2.38,
+          1.08,
           0.092,
           0.16,
           createTotalAttendanceTexture(),
@@ -1550,8 +1550,8 @@ useEffect(() => {
 
         /* QUOTE CARD */
         const quoteCardData = createFloatingCard(
-          1.34,
-          2.18,
+          1.46,
+          2.34,
           0.094,
           0.18,
           createQuoteCardTexture(),
@@ -1589,8 +1589,8 @@ useEffect(() => {
 
         /* CONNECT CARD */
         const connectCardData = createFloatingCard(
-          1.14,
-          1.9,
+          1.2,
+          2.04,
           0.09,
           0.18,
           createConnectCardTexture(),
@@ -1627,15 +1627,15 @@ useEffect(() => {
         });
 
         /* CHECK-IN CARD */
-        const checkInCardData = createFloatingCard(
-          2.74,
-          0.82,
-          0.096,
-          0.14,
-          createCheckInTexture(),
-          12,
-          shadowTexture,
-        );
+const checkInCardData = createFloatingCard(
+  2.88,
+  0.9,
+  0.096,
+  0.14,
+  createCheckInTexture(),
+  12,
+  shadowTexture,
+);
 
         checkInCardData.group.position.set(
           CHECKIN_CARD_POSITION.x,
