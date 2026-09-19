@@ -22,6 +22,10 @@ type AttendanceSystemArtworkProps = {
   secondaryVisual: string | null;
 };
 
+function clamp(value: number) {
+  return Math.max(-1, Math.min(1, value));
+}
+
 export default function AttendanceSystemArtwork({
   project,
   primaryVisual,
@@ -70,6 +74,188 @@ export default function AttendanceSystemArtwork({
 
     return () => {
       observer.disconnect();
+    };
+  }, []);
+
+  /* =========================================================
+     TEXT / UI COUNTER PARALLAX
+
+     iMac follows the pointer inside AttendanceEditorialScene.
+     Everything outside the hero hardware moves in the opposite
+     direction so Attendance matches the BAST / Spall interaction.
+  ========================================================= */
+
+  useEffect(() => {
+    const currentArtwork = artworkRef.current;
+
+    if (!currentArtwork) {
+      return;
+    }
+
+    const artwork = currentArtwork;
+
+    const finePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    );
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let animationFrame = 0;
+
+    function clearMotionProperties() {
+      [
+        "--attendance-copy-x",
+        "--attendance-copy-y",
+        "--attendance-copy-rotate",
+        "--attendance-features-x",
+        "--attendance-features-y",
+        "--attendance-note-x",
+        "--attendance-note-y",
+      ].forEach((property) => {
+        artwork.style.removeProperty(property);
+      });
+    }
+
+    function applyMotion() {
+      /*
+       * Counter-parallax:
+       * cursor / iMac RIGHT -> copy moves LEFT.
+       */
+      artwork.style.setProperty(
+        "--attendance-copy-x",
+        `${currentX * -22}px`,
+      );
+
+      artwork.style.setProperty(
+        "--attendance-copy-y",
+        `${currentY * -13}px`,
+      );
+
+      artwork.style.setProperty(
+        "--attendance-copy-rotate",
+        `${currentX * -0.16}deg`,
+      );
+
+      artwork.style.setProperty(
+        "--attendance-features-x",
+        `${currentX * -13}px`,
+      );
+
+      artwork.style.setProperty(
+        "--attendance-features-y",
+        `${currentY * -8}px`,
+      );
+
+      artwork.style.setProperty(
+        "--attendance-note-x",
+        `${currentX * -9}px`,
+      );
+
+      artwork.style.setProperty(
+        "--attendance-note-y",
+        `${currentY * -5}px`,
+      );
+    }
+
+    function tick() {
+      const easing = 0.115;
+
+      currentX += (targetX - currentX) * easing;
+      currentY += (targetY - currentY) * easing;
+
+      applyMotion();
+
+      const movingX = Math.abs(targetX - currentX);
+      const movingY = Math.abs(targetY - currentY);
+
+      if (movingX > 0.0005 || movingY > 0.0005) {
+        animationFrame = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      currentX = targetX;
+      currentY = targetY;
+      applyMotion();
+      animationFrame = 0;
+    }
+
+    function requestTick() {
+      if (animationFrame) {
+        return;
+      }
+
+      animationFrame = window.requestAnimationFrame(tick);
+    }
+
+    function handlePointerMove(event: PointerEvent) {
+      if (
+        event.pointerType === "touch" ||
+        !finePointer.matches ||
+        reducedMotion.matches
+      ) {
+        return;
+      }
+
+      const bounds = artwork.getBoundingClientRect();
+
+      if (bounds.width <= 0 || bounds.height <= 0) {
+        return;
+      }
+
+      targetX = clamp(
+        ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
+      );
+
+      targetY = clamp(
+        ((event.clientY - bounds.top) / bounds.height) * 2 - 1,
+      );
+
+      requestTick();
+    }
+
+    function resetMotion() {
+      targetX = 0;
+      targetY = 0;
+
+      if (reducedMotion.matches || !finePointer.matches) {
+        currentX = 0;
+        currentY = 0;
+        clearMotionProperties();
+        return;
+      }
+
+      requestTick();
+    }
+
+    artwork.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+
+    artwork.addEventListener("pointerleave", resetMotion);
+    artwork.addEventListener("pointercancel", resetMotion);
+    window.addEventListener("blur", resetMotion);
+    finePointer.addEventListener("change", resetMotion);
+    reducedMotion.addEventListener("change", resetMotion);
+
+    return () => {
+      artwork.removeEventListener("pointermove", handlePointerMove);
+      artwork.removeEventListener("pointerleave", resetMotion);
+      artwork.removeEventListener("pointercancel", resetMotion);
+      window.removeEventListener("blur", resetMotion);
+      finePointer.removeEventListener("change", resetMotion);
+      reducedMotion.removeEventListener("change", resetMotion);
+
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      clearMotionProperties();
     };
   }, []);
 
