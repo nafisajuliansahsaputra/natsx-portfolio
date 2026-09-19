@@ -42,6 +42,28 @@ type Props = {
 const MODEL_URL =
   "/models/iphone-17-pro-max.glb";
 
+function freezeStaticDescendants(
+  root:
+    THREE.Object3D,
+) {
+  root.traverse(
+    (
+      object,
+    ) => {
+      if (
+        object ===
+        root
+      ) {
+        return;
+      }
+
+      object.updateMatrix();
+      object.matrixAutoUpdate =
+        false;
+    },
+  );
+}
+
 export default function SpallEditorialScene(
   props:
     Props,
@@ -260,7 +282,7 @@ function Scene({
           webgl.setPixelRatio(
             Math.min(
               window.devicePixelRatio,
-              1.75,
+              1.6,
             ),
           );
 
@@ -890,6 +912,10 @@ function Scene({
             0,
           );
 
+          freezeStaticDescendants(
+            phone,
+          );
+
           rig.add(
             phone,
           );
@@ -1050,6 +1076,18 @@ function Scene({
                 0.25,
               ],
             );
+
+          freezeStaticDescendants(
+            identity,
+          );
+
+          freezeStaticDescendants(
+            share,
+          );
+
+          freezeStaticDescendants(
+            explore,
+          );
 
           /* =================================================
              MARBLE
