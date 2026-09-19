@@ -245,13 +245,6 @@
   aspect-ratio: 16 / 8.9;
 }
 
-@media (min-width: 701px) {
-  .project[data-project-visual="attendance"] .visual {
-    min-height: 0;
-    aspect-ratio: 16 / 9;
-  }
-}
-
 /* =========================================================
    PROJECT FOOTER
 ========================================================= */
