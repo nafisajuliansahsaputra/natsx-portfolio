@@ -136,7 +136,7 @@ const SUCCESS_CARD_ROTATION = {
 };
 
 const STATS_CARD_POSITION = {
-  x: 1.55,
+  x: 2.15,
   y: -1.9,
   z: 1.08,
 };
@@ -3013,6 +3013,9 @@ composition.add(
 
 const floatingDocCard =
   createFloatingDocCard();
+
+// The foreground document already tells this story; keep the scene uncluttered.
+floatingDocCard.visible = false;
 
 const successCard =
   createSuccessCard();

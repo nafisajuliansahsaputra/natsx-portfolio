@@ -37,7 +37,7 @@ const CAMERA_BASE_DISTANCE = Math.hypot(
  */
 const IMAC_TARGET_SIZE = 6.92;
 const IMAC_POSITION = { x: 1.05, y: -0.08, z: -0.62 };
-const IMAC_ROTATION = { x: -0.055, y: -0.12, z: -0.025 };
+const IMAC_ROTATION = { x: -0.2, y: -1.2, z: -0.20 };
 
 const SCANNER_TARGET_SIZE = 2.48;
 const SCANNER_POSITION = { x: 2.62, y: -2.42, z: 3.72 };

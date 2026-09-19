@@ -154,330 +154,57 @@ export default function BastManagementArtwork({
   );
 
   return (
-    <div
-      ref={
-        artworkRef
-      }
-      className={
-        styles.artwork
-      }
-      data-bast-featured="true"
-    >
-      {/* =====================================================
-          BACKGROUND
-      ===================================================== */}
+    <div ref={artworkRef} className={styles.artwork} data-bast-featured="true">
+      <div className={styles.orbit} aria-hidden="true" />
+      <div className={styles.orbitBubble} aria-hidden="true" />
+      <div className={styles.index} aria-hidden="true">
+        <span>{project.number}</span><i />
+      </div>
 
-      <div
-        className={
-          styles.light
-        }
-        aria-hidden="true"
-      />
-
-      <div
-        className={
-          styles.grid
-        }
-        aria-hidden="true"
-      />
-
-      <div
-        className={
-          styles.orbit
-        }
-        aria-hidden="true"
-      />
-
-      <div
-        className={
-          styles.orbitBubble
-        }
-        aria-hidden="true"
-      />
-
-      {/* =====================================================
-          LEFT EDITORIAL COPY
-      ===================================================== */}
-
-      <div
-        className={
-          styles.copy
-        }
-        aria-hidden="true"
-      >
-        <h4
-          className={
-            styles.headline
-          }
-        >
-          BAST
-        </h4>
-
-        <span
-          className={
-            styles.titleRule
-          }
-        />
-
-        <p
-          className={
-            styles.systemName
-          }
-        >
-          BERITA ACARA
-          <br />
-
-          SERAH TERIMA
-          <br />
-
+      <div className={styles.copy} aria-hidden="true">
+        <h4 className={styles.headline}>BAST</h4>
+        <p className={styles.systemName}>
+          BERITA ACARA<br />
+          SERAH TERIMA<br />
           MANAGEMENT SYSTEM
         </p>
-
-        <span
-          className={
-            styles.copyRule
-          }
-        />
-
-        <p
-          className={
-            styles.description
-          }
-        >
-          FROM PROCESS
-          <br />
-
-          TO PROOF.
-          <br />
-
-          ALL IN ONE SYSTEM.
+        <span className={styles.copyRule} />
+        <p className={styles.description}>
+          From process to proof.<br />
+          All in one system.
         </p>
       </div>
 
-      {/* =====================================================
-          THREE.JS WORLD
-      =====================================================
-
-          Semua object berikut sekarang ada di scene 3D:
-
-          - MacBook
-          - Printer
-          - Floating document icon
-          - Success notification
-          - Total BAST stats card
-
-          Jangan bikin versi DOM 2D lagi di file ini.
-      ===================================================== */}
-
-      <div
-        className={
-          styles.scene
-        }
-      >
-        {
-          shouldLoadScene
-            ? (
-              <BastEditorialScene
-                screenUrl={
-                  primaryVisual
-                }
-                documentUrl={
-                  secondaryVisual
-                }
-                label={`${project.title} — ${visualLabel}`}
-              />
-            )
-            : null
-        }
+      <div className={styles.scene}>
+        {shouldLoadScene ? (
+          <BastEditorialScene
+            screenUrl={primaryVisual}
+            documentUrl={secondaryVisual}
+            label={project.title + " — " + visualLabel}
+          />
+        ) : null}
       </div>
 
-      {/* =====================================================
-          FOREGROUND DOCUMENT
+      {secondaryVisual ? (
+        <div className={styles.documentStage} aria-hidden="true">
+          <div className={styles.documentShadow} />
+          <div className={styles.documentSheet}>
+            <Image
+              src={secondaryVisual}
+              alt=""
+              fill
+              sizes="(max-width: 700px) 30vw, 24vw"
+              className={styles.documentImage}
+              unoptimized
+            />
+          </div>
+        </div>
+      ) : null}
 
-          Ini tetap DOM/Image karena memang merupakan
-          dokumen project real yang berasal dari secondaryVisual.
-
-          Sengaja tetap di foreground di luar Three.js
-          supaya kualitas dokumen tetap tajam.
-      ===================================================== */}
-
-      {
-        secondaryVisual
-          ? (
-            <div
-              className={
-                styles.documentStage
-              }
-              aria-hidden="true"
-            >
-              <div
-                className={
-                  styles.documentShadow
-                }
-              />
-
-              <div
-                className={
-                  styles.documentSheet
-                }
-              >
-                <Image
-                  src={
-                    secondaryVisual
-                  }
-                  alt=""
-                  fill
-                  sizes="24vw"
-                  className={
-                    styles.documentImage
-                  }
-                  unoptimized
-                />
-              </div>
-            </div>
-          )
-          : null
-      }
-
-      {/* =====================================================
-          TOP RIGHT NOTE
-      ===================================================== */}
-
-      <div
-        className={
-          styles.topNote
-        }
-        aria-hidden="true"
-      >
-        <span>
-          DOKUMEN
-        </span>
-
-        <span>
-          LEBIH TERATUR
-        </span>
-
-        <span>
-          KINERJA LEBIH MAJU
-        </span>
-
+      <div className={styles.topNote} aria-hidden="true">
         <i />
+        <p>DOKUMEN LEBIH TERATUR,<br />KERJA LEBIH MAJU.</p>
       </div>
-
-      {/* =====================================================
-          WORKFLOW
-
-          Workflow masih editorial 2D karena ini lebih cocok
-          sebagai UI annotation daripada floating physical card.
-      ===================================================== */}
-
-      <div
-        className={
-          styles.workflow
-        }
-        aria-hidden="true"
-      >
-        <div
-          className={
-            styles.workflowTrack
-          }
-        />
-
-        <WorkflowItem
-          symbol="+"
-          text="Buat & Ajukan"
-        />
-
-        <WorkflowItem
-          symbol="✓"
-          text="Verifikasi"
-        />
-
-        <WorkflowItem
-          symbol="✓"
-          text="Selesai"
-          active
-        />
-      </div>
-
-      {/* =====================================================
-          BOTTOM LEFT NOTE
-      ===================================================== */}
-
-      <div
-        className={
-          styles.bottomLeft
-        }
-        aria-hidden="true"
-      >
-        <span>
-          DIGITAL WORKFLOW
-        </span>
-
-        <span>
-          REAL IMPACT
-        </span>
-
-        <i />
-      </div>
-
-      {/* =====================================================
-          BOTTOM RIGHT NOTE
-      ===================================================== */}
-
-      <div
-        className={
-          styles.bottomRight
-        }
-        aria-hidden="true"
-      >
-        <span>
-          PEMERINTAH
-        </span>
-
-        <span>
-          LEBIH EFISIEN
-        </span>
-
-        <span>
-          MASA DEPAN LEBIH BAIK
-        </span>
-
-        <i />
-      </div>
-    </div>
-  );
-}
-
-function WorkflowItem({
-  symbol,
-  text,
-  active = false,
-}: {
-  symbol:
-    string;
-
-  text:
-    string;
-
-  active?:
-    boolean;
-}) {
-  return (
-    <div
-      className={`${styles.workflowItem} ${
-        active
-          ? styles.workflowActive
-          : ""
-      }`}
-    >
-      <span>
-        {symbol}
-      </span>
-
-      <strong>
-        {text}
-      </strong>
     </div>
   );
 }
