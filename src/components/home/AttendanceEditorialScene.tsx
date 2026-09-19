@@ -1168,6 +1168,7 @@ useEffect(() => {
     let renderer: THREE.WebGLRenderer | undefined;
     let environment: THREE.WebGLRenderTarget | undefined;
     let animationFrameId = 0;
+    let cleanupPointerMotion: (() => void) | undefined;
 
     const geometries = new Set<THREE.BufferGeometry>();
     const materials = new Set<THREE.Material>();
@@ -1580,6 +1581,184 @@ const checkInCardData = createFloatingCard(
           rotationAmplitude: 0.006,
         });
 
+        /* =====================================================
+           3D MAGNETIC PARALLAX
+
+           Same interaction language as BAST + Spall:
+           - hero hardware follows the pointer
+           - supporting hardware/cards move in the opposite direction
+           - idle floating stays active underneath the pointer pose
+        ===================================================== */
+
+        const cover = hostElement.closest<HTMLElement>(
+          '[data-attendance-featured="true"]',
+        );
+
+        const reducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+        const finePointer = window.matchMedia(
+          "(hover: hover) and (pointer: fine)",
+        );
+
+        const targetPointer = new THREE.Vector2(0, 0);
+        const currentPointer = new THREE.Vector2(0, 0);
+
+        let previousMotionFrameTime = 0;
+
+        const imacShadowBase = imacShadow.sprite.position.clone();
+        const scannerShadowBase = scannerShadow.sprite.position.clone();
+        const badgeShadowBase = badgeShadow.sprite.position.clone();
+
+        function applyPointerPose() {
+          const x = currentPointer.x;
+          const y = currentPointer.y;
+          const depth = Math.abs(x);
+
+          /* iMac — hero, follows pointer. */
+          imac.position.set(
+            IMAC_POSITION.x + x * 0.18,
+            IMAC_POSITION.y - y * 0.105,
+            IMAC_POSITION.z + depth * 0.035,
+          );
+
+          imac.rotation.set(
+            IMAC_ROTATION.x + y * 0.028,
+            IMAC_ROTATION.y + x * 0.068,
+            IMAC_ROTATION.z - x * 0.012,
+          );
+
+          imacShadow.sprite.position.set(
+            imacShadowBase.x + x * 0.14,
+            imacShadowBase.y - y * 0.055,
+            imacShadowBase.z,
+          );
+
+          /* Scanner — foreground, opposing. */
+          scanner.position.x -= x * 0.165;
+          scanner.position.y += y * 0.09;
+          scanner.position.z -= depth * 0.032;
+
+          scanner.rotation.x -= y * 0.024;
+          scanner.rotation.y -= x * 0.06;
+          scanner.rotation.z += x * 0.012;
+
+          scannerShadow.sprite.position.set(
+            scannerShadowBase.x - x * 0.125,
+            scannerShadowBase.y + y * 0.05,
+            scannerShadowBase.z,
+          );
+
+          /* Badge — opposing, slightly calmer. */
+          badge.position.x -= x * 0.115;
+          badge.position.y += y * 0.068;
+          badge.position.z -= depth * 0.02;
+
+          badge.rotation.x -= y * 0.017;
+          badge.rotation.y -= x * 0.038;
+          badge.rotation.z += x * 0.009;
+
+          badgeShadow.sprite.position.set(
+            badgeShadowBase.x - x * 0.09,
+            badgeShadowBase.y + y * 0.042,
+            badgeShadowBase.z,
+          );
+
+          /* Total attendance card. */
+          totalCardData.group.position.x -= x * 0.12;
+          totalCardData.group.position.y += y * 0.072;
+          totalCardData.group.position.z -= depth * 0.018;
+
+          totalCardData.group.rotation.x -= y * 0.016;
+          totalCardData.group.rotation.y -= x * 0.032;
+          totalCardData.group.rotation.z += x * 0.01;
+
+          /* Quote card. */
+          quoteCardData.group.position.x -= x * 0.13;
+          quoteCardData.group.position.y += y * 0.078;
+          quoteCardData.group.position.z -= depth * 0.021;
+
+          quoteCardData.group.rotation.x -= y * 0.018;
+          quoteCardData.group.rotation.y -= x * 0.036;
+          quoteCardData.group.rotation.z += x * 0.011;
+
+          /* Connect card. */
+          connectCardData.group.position.x -= x * 0.145;
+          connectCardData.group.position.y += y * 0.085;
+          connectCardData.group.position.z -= depth * 0.024;
+
+          connectCardData.group.rotation.x -= y * 0.019;
+          connectCardData.group.rotation.y -= x * 0.04;
+          connectCardData.group.rotation.z += x * 0.012;
+
+          /* Check-in card — closest supporting UI, strongest depth. */
+          checkInCardData.group.position.x -= x * 0.17;
+          checkInCardData.group.position.y += y * 0.098;
+          checkInCardData.group.position.z -= depth * 0.03;
+
+          checkInCardData.group.rotation.x -= y * 0.022;
+          checkInCardData.group.rotation.y -= x * 0.048;
+          checkInCardData.group.rotation.z += x * 0.014;
+        }
+
+        function handlePointerMove(event: PointerEvent) {
+          if (
+            !cover ||
+            event.pointerType === "touch" ||
+            reducedMotion.matches ||
+            !finePointer.matches
+          ) {
+            return;
+          }
+
+          const bounds = cover.getBoundingClientRect();
+
+          if (bounds.width <= 0 || bounds.height <= 0) {
+            return;
+          }
+
+          targetPointer.set(
+            THREE.MathUtils.clamp(
+              ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
+              -1,
+              1,
+            ),
+            THREE.MathUtils.clamp(
+              ((event.clientY - bounds.top) / bounds.height) * 2 - 1,
+              -1,
+              1,
+            ),
+          );
+        }
+
+        function resetPointer() {
+          targetPointer.set(0, 0);
+
+          if (reducedMotion.matches || !finePointer.matches) {
+            currentPointer.set(0, 0);
+            previousMotionFrameTime = 0;
+          }
+        }
+
+        cover?.addEventListener("pointermove", handlePointerMove, {
+          passive: true,
+        });
+        cover?.addEventListener("pointerleave", resetPointer);
+        cover?.addEventListener("pointercancel", resetPointer);
+        reducedMotion.addEventListener("change", resetPointer);
+        finePointer.addEventListener("change", resetPointer);
+        window.addEventListener("blur", resetPointer);
+
+        cleanupPointerMotion = () => {
+          cover?.removeEventListener("pointermove", handlePointerMove);
+          cover?.removeEventListener("pointerleave", resetPointer);
+          cover?.removeEventListener("pointercancel", resetPointer);
+          reducedMotion.removeEventListener("change", resetPointer);
+          finePointer.removeEventListener("change", resetPointer);
+          window.removeEventListener("blur", resetPointer);
+        };
+
         function renderFrame(time: number) {
           if (disposed) {
             return;
@@ -1587,22 +1766,42 @@ const checkInCardData = createFloatingCard(
 
           const t = time * 0.001;
 
+          const delta = previousMotionFrameTime
+            ? Math.min((time - previousMotionFrameTime) / 1000, 0.05)
+            : 1 / 60;
+
+          previousMotionFrameTime = time;
+
+          currentPointer.lerp(
+            targetPointer,
+            1 - Math.exp(-7.2 * delta),
+          );
+
+          if (currentPointer.distanceTo(targetPointer) < 0.00045) {
+            currentPointer.copy(targetPointer);
+          }
+
           floatingNodes.forEach((node, index) => {
             const offset = Math.sin(t * node.speed + index * 0.85);
             const twist = Math.cos(t * node.speed * 0.8 + index * 0.65);
 
+            node.object.position.x = node.basePosition.x;
             node.object.position.y =
               node.basePosition.y + offset * node.amplitude;
+            node.object.position.z = node.basePosition.z;
 
+            node.object.rotation.x =
+              node.baseRotation.x +
+              (node.object !== scanner && node.object !== badge
+                ? offset * node.rotationAmplitude * 0.35
+                : 0);
+
+            node.object.rotation.y = node.baseRotation.y;
             node.object.rotation.z =
               node.baseRotation.z + twist * node.rotationAmplitude;
-
-            if (node.object !== scanner && node.object !== badge) {
-              node.object.rotation.x =
-                node.baseRotation.x +
-                offset * node.rotationAmplitude * 0.35;
-            }
           });
+
+          applyPointerPose();
 
           webgl.render(scene, camera);
           animationFrameId = window.requestAnimationFrame(renderFrame);
@@ -1678,6 +1877,7 @@ const checkInCardData = createFloatingCard(
         window.cancelAnimationFrame(animationFrameId);
       }
 
+      cleanupPointerMotion?.();
       resizeObserver?.disconnect();
 
       if (renderer) {
