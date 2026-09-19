@@ -1060,15 +1060,13 @@ function styleImac(object: THREE.Object3D) {
       return;
     }
 
-    const currentMaterials = Array.isArray(child.material)
+    const materials = Array.isArray(child.material)
       ? child.material
       : [child.material];
 
-    const nextMaterials = currentMaterials.map((source) => {
-      const material = source.clone();
-
+    materials.forEach((material) => {
       if (!(material instanceof THREE.MeshStandardMaterial)) {
-        return material;
+        return;
       }
 
       const name = material.name.trim().toLowerCase();
@@ -1100,12 +1098,7 @@ function styleImac(object: THREE.Object3D) {
       }
 
       material.needsUpdate = true;
-      return material;
     });
-
-    child.material = Array.isArray(child.material)
-      ? nextMaterials
-      : nextMaterials[0];
   });
 }
 
@@ -1118,15 +1111,13 @@ function styleScanner(
       return;
     }
 
-    const currentMaterials = Array.isArray(child.material)
+    const materials = Array.isArray(child.material)
       ? child.material
       : [child.material];
 
-    const nextMaterials = currentMaterials.map((source) => {
-      const material = source.clone();
-
+    materials.forEach((material) => {
       if (!(material instanceof THREE.MeshStandardMaterial)) {
-        return material;
+        return;
       }
 
       const name = material.name.trim().toLowerCase();
@@ -1164,12 +1155,7 @@ function styleScanner(
       }
 
       material.needsUpdate = true;
-      return material;
     });
-
-    child.material = Array.isArray(child.material)
-      ? nextMaterials
-      : nextMaterials[0];
   });
 }
 
@@ -1179,26 +1165,19 @@ function softenBadge(object: THREE.Object3D) {
       return;
     }
 
-    const currentMaterials = Array.isArray(child.material)
+    const materials = Array.isArray(child.material)
       ? child.material
       : [child.material];
 
-    const nextMaterials = currentMaterials.map((source) => {
-      const material = source.clone();
-
+    materials.forEach((material) => {
       if (!(material instanceof THREE.MeshStandardMaterial)) {
-        return material;
+        return;
       }
 
       material.metalness = Math.min(material.metalness ?? 0, 0.18);
       material.roughness = Math.max(material.roughness ?? 0.4, 0.36);
-
-      return material;
+      material.needsUpdate = true;
     });
-
-    child.material = Array.isArray(child.material)
-      ? nextMaterials
-      : nextMaterials[0];
   });
 }
 
