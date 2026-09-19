@@ -314,11 +314,11 @@ export default function AttendanceSystemArtwork({
         <span className={styles.rule} />
 
         <p className={styles.description}>
-          CHECK IN FASTER.
+          Check in faster.
           <br />
-          VERIFY SMARTER.
+          Verify smarter.
           <br />
-          TRACK IN REAL TIME.
+          Track in real time.
         </p>
       </div>
 
@@ -361,7 +361,7 @@ export default function AttendanceSystemArtwork({
 
       <div className={styles.bottomNote} aria-hidden="true">
         <span>A SMARTER TOMORROW</span>
-        <span>STARTS WITH PEOPLE</span>
+        <span>STARTS WITH PEOPLE.</span>
         <i />
       </div>
     </div>
