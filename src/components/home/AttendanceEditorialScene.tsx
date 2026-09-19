@@ -429,7 +429,7 @@ function createTotalAttendanceTexture() {
 
   ctx.fillStyle = green;
   ctx.font = "700 42px Arial";
-  ctx.fillText("↑ 12%", 812, 356);
+  ctx.fillText("↑ 14%", 812, 356);
 
   ctx.fillStyle = muted;
   ctx.font = "500 34px Arial";
