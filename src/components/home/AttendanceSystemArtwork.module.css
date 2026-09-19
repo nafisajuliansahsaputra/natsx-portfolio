@@ -15,22 +15,21 @@
   color: #092b30;
   background:
     radial-gradient(
-      ellipse at 72% 44%,
-      rgba(132, 226, 197, 0.5) 0%,
-      rgba(190, 241, 224, 0.3) 29%,
-      transparent 59%
+      ellipse at 70% 45%,
+      rgba(137, 228, 201, 0.46) 0%,
+      rgba(192, 242, 226, 0.26) 28%,
+      transparent 58%
     ),
     radial-gradient(
-      ellipse at 96% 12%,
-      rgba(112, 203, 180, 0.24) 0%,
-      transparent 34%
+      ellipse at 94% 10%,
+      rgba(113, 201, 179, 0.25) 0%,
+      transparent 35%
     ),
     linear-gradient(
-      108deg,
-      #ffffff 8%,
-      #fbfefd 36%,
-      #e4f7f1 67%,
-      #cff0e6 100%
+      112deg,
+      #ffffff 10%,
+      #f7fcfa 43%,
+      #d9f3eb 100%
     );
 }
 
@@ -117,19 +116,18 @@
 }
 
 .orbOne {
-  top: 8.2%;
-  left: 68.6%;
-  right: auto;
-  width: 4.7cqw;
-  height: 4.7cqw;
+  top: 7%;
+  right: 12%;
+  width: 5.7cqw;
+  height: 5.7cqw;
   filter: blur(0.08cqw);
 }
 
 .orbTwo {
-  top: 50.8%;
-  left: 35.3%;
-  width: 6.4cqw;
-  height: 6.4cqw;
+  top: 48%;
+  left: 44%;
+  width: 6.9cqw;
+  height: 6.9cqw;
   filter: blur(0.18cqw);
 }
 
@@ -177,8 +175,8 @@
 }
 
 .projectMeta {
-  top: 11.1%;
-  left: 5%;
+  top: 6.2%;
+  left: 3.8%;
   gap: 1.15cqw;
   transform: translate3d(
     var(--attendance-note-x),
@@ -242,9 +240,9 @@
 .copy {
   position: absolute;
   z-index: 8;
-  top: 18.3%;
-  left: 5%;
-  width: 34.8%;
+  top: 16.2%;
+  left: 3.8%;
+  width: 35.8%;
   transform:
     translate3d(
       var(--attendance-copy-x),
@@ -342,19 +340,19 @@
 .scene {
   position: absolute;
   z-index: 4;
-  top: 4.5%;
-  left: 32.5%;
-  width: 67.5%;
-  height: 92.5%;
+  top: 3%;
+  left: 30%;
+  width: 70%;
+  height: 94%;
   pointer-events: none;
-  filter: drop-shadow(0 1.25cqw 1.65cqw rgba(21, 93, 66, 0.13));
+  filter: drop-shadow(0 1.4cqw 1.8cqw rgba(21, 93, 66, 0.14));
 }
 
 .features {
   position: absolute;
   z-index: 8;
-  left: 5%;
-  top: 73.2%;
+  left: 3.8%;
+  top: 72.5%;
   display: grid;
   grid-template-columns: repeat(4, max-content);
   gap: 0;
@@ -412,8 +410,8 @@
 .bottomNote {
   position: absolute;
   z-index: 8;
-  left: 8%;
-  bottom: 6.7%;
+  left: 6.8%;
+  bottom: 4.7%;
   display: flex;
   flex-direction: column;
   gap: 0.22cqw;
