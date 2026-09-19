@@ -280,26 +280,35 @@ export default function AttendanceSystemArtwork({
       <div className={styles.orbFour} aria-hidden="true" />
       <div className={styles.sceneGlow} aria-hidden="true" />
 
-      {/* Copy */}
-      <div className={styles.copy} aria-hidden="true">
-        <span className={styles.eyebrow}>
+      {/* Reference-style editorial metadata */}
+      <div className={styles.projectMeta} aria-hidden="true">
+        <strong>{project.number}</strong>
+        <i />
+        <span>FEATURED PROJECT</span>
+      </div>
+
+      <div className={styles.yearMeta} aria-hidden="true">
+        <strong>{project.year}</strong>
+        <i />
+        <span>
           PEOPLE
-          <i>→</i>
+          <br />
           PRESENCE
-          <i>→</i>
+          <br />
           PROGRESS
         </span>
+      </div>
 
+      {/* Copy */}
+      <div className={styles.copy} aria-hidden="true">
         <h4 className={styles.headline}>
-          SMART
-          <br />
-          <strong>ATTENDANCE</strong>
+          <span>Smart</span>
+          <strong>Attendance</strong>
+          <span>System</span>
         </h4>
 
         <p className={styles.systemName}>
-          IDENTITY VERIFICATION
-          <br />
-          SYSTEM
+          IDENTITY VERIFICATION SYSTEM
         </p>
 
         <span className={styles.rule} />
