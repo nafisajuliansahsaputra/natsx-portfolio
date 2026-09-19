@@ -1,4 +1,12 @@
 .artwork {
+  --attendance-copy-x: 0px;
+  --attendance-copy-y: 0px;
+  --attendance-copy-rotate: 0deg;
+  --attendance-features-x: 0px;
+  --attendance-features-y: 0px;
+  --attendance-note-x: 0px;
+  --attendance-note-y: 0px;
+
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -137,6 +145,15 @@
   top: 8.7%;
   left: 2.9%;
   width: 35.5%;
+  transform:
+    translate3d(
+      var(--attendance-copy-x),
+      var(--attendance-copy-y),
+      0
+    )
+    rotate(var(--attendance-copy-rotate));
+  transform-origin: left center;
+  will-change: transform;
   pointer-events: none;
 }
 
@@ -232,6 +249,12 @@
   display: grid;
   grid-template-columns: repeat(4, auto);
   gap: 1.95cqw;
+  transform: translate3d(
+    var(--attendance-features-x),
+    var(--attendance-features-y),
+    0
+  );
+  will-change: transform;
   pointer-events: none;
 }
 
@@ -270,6 +293,12 @@
   font-size: 0.65cqw;
   letter-spacing: 0.3em;
   line-height: 1.6;
+  transform: translate3d(
+    var(--attendance-note-x),
+    var(--attendance-note-y),
+    0
+  );
+  will-change: transform;
   pointer-events: none;
 }
 
@@ -343,5 +372,15 @@
   .orbitSecondary,
   .orbitTertiary {
     opacity: 0.72;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .copy,
+  .features,
+  .bottomNote {
+    transform: none !important;
+    will-change: auto;
   }
 }
