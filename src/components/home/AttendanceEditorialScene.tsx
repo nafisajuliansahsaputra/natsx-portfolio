@@ -761,6 +761,7 @@ function createFloatingCard(
   radius: number,
   texture: THREE.Texture,
   renderOrder: number,
+  shadowTexture: THREE.Texture,
 ) {
   const group = new THREE.Group();
   const halfW = width / 2;
@@ -778,62 +779,136 @@ function createFloatingCard(
   shape.lineTo(-halfW, -halfH + r);
   shape.quadraticCurveTo(-halfW, -halfH, -halfW + r, -halfH);
 
-  const actualDepth = Math.min(depth, 0.026);
+  /*
+   * Card Attendance sebelumnya technically sudah ExtrudeGeometry,
+   * tapi depth 0.026 terlalu tipis untuk terbaca sebagai object 3D.
+   *
+   * BAST memakai depth sekitar 0.095, jadi kita pakai bahasa visual
+   * yang sama di sini: body tebal, bevel nyata, edge material terpisah.
+   */
+  const actualDepth = Math.max(depth, 0.088);
+  const bevelThickness = actualDepth * 0.18;
 
   const bodyGeometry = new THREE.ExtrudeGeometry(shape, {
     depth: actualDepth,
     steps: 1,
     bevelEnabled: true,
-    bevelSegments: 4,
-    bevelSize: 0.006,
-    bevelThickness: 0.006,
-    curveSegments: 16,
+    bevelSegments: 6,
+    bevelSize: bevelThickness,
+    bevelThickness,
+    curveSegments: 24,
   });
 
+  /*
+   * Center body around local Z=0 supaya semua pose/rotation lama
+   * tetap terasa sama; hanya volume fisiknya yang bertambah.
+   */
   bodyGeometry.translate(0, 0, -actualDepth / 2);
 
-  const bodyMaterial = new THREE.MeshPhysicalMaterial({
+  const frontMaterial = new THREE.MeshPhysicalMaterial({
     color: "#fbfffd",
-    roughness: 0.18,
+    roughness: 0.17,
     metalness: 0,
-    transmission: 0.08,
-    transparent: true,
-    opacity: 0.94,
-    clearcoat: 0.45,
-    clearcoatRoughness: 0.22,
-    thickness: 0.4,
-    ior: 1.12,
-    reflectivity: 0.45,
+    transmission: 0.22,
+    thickness: 0.09,
+    ior: 1.44,
+    clearcoat: 1,
+    clearcoatRoughness: 0.075,
+    envMapIntensity: 1.05,
   });
 
-  const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-  body.renderOrder = renderOrder - 1;
+  const sideMaterial = new THREE.MeshPhysicalMaterial({
+    color: "#d8eee5",
+    roughness: 0.2,
+    metalness: 0.04,
+    transmission: 0.14,
+    thickness: 0.12,
+    ior: 1.44,
+    clearcoat: 1,
+    clearcoatRoughness: 0.065,
+    envMapIntensity: 1.18,
+  });
+
+  const body = new THREE.Mesh(bodyGeometry, [
+    frontMaterial,
+    sideMaterial,
+  ]);
+
+  body.renderOrder = renderOrder - 2;
   group.add(body);
 
-  const faceGeometry = new THREE.PlaneGeometry(width * 0.94, height * 0.92);
+  /*
+   * Soft local shadow seperti floating cards BAST.
+   * Shadow ikut card group sehingga kedalaman tetap terbaca
+   * saat magnetic parallax mengubah pose card.
+   */
+  const shadowGeometry = new THREE.PlaneGeometry(
+    width * 1.04,
+    Math.max(height * 0.42, 0.34),
+  );
+
+  const shadowMaterial = new THREE.MeshBasicMaterial({
+    map: shadowTexture,
+    transparent: true,
+    opacity: 0.34,
+    depthWrite: false,
+    depthTest: true,
+    toneMapped: false,
+    side: THREE.DoubleSide,
+  });
+
+  const shadow = new THREE.Mesh(shadowGeometry, shadowMaterial);
+  shadow.position.set(
+    width * 0.018,
+    -height * 0.14,
+    -actualDepth / 2 - bevelThickness - 0.035,
+  );
+  shadow.renderOrder = renderOrder - 3;
+  group.add(shadow);
+
+  /*
+   * Printed UI lives in front of the bevel, not inside the body.
+   * Ini penting supaya print tidak kelihatan "tenggelam".
+   */
+  const frontZ =
+    actualDepth / 2 +
+    bevelThickness +
+    0.012;
+
+  const faceGeometry = new THREE.PlaneGeometry(
+    width * 0.94,
+    height * 0.92,
+  );
 
   const faceMaterial = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
+    alphaTest: 0.005,
     depthTest: true,
     depthWrite: false,
     toneMapped: false,
     side: THREE.DoubleSide,
-    polygonOffset: true,
-    polygonOffsetFactor: -4,
-    polygonOffsetUnits: -4,
   });
 
   const face = new THREE.Mesh(faceGeometry, faceMaterial);
-  face.position.z = actualDepth / 2 + 0.012;
+  face.position.z = frontZ;
   face.renderOrder = renderOrder;
   group.add(face);
 
   return {
     group,
     resources: {
-      geometries: [bodyGeometry, faceGeometry],
-      materials: [bodyMaterial, faceMaterial],
+      geometries: [
+        bodyGeometry,
+        shadowGeometry,
+        faceGeometry,
+      ],
+      materials: [
+        frontMaterial,
+        sideMaterial,
+        shadowMaterial,
+        faceMaterial,
+      ],
       textures: [texture],
     },
   };
@@ -1437,10 +1512,11 @@ useEffect(() => {
         const totalCardData = createFloatingCard(
           2.28,
           1.08,
-          0.026,
+          0.092,
           0.16,
           createTotalAttendanceTexture(),
           10,
+          shadowTexture,
         );
 
         totalCardData.group.position.set(
@@ -1474,10 +1550,11 @@ useEffect(() => {
         const quoteCardData = createFloatingCard(
           1.58,
           2.72,
-          0.026,
+          0.094,
           0.18,
           createQuoteCardTexture(),
           11,
+          shadowTexture,
         );
 
         quoteCardData.group.position.set(
@@ -1511,10 +1588,11 @@ useEffect(() => {
         const connectCardData = createFloatingCard(
           1.24,
           2.28,
-          0.026,
+          0.09,
           0.18,
           createConnectCardTexture(),
           9,
+          shadowTexture,
         );
 
         connectCardData.group.position.set(
@@ -1548,10 +1626,11 @@ useEffect(() => {
 const checkInCardData = createFloatingCard(
   2.65,
   0.88,
-  0.026,
+  0.096,
   0.14,
   createCheckInTexture(),
   12,
+  shadowTexture,
 );
 
         checkInCardData.group.position.set(
