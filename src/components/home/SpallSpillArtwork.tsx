@@ -14,7 +14,6 @@ import type {
 
 import styles from "./SpallSpillArtwork.module.css";
 
-
 const SpallEditorialScene =
   dynamic(
     () =>
@@ -27,15 +26,19 @@ const SpallEditorialScene =
     },
   );
 
-
 const SCENE_PRELOAD_MARGIN =
-  "500px 0px";
-
+  "250px 0px";
 
 type Props = {
   project:
     PublicProject;
 
+  /*
+   * Tetap dipertahankan sementara supaya
+   * SelectedWork.tsx tidak perlu ikut diubah.
+   *
+   * Prop ini tidak dipakai oleh artwork.
+   */
   primaryVisual:
     | string
     | null;
@@ -48,6 +51,18 @@ type Props = {
     string;
 };
 
+function clamp(
+  value:
+    number,
+) {
+  return Math.max(
+    -1,
+    Math.min(
+      1,
+      value,
+    ),
+  );
+}
 
 export default function SpallSpillArtwork({
   project,
@@ -67,55 +82,29 @@ export default function SpallSpillArtwork({
       false,
     );
 
+  /* =========================================================
+     LAZY 3D SCENE
+  ========================================================= */
 
   useEffect(
     () => {
-      const artwork =
+      const currentArtwork =
         artworkRef.current;
 
       if (
-        !artwork
+        !currentArtwork
       ) {
         return;
       }
 
-
-      /*
-       * =====================================================
-       * LAZY 3D SCENE GATE
-       * =====================================================
-       *
-       * SpallEditorialScene membawa Three.js
-       * dan model GLB iPhone yang cukup berat.
-       *
-       * Scene tidak perlu dimount ketika
-       * artwork Spall masih jauh dari viewport.
-       *
-       * Kita mulai memuat scene sedikit sebelum
-       * user sampai ke section agar model punya
-       * waktu untuk siap tanpa membebani initial
-       * homepage load.
-       *
-       * Setelah scene pernah dimuat, scene tetap
-       * mounted supaya model tidak perlu dibuat
-       * ulang ketika user scroll naik / turun.
-       */
-
+      const artwork:
+        HTMLDivElement =
+          currentArtwork;
 
       if (
         typeof IntersectionObserver ===
         "undefined"
       ) {
-        /*
-         * Fallback untuk environment/browser
-         * yang tidak menyediakan
-         * IntersectionObserver.
-         *
-         * State update dijalankan melalui
-         * requestAnimationFrame agar tidak
-         * dilakukan secara sinkron di body
-         * useEffect.
-         */
         const fallbackFrame =
           window.requestAnimationFrame(
             () => {
@@ -125,14 +114,12 @@ export default function SpallSpillArtwork({
             },
           );
 
-
         return () => {
           window.cancelAnimationFrame(
             fallbackFrame,
           );
         };
       }
-
 
       const observer =
         new IntersectionObserver(
@@ -149,20 +136,10 @@ export default function SpallSpillArtwork({
               return;
             }
 
-
             setShouldLoadScene(
               true,
             );
 
-
-            /*
-             * Gate hanya dibutuhkan sekali.
-             *
-             * Setelah scene dimount,
-             * lifecycle visibility dan render
-             * tetap ditangani langsung oleh
-             * SpallEditorialScene.
-             */
             observer.disconnect();
           },
           {
@@ -177,11 +154,9 @@ export default function SpallSpillArtwork({
           },
         );
 
-
       observer.observe(
         artwork,
       );
-
 
       return () => {
         observer.disconnect();
@@ -190,6 +165,318 @@ export default function SpallSpillArtwork({
     [],
   );
 
+  /* =========================================================
+     TEXT COUNTER PARALLAX
+  ========================================================= */
+
+  useEffect(
+    () => {
+      const currentArtwork =
+        artworkRef.current;
+
+      if (
+        !currentArtwork
+      ) {
+        return;
+      }
+
+      const artwork:
+        HTMLDivElement =
+          currentArtwork;
+
+      const finePointer =
+        window.matchMedia(
+          "(hover: hover) and (pointer: fine)",
+        );
+
+      const reducedMotion =
+        window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+      if (
+        !finePointer.matches ||
+        reducedMotion.matches
+      ) {
+        return;
+      }
+
+      let targetX =
+        0;
+
+      let targetY =
+        0;
+
+      let currentX =
+        0;
+
+      let currentY =
+        0;
+
+      let animationFrame =
+        0;
+
+      function applyMotion() {
+        /*
+         * Main typography.
+         *
+         * iPhone LEFT  -> text RIGHT
+         * iPhone RIGHT -> text LEFT
+         */
+
+        artwork.style.setProperty(
+          "--spall-copy-x",
+          `${currentX * -22}px`,
+        );
+
+        artwork.style.setProperty(
+          "--spall-copy-y",
+          `${currentY * -13}px`,
+        );
+
+        artwork.style.setProperty(
+          "--spall-copy-rotate",
+          `${currentX * -0.18}deg`,
+        );
+
+        /*
+         * Small editorial note.
+         */
+
+        artwork.style.setProperty(
+          "--spall-top-x",
+          `${currentX * -12}px`,
+        );
+
+        artwork.style.setProperty(
+          "--spall-top-y",
+          `${currentY * -7}px`,
+        );
+
+        /*
+         * Bottom metadata.
+         */
+
+        artwork.style.setProperty(
+          "--spall-footer-x",
+          `${currentX * -9}px`,
+        );
+
+        artwork.style.setProperty(
+          "--spall-footer-y",
+          `${currentY * -5}px`,
+        );
+      }
+
+      function tick() {
+        const easing =
+          0.115;
+
+        currentX +=
+          (
+            targetX -
+            currentX
+          ) *
+          easing;
+
+        currentY +=
+          (
+            targetY -
+            currentY
+          ) *
+          easing;
+
+        applyMotion();
+
+        const movingX =
+          Math.abs(
+            targetX -
+              currentX,
+          );
+
+        const movingY =
+          Math.abs(
+            targetY -
+              currentY,
+          );
+
+        if (
+          movingX >
+            0.0005 ||
+          movingY >
+            0.0005
+        ) {
+          animationFrame =
+            window.requestAnimationFrame(
+              tick,
+            );
+
+          return;
+        }
+
+        currentX =
+          targetX;
+
+        currentY =
+          targetY;
+
+        applyMotion();
+
+        animationFrame =
+          0;
+      }
+
+      function requestTick() {
+        if (
+          animationFrame
+        ) {
+          return;
+        }
+
+        animationFrame =
+          window.requestAnimationFrame(
+            tick,
+          );
+      }
+
+      function handlePointerMove(
+        event:
+          PointerEvent,
+      ) {
+        if (
+          event.pointerType ===
+          "touch"
+        ) {
+          return;
+        }
+
+        const bounds =
+          artwork.getBoundingClientRect();
+
+        if (
+          bounds.width <=
+            0 ||
+          bounds.height <=
+            0
+        ) {
+          return;
+        }
+
+        const localX =
+          (
+            event.clientX -
+            bounds.left
+          ) /
+          bounds.width;
+
+        const localY =
+          (
+            event.clientY -
+            bounds.top
+          ) /
+          bounds.height;
+
+        targetX =
+          clamp(
+            localX *
+              2 -
+              1,
+          );
+
+        targetY =
+          clamp(
+            localY *
+              2 -
+              1,
+          );
+
+        requestTick();
+      }
+
+      function resetMotion() {
+        targetX =
+          0;
+
+        targetY =
+          0;
+
+        requestTick();
+      }
+
+      artwork.addEventListener(
+        "pointermove",
+        handlePointerMove,
+        {
+          passive:
+            true,
+        },
+      );
+
+      artwork.addEventListener(
+        "pointerleave",
+        resetMotion,
+      );
+
+      artwork.addEventListener(
+        "pointercancel",
+        resetMotion,
+      );
+
+      window.addEventListener(
+        "blur",
+        resetMotion,
+      );
+
+      return () => {
+        artwork.removeEventListener(
+          "pointermove",
+          handlePointerMove,
+        );
+
+        artwork.removeEventListener(
+          "pointerleave",
+          resetMotion,
+        );
+
+        artwork.removeEventListener(
+          "pointercancel",
+          resetMotion,
+        );
+
+        window.removeEventListener(
+          "blur",
+          resetMotion,
+        );
+
+        if (
+          animationFrame
+        ) {
+          window.cancelAnimationFrame(
+            animationFrame,
+          );
+        }
+
+        [
+          "--spall-copy-x",
+          "--spall-copy-y",
+          "--spall-copy-rotate",
+          "--spall-top-x",
+          "--spall-top-y",
+          "--spall-footer-x",
+          "--spall-footer-y",
+        ].forEach(
+          (
+            property,
+          ) => {
+            artwork.style.removeProperty(
+              property,
+            );
+          },
+        );
+      };
+    },
+    [],
+  );
 
   return (
     <div
@@ -207,7 +494,6 @@ export default function SpallSpillArtwork({
         }
         aria-hidden="true"
       />
-
 
       <div
         className={
@@ -229,7 +515,6 @@ export default function SpallSpillArtwork({
           </span>
         </p>
 
-
         <p
           className={
             styles.subline
@@ -237,7 +522,6 @@ export default function SpallSpillArtwork({
         >
           your spill.
         </p>
-
 
         <p
           className={
@@ -253,13 +537,11 @@ export default function SpallSpillArtwork({
           TO DISCOVER.
         </p>
 
-
         <span
           className={
             styles.rule
           }
         />
-
 
         <span
           className={
@@ -269,7 +551,6 @@ export default function SpallSpillArtwork({
           spall spill.
         </span>
       </div>
-
 
       <div
         className={
@@ -290,7 +571,6 @@ export default function SpallSpillArtwork({
         }
       </div>
 
-
       <span
         className={
           styles.topNote
@@ -305,7 +585,6 @@ export default function SpallSpillArtwork({
 
         YOU
       </span>
-
 
       <div
         className={

@@ -1,24 +1,76 @@
 .artwork {
-  position: absolute;
-  inset: 0;
-  isolation: isolate;
-  container-type: inline-size;
-  overflow: hidden;
-  color: #081b13;
-  background: #f3f0e8;
-  font-family: inherit;
+  --spall-copy-x:
+    0px;
+
+  --spall-copy-y:
+    0px;
+
+  --spall-copy-rotate:
+    0deg;
+
+  --spall-top-x:
+    0px;
+
+  --spall-top-y:
+    0px;
+
+  --spall-footer-x:
+    0px;
+
+  --spall-footer-y:
+    0px;
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  isolation:
+    isolate;
+
+  container-type:
+    inline-size;
+
+  overflow:
+    hidden;
+
+  color:
+    #081b13;
+
+  background:
+    #f3f0e8;
+
+  font-family:
+    inherit;
+
+  touch-action:
+    pan-y;
 }
 
 .artwork,
 .artwork * {
-  box-sizing: border-box;
+  box-sizing:
+    border-box;
 }
 
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
 .light {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  pointer-events: none;
+  position:
+    absolute;
+
+  z-index:
+    0;
+
+  inset:
+    0;
+
+  pointer-events:
+    none;
+
   background:
     radial-gradient(
       ellipse at 18% 16%,
@@ -31,171 +83,452 @@
       rgb(155 169 146 / 17%),
       transparent 52%
     ),
-    linear-gradient(125deg, #f7f4ec, #ebe8df);
+    linear-gradient(
+      125deg,
+      #f7f4ec,
+      #ebe8df
+    );
 }
 
-/* Atmospheric foreground; deliberately outside the main focal area. */
+/* =========================================================
+   ATMOSPHERIC FOREGROUND
+========================================================= */
+
 .artwork::after {
-  content: "";
-  position: absolute;
-  z-index: 4;
-  right: -7%;
-  bottom: -13%;
-  width: 20%;
-  aspect-ratio: 0.85;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 30% 22%,
-    #729181 0%,
-    #355c48 33%,
-    #153a28 67%,
-    #102d20 100%
-  );
-  filter: blur(1.5cqw);
-  transform: rotate(-24deg);
-  opacity: 0.78;
-  pointer-events: none;
+  content:
+    "";
+
+  position:
+    absolute;
+
+  z-index:
+    4;
+
+  right:
+    -7%;
+
+  bottom:
+    -13%;
+
+  width:
+    20%;
+
+  aspect-ratio:
+    0.85;
+
+  border-radius:
+    50%;
+
+  background:
+    radial-gradient(
+      circle at 30% 22%,
+      #729181 0%,
+      #355c48 33%,
+      #153a28 67%,
+      #102d20 100%
+    );
+
+  filter:
+    blur(
+      1.5cqw
+    );
+
+  transform:
+    rotate(
+      -24deg
+    );
+
+  opacity:
+    0.78;
+
+  pointer-events:
+    none;
 }
+
+/* =========================================================
+   MAIN EDITORIAL COPY
+========================================================= */
 
 .copy {
-  position: absolute;
-  z-index: 3;
-  top: 20%;
-  left: 5.5%;
-  width: 30%;
-  pointer-events: none;
+  position:
+    absolute;
+
+  z-index:
+    3;
+
+  top:
+    20%;
+
+  left:
+    5.5%;
+
+  width:
+    30%;
+
+  transform:
+    translate3d(
+      var(
+        --spall-copy-x
+      ),
+      var(
+        --spall-copy-y
+      ),
+      0
+    )
+    rotate(
+      var(
+        --spall-copy-rotate
+      )
+    );
+
+  transform-origin:
+    left center;
+
+  will-change:
+    transform;
+
+  pointer-events:
+    none;
 }
 
 .headline {
-  margin: 0;
-  font-size: 8.4cqw;
-  font-weight: 800;
-  line-height: 0.84;
-  letter-spacing: -0.085em;
+  margin:
+    0;
+
+  font-size:
+    8.4cqw;
+
+  font-weight:
+    800;
+
+  line-height:
+    0.84;
+
+  letter-spacing:
+    -0.085em;
 }
 
 .headline span {
-  display: block;
+  display:
+    block;
 }
 
 .subline {
-  margin: 0.8cqw 0 0;
-  color: #193f2d;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 5.8cqw;
-  font-weight: 400;
-  font-style: italic;
-  line-height: 1;
-  letter-spacing: -0.075em;
-  white-space: nowrap;
+  margin:
+    0.8cqw
+    0
+    0;
+
+  color:
+    #193f2d;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    5.8cqw;
+
+  font-weight:
+    400;
+
+  font-style:
+    italic;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    -0.075em;
+
+  white-space:
+    nowrap;
 }
 
 .description {
-  margin: 4.7cqw 0 0;
-  color: #6a7369;
-  font-size: 0.88cqw;
-  font-weight: 600;
-  line-height: 1.8;
-  letter-spacing: 0.24em;
+  margin:
+    4.7cqw
+    0
+    0;
+
+  color:
+    #6a7369;
+
+  font-size:
+    0.88cqw;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.8;
+
+  letter-spacing:
+    0.24em;
 }
 
 .rule {
-  display: block;
-  width: 2.2cqw;
-  height: 1px;
-  margin-top: 3.7cqw;
-  background: #244735;
+  display:
+    block;
+
+  width:
+    2.2cqw;
+
+  height:
+    1px;
+
+  margin-top:
+    3.7cqw;
+
+  background:
+    #244735;
 }
 
 .wordmark {
-  display: block;
-  margin-top: 2.7cqw;
-  font-size: 2cqw;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.08em;
+  display:
+    block;
+
+  margin-top:
+    2.7cqw;
+
+  font-size:
+    2cqw;
+
+  font-weight:
+    700;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    -0.08em;
 }
 
-/* Actual camera perspective belongs entirely to the 3D scene. */
+/* =========================================================
+   THREE.JS SCENE
+========================================================= */
+
 .scene {
-  position: absolute;
-  z-index: 2;
-  top: -1%;
-  left: 24%;
-  width: 79%;
-  height: 103%;
-  pointer-events: none;
+  position:
+    absolute;
+
+  z-index:
+    2;
+
+  top:
+    -1%;
+
+  left:
+    24%;
+
+  width:
+    79%;
+
+  height:
+    103%;
+
+  pointer-events:
+    none;
 }
+
+/* =========================================================
+   TOP NOTE
+========================================================= */
 
 .topNote {
-  position: absolute;
-  z-index: 3;
-  top: 6%;
-  right: 4%;
-  color: #6a7369;
-  font-size: 0.6cqw;
-  font-weight: 600;
-  line-height: 1.8;
-  letter-spacing: 0.2em;
-  pointer-events: none;
+  position:
+    absolute;
+
+  z-index:
+    3;
+
+  top:
+    6%;
+
+  right:
+    4%;
+
+  color:
+    #6a7369;
+
+  font-size:
+    0.6cqw;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.8;
+
+  letter-spacing:
+    0.2em;
+
+  transform:
+    translate3d(
+      var(
+        --spall-top-x
+      ),
+      var(
+        --spall-top-y
+      ),
+      0
+    );
+
+  will-change:
+    transform;
+
+  pointer-events:
+    none;
 }
+
+/* =========================================================
+   FOOTER TEXT
+========================================================= */
 
 .footer {
-  position: absolute;
-  z-index: 5;
-  right: 4%;
-  bottom: 6%;
-  left: 5.5%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2cqw;
-  color: #6a7369;
-  font-size: 0.55cqw;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: 0.18em;
-  pointer-events: none;
+  position:
+    absolute;
+
+  z-index:
+    5;
+
+  right:
+    4%;
+
+  bottom:
+    6%;
+
+  left:
+    5.5%;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    2cqw;
+
+  color:
+    #6a7369;
+
+  font-size:
+    0.55cqw;
+
+  font-weight:
+    600;
+
+  line-height:
+    1.5;
+
+  letter-spacing:
+    0.18em;
+
+  transform:
+    translate3d(
+      var(
+        --spall-footer-x
+      ),
+      var(
+        --spall-footer-y
+      ),
+      0
+    );
+
+  will-change:
+    transform;
+
+  pointer-events:
+    none;
 }
 
-.footer > span:last-child {
-  display: none;
+.footer
+  > span:last-child {
+  display:
+    none;
 }
 
-@container (max-width: 650px) {
+/* =========================================================
+   MOBILE / COMPACT
+========================================================= */
+
+@container (
+  max-width:
+    650px
+) {
   .copy {
-    top: 21%;
+    top:
+      21%;
   }
 
   .headline {
-    font-size: 8.5cqw;
+    font-size:
+      8.5cqw;
   }
 
   .subline {
-    font-size: 5.9cqw;
+    font-size:
+      5.9cqw;
   }
 
   .description {
-    font-size: 1.15cqw;
-    letter-spacing: 0.13em;
-    margin-top: 4cqw;
+    margin-top:
+      4cqw;
+
+    font-size:
+      1.15cqw;
+
+    letter-spacing:
+      0.13em;
   }
 
   .rule {
-    margin-top: 3cqw;
+    margin-top:
+      3cqw;
   }
 
   .wordmark {
-    font-size: 2.6cqw;
-    margin-top: 2.4cqw;
+    margin-top:
+      2.4cqw;
+
+    font-size:
+      2.6cqw;
   }
 
   .topNote {
-    display: none;
+    display:
+      none;
   }
 
   .footer {
-    font-size: 0.8cqw;
-    letter-spacing: 0.09em;
+    font-size:
+      0.8cqw;
+
+    letter-spacing:
+      0.09em;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .copy,
+  .topNote,
+  .footer {
+    transform:
+      none !important;
+
+    will-change:
+      auto;
   }
 }

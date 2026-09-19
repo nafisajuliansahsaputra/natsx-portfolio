@@ -1,0 +1,28 @@
+#!/bin/sh
+
+echo ""
+echo "======================================"
+echo " NATSX Portfolio — Local Verify"
+echo "======================================"
+echo ""
+
+npm run verify
+
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ""
+  echo "======================================"
+  echo " VERIFY FAILED — PUSH CANCELLED"
+  echo "======================================"
+  echo ""
+  exit $STATUS
+fi
+
+echo ""
+echo "======================================"
+echo " VERIFY PASSED — PUSHING"
+echo "======================================"
+echo ""
+
+exit 0

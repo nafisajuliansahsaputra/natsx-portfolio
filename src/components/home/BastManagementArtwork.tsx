@@ -22,12 +22,13 @@ const BastEditorialScene =
         "./BastEditorialScene"
       ),
     {
-      ssr: false,
+      ssr:
+        false,
     },
   );
 
 const SCENE_PRELOAD_MARGIN =
-  "500px 0px";
+  "300px 0px";
 
 type Props = {
   project:
@@ -58,16 +59,28 @@ export default function BastManagementArtwork({
     shouldLoadScene,
     setShouldLoadScene,
   ] =
-    useState(false);
+    useState(
+      false,
+    );
+
+  /* =========================================================
+     LAZY THREE.JS SCENE
+  ========================================================= */
 
   useEffect(
     () => {
-      const artwork =
+      const currentArtwork =
         artworkRef.current;
 
-      if (!artwork) {
+      if (
+        !currentArtwork
+      ) {
         return;
       }
+
+      const artwork:
+        HTMLDivElement =
+          currentArtwork;
 
       if (
         typeof IntersectionObserver ===
@@ -75,24 +88,31 @@ export default function BastManagementArtwork({
       ) {
         const frame =
           window.requestAnimationFrame(
-            () =>
+            () => {
               setShouldLoadScene(
                 true,
-              ),
+              );
+            },
           );
 
-        return () =>
+        return () => {
           window.cancelAnimationFrame(
             frame,
           );
+        };
       }
 
       const observer =
         new IntersectionObserver(
-          (entries) => {
+          (
+            entries,
+          ) => {
+            const entry =
+              entries[0];
+
             if (
-              !entries[0]
-                ?.isIntersecting
+              !entry ||
+              !entry.isIntersecting
             ) {
               return;
             }
@@ -101,9 +121,19 @@ export default function BastManagementArtwork({
               true,
             );
 
+            /*
+             * Hanya perlu trigger sekali.
+             *
+             * Setelah Three.js scene mounted,
+             * lifecycle visibility ditangani
+             * langsung BastEditorialScene.
+             */
             observer.disconnect();
           },
           {
+            root:
+              null,
+
             rootMargin:
               SCENE_PRELOAD_MARGIN,
 
@@ -116,20 +146,27 @@ export default function BastManagementArtwork({
         artwork,
       );
 
-      return () =>
+      return () => {
         observer.disconnect();
+      };
     },
     [],
   );
 
   return (
     <div
-      ref={artworkRef}
+      ref={
+        artworkRef
+      }
       className={
         styles.artwork
       }
       data-bast-featured="true"
     >
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
+
       <div
         className={
           styles.light
@@ -158,7 +195,9 @@ export default function BastManagementArtwork({
         aria-hidden="true"
       />
 
-      {/* LEFT COPY */}
+      {/* =====================================================
+          LEFT EDITORIAL COPY
+      ===================================================== */}
 
       <div
         className={
@@ -215,26 +254,20 @@ export default function BastManagementArtwork({
         </p>
       </div>
 
-      {/* FLOATING DOCUMENT ICON */}
+      {/* =====================================================
+          THREE.JS WORLD
+      =====================================================
 
-      <div
-        className={
-          styles.documentIconCard
-        }
-        aria-hidden="true"
-      >
-        <span
-          className={
-            styles.documentIcon
-          }
-        >
-          <i />
-          <i />
-          <i />
-        </span>
-      </div>
+          Semua object berikut sekarang ada di scene 3D:
 
-      {/* THREE.JS */}
+          - MacBook
+          - Printer
+          - Floating document icon
+          - Success notification
+          - Total BAST stats card
+
+          Jangan bikin versi DOM 2D lagi di file ini.
+      ===================================================== */}
 
       <div
         className={
@@ -258,7 +291,15 @@ export default function BastManagementArtwork({
         }
       </div>
 
-      {/* FOREGROUND DOCUMENT */}
+      {/* =====================================================
+          FOREGROUND DOCUMENT
+
+          Ini tetap DOM/Image karena memang merupakan
+          dokumen project real yang berasal dari secondaryVisual.
+
+          Sengaja tetap di foreground di luar Three.js
+          supaya kualitas dokumen tetap tajam.
+      ===================================================== */}
 
       {
         secondaryVisual
@@ -298,7 +339,9 @@ export default function BastManagementArtwork({
           : null
       }
 
-      {/* TOP RIGHT NOTE */}
+      {/* =====================================================
+          TOP RIGHT NOTE
+      ===================================================== */}
 
       <div
         className={
@@ -321,76 +364,12 @@ export default function BastManagementArtwork({
         <i />
       </div>
 
-      {/* SUCCESS */}
+      {/* =====================================================
+          WORKFLOW
 
-      <div
-        className={
-          styles.successCard
-        }
-        aria-hidden="true"
-      >
-        <span
-          className={
-            styles.successIcon
-          }
-        >
-          ✓
-        </span>
-
-        <div>
-          <strong>
-            Dokumen Berhasil Dicetak
-          </strong>
-
-          <small>
-            BAST-2026-014
-          </small>
-        </div>
-      </div>
-
-      {/* TOTAL */}
-
-      <div
-        className={
-          styles.totalCard
-        }
-        aria-hidden="true"
-      >
-        <div
-          className={
-            styles.totalDocumentIcon
-          }
-        >
-          <i />
-          <i />
-        </div>
-
-        <div
-          className={
-            styles.totalCopy
-          }
-        >
-          <strong>
-            128
-          </strong>
-
-          <small>
-            Total BAST
-          </small>
-        </div>
-
-        <div
-          className={
-            styles.miniChart
-          }
-        >
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-
-      {/* WORKFLOW */}
+          Workflow masih editorial 2D karena ini lebih cocok
+          sebagai UI annotation daripada floating physical card.
+      ===================================================== */}
 
       <div
         className={
@@ -421,7 +400,9 @@ export default function BastManagementArtwork({
         />
       </div>
 
-      {/* FOOTER */}
+      {/* =====================================================
+          BOTTOM LEFT NOTE
+      ===================================================== */}
 
       <div
         className={
@@ -439,6 +420,10 @@ export default function BastManagementArtwork({
 
         <i />
       </div>
+
+      {/* =====================================================
+          BOTTOM RIGHT NOTE
+      ===================================================== */}
 
       <div
         className={
