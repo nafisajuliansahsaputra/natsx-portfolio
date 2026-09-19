@@ -39,6 +39,10 @@ test.describe(
           const response =
             await page.goto(
               route,
+              {
+                waitUntil:
+                  "domcontentloaded",
+              },
             );
 
           expect(
@@ -96,6 +100,10 @@ test.describe(
           const response =
             await page.goto(
               route,
+              {
+                waitUntil:
+                  "domcontentloaded",
+              },
             );
 
           expect(

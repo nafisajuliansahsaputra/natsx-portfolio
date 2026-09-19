@@ -115,10 +115,9 @@ test.describe(
         async ({
           page,
         }) => {
-          const response =
-            await page.goto(
-              path,
-            );
+const response = await page.goto(path, {
+  waitUntil: "domcontentloaded",
+});
 
           expect(
             response,
