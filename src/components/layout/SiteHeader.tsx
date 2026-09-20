@@ -476,14 +476,22 @@ export default function SiteHeader() {
           );
       };
 
-    const updateCompactState =
+    const mobileFloatingQuery =
+      window.matchMedia(
+        MOBILE_FLOATING_QUERY,
+      );
+
+    let heroExited =
+      hero
+        ? hero
+            .getBoundingClientRect()
+            .bottom <= 0
+        : false;
+
+    const syncCompactState =
       () => {
         if (
-          window
-            .matchMedia(
-              MOBILE_FLOATING_QUERY,
-            )
-            .matches
+          mobileFloatingQuery.matches
         ) {
           if (
             headerCompactRef.current ||
@@ -492,30 +500,15 @@ export default function SiteHeader() {
             resetDesktopFloating();
           }
 
-          scrollFrameRef.current =
-            null;
-
           return;
         }
 
-        let shouldCompact =
-          false;
-
-        if (
+        const shouldCompact =
           hero
-        ) {
-          const heroRect =
-            hero.getBoundingClientRect();
-
-          shouldCompact =
-            heroRect.bottom <=
-            0;
-        } else {
-          shouldCompact =
-            window.scrollY >=
-            window.innerHeight *
-              0.8;
-        }
+            ? heroExited
+            : window.scrollY >=
+                window.innerHeight *
+                  0.8;
 
         if (
           shouldCompact
@@ -524,12 +517,26 @@ export default function SiteHeader() {
         } else {
           hideFloating();
         }
+      };
+
+    const updateFallbackState =
+      () => {
+        if (
+          hero
+        ) {
+          heroExited =
+            hero
+              .getBoundingClientRect()
+              .bottom <= 0;
+        }
+
+        syncCompactState();
 
         scrollFrameRef.current =
           null;
       };
 
-    const requestUpdate =
+    const requestFallbackUpdate =
       () => {
         if (
           scrollFrameRef.current !==
@@ -540,57 +547,96 @@ export default function SiteHeader() {
 
         scrollFrameRef.current =
           window.requestAnimationFrame(
-            updateCompactState,
+            updateFallbackState,
           );
       };
 
-    updateCompactState();
-
-    window.addEventListener(
-      "scroll",
-      requestUpdate,
-      {
-        passive: true,
-      },
-    );
-
-    window.addEventListener(
-      "resize",
-      requestUpdate,
-    );
-
-    let resizeObserver:
-      ResizeObserver |
+    let heroObserver:
+      IntersectionObserver |
       null =
       null;
 
+    const canObserveHero =
+      Boolean(
+        hero &&
+        typeof IntersectionObserver !==
+          "undefined",
+      );
+
     if (
       hero &&
-      typeof ResizeObserver !==
-        "undefined"
+      canObserveHero
     ) {
-      resizeObserver =
-        new ResizeObserver(
-          requestUpdate,
+      heroObserver =
+        new IntersectionObserver(
+          (
+            [
+              entry,
+            ],
+          ) => {
+            if (
+              !entry
+            ) {
+              return;
+            }
+
+            heroExited =
+              !entry.isIntersecting &&
+              entry.boundingClientRect.bottom <=
+                0;
+
+            syncCompactState();
+          },
+          {
+            threshold:
+              0,
+          },
         );
 
-      resizeObserver.observe(
+      heroObserver.observe(
         hero,
+      );
+    } else {
+      window.addEventListener(
+        "scroll",
+        requestFallbackUpdate,
+        {
+          passive:
+            true,
+        },
+      );
+
+      window.addEventListener(
+        "resize",
+        requestFallbackUpdate,
       );
     }
 
+    mobileFloatingQuery.addEventListener(
+      "change",
+      syncCompactState,
+    );
+
+    syncCompactState();
+
     return () => {
+      heroObserver
+        ?.disconnect();
+
       window.removeEventListener(
         "scroll",
-        requestUpdate,
+        requestFallbackUpdate,
       );
 
       window.removeEventListener(
         "resize",
-        requestUpdate,
+        requestFallbackUpdate,
       );
 
-      resizeObserver?.disconnect();
+      mobileFloatingQuery.removeEventListener(
+        "change",
+        syncCompactState,
+      );
 
       clearFloatingExitTimer();
 
