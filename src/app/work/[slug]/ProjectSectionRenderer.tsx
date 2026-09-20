@@ -73,6 +73,25 @@ function isAnimatedImage(
   );
 }
 
+function shouldServeOriginalGalleryImage(
+  mimeType:
+    string,
+  fileSize:
+    number,
+) {
+  return (
+    isAnimatedImage(
+      mimeType,
+    ) ||
+    (
+      mimeType ===
+        "image/png" &&
+      fileSize >=
+        1_500_000
+    )
+  );
+}
+
 
 function getSectionFallbackLabel(
   sectionType: string,
@@ -896,10 +915,15 @@ function GallerySection({
                         sizes={
                           imageSizes
                         }
-                        unoptimized={isAnimatedImage(
+                        unoptimized={shouldServeOriginalGalleryImage(
                           item.asset
                             .mimeType,
+
+                          item.asset
+                            .size,
                         )}
+                        loading="lazy"
+                        decoding="async"
                         className={
                           mediaStyles.galleryMedia
                         }
