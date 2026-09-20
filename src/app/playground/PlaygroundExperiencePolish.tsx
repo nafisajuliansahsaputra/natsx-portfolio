@@ -144,6 +144,10 @@ export default function PlaygroundExperiencePolish() {
     let destroyed =
       false;
 
+    let labActive =
+      typeof IntersectionObserver ===
+      "undefined";
+
     /*
      * =========================
      * INITIAL SETUP
@@ -537,8 +541,9 @@ export default function PlaygroundExperiencePolish() {
 
     function requestMeasure() {
       if (
+        !labActive ||
         frameId !==
-        0
+          0
       ) {
         return;
       }
@@ -554,6 +559,57 @@ export default function PlaygroundExperiencePolish() {
      * EVENTS
      * =========================
      */
+
+    const visibilityObserver =
+      typeof IntersectionObserver !==
+      "undefined"
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              labActive =
+                Boolean(
+                  entry
+                    ?.isIntersecting,
+                );
+
+              if (
+                labActive
+              ) {
+                requestMeasure();
+              } else {
+                navigatorElement.dataset.labVisible =
+                  "false";
+
+                if (
+                  frameId !==
+                  0
+                ) {
+                  window.cancelAnimationFrame(
+                    frameId,
+                  );
+
+                  frameId =
+                    0;
+                }
+              }
+            },
+            {
+              rootMargin:
+                "100% 0px 100% 0px",
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
+    visibilityObserver
+      ?.observe(
+        labElement,
+      );
 
     window.addEventListener(
       "scroll",
@@ -633,6 +689,9 @@ export default function PlaygroundExperiencePolish() {
       );
 
       resizeObserver?.disconnect();
+
+      visibilityObserver
+        ?.disconnect();
 
       if (
         frameId !==
