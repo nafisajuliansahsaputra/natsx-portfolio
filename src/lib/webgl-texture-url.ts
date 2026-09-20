@@ -1,4 +1,4 @@
-const DEFAULT_QUALITY = 80;
+const DEFAULT_QUALITY = 75;
 
 export function getWebglTextureUrl(
   source: string | null,
