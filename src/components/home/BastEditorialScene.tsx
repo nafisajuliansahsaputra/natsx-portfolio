@@ -2504,9 +2504,14 @@ group.rotation.set(
                 ),
 
                 screenUrl
-                  ? textureLoader.loadAsync(
-                      screenUrl,
-                    )
+                  ? textureLoader
+                      .loadAsync(
+                        screenUrl,
+                      )
+                      .catch(
+                        () =>
+                          undefined,
+                      )
                   : Promise.resolve(
                       undefined,
                     ),

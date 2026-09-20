@@ -2,7 +2,7 @@ const DEFAULT_QUALITY = 75;
 
 export function getWebglTextureUrl(
   source: string | null,
-  width: 1200 | 1440 | 1920,
+  width: 1200 | 1920,
   quality = DEFAULT_QUALITY,
 ) {
   if (!source) {

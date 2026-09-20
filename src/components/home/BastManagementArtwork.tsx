@@ -36,7 +36,7 @@ export default function BastManagementArtwork({
   const optimizedScreenUrl =
     getWebglTextureUrl(
       primaryVisual,
-      1440,
+      1200,
     );
 
   return (

@@ -32,7 +32,7 @@ export default function AttendanceSystemArtwork({
       secondaryVisual ??
         primaryVisual ??
         null,
-      1440,
+      1200,
     );
 
   return (
