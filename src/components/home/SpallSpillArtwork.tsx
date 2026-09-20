@@ -12,6 +12,10 @@ import type {
   PublicProject,
 } from "@/lib/public-projects";
 
+import {
+  getWebglTextureUrl,
+} from "@/lib/webgl-texture-url";
+
 import styles from "./SpallSpillArtwork.module.css";
 
 const SpallEditorialScene =
@@ -468,6 +472,12 @@ export default function SpallSpillArtwork({
     [],
   );
 
+  const optimizedScreenUrl =
+    getWebglTextureUrl(
+      secondaryVisual,
+      1200,
+    );
+
   return (
     <div
       ref={
@@ -552,7 +562,7 @@ export default function SpallSpillArtwork({
             ? (
               <SpallEditorialScene
                 screenUrl={
-                  secondaryVisual
+                  optimizedScreenUrl
                 }
                 label={`${project.title} — ${visualLabel}`}
               />
