@@ -3,6 +3,7 @@ import "@/app/contact-email-fit.css";
 
 import Link from "next/link";
 
+import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
@@ -852,6 +853,8 @@ export function ContactPageContent({
 
         <ContactConversionPolish />
       </main>
+
+      <InnerFooter />
     </>
   );
 }
