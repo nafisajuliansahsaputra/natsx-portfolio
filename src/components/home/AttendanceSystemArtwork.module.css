@@ -110,12 +110,6 @@
       rotate(var(--attendance-copy-rotate));
   }
 
-  .eyebrow {
-    font-size: 1cqw;
-    padding: 1cqw;
-    gap: 1cqw;
-  }
-
   .headline {
     font-size: 8.6cqw;
     line-height: 0.9;
