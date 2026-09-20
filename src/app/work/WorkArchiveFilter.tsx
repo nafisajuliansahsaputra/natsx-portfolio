@@ -16,7 +16,12 @@ import WorkArchiveHomepagePreview, {
   hasHomepageArchiveArtwork,
 } from "./WorkArchiveHomepagePreview";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
+
+import {
+  localizePath,
+  type Locale,
+} from "@/i18n/config";
 
 import type {
   PublicProject,
@@ -45,6 +50,9 @@ export type WorkArchiveProject = {
 
 
 type WorkArchiveFilterProps = {
+  locale:
+    Locale;
+
   projects:
     WorkArchiveProject[];
 
@@ -110,6 +118,7 @@ function getProjectMatchesCategory(
 
 
 export default function WorkArchiveFilter({
+  locale,
   projects,
   categories,
   initialCategory,
@@ -933,8 +942,8 @@ const hasPreview =
                   slotStyle
                 }
               >
-                <LocaleLink
-                  href={`/work/${project.slug}`}
+                <Link
+                  href={localizePath(`/work/${project.slug}`, locale)}
                   className={
                     styles.project
                   }
@@ -1028,6 +1037,9 @@ const hasPreview =
         fallbackImage={
           previewImage
         }
+        locale={
+          locale
+        }
       />
     </div>
   </div>
@@ -1057,7 +1069,7 @@ const hasPreview =
                   >
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
               </div>
             );
           },
