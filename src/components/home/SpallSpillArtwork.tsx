@@ -27,7 +27,7 @@ const SpallEditorialScene =
   );
 
 const SCENE_PRELOAD_MARGIN =
-  "250px 0px";
+  "500px 0px";
 
 type Props = {
   project:
