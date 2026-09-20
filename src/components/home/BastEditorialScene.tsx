@@ -11,6 +11,7 @@ import * as THREE from "three";
 import {
   GLTFLoader,
 } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 
 import {
   RoomEnvironment,
@@ -2485,6 +2486,10 @@ group.rotation.set(
         try {
           const loader =
             new GLTFLoader();
+
+          loader.setMeshoptDecoder(
+            MeshoptDecoder,
+          );
 
           const textureLoader =
             new THREE.TextureLoader();

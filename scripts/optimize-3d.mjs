@@ -41,7 +41,8 @@ const npxCommand =
     : "npx";
 
 const safeOptimizeArgs = [
-  "--no-compress",
+  "--compress",
+  "meshopt",
   "--no-instance",
   "--no-palette",
   "--no-simplify",
