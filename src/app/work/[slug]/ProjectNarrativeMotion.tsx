@@ -223,6 +223,95 @@ export default function ProjectNarrativeMotion() {
       typeof IntersectionObserver ===
       "undefined";
 
+    const mediaPreloadObserver =
+      typeof IntersectionObserver !==
+      "undefined"
+        ? new IntersectionObserver(
+            (
+              entries,
+            ) => {
+              entries.forEach(
+                (
+                  entry,
+                ) => {
+                  if (
+                    !entry.isIntersecting
+                  ) {
+                    return;
+                  }
+
+                  const section =
+                    entry.target as HTMLElement;
+
+                  section
+                    .querySelectorAll<HTMLImageElement>(
+                      'img[loading="lazy"]',
+                    )
+                    .forEach(
+                      (
+                        image,
+                      ) => {
+                        image.loading =
+                          "eager";
+                      },
+                    );
+
+                  mediaPreloadObserver
+                    ?.unobserve(
+                      section,
+                    );
+                },
+              );
+            },
+            {
+              rootMargin:
+                `${Math.max(
+                  Math.round(
+                    window.innerHeight *
+                      2,
+                  ),
+                  1,
+                )}px 0px`,
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
+    if (
+      mediaPreloadObserver
+    ) {
+      sections.forEach(
+        (
+          section,
+        ) => {
+          mediaPreloadObserver.observe(
+            section,
+          );
+        },
+      );
+    } else {
+      sections.forEach(
+        (
+          section,
+        ) => {
+          section
+            .querySelectorAll<HTMLImageElement>(
+              'img[loading="lazy"]',
+            )
+            .forEach(
+              (
+                image,
+              ) => {
+                image.loading =
+                  "eager";
+              },
+            );
+        },
+      );
+    }
+
     sections.forEach(
       (
         section,
@@ -740,6 +829,9 @@ export default function ProjectNarrativeMotion() {
       resizeObserver?.disconnect();
 
       visibilityObserver
+        ?.disconnect();
+
+      mediaPreloadObserver
         ?.disconnect();
 
       if (
