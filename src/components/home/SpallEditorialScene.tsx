@@ -284,7 +284,7 @@ function Scene({
           webgl.setPixelRatio(
             Math.min(
               window.devicePixelRatio,
-              1.6,
+              1.5,
             ),
           );
 

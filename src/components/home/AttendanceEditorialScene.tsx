@@ -1205,7 +1205,7 @@ useEffect(() => {
         webgl.setPixelRatio(
           Math.min(
             window.devicePixelRatio || 1,
-            1.6,
+            1.5,
           ),
         );
         webgl.outputColorSpace = THREE.SRGBColorSpace;
