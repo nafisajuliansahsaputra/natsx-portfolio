@@ -73,6 +73,19 @@ function isAnimatedImage(
   );
 }
 
+function shouldBypassImageOptimizer(
+  mimeType: string,
+  fileSize: number,
+) {
+  return (
+    isAnimatedImage(
+      mimeType,
+    ) ||
+    fileSize >=
+      2_000_000
+  );
+}
+
 
 function getSectionFallbackLabel(
   sectionType: string,
@@ -896,9 +909,12 @@ function GallerySection({
                         sizes={
                           imageSizes
                         }
-                        unoptimized={isAnimatedImage(
+                        unoptimized={shouldBypassImageOptimizer(
                           item.asset
                             .mimeType,
+
+                          item.asset
+                            .size,
                         )}
                         className={
                           mediaStyles.galleryMedia
