@@ -165,7 +165,8 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .documentStage {
+  .artwork[data-bast-active="true"]
+    .documentStage {
     animation: document-float 8s ease-in-out infinite;
   }
 }
