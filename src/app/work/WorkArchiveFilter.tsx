@@ -38,7 +38,25 @@ import styles from "./Work.module.css";
 
 export type WorkArchiveProject = {
   project:
-    PublicProject;
+    Pick<
+      PublicProject,
+      | "id"
+      | "slug"
+      | "number"
+      | "title"
+      | "year"
+      | "disciplines"
+      | "accentColor"
+      | "secondaryColor"
+    >;
+
+  primaryVisual:
+    | string
+    | null;
+
+  secondaryVisual:
+    | string
+    | null;
 
   previewImage:
     | string
@@ -869,6 +887,8 @@ export default function WorkArchiveFilter({
           ) => {
             const {
               project,
+              primaryVisual,
+              secondaryVisual,
               previewImage,
               categorySlugs,
             } =
@@ -1033,6 +1053,12 @@ const hasPreview =
       <WorkArchiveHomepagePreview
         project={
           project
+        }
+        primaryVisual={
+          primaryVisual
+        }
+        secondaryVisual={
+          secondaryVisual
         }
         fallbackImage={
           previewImage
