@@ -160,6 +160,10 @@ export default function FiveAmVisionMotionRoot({
       let currentY = 0;
 
       let animationFrame = 0;
+      let pointerFrame = 0;
+
+      let pointerClientX = 0;
+      let pointerClientY = 0;
 
 
       const applyMotion = () => {
@@ -324,11 +328,11 @@ export default function FiveAmVisionMotionRoot({
         };
 
 
-      const handlePointerMove =
-        (
-          event:
-            PointerEvent,
-        ) => {
+      const applyPointerTarget =
+        () => {
+          pointerFrame =
+            0;
+
           const bounds =
             root.getBoundingClientRect();
 
@@ -343,14 +347,14 @@ export default function FiveAmVisionMotionRoot({
 
           const localX =
             (
-              event.clientX -
+              pointerClientX -
               bounds.left
             ) /
             bounds.width;
 
           const localY =
             (
-              event.clientY -
+              pointerClientY -
               bounds.top
             ) /
             bounds.height;
@@ -370,6 +374,30 @@ export default function FiveAmVisionMotionRoot({
             );
 
           requestTick();
+        };
+
+
+      const handlePointerMove =
+        (
+          event:
+            PointerEvent,
+        ) => {
+          pointerClientX =
+            event.clientX;
+
+          pointerClientY =
+            event.clientY;
+
+          if (
+            pointerFrame
+          ) {
+            return;
+          }
+
+          pointerFrame =
+            window.requestAnimationFrame(
+              applyPointerTarget,
+            );
         };
 
 
@@ -418,6 +446,14 @@ export default function FiveAmVisionMotionRoot({
         ) {
           window.cancelAnimationFrame(
             animationFrame,
+          );
+        }
+
+        if (
+          pointerFrame
+        ) {
+          window.cancelAnimationFrame(
+            pointerFrame,
           );
         }
       };
