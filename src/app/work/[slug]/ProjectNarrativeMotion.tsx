@@ -223,10 +223,17 @@ export default function ProjectNarrativeMotion() {
       typeof IntersectionObserver ===
       "undefined";
 
-    const mediaPreloadObserver =
+    let mediaPreloadObserver:
+      IntersectionObserver |
+      null =
+      null;
+
+    if (
       typeof IntersectionObserver !==
       "undefined"
-        ? new IntersectionObserver(
+    ) {
+      mediaPreloadObserver =
+        new IntersectionObserver(
             (
               entries,
             ) => {
@@ -276,8 +283,8 @@ export default function ProjectNarrativeMotion() {
               threshold:
                 0,
             },
-          )
-        : null;
+          );
+    }
 
     if (
       mediaPreloadObserver
