@@ -98,8 +98,8 @@ function getGalleryDerivativeUrl(
       "small" ||
     size ===
       "tall"
-      ? 720
-      : 1440;
+      ? 480
+      : 960;
 
   const params =
     new URLSearchParams({
@@ -109,7 +109,7 @@ function getGalleryDerivativeUrl(
           width,
         ),
       q:
-        "78",
+        "72",
     });
 
   return `/api/project-image?${params.toString()}`;

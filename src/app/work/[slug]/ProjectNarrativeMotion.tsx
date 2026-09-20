@@ -223,79 +223,168 @@ export default function ProjectNarrativeMotion() {
       typeof IntersectionObserver ===
       "undefined";
 
-    let mediaPreloadObserver:
+    let earlyMediaObserver:
       IntersectionObserver |
       null =
       null;
+
+    let prepareMediaObserver:
+      IntersectionObserver |
+      null =
+      null;
+
+    const promoteImages =
+      (
+        section:
+          HTMLElement,
+        limit?:
+          number,
+      ) => {
+        const images =
+          Array.from(
+            section.querySelectorAll<HTMLImageElement>(
+              'img[loading="lazy"]',
+            ),
+          );
+
+        const targets =
+          typeof limit ===
+          "number"
+            ? images.slice(
+                0,
+                limit,
+              )
+            : images;
+
+        targets.forEach(
+          (
+            image,
+            index,
+          ) => {
+            image.loading =
+              "eager";
+
+            if (
+              index <
+              2
+            ) {
+              image.fetchPriority =
+                "high";
+            }
+          },
+        );
+      };
 
     if (
       typeof IntersectionObserver !==
       "undefined"
     ) {
-      mediaPreloadObserver =
+      earlyMediaObserver =
         new IntersectionObserver(
-            (
-              entries,
-            ) => {
-              entries.forEach(
-                (
-                  entry,
-                ) => {
-                  if (
-                    !entry.isIntersecting
-                  ) {
-                    return;
-                  }
+          (
+            entries,
+          ) => {
+            entries.forEach(
+              (
+                entry,
+              ) => {
+                if (
+                  !entry.isIntersecting
+                ) {
+                  return;
+                }
 
-                  const section =
-                    entry.target as HTMLElement;
+                const section =
+                  entry.target as HTMLElement;
 
-                  section
-                    .querySelectorAll<HTMLImageElement>(
-                      'img[loading="lazy"]',
-                    )
-                    .forEach(
-                      (
-                        image,
-                      ) => {
-                        image.loading =
-                          "eager";
-                      },
-                    );
+                promoteImages(
+                  section,
+                  4,
+                );
 
-                  mediaPreloadObserver
-                    ?.unobserve(
-                      section,
-                    );
-                },
-              );
-            },
-            {
-              rootMargin:
-                `${Math.max(
-                  Math.round(
-                    window.innerHeight *
-                      2,
-                  ),
-                  1,
-                )}px 0px`,
+                earlyMediaObserver
+                  ?.unobserve(
+                    section,
+                  );
+              },
+            );
+          },
+          {
+            rootMargin:
+              `${Math.max(
+                Math.round(
+                  window.innerHeight *
+                    2,
+                ),
+                1,
+              )}px 0px`,
 
-              threshold:
-                0,
-            },
-          );
+            threshold:
+              0,
+          },
+        );
+
+      prepareMediaObserver =
+        new IntersectionObserver(
+          (
+            entries,
+          ) => {
+            entries.forEach(
+              (
+                entry,
+              ) => {
+                if (
+                  !entry.isIntersecting
+                ) {
+                  return;
+                }
+
+                const section =
+                  entry.target as HTMLElement;
+
+                promoteImages(
+                  section,
+                );
+
+                prepareMediaObserver
+                  ?.unobserve(
+                    section,
+                  );
+              },
+            );
+          },
+          {
+            rootMargin:
+              `${Math.max(
+                Math.round(
+                  window.innerHeight,
+                ),
+                1,
+              )}px 0px`,
+
+            threshold:
+              0,
+          },
+        );
     }
 
     if (
-      mediaPreloadObserver
+      earlyMediaObserver &&
+      prepareMediaObserver
     ) {
       sections.forEach(
         (
           section,
         ) => {
-          mediaPreloadObserver.observe(
-            section,
-          );
+          earlyMediaObserver
+            ?.observe(
+              section,
+            );
+
+          prepareMediaObserver
+            ?.observe(
+              section,
+            );
         },
       );
     } else {
@@ -303,18 +392,9 @@ export default function ProjectNarrativeMotion() {
         (
           section,
         ) => {
-          section
-            .querySelectorAll<HTMLImageElement>(
-              'img[loading="lazy"]',
-            )
-            .forEach(
-              (
-                image,
-              ) => {
-                image.loading =
-                  "eager";
-              },
-            );
+          promoteImages(
+            section,
+          );
         },
       );
     }
@@ -838,7 +918,10 @@ export default function ProjectNarrativeMotion() {
       visibilityObserver
         ?.disconnect();
 
-      mediaPreloadObserver
+      earlyMediaObserver
+        ?.disconnect();
+
+      prepareMediaObserver
         ?.disconnect();
 
       if (

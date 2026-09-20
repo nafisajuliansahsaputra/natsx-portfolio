@@ -6,6 +6,55 @@ export const runtime =
 const CACHE_SECONDS =
   2678400;
 
+const MAX_CONCURRENT_TRANSFORMS =
+  2;
+
+let activeTransforms =
+  0;
+
+const transformWaiters:
+  Array<
+    () => void
+  > =
+  [];
+
+async function withTransformSlot<
+  Result,
+>(
+  task:
+    () =>
+      Promise<Result>,
+) {
+  if (
+    activeTransforms >=
+    MAX_CONCURRENT_TRANSFORMS
+  ) {
+    await new Promise<void>(
+      (
+        resolve,
+      ) => {
+        transformWaiters.push(
+          resolve,
+        );
+      },
+    );
+  }
+
+  activeTransforms +=
+    1;
+
+  try {
+    return await task();
+  } finally {
+    activeTransforms -=
+      1;
+
+    transformWaiters
+      .shift()
+      ?.();
+  }
+}
+
 function getSafeWidth(
   value:
     string | null,
@@ -21,7 +70,7 @@ function getSafeWidth(
       parsed,
     )
   ) {
-    return 900;
+    return 720;
   }
 
   return Math.min(
@@ -29,7 +78,7 @@ function getSafeWidth(
       parsed,
       320,
     ),
-    1600,
+    1200,
   );
 }
 
@@ -48,7 +97,7 @@ function getSafeQuality(
       parsed,
     )
   ) {
-    return 78;
+    return 72;
   }
 
   return Math.min(
@@ -151,67 +200,121 @@ export async function GET(
   const sourceUrl =
     `${supabaseUrl}/storage/v1/object/public/portfolio-media/${encodedPath}`;
 
-  const source =
-    await fetch(
-      sourceUrl,
+  try {
+    return await withTransformSlot(
+      async () => {
+        const source =
+          await fetch(
+            sourceUrl,
+            {
+              cache:
+                "force-cache",
+            },
+          );
+
+        if (
+          !source.ok
+        ) {
+          return new Response(
+            "Source image unavailable.",
+            {
+              status:
+                source.status,
+            },
+          );
+        }
+
+        const input =
+          Buffer.from(
+            await source.arrayBuffer(),
+          );
+
+        const output =
+          await sharp(
+            input,
+            {
+              failOn:
+                "none",
+
+              sequentialRead:
+                true,
+
+              limitInputPixels:
+                400_000_000,
+            },
+          )
+            .rotate()
+            .resize({
+              width,
+
+              withoutEnlargement:
+                true,
+
+              fit:
+                "inside",
+
+              fastShrinkOnLoad:
+                true,
+            })
+            .webp({
+              quality,
+
+              effort:
+                0,
+            })
+            .toBuffer();
+
+        return new Response(
+          output,
+          {
+            headers: {
+              "Content-Type":
+                "image/webp",
+
+              "Content-Length":
+                String(
+                  output.byteLength,
+                ),
+
+              "Cache-Control":
+                `public, max-age=${CACHE_SECONDS}, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=604800`,
+            },
+          },
+        );
+      },
+    );
+  } catch (
+    error
+  ) {
+    console.error(
+      "[Project image] derivative failed:",
       {
-        cache:
-          "force-cache",
+        path,
+        width,
+        error:
+          error instanceof
+          Error
+            ? error.message
+            : String(
+                error,
+              ),
       },
     );
 
-  if (
-    !source.ok
-  ) {
     return new Response(
-      "Source image unavailable.",
+      null,
       {
         status:
-          source.status,
+          307,
+
+        headers: {
+          Location:
+            sourceUrl,
+
+          "Cache-Control":
+            "public, max-age=3600",
+        },
       },
     );
   }
-
-  const input =
-    Buffer.from(
-      await source.arrayBuffer(),
-    );
-
-  const output =
-    await sharp(
-      input,
-      {
-        failOn:
-          "none",
-      },
-    )
-      .rotate()
-      .resize({
-        width,
-        withoutEnlargement:
-          true,
-        fit:
-          "inside",
-      })
-      .webp({
-        quality,
-        effort:
-          4,
-        smartSubsample:
-          true,
-      })
-      .toBuffer();
-
-  return new Response(
-    output,
-    {
-      headers: {
-        "Content-Type":
-          "image/webp",
-
-        "Cache-Control":
-          `public, max-age=${CACHE_SECONDS}, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=604800`,
-      },
-    },
-  );
 }
