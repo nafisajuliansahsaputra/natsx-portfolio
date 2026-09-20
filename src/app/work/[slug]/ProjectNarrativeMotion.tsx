@@ -219,6 +219,10 @@ export default function ProjectNarrativeMotion() {
     let destroyed =
       false;
 
+    let storyActive =
+      typeof IntersectionObserver ===
+      "undefined";
+
     sections.forEach(
       (
         section,
@@ -591,8 +595,9 @@ export default function ProjectNarrativeMotion() {
 
     function requestMeasure() {
       if (
+        !storyActive ||
         frameId !==
-        0
+          0
       ) {
         return;
       }
@@ -602,6 +607,57 @@ export default function ProjectNarrativeMotion() {
           measure,
         );
     }
+
+    const visibilityObserver =
+      typeof IntersectionObserver !==
+      "undefined"
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              storyActive =
+                Boolean(
+                  entry
+                    ?.isIntersecting,
+                );
+
+              if (
+                storyActive
+              ) {
+                requestMeasure();
+              } else {
+                indicatorElement.dataset.storyVisible =
+                  "false";
+
+                if (
+                  frameId !==
+                  0
+                ) {
+                  window.cancelAnimationFrame(
+                    frameId,
+                  );
+
+                  frameId =
+                    0;
+                }
+              }
+            },
+            {
+              rootMargin:
+                "100% 0px 100% 0px",
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
+    visibilityObserver
+      ?.observe(
+        storyElement,
+      );
 
     window.addEventListener(
       "scroll",
@@ -682,6 +738,9 @@ export default function ProjectNarrativeMotion() {
       );
 
       resizeObserver?.disconnect();
+
+      visibilityObserver
+        ?.disconnect();
 
       if (
         frameId !==
