@@ -155,7 +155,7 @@ export default function WorkArchiveHomepagePreview({
           }
           alt=""
           fill
-          loading="eager"
+          loading="lazy"
           sizes="(max-width: 700px) 1px, (max-width: 1200px) 420px, 480px"
           className={
             styles.fallbackImage
@@ -286,7 +286,6 @@ export default function WorkArchiveHomepagePreview({
   }
   part="spall-primary-image"
   sizes="420px"
-  unoptimized
 />
               ) : (
                 <div
@@ -461,7 +460,6 @@ export default function WorkArchiveHomepagePreview({
   }
   part="bast-primary-image"
   sizes="420px"
-  unoptimized
 />
             ) : (
               <BastFallback />
@@ -486,7 +484,6 @@ export default function WorkArchiveHomepagePreview({
   }
   part="bast-secondary-image"
   sizes="140px"
-  unoptimized
 />
           ) : (
             <div
@@ -585,7 +582,6 @@ function SpallPhone({
   }
   part="spall-phone-image"
   sizes="100px"
-  unoptimized
 />
         </div>
 
@@ -650,7 +646,6 @@ function ShowcaseImage({
   className,
   part,
   sizes,
-  unoptimized = false,
 }: {
   src:
     string;
@@ -666,9 +661,6 @@ function ShowcaseImage({
 
   sizes:
     string;
-
-  unoptimized?:
-    boolean;
 }) {
   return (
     <Image
@@ -679,7 +671,7 @@ function ShowcaseImage({
         alt
       }
       fill
-      loading="eager"
+      loading="lazy"
       sizes={
         sizes
       }
@@ -688,9 +680,6 @@ function ShowcaseImage({
       }
       data-archive-part={
         part
-      }
-      unoptimized={
-        unoptimized
       }
     />
   );
