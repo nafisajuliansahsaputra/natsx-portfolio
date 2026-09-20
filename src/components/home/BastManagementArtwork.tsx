@@ -176,7 +176,6 @@ export default function BastManagementArtwork({
         {shouldLoadScene ? (
           <BastEditorialScene
             screenUrl={primaryVisual}
-            documentUrl={secondaryVisual}
             label={project.title + " — " + visualLabel}
           />
         ) : null}
@@ -191,9 +190,7 @@ export default function BastManagementArtwork({
               alt=""
               fill
               sizes="(max-width: 700px) 30vw, 24vw"
-              className={styles.documentImage}
-              unoptimized
-            />
+              className={styles.documentImage}            />
           </div>
         </div>
       ) : null}
