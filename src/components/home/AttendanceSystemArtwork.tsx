@@ -14,7 +14,7 @@ const AttendanceEditorialScene = dynamic(
   },
 );
 
-const SCENE_PRELOAD_MARGIN = "300px 0px";
+const SCENE_PRELOAD_MARGIN = "800px 0px";
 
 type AttendanceSystemArtworkProps = {
   project: PublicProject;
