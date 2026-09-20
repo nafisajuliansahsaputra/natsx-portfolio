@@ -8,20 +8,25 @@ import {
   useState,
 } from "react";
 
+import {
+  getSceneMargin,
+  warmSceneResources,
+} from "./scene-resource-preload";
+
+const loadBastEditorialScene =
+  () =>
+    import(
+      "./BastEditorialScene"
+    );
+
 const BastEditorialScene =
   dynamic(
-    () =>
-      import(
-        "./BastEditorialScene"
-      ),
+    loadBastEditorialScene,
     {
       ssr:
         false,
     },
   );
-
-const SCENE_PRELOAD_MARGIN =
-  "800px 0px";
 
 type BastSceneGateProps = {
   className:
@@ -60,10 +65,28 @@ export default function BastSceneGate({
       return;
     }
 
+    const preload =
+      () => {
+        void loadBastEditorialScene()
+          .catch(
+            () => undefined,
+          );
+
+        void warmSceneResources(
+          [
+            "/models/bast/macbook-pro.glb",
+            "/models/bast/printer.glb",
+            screenUrl,
+          ],
+        );
+      };
+
     if (
       typeof IntersectionObserver ===
       "undefined"
     ) {
+      preload();
+
       const frame =
         window.requestAnimationFrame(
           () => {
@@ -80,17 +103,48 @@ export default function BastSceneGate({
       };
     }
 
-    const observer =
+    const preloadObserver =
       new IntersectionObserver(
         (
-          entries,
+          [
+            entry,
+          ],
         ) => {
-          const entry =
-            entries[0];
-
           if (
-            !entry ||
-            !entry.isIntersecting
+            !entry
+              ?.isIntersecting
+          ) {
+            return;
+          }
+
+          preload();
+
+          preloadObserver.disconnect();
+        },
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              2,
+            ),
+
+          threshold:
+            0,
+        },
+      );
+
+    const prepareObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            !entry
+              ?.isIntersecting
           ) {
             return;
           }
@@ -99,28 +153,37 @@ export default function BastSceneGate({
             true,
           );
 
-          observer.disconnect();
+          prepareObserver.disconnect();
         },
         {
           root:
             null,
 
           rootMargin:
-            SCENE_PRELOAD_MARGIN,
+            getSceneMargin(
+              1,
+            ),
 
           threshold:
-            0.01,
+            0,
         },
       );
 
-    observer.observe(
+    preloadObserver.observe(
+      scene,
+    );
+
+    prepareObserver.observe(
       scene,
     );
 
     return () => {
-      observer.disconnect();
+      preloadObserver.disconnect();
+      prepareObserver.disconnect();
     };
-  }, []);
+  }, [
+    screenUrl,
+  ]);
 
   return (
     <div
