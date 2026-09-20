@@ -446,7 +446,7 @@ export default function FiveAmVisionArtwork({
   );
 
 
-  const eager =
+  const archive =
     mode ===
     "archive";
 
@@ -517,13 +517,9 @@ export default function FiveAmVisionArtwork({
             src="/images/projects/5am-vision/5am-logo.png"
             alt=""
             fill
-            loading={
-              eager
-                ? "eager"
-                : undefined
-            }
+            loading="lazy"
             sizes={
-              eager
+              archive
                 ? "24px"
                 : "(max-width: 700px) 28px, (max-width: 960px) 34px, 42px"
             }
@@ -640,13 +636,9 @@ export default function FiveAmVisionArtwork({
           src="/images/projects/5am-vision/aven-cutout.png"
           alt=""
           fill
-          loading={
-            eager
-              ? "eager"
-              : undefined
-          }
+          loading="lazy"
           sizes={
-            eager
+            archive
               ? "360px"
               : "(max-width: 700px) 74vw, (max-width: 960px) 56vw, 42vw"
           }
