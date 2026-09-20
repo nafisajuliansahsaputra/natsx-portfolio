@@ -157,9 +157,6 @@ export default function BastManagementArtwork({
     <div ref={artworkRef} className={styles.artwork} data-bast-featured="true">
       <div className={styles.orbit} aria-hidden="true" />
       <div className={styles.orbitBubble} aria-hidden="true" />
-      <div className={styles.index} aria-hidden="true">
-        <span>{project.number}</span><i />
-      </div>
 
       <div className={styles.copy} aria-hidden="true">
         <h4 className={styles.headline}>BAST</h4>
