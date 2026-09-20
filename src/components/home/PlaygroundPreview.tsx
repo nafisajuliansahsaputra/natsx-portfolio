@@ -8,10 +8,11 @@ import type {
   PointerEvent as ReactPointerEvent,
 } from "react";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -285,8 +286,8 @@ export default function PlaygroundPreview({
                 }
               </p>
 
-              <LocaleLink
-                href="/playground"
+              <Link
+                href={localizePath("/playground", locale)}
                 className={
                   styles.allLink
                 }
@@ -298,13 +299,13 @@ export default function PlaygroundPreview({
                 <span>
                   ↗
                 </span>
-              </LocaleLink>
+              </Link>
             </div>
           </div>
         </header>
 
-        <LocaleLink
-          href="/playground"
+        <Link
+          href={localizePath("/playground", locale)}
           className={
             styles.labLink
           }
@@ -420,7 +421,7 @@ export default function PlaygroundPreview({
               </span>
             </div>
           </div>
-        </LocaleLink>
+        </Link>
 
         <div
           className={
@@ -431,8 +432,8 @@ export default function PlaygroundPreview({
             (
               experiment,
             ) => (
-              <LocaleLink
-                href="/playground"
+              <Link
+                href={localizePath("/playground", locale)}
                 className={
                   styles.experiment
                 }
@@ -472,7 +473,7 @@ export default function PlaygroundPreview({
                 >
                   ↗
                 </span>
-              </LocaleLink>
+              </Link>
             ),
           )}
         </div>
