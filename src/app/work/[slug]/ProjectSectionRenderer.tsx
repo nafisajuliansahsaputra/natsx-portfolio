@@ -896,10 +896,7 @@ function GallerySection({
                         sizes={
                           imageSizes
                         }
-                        unoptimized={isAnimatedImage(
-                          item.asset
-                            .mimeType,
-                        )}
+                        unoptimized
                         className={
                           mediaStyles.galleryMedia
                         }
