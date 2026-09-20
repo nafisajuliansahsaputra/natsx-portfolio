@@ -66,6 +66,86 @@ export default function FiveAmVisionArtwork({
       const root =
         rootRef.current;
 
+      if (!root) {
+        return;
+      }
+
+      let inView =
+        false;
+
+      const syncActivity =
+        () => {
+          root.dataset.visionActive =
+            inView &&
+            !document.hidden
+              ? "true"
+              : "false";
+        };
+
+      const observer =
+        typeof IntersectionObserver !==
+        "undefined"
+          ? new IntersectionObserver(
+              (
+                [
+                  entry,
+                ],
+              ) => {
+                inView =
+                  Boolean(
+                    entry
+                      ?.isIntersecting,
+                  );
+
+                syncActivity();
+              },
+              {
+                rootMargin:
+                  "15% 0px 15% 0px",
+
+                threshold:
+                  0,
+              },
+            )
+          : null;
+
+      if (observer) {
+        observer.observe(
+          root,
+        );
+      } else {
+        inView =
+          true;
+
+        syncActivity();
+      }
+
+      document.addEventListener(
+        "visibilitychange",
+        syncActivity,
+      );
+
+      return () => {
+        observer
+          ?.disconnect();
+
+        document.removeEventListener(
+          "visibilitychange",
+          syncActivity,
+        );
+
+        delete root.dataset
+          .visionActive;
+      };
+    },
+    [],
+  );
+
+  useEffect(
+    () => {
+      const root =
+        rootRef.current;
+
       if (
         !root ||
         mode ===
@@ -382,6 +462,7 @@ export default function FiveAmVisionArtwork({
       data-vision-mode={
         mode
       }
+      data-vision-active="false"
       aria-hidden="true"
     >
       <div
