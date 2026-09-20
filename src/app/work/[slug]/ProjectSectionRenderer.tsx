@@ -73,47 +73,6 @@ function isAnimatedImage(
   );
 }
 
-function shouldUseGalleryDerivative(
-  mimeType:
-    string,
-  fileSize:
-    number,
-) {
-  return (
-    mimeType ===
-      "image/png" &&
-    fileSize >=
-      1_700_000
-  );
-}
-
-function getGalleryDerivativeUrl(
-  path:
-    string,
-  size:
-    GalleryItemSize,
-) {
-  const width =
-    size ===
-      "small" ||
-    size ===
-      "tall"
-      ? 480
-      : 960;
-
-  const params =
-    new URLSearchParams({
-      path,
-      w:
-        String(
-          width,
-        ),
-      q:
-        "72",
-    });
-
-  return `/api/project-image?${params.toString()}`;
-}
 
 function getSectionFallbackLabel(
   sectionType: string,
@@ -634,16 +593,16 @@ function getGalleryImageSizes(
       "tall"
   ) {
     return (
-      "(max-width: 700px) calc((100vw - 48px) / 2), " +
-      "(max-width: 960px) 30vw, " +
-      "328px"
+      "(max-width: 700px) 50vw, " +
+      "(max-width: 960px) 34vw, " +
+      "25vw"
     );
   }
 
   return (
-    "(max-width: 700px) calc(100vw - 40px), " +
-    "(max-width: 960px) 62vw, " +
-    "666px"
+    "(max-width: 700px) 100vw, " +
+    "(max-width: 960px) 67vw, " +
+    "50vw"
   );
 }
 
@@ -866,37 +825,20 @@ function GallerySection({
                 item,
                 index,
               ) => {
+                const imageUrl =
+                  getPortfolioMediaPublicUrl(
+                    item.asset
+                      .bucket,
+
+                    item.asset
+                      .path,
+                  );
+
+
                 const size:
                   GalleryItemSize =
                   item.size ??
                   "small";
-
-
-                const useDerivative =
-                  shouldUseGalleryDerivative(
-                    item.asset
-                      .mimeType,
-
-                    item.asset
-                      .size,
-                  );
-
-
-                const imageUrl =
-                  useDerivative
-                    ? getGalleryDerivativeUrl(
-                        item.asset
-                          .path,
-
-                        size,
-                      )
-                    : getPortfolioMediaPublicUrl(
-                        item.asset
-                          .bucket,
-
-                        item.asset
-                          .path,
-                      );
 
 
                 const imageSizes =
@@ -954,17 +896,13 @@ function GallerySection({
                         sizes={
                           imageSizes
                         }
-                        unoptimized={
-                          useDerivative ||
-                          isAnimatedImage(
-                            item.asset
-                              .mimeType,
-                          )
-                        }
+                        unoptimized={isAnimatedImage(
+                          item.asset
+                            .mimeType,
+                        )}
                         className={
                           mediaStyles.galleryMedia
                         }
-                        loading="lazy"
                       />
                     </div>
 
