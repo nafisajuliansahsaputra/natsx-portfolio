@@ -1,13 +1,4 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import Image from "next/image";
-
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
 
 import type {
   PublicProject,
@@ -17,22 +8,10 @@ import {
   getWebglTextureUrl,
 } from "@/lib/webgl-texture-url";
 
+import BastArtworkRuntimeRoot from "./BastArtworkRuntimeRoot";
+import BastSceneGate from "./BastSceneGate";
+
 import styles from "./BastManagementArtwork.module.css";
-
-const BastEditorialScene =
-  dynamic(
-    () =>
-      import(
-        "./BastEditorialScene"
-      ),
-    {
-      ssr:
-        false,
-    },
-  );
-
-const SCENE_PRELOAD_MARGIN =
-  "800px 0px";
 
 type Props = {
   project:
@@ -49,190 +28,6 @@ type Props = {
 };
 
 export default function BastManagementArtwork({
-  project,
-  primaryVisual,
-  secondaryVisual,
-  visualLabel,
-}: Props) {
-  const artworkRef =
-    useRef<HTMLDivElement>(
-      null,
-    );
-
-  const [
-    shouldLoadScene,
-    setShouldLoadScene,
-  ] =
-    useState(
-      false,
-    );
-
-  /* =========================================================
-     LAZY THREE.JS SCENE
-  ========================================================= */
-
-  useEffect(
-    () => {
-      const currentArtwork =
-        artworkRef.current;
-
-      if (
-        !currentArtwork
-      ) {
-        return;
-      }
-
-      const artwork:
-        HTMLDivElement =
-          currentArtwork;
-
-      if (
-        typeof IntersectionObserver ===
-        "undefined"
-      ) {
-        const frame =
-          window.requestAnimationFrame(
-            () => {
-              setShouldLoadScene(
-                true,
-              );
-            },
-          );
-
-        return () => {
-          window.cancelAnimationFrame(
-            frame,
-          );
-        };
-      }
-
-      const observer =
-        new IntersectionObserver(
-          (
-            entries,
-          ) => {
-            const entry =
-              entries[0];
-
-            if (
-              !entry ||
-              !entry.isIntersecting
-            ) {
-              return;
-            }
-
-            setShouldLoadScene(
-              true,
-            );
-
-            /*
-             * Hanya perlu trigger sekali.
-             *
-             * Setelah Three.js scene mounted,
-             * lifecycle visibility ditangani
-             * langsung BastEditorialScene.
-             */
-            observer.disconnect();
-          },
-          {
-            root:
-              null,
-
-            rootMargin:
-              SCENE_PRELOAD_MARGIN,
-
-            threshold:
-              0.01,
-          },
-        );
-
-      observer.observe(
-        artwork,
-      );
-
-      return () => {
-        observer.disconnect();
-      };
-    },
-    [],
-  );
-
-  useEffect(
-    () => {
-      const artwork =
-        artworkRef.current;
-
-      if (!artwork) {
-        return;
-      }
-
-      let inView =
-        typeof IntersectionObserver ===
-        "undefined";
-
-      const syncActivity =
-        () => {
-          artwork.dataset.bastActive =
-            inView &&
-            !document.hidden
-              ? "true"
-              : "false";
-        };
-
-      const observer =
-        typeof IntersectionObserver !==
-        "undefined"
-          ? new IntersectionObserver(
-              (
-                [
-                  entry,
-                ],
-              ) => {
-                inView =
-                  Boolean(
-                    entry
-                      ?.isIntersecting,
-                  );
-
-                syncActivity();
-              },
-              {
-                rootMargin:
-                  "15% 0px 15% 0px",
-
-                threshold:
-                  0,
-              },
-            )
-          : null;
-
-      observer?.observe(
-        artwork,
-      );
-
-      syncActivity();
-
-      document.addEventListener(
-        "visibilitychange",
-        syncActivity,
-      );
-
-      return () => {
-        observer
-          ?.disconnect();
-
-        document.removeEventListener(
-          "visibilitychange",
-          syncActivity,
-        );
-
-        delete artwork.dataset
-          .bastActive;
-      };
-    },
-    [],
-  );
-
   const optimizedScreenUrl =
     getWebglTextureUrl(
       primaryVisual,
@@ -240,11 +35,10 @@ export default function BastManagementArtwork({
     );
 
   return (
-    <div
-      ref={artworkRef}
-      className={styles.artwork}
-      data-bast-featured="true"
-      data-bast-active="false"
+    <BastArtworkRuntimeRoot
+      className={
+        styles.artwork
+      }
     >
       <div className={styles.orbit} aria-hidden="true" />
       <div className={styles.orbitBubble} aria-hidden="true" />
@@ -263,14 +57,19 @@ export default function BastManagementArtwork({
         </p>
       </div>
 
-      <div className={styles.scene}>
-        {shouldLoadScene ? (
-          <BastEditorialScene
-            screenUrl={optimizedScreenUrl}
-            label={project.title + " — " + visualLabel}
-          />
-        ) : null}
-      </div>
+      <BastSceneGate
+        className={
+          styles.scene
+        }
+        screenUrl={
+          optimizedScreenUrl
+        }
+        label={
+          project.title +
+          " — " +
+          visualLabel
+        }
+      />
 
       {secondaryVisual ? (
         <div className={styles.documentStage} aria-hidden="true">
@@ -291,6 +90,6 @@ export default function BastManagementArtwork({
         <i />
         <p>DOKUMEN LEBIH TERATUR,<br />KERJA LEBIH MAJU.</p>
       </div>
-    </div>
+    </BastArtworkRuntimeRoot>
   );
 }
