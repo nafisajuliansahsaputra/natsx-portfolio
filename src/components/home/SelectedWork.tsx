@@ -2,10 +2,11 @@ import type {
   CSSProperties,
 } from "react";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -239,8 +240,8 @@ export default async function SelectedWork({
               }
             </span>
 
-            <LocaleLink
-              href="/work"
+            <Link
+              href={localizePath("/work", locale)}
               className={
                 styles.projectLink
               }
@@ -252,7 +253,7 @@ export default async function SelectedWork({
               <span>
                 ↗
               </span>
-            </LocaleLink>
+            </Link>
           </div>
         </header>
 
@@ -424,8 +425,8 @@ export default async function SelectedWork({
                         }
                       </div>
 
-                      <LocaleLink
-                        href={`/work/${project.slug}`}
+                      <Link
+                        href={localizePath(`/work/${project.slug}`, locale)}
                         className={
                           styles.projectLink
                         }
@@ -437,7 +438,7 @@ export default async function SelectedWork({
                         <span>
                           ↗
                         </span>
-                      </LocaleLink>
+                      </Link>
                     </div>
                   </article>
                 );
