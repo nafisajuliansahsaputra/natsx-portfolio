@@ -14,7 +14,7 @@ import "@/app/project-motion.css";
 import "@/app/project-media-motion.css";
 import "@/app/project-fit.css";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import type {
@@ -449,8 +449,8 @@ export async function ProjectPageContent({
               }
               data-motion-project-hero-piece="top"
             >
-              <LocaleLink
-                href="/work"
+              <Link
+                href={localizePath("/work", locale)}
                 className={
                   styles.backLink
                 }
@@ -462,7 +462,7 @@ export async function ProjectPageContent({
                 {
                   copy.back
                 }
-              </LocaleLink>
+              </Link>
 
               <span
                 className={
@@ -791,8 +791,8 @@ export async function ProjectPageContent({
                   </span>
                 </div>
 
-                <LocaleLink
-                  href={`/work/${nextProject.slug}`}
+                <Link
+                  href={localizePath(`/work/${nextProject.slug}`, locale)}
                   className={
                     styles.nextLink
                   }
@@ -841,7 +841,7 @@ export async function ProjectPageContent({
                       ↗
                     </span>
                   </div>
-                </LocaleLink>
+                </Link>
               </div>
             </section>
 
