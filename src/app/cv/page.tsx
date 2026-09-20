@@ -226,7 +226,12 @@ export async function CvPageContent({
         />
       </main>
 
-      <InnerFooter />
+      <InnerFooter
+        locale={
+          locale
+        }
+        isCv
+      />
     </>
   );
 }
