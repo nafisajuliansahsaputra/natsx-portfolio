@@ -2106,14 +2106,21 @@ function Scene({
               );
           }
 
-          function move(
-            event:
-              PointerEvent,
-          ) {
+          let pointerFrame =
+            0;
+
+          let pointerClientX =
+            0;
+
+          let pointerClientY =
+            0;
+
+          function applyPointerTarget() {
+            pointerFrame =
+              0;
+
             if (
               !cover ||
-              event.pointerType ===
-                "touch" ||
               reduced.matches ||
               !finePointer.matches
             ) {
@@ -2121,8 +2128,7 @@ function Scene({
             }
 
             const rect =
-              cover
-                .getBoundingClientRect();
+              cover.getBoundingClientRect();
 
             if (
               !rect.width ||
@@ -2135,7 +2141,7 @@ function Scene({
               THREE.MathUtils.clamp(
                 (
                   (
-                    event.clientX -
+                    pointerClientX -
                     rect.left
                   ) /
                     rect.width
@@ -2150,7 +2156,7 @@ function Scene({
               THREE.MathUtils.clamp(
                 (
                   (
-                    event.clientY -
+                    pointerClientY -
                     rect.top
                   ) /
                     rect.height
@@ -2166,7 +2172,50 @@ function Scene({
             schedule();
           }
 
+          function move(
+            event:
+              PointerEvent,
+          ) {
+            if (
+              !cover ||
+              event.pointerType ===
+                "touch" ||
+              reduced.matches ||
+              !finePointer.matches
+            ) {
+              return;
+            }
+
+            pointerClientX =
+              event.clientX;
+
+            pointerClientY =
+              event.clientY;
+
+            if (
+              pointerFrame
+            ) {
+              return;
+            }
+
+            pointerFrame =
+              window.requestAnimationFrame(
+                applyPointerTarget,
+              );
+          }
+
           function reset() {
+            if (
+              pointerFrame
+            ) {
+              window.cancelAnimationFrame(
+                pointerFrame,
+              );
+
+              pointerFrame =
+                0;
+            }
+
             target.set(
               0,
               0,
@@ -2240,6 +2289,17 @@ function Scene({
 
           cleanupMotion =
             () => {
+              if (
+                pointerFrame
+              ) {
+                window.cancelAnimationFrame(
+                  pointerFrame,
+                );
+
+                pointerFrame =
+                  0;
+              }
+
               if (
                 frame
               ) {

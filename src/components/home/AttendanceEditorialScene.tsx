@@ -1565,6 +1565,9 @@ const checkInCardData = createFloatingCard(
         const currentPointer = new THREE.Vector2(0, 0);
 
         let previousMotionFrameTime = 0;
+        let pointerFrameId = 0;
+        let pointerClientX = 0;
+        let pointerClientY = 0;
 
         const imacShadowBase = imacShadow.sprite.position.clone();
         const scannerShadowBase = scannerShadow.sprite.position.clone();
@@ -1661,10 +1664,11 @@ const checkInCardData = createFloatingCard(
           checkInCardData.group.rotation.z += x * 0.014;
         }
 
-        function handlePointerMove(event: PointerEvent) {
+        function applyPointerTarget() {
+          pointerFrameId = 0;
+
           if (
             !cover ||
-            event.pointerType === "touch" ||
             reducedMotion.matches ||
             !finePointer.matches
           ) {
@@ -1679,19 +1683,46 @@ const checkInCardData = createFloatingCard(
 
           targetPointer.set(
             THREE.MathUtils.clamp(
-              ((event.clientX - bounds.left) / bounds.width) * 2 - 1,
+              ((pointerClientX - bounds.left) / bounds.width) * 2 - 1,
               -1,
               1,
             ),
             THREE.MathUtils.clamp(
-              ((event.clientY - bounds.top) / bounds.height) * 2 - 1,
+              ((pointerClientY - bounds.top) / bounds.height) * 2 - 1,
               -1,
               1,
             ),
           );
         }
 
+        function handlePointerMove(event: PointerEvent) {
+          if (
+            !cover ||
+            event.pointerType === "touch" ||
+            reducedMotion.matches ||
+            !finePointer.matches
+          ) {
+            return;
+          }
+
+          pointerClientX = event.clientX;
+          pointerClientY = event.clientY;
+
+          if (pointerFrameId) {
+            return;
+          }
+
+          pointerFrameId = window.requestAnimationFrame(
+            applyPointerTarget,
+          );
+        }
+
         function resetPointer() {
+          if (pointerFrameId) {
+            window.cancelAnimationFrame(pointerFrameId);
+            pointerFrameId = 0;
+          }
+
           targetPointer.set(0, 0);
 
           if (reducedMotion.matches || !finePointer.matches) {
@@ -1710,6 +1741,11 @@ const checkInCardData = createFloatingCard(
         window.addEventListener("blur", resetPointer);
 
         cleanupPointerMotion = () => {
+          if (pointerFrameId) {
+            window.cancelAnimationFrame(pointerFrameId);
+            pointerFrameId = 0;
+          }
+
           cover?.removeEventListener("pointermove", handlePointerMove);
           cover?.removeEventListener("pointerleave", resetPointer);
           cover?.removeEventListener("pointercancel", resetPointer);

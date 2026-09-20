@@ -3142,15 +3142,22 @@ statsCard.position.y =
               "(hover: hover) and (pointer: fine)",
             );
 
-          function handlePointerMove(
-            event:
-              PointerEvent,
-          ) {
+          let pointerFrame =
+            0;
+
+          let pointerClientX =
+            0;
+
+          let pointerClientY =
+            0;
+
+          function applyPointerTarget() {
+            pointerFrame =
+              0;
+
             if (
               reducedMotion.matches ||
-              !finePointer.matches ||
-              event.pointerType ===
-                "touch"
+              !finePointer.matches
             ) {
               return;
             }
@@ -3170,7 +3177,7 @@ statsCard.position.y =
               THREE.MathUtils.clamp(
                 (
                   (
-                    event.clientX -
+                    pointerClientX -
                     bounds.left
                   ) /
                   bounds.width
@@ -3186,7 +3193,7 @@ statsCard.position.y =
               THREE.MathUtils.clamp(
                 (
                   (
-                    event.clientY -
+                    pointerClientY -
                     bounds.top
                   ) /
                   bounds.height
@@ -3206,7 +3213,49 @@ statsCard.position.y =
             scheduleMotion();
           }
 
+          function handlePointerMove(
+            event:
+              PointerEvent,
+          ) {
+            if (
+              reducedMotion.matches ||
+              !finePointer.matches ||
+              event.pointerType ===
+                "touch"
+            ) {
+              return;
+            }
+
+            pointerClientX =
+              event.clientX;
+
+            pointerClientY =
+              event.clientY;
+
+            if (
+              pointerFrame
+            ) {
+              return;
+            }
+
+            pointerFrame =
+              window.requestAnimationFrame(
+                applyPointerTarget,
+              );
+          }
+
           function resetPointer() {
+            if (
+              pointerFrame
+            ) {
+              window.cancelAnimationFrame(
+                pointerFrame,
+              );
+
+              pointerFrame =
+                0;
+            }
+
             targetPointer.set(
               0,
               0,
@@ -3483,6 +3532,17 @@ function resize() {
 
           cleanup =
             () => {
+              if (
+                pointerFrame
+              ) {
+                window.cancelAnimationFrame(
+                  pointerFrame,
+                );
+
+                pointerFrame =
+                  0;
+              }
+
               cover?.removeEventListener(
                 "pointermove",
                 handlePointerMove,
