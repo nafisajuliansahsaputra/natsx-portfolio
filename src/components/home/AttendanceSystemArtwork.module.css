@@ -12,24 +12,6 @@
   background: #f3faf7;
 }
 
-/*
- * Keep the existing background-layer architecture in place, but make the
- * Attendance thumbnail intentionally quiet. The 3D scene, editorial copy,
- * pointer motion and responsive composition remain untouched.
- */
-.light,
-.sparkles,
-.orbit,
-.orbitSecondary,
-.orbitTertiary,
-.orbOne,
-.orbTwo,
-.orbThree,
-.orbFour,
-.sceneGlow {
-  display: none;
-}
-
 .copy {
   position: absolute;
   z-index: 8;
@@ -47,34 +29,6 @@
   transform-origin: left center;
   will-change: transform;
   pointer-events: none;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8cqw;
-  padding: 0.85cqw 1.15cqw;
-  border: 1px solid #c7dadb;
-  border-radius: 999px;
-  font-size: 0.61cqw;
-  letter-spacing: 0.23em;
-  line-height: 1;
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(0.2cqw);
-}
-
-.eyebrow::before {
-  content: "";
-  width: 0.58cqw;
-  height: 0.58cqw;
-  border-radius: 50%;
-  background: #009868;
-  box-shadow: 0 0 0.35cqw rgba(0, 152, 104, 0.25);
-}
-
-.eyebrow i {
-  font-style: normal;
-  color: #225661;
 }
 
 .headline {
@@ -186,11 +140,6 @@
     height: 64%;
   }
 
-  .orbit,
-  .orbitSecondary,
-  .orbitTertiary {
-    opacity: 0.72;
-  }
 }
 
 
