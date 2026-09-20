@@ -115,8 +115,6 @@ export default function AttendanceSystemArtwork({
         "--attendance-copy-rotate",
         "--attendance-features-x",
         "--attendance-features-y",
-        "--attendance-note-x",
-        "--attendance-note-y",
       ].forEach((property) => {
         artwork.style.removeProperty(property);
       });
@@ -152,15 +150,6 @@ export default function AttendanceSystemArtwork({
         `${currentY * -8}px`,
       );
 
-      artwork.style.setProperty(
-        "--attendance-note-x",
-        `${currentX * -9}px`,
-      );
-
-      artwork.style.setProperty(
-        "--attendance-note-y",
-        `${currentY * -5}px`,
-      );
     }
 
     function tick() {
@@ -280,25 +269,6 @@ export default function AttendanceSystemArtwork({
       <div className={styles.orbFour} aria-hidden="true" />
       <div className={styles.sceneGlow} aria-hidden="true" />
 
-      {/* Reference-style editorial metadata */}
-      <div className={styles.projectMeta} aria-hidden="true">
-        <strong>{project.number}</strong>
-        <i />
-        <span>FEATURED PROJECT</span>
-      </div>
-
-      <div className={styles.yearMeta} aria-hidden="true">
-        <strong>{project.year}</strong>
-        <i />
-        <span>
-          PEOPLE
-          <br />
-          PRESENCE
-          <br />
-          PROGRESS
-        </span>
-      </div>
-
       {/* Copy */}
       <div className={styles.copy} aria-hidden="true">
         <h4 className={styles.headline}>
@@ -359,11 +329,6 @@ export default function AttendanceSystemArtwork({
         />
       </div>
 
-      <div className={styles.bottomNote} aria-hidden="true">
-        <span>A SMARTER TOMORROW</span>
-        <span>STARTS WITH PEOPLE.</span>
-        <i />
-      </div>
     </div>
   );
 }
