@@ -198,14 +198,34 @@ function Scene({
       async function initialize() {
         try {
           /* =================================================
-             LOAD MODEL
+             LOAD MODEL + SCREEN IN PARALLEL
           ================================================= */
 
-          const gltf =
-            await new GLTFLoader()
-              .loadAsync(
-                MODEL_URL,
-              );
+          const modelLoader =
+            new GLTFLoader();
+
+          const textureLoader =
+            new THREE.TextureLoader();
+
+          const [
+            gltf,
+            screenshot,
+          ] =
+            await Promise.all(
+              [
+                modelLoader.loadAsync(
+                  MODEL_URL,
+                ),
+
+                screenUrl
+                  ? textureLoader.loadAsync(
+                      screenUrl,
+                    )
+                  : Promise.resolve(
+                      undefined,
+                    ),
+              ],
+            );
 
           const model =
             gltf.scene;
@@ -215,6 +235,14 @@ function Scene({
           );
 
           if (
+            screenshot
+          ) {
+            textures.add(
+              screenshot,
+            );
+          }
+
+          if (
             disposed
           ) {
             disposeAssets();
@@ -222,35 +250,9 @@ function Scene({
             return;
           }
 
-          /* =================================================
-             SCREEN TEXTURE
-          ================================================= */
-
-          let screenshot:
-            | THREE.Texture
-            | undefined;
-
           if (
-            screenUrl
+            screenshot
           ) {
-            screenshot =
-              await new THREE.TextureLoader()
-                .loadAsync(
-                  screenUrl,
-                );
-
-            textures.add(
-              screenshot,
-            );
-
-            if (
-              disposed
-            ) {
-              disposeAssets();
-
-              return;
-            }
-
             screenshot.colorSpace =
               THREE.SRGBColorSpace;
 
