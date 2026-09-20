@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 import type { PublicProject } from "@/lib/public-projects";
+import { getWebglTextureUrl } from "@/lib/webgl-texture-url";
 
 import styles from "./AttendanceSystemArtwork.module.css";
 
@@ -236,7 +237,10 @@ export default function AttendanceSystemArtwork({
     };
   }, []);
 
-  const dashboardImageUrl = secondaryVisual ?? primaryVisual ?? null;
+  const dashboardImageUrl = getWebglTextureUrl(
+    secondaryVisual ?? primaryVisual ?? null,
+    1920,
+  );
 
   return (
     <div
