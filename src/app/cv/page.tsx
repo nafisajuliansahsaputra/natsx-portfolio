@@ -1,6 +1,7 @@
 import "@/app/cv-motion.css";
 import "@/app/cv-motion-fit.css";
 
+import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
@@ -224,6 +225,8 @@ export async function CvPageContent({
           }
         />
       </main>
+
+      <InnerFooter />
     </>
   );
 }
