@@ -510,7 +510,11 @@ export async function WorkPageContent({
         </section>
       </main>
 
-      <InnerFooter />
+      <InnerFooter
+        locale={
+          locale
+        }
+      />
     </>
   );
 }
