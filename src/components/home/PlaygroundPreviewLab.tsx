@@ -5,34 +5,11 @@ import type {
 } from "react";
 
 import {
+  useEffect,
   useRef,
 } from "react";
 
 import styles from "./PlaygroundPreview.module.css";
-
-function canUseInteractivePointer() {
-  if (
-    typeof window ===
-    "undefined"
-  ) {
-    return false;
-  }
-
-  const reducedMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-  if (
-    reducedMotion
-  ) {
-    return false;
-  }
-
-  return window.matchMedia(
-    "(min-width: 961px) and (hover: hover) and (pointer: fine)",
-  ).matches;
-}
 
 export default function PlaygroundPreviewLab() {
   const visualRef =
@@ -40,11 +17,83 @@ export default function PlaygroundPreviewLab() {
       null,
     );
 
-  function handlePointerMove(
-    event: ReactPointerEvent<HTMLDivElement>,
-  ) {
+  const frameRef =
+    useRef<number | null>(
+      null,
+    );
+
+  const pointerRef =
+    useRef({
+      clientX:
+        0,
+
+      clientY:
+        0,
+    });
+
+  const interactiveRef =
+    useRef(
+      false,
+    );
+
+  useEffect(() => {
+    const supported =
+      window.matchMedia(
+        "(min-width: 961px) and (hover: hover) and (pointer: fine)",
+      );
+
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
+    const sync =
+      () => {
+        interactiveRef.current =
+          supported.matches &&
+          !reducedMotion.matches;
+      };
+
+    sync();
+
+    supported.addEventListener(
+      "change",
+      sync,
+    );
+
+    reducedMotion.addEventListener(
+      "change",
+      sync,
+    );
+
+    return () => {
+      supported.removeEventListener(
+        "change",
+        sync,
+      );
+
+      reducedMotion.removeEventListener(
+        "change",
+        sync,
+      );
+
+      if (
+        frameRef.current !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          frameRef.current,
+        );
+      }
+    };
+  }, []);
+
+  function applyPointerMotion() {
+    frameRef.current =
+      null;
+
     if (
-      !canUseInteractivePointer()
+      !interactiveRef.current
     ) {
       return;
     }
@@ -68,10 +117,16 @@ export default function PlaygroundPreviewLab() {
       return;
     }
 
+    const {
+      clientX,
+      clientY,
+    } =
+      pointerRef.current;
+
     const x =
       (
         (
-          event.clientX -
+          clientX -
           rect.left
         ) /
           rect.width -
@@ -82,7 +137,7 @@ export default function PlaygroundPreviewLab() {
     const y =
       (
         (
-          event.clientY -
+          clientY -
           rect.top
         ) /
           rect.height -
@@ -118,7 +173,7 @@ export default function PlaygroundPreviewLab() {
     element.style.setProperty(
       "--cursor-x",
       `${
-        event.clientX -
+        clientX -
         rect.left
       }px`,
     );
@@ -126,13 +181,55 @@ export default function PlaygroundPreviewLab() {
     element.style.setProperty(
       "--cursor-y",
       `${
-        event.clientY -
+        clientY -
         rect.top
       }px`,
     );
   }
 
+  function handlePointerMove(
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) {
+    if (
+      !interactiveRef.current
+    ) {
+      return;
+    }
+
+    pointerRef.current = {
+      clientX:
+        event.clientX,
+
+      clientY:
+        event.clientY,
+    };
+
+    if (
+      frameRef.current !==
+      null
+    ) {
+      return;
+    }
+
+    frameRef.current =
+      window.requestAnimationFrame(
+        applyPointerMotion,
+      );
+  }
+
   function resetPointer() {
+    if (
+      frameRef.current !==
+      null
+    ) {
+      window.cancelAnimationFrame(
+        frameRef.current,
+      );
+
+      frameRef.current =
+        null;
+    }
+
     const element =
       visualRef.current;
 
