@@ -1358,6 +1358,9 @@ export default function SiteHeader() {
               onNavigate={
                 closeMenu
               }
+              syncPreference={
+                false
+              }
             />
           </div>
 

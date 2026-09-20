@@ -40,11 +40,15 @@ type LanguageSwitcherProps = {
 
   onNavigate?:
     () => void;
+
+  syncPreference?:
+    boolean;
 };
 
 export default function LanguageSwitcher({
   variant = "desktop",
   onNavigate,
+  syncPreference = true,
 }: LanguageSwitcherProps) {
   const pathname =
     usePathname();
@@ -85,6 +89,12 @@ export default function LanguageSwitcher({
    * the active route locale.
    */
   useEffect(() => {
+    if (
+      !syncPreference
+    ) {
+      return;
+    }
+
     const root =
       document.documentElement;
 
@@ -95,6 +105,7 @@ export default function LanguageSwitcher({
       currentLocale;
   }, [
     currentLocale,
+    syncPreference,
   ]);
 
   /*
@@ -116,6 +127,12 @@ export default function LanguageSwitcher({
    * entry to browser history.
    */
   useEffect(() => {
+    if (
+      !syncPreference
+    ) {
+      return;
+    }
+
     let storedLocale:
       | Locale
       | null =
@@ -223,6 +240,7 @@ export default function LanguageSwitcher({
     currentLocale,
     pathname,
     router,
+    syncPreference,
   ]);
 
   useEffect(() => {
