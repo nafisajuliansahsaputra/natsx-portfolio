@@ -1117,7 +1117,8 @@
   prefers-reduced-motion:
     no-preference
 ) {
-  .orbit {
+  .artwork[data-vision-active="true"]
+    .orbit {
     animation:
       vision-orbit-float
       9s
@@ -1125,7 +1126,8 @@
       infinite;
   }
 
-  .orbit::after {
+  .artwork[data-vision-active="true"]
+    .orbit::after {
     animation:
       vision-orbit-ring
       7.2s
@@ -1133,7 +1135,8 @@
       infinite;
   }
 
-  .ambient {
+  .artwork[data-vision-active="true"]
+    .ambient {
     animation:
       vision-ambient-drift
       14s
@@ -1141,7 +1144,8 @@
       infinite;
   }
 
-  .character {
+  .artwork[data-vision-active="true"]
+    .character {
     animation:
       vision-character-float
       9.8s
@@ -1149,7 +1153,8 @@
       infinite;
   }
 
-  .type
+  .artwork[data-vision-active="true"]
+    .type
     span:first-child {
     animation:
       vision-type-a
@@ -1158,7 +1163,8 @@
       infinite;
   }
 
-  .type
+  .artwork[data-vision-active="true"]
+    .type
     span:last-child {
     animation:
       vision-type-b
