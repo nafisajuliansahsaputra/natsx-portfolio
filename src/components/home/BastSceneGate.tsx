@@ -28,6 +28,12 @@ const BastEditorialScene =
     },
   );
 
+const BAST_PRELOAD_VIEWPORTS =
+  3;
+
+const BAST_PREPARE_VIEWPORTS =
+  2;
+
 type BastSceneGateProps = {
   className:
     string;
@@ -138,7 +144,7 @@ export default function BastSceneGate({
 
           rootMargin:
             getSceneMargin(
-              2,
+              BAST_PRELOAD_VIEWPORTS,
             ),
 
           threshold:
@@ -173,7 +179,7 @@ export default function BastSceneGate({
 
           rootMargin:
             getSceneMargin(
-              1,
+              BAST_PREPARE_VIEWPORTS,
             ),
 
           threshold:
