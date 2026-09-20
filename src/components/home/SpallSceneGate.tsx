@@ -102,7 +102,17 @@ export default function SpallSceneGate({
       };
     }
 
-    const preloadObserver =
+    let preloadObserver:
+      IntersectionObserver |
+      null =
+      null;
+
+    let prepareObserver:
+      IntersectionObserver |
+      null =
+      null;
+
+    preloadObserver =
       new IntersectionObserver(
         (
           [
@@ -118,7 +128,8 @@ export default function SpallSceneGate({
 
           preload();
 
-          preloadObserver.disconnect();
+          preloadObserver
+            ?.disconnect();
         },
         {
           root:
@@ -134,7 +145,7 @@ export default function SpallSceneGate({
         },
       );
 
-    const prepareObserver =
+    prepareObserver =
       new IntersectionObserver(
         (
           [
@@ -152,7 +163,8 @@ export default function SpallSceneGate({
             true,
           );
 
-          prepareObserver.disconnect();
+          prepareObserver
+            ?.disconnect();
         },
         {
           root:
@@ -177,8 +189,11 @@ export default function SpallSceneGate({
     );
 
     return () => {
-      preloadObserver.disconnect();
-      prepareObserver.disconnect();
+      preloadObserver
+        ?.disconnect();
+
+      prepareObserver
+        ?.disconnect();
     };
   }, [
     screenUrl,
