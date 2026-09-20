@@ -2,13 +2,14 @@ import {
   getWorkMessages,
 } from "@/i18n/work-messages";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import {
   createPageMetadata,
@@ -428,8 +429,8 @@ export async function WorkPageContent({
                     }
                   </p>
 
-                  <LocaleLink
-                    href="/contact"
+                  <Link
+                    href={localizePath("/contact", locale)}
                     className={
                       styles.contactLink
                     }
@@ -442,7 +443,7 @@ export async function WorkPageContent({
                     <span>
                       ↗
                     </span>
-                  </LocaleLink>
+                  </Link>
                 </div>
               </div>
             ) : (
@@ -483,8 +484,8 @@ export async function WorkPageContent({
                     }
                   </p>
 
-                  <LocaleLink
-                    href="/contact"
+                  <Link
+                    href={localizePath("/contact", locale)}
                     className={
                       styles.contactLink
                     }
@@ -497,7 +498,7 @@ export async function WorkPageContent({
                     <span>
                       ↗
                     </span>
-                  </LocaleLink>
+                  </Link>
                 </div>
               </div>
             )}
