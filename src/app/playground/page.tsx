@@ -3,6 +3,7 @@ import "@/app/playground-motion-fit.css";
 
 import Link from "next/link";
 
+import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
@@ -350,6 +351,8 @@ export function PlaygroundPageContent({
           </div>
         </section>
       </main>
+
+      <InnerFooter />
     </>
   );
 }
