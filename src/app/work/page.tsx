@@ -1,4 +1,8 @@
 import {
+  getHomeMessages,
+} from "@/i18n/home-messages";
+
+import {
   getWorkMessages,
 } from "@/i18n/work-messages";
 
@@ -110,6 +114,21 @@ export async function WorkPageContent({
     getWorkMessages(
       locale,
     );
+
+  const selectedWorkCopy =
+    getHomeMessages(
+      locale,
+    ).selectedWork;
+
+  const previewCopy = {
+    selectedProject:
+      selectedWorkCopy
+        .selectedProject,
+
+    visionArtwork:
+      selectedWorkCopy
+        .visionArtwork,
+  };
 
   const [
     projects,
@@ -419,6 +438,9 @@ export async function WorkPageContent({
               }
               initialCategory={
                 resolvedInitialCategory
+              }
+              previewCopy={
+                previewCopy
               }
             />
 
