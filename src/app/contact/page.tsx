@@ -1,7 +1,7 @@
 import "@/app/contact-motion.css";
 import "@/app/contact-email-fit.css";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -9,8 +9,9 @@ import {
   site,
 } from "@/data/site";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -388,9 +389,12 @@ export function ContactPageContent({
 
             <ContactMagneticSurface>
               {primaryIsInternal ? (
-                <LocaleLink
+                <Link
                   href={
-                    primaryContact.href
+                    localizePath(
+                      primaryContact.href,
+                      locale,
+                    )
                   }
                   className={
                     styles.emailLink
@@ -399,7 +403,7 @@ export function ContactPageContent({
                   {
                     primaryContent
                   }
-                </LocaleLink>
+                </Link>
               ) : (
                 <a
                   href={
@@ -535,8 +539,8 @@ export function ContactPageContent({
                     }
                   </span>
 
-                  <LocaleLink
-                    href="/cv"
+                  <Link
+                    href={localizePath("/cv", locale)}
                     className={
                       styles.contactCvLink
                     }
@@ -553,7 +557,7 @@ export function ContactPageContent({
                     >
                       ↗
                     </span>
-                  </LocaleLink>
+                  </Link>
                 </div>
               </div>
 
@@ -823,8 +827,8 @@ export function ContactPageContent({
                   </span>
                 </p>
 
-                <LocaleLink
-                  href="/work"
+                <Link
+                  href={localizePath("/work", locale)}
                   className={
                     styles.closingLink
                   }
@@ -840,7 +844,7 @@ export function ContactPageContent({
                   >
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
               </div>
             </div>
           </div>
