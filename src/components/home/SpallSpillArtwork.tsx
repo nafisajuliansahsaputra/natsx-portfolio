@@ -33,16 +33,6 @@ type Props = {
   project:
     PublicProject;
 
-  /*
-   * Tetap dipertahankan sementara supaya
-   * SelectedWork.tsx tidak perlu ikut diubah.
-   *
-   * Prop ini tidak dipakai oleh artwork.
-   */
-  primaryVisual:
-    | string
-    | null;
-
   secondaryVisual:
     | string
     | null;
