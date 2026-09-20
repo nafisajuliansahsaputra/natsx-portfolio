@@ -1,11 +1,12 @@
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import {
   site,
 } from "@/data/site";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -139,8 +140,8 @@ export default function AboutPreview({
               }
               data-motion-piece="actions"
             >
-              <LocaleLink
-                href="/about"
+              <Link
+                href={localizePath("/about", locale)}
                 className={
                   styles.link
                 }
@@ -159,10 +160,10 @@ export default function AboutPreview({
                 >
                   ↗
                 </span>
-              </LocaleLink>
+              </Link>
 
-              <LocaleLink
-                href="/cv"
+              <Link
+                href={localizePath("/cv", locale)}
                 className={`${styles.link} ${styles.cvLink}`}
               >
                 <span>
@@ -179,7 +180,7 @@ export default function AboutPreview({
                 >
                   ↗
                 </span>
-              </LocaleLink>
+              </Link>
             </div>
           </div>
         </div>
