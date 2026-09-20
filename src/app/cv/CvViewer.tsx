@@ -4,15 +4,16 @@ import {
   useState,
 } from "react";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import {
   cvVersions,
   type CvVersion,
 } from "@/data/cv";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -444,8 +445,8 @@ export default function CvViewer({
                 </span>
               </p>
 
-              <LocaleLink
-                href="/contact"
+              <Link
+                href={localizePath("/contact", locale)}
                 className={
                   styles.closingLink
                 }
@@ -458,7 +459,7 @@ export default function CvViewer({
                 <span>
                   ↗
                 </span>
-              </LocaleLink>
+              </Link>
             </div>
           </div>
         </div>
