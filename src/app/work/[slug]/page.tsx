@@ -15,6 +15,7 @@ import "@/app/project-media-motion.css";
 import "@/app/project-fit.css";
 
 import Link from "next/link";
+import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import type {
@@ -849,6 +850,8 @@ export async function ProjectPageContent({
           </>
         ) : null}
       </main>
+
+      <InnerFooter />
     </>
   );
 }
