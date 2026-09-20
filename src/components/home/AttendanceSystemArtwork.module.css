@@ -211,12 +211,12 @@
 .scene {
   position: absolute;
   z-index: 4;
-  top: 3%;
-  left: 30%;
-  width: 70%;
-  height: 94%;
+  top: 2%;
+  left: 31.5%;
+  width: 68.5%;
+  height: 95%;
   pointer-events: none;
-  filter: drop-shadow(0 1.4cqw 1.8cqw rgba(21, 93, 66, 0.14));
+  filter: drop-shadow(0 1.25cqw 1.65cqw rgba(21, 93, 66, 0.12));
 }
 
 .features {
