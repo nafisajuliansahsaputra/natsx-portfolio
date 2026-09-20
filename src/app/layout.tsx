@@ -11,6 +11,7 @@ import {
 } from "@vercel/analytics/next";
 
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
+import GlobalImagePreloader from "@/components/media/GlobalImagePreloader";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
 
@@ -227,6 +228,16 @@ const introBootstrapScript = `
   })();
 `;
 
+const publicMediaOrigin =
+  process.env
+    .NEXT_PUBLIC_SUPABASE_URL
+    ?.trim()
+    .replace(
+      /\/$/,
+      "",
+    ) ??
+  null;
+
 const isVercelDeployment =
   process.env.VERCEL ===
   "1";
@@ -369,6 +380,25 @@ export default function RootLayout({
               introBootstrapScript,
           }}
         />
+
+        {publicMediaOrigin ? (
+          <>
+            <link
+              rel="preconnect"
+              href={
+                publicMediaOrigin
+              }
+              crossOrigin="anonymous"
+            />
+
+            <link
+              rel="dns-prefetch"
+              href={
+                publicMediaOrigin
+              }
+            />
+          </>
+        ) : null}
       </head>
 
       <body
@@ -377,6 +407,8 @@ export default function RootLayout({
         }
       >
         <PortfolioIntro />
+
+        <GlobalImagePreloader />
 
         <MotionController />
 
