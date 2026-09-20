@@ -2,6 +2,7 @@ import "@/app/about-motion.css";
 import "@/app/about-motion-fit.css";
 
 import Link from "next/link";
+import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
@@ -713,6 +714,8 @@ export function AboutPageContent({
 
         <AboutInteractionPolish />
       </main>
+
+      <InnerFooter />
     </>
   );
 }
