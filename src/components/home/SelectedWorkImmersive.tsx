@@ -94,44 +94,6 @@ const DESKTOP_MOTION:
       0.82,
   };
 
-const MOBILE_MOTION:
-  MotionProfile = {
-    /*
-     * Mobile tetap punya depth.
-     *
-     * Nilainya hanya dibuat lebih halus
-     * supaya canvas project yang lebih
-     * compact tidak terlihat melompat
-     * saat user scroll.
-     */
-    focusLine:
-      0.54,
-
-    progressRange:
-      1,
-
-    activeRange:
-      0.88,
-
-    visualTravel:
-      5,
-
-    headerTravel:
-      1.25,
-
-    footerTravel:
-      1.5,
-
-    scaleStrength:
-      0.001,
-
-    frameOpacity:
-      0.06,
-
-    metaBaseOpacity:
-      0.9,
-  };
-
 function clamp(
   value: number,
   min: number,
@@ -218,11 +180,6 @@ export default function SelectedWorkImmersive() {
     const finePointer =
       window.matchMedia(
         "(hover: hover) and (pointer: fine)",
-      );
-
-    const mobile =
-      window.matchMedia(
-        "(max-width: 700px)",
       );
 
     const projectElements =
@@ -502,13 +459,8 @@ export default function SelectedWorkImmersive() {
             1,
           );
 
-        const compact =
-          mobile.matches;
-
         const profile =
-          compact
-            ? MOBILE_MOTION
-            : DESKTOP_MOTION;
+          DESKTOP_MOTION;
 
         const focusLine =
           viewportHeight *
