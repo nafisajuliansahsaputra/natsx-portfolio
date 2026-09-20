@@ -352,7 +352,11 @@ export function PlaygroundPageContent({
         </section>
       </main>
 
-      <InnerFooter />
+      <InnerFooter
+        locale={
+          locale
+        }
+      />
     </>
   );
 }
