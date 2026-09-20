@@ -90,6 +90,12 @@ const mobileRefreshCoveredDelay =
 const routeSettleDelay =
   24;
 
+const desktopHandoffDelay =
+  76;
+
+const mobileHandoffDelay =
+  58;
+
 const navigationSafetyTimeout =
   5000;
 
@@ -394,6 +400,14 @@ function getRefreshCoveredDelay() {
   ).matches
     ? mobileRefreshCoveredDelay
     : desktopRefreshCoveredDelay;
+}
+
+function getHandoffDelay() {
+  return window.matchMedia(
+    "(max-width: 700px)",
+  ).matches
+    ? mobileHandoffDelay
+    : desktopHandoffDelay;
 }
 
 
@@ -891,6 +905,13 @@ export default function RouteTransitionController() {
       null,
     );
 
+  const handoffTimerRef =
+    useRef<
+      number | null
+    >(
+      null,
+    );
+
 
   const clearTimers =
     useCallback(() => {
@@ -898,6 +919,7 @@ export default function RouteTransitionController() {
         navigationTimerRef,
         revealTimerRef,
         safetyTimerRef,
+        handoffTimerRef,
       ].forEach(
         (
           timerRef,
@@ -1081,6 +1103,18 @@ export default function RouteTransitionController() {
       document.documentElement;
 
     if (
+      handoffTimerRef.current !==
+      null
+    ) {
+      window.clearTimeout(
+        handoffTimerRef.current,
+      );
+
+      handoffTimerRef.current =
+        null;
+    }
+
+    if (
       phase ===
       "idle"
     ) {
@@ -1089,6 +1123,9 @@ export default function RouteTransitionController() {
 
       delete root.dataset
         .routeTransitionPhase;
+
+      delete root.dataset
+        .routeTransitionHold;
 
       return;
     }
@@ -1100,6 +1137,33 @@ export default function RouteTransitionController() {
     root.dataset
       .routeTransitionPhase =
       phase;
+
+    if (
+      phase ===
+      "revealing"
+    ) {
+      root.dataset
+        .routeTransitionHold =
+        "true";
+
+      handoffTimerRef.current =
+        window.setTimeout(
+          () => {
+            if (
+              root.dataset
+                .routeTransitionPhase ===
+              "revealing"
+            ) {
+              delete root.dataset
+                .routeTransitionHold;
+            }
+
+            handoffTimerRef.current =
+              null;
+          },
+          getHandoffDelay(),
+        );
+    }
   }, [
     phase,
   ]);
