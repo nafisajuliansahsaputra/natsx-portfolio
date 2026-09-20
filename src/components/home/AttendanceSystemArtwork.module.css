@@ -13,153 +13,25 @@
   isolation: isolate;
   container-type: inline-size;
   color: #092b30;
-  background:
-    radial-gradient(
-      ellipse at 70% 45%,
-      rgba(171, 239, 218, 0.18) 0%,
-      rgba(216, 250, 238, 0.12) 28%,
-      transparent 58%
-    ),
-    radial-gradient(
-      ellipse at 94% 10%,
-      rgba(170, 232, 214, 0.12) 0%,
-      transparent 35%
-    ),
-    linear-gradient(
-      112deg,
-      #edfcf6 10%,
-      #effcf7 43%,
-      #e4faf1 100%
-    );
+  background: #f3faf7;
 }
 
-.light {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse at 61% 65%,
-      rgba(231, 255, 247, 0.74),
-      transparent 54%
-    ),
-    radial-gradient(
-      ellipse at 75% 25%,
-      rgba(247, 255, 252, 0.72),
-      transparent 30%
-    );
-}
-
-.sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  background:
-    radial-gradient(circle at 63% 6%, rgba(255, 255, 255, 0.95) 0 0.18%, transparent 0.6%),
-    radial-gradient(circle at 86% 27%, rgba(255, 255, 255, 0.72) 0 0.18%, transparent 0.55%),
-    radial-gradient(circle at 94% 60%, rgba(255, 255, 255, 0.82) 0 0.14%, transparent 0.5%),
-    radial-gradient(circle at 51% 92%, rgba(255, 255, 255, 0.72) 0 0.14%, transparent 0.5%),
-    radial-gradient(circle at 29% 81%, rgba(255, 255, 255, 0.8) 0 0.16%, transparent 0.5%);
-}
-
+/*
+ * Keep the existing background-layer architecture in place, but make the
+ * Attendance thumbnail intentionally quiet. The 3D scene, editorial copy,
+ * pointer motion and responsive composition remain untouched.
+ */
+.light,
+.sparkles,
 .orbit,
 .orbitSecondary,
-.orbitTertiary {
-  position: absolute;
-  z-index: 1;
-  border: 0.065cqw solid rgba(83, 224, 187, 0.48);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.orbit {
-  left: 34%;
-  top: 13%;
-  width: 63%;
-  height: 60%;
-  transform: rotate(-24deg);
-}
-
-.orbitSecondary {
-  left: 39%;
-  top: 5%;
-  width: 54%;
-  height: 74%;
-  transform: rotate(22deg);
-}
-
-.orbitTertiary {
-  left: 31%;
-  top: 10%;
-  width: 69%;
-  height: 72%;
-  transform: rotate(7deg);
-  opacity: 0.46;
-}
-
+.orbitTertiary,
 .orbOne,
 .orbTwo,
 .orbThree,
-.orbFour {
-  position: absolute;
-  z-index: 1;
-  border-radius: 50%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 32% 24%, #ffffff 0%, #d3f0e5 16%, #6db09d 49%, #b8e2d4 77%, #f1fff9 96%);
-  box-shadow:
-    inset -0.5cqw -0.5cqw 1cqw rgba(238, 255, 249, 0.65),
-    0 0 0.7cqw rgba(231, 255, 245, 0.8);
-}
-
-.orbOne {
-  top: 11%;
-  right: 11%;
-  width: 7.3cqw;
-  height: 7.3cqw;
-  filter: blur(0.08cqw);
-}
-
-.orbTwo {
-  top: 52%;
-  left: 37.5%;
-  width: 5.4cqw;
-  height: 5.4cqw;
-  filter: blur(0.04cqw);
-}
-
-.orbThree {
-  bottom: -10%;
-  left: 28%;
-  width: 17.8cqw;
-  height: 17.8cqw;
-  filter: blur(0.3cqw);
-  opacity: 0.7;
-}
-
-.orbFour {
-  right: -2.5%;
-  bottom: 6%;
-  left: auto;
-  width: 10cqw;
-  height: 10cqw;
-  filter: blur(0.18cqw);
-  opacity: 0.66;
-}
-
+.orbFour,
 .sceneGlow {
-  position: absolute;
-  z-index: 2;
-  left: 42%;
-  top: 15%;
-  width: 47%;
-  height: 64%;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.15;
-  background: radial-gradient(circle, rgba(139, 255, 214, 0.24) 0%, rgba(139, 255, 214, 0.08) 36%, transparent 70%);
-  filter: blur(1.3cqw);
+  display: none;
 }
 
 .projectMeta,
