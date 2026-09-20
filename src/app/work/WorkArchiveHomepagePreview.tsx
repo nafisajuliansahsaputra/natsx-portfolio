@@ -12,14 +12,6 @@ import artworkStyles from "./WorkArchiveArtwork.module.css";
 import phoneStyles from "@/components/home/SpallPhone.module.css";
 
 import type {
-  Locale,
-} from "@/i18n/config";
-
-import {
-  getHomeMessages,
-} from "@/i18n/home-messages";
-
-import type {
   PublicProject,
 } from "@/lib/public-projects";
 
@@ -31,6 +23,38 @@ type HomepageArchiveVariant =
   | "spall"
   | "vision"
   | "bast";
+
+
+export type WorkArchivePreviewCopy = {
+  selectedProject:
+    string;
+
+  visionArtwork: {
+    disciplineLabel:
+      string;
+
+    identity:
+      string;
+
+    artDirection:
+      string;
+
+    digitalDesign:
+      string;
+
+    philosophyLine1:
+      string;
+
+    philosophyLine2:
+      string;
+
+    philosophyLine3:
+      string;
+
+    tagline:
+      string;
+  };
+};
 
 
 type WorkArchiveHomepagePreviewProps = {
@@ -57,8 +81,8 @@ type WorkArchiveHomepagePreviewProps = {
     | string
     | null;
 
-  locale:
-    Locale;
+  copy:
+    WorkArchivePreviewCopy;
 };
 
 
@@ -104,13 +128,8 @@ export default function WorkArchiveHomepagePreview({
   primaryVisual,
   secondaryVisual,
   fallbackImage,
-  locale,
+  copy,
 }: WorkArchiveHomepagePreviewProps) {
-  const copy =
-    getHomeMessages(
-      locale,
-    ).selectedWork;
-
   const variant =
     getHomepageArchiveVariant(
       project.slug,
