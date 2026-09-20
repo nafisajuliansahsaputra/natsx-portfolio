@@ -2,11 +2,16 @@
 
 import {
   revalidatePath,
+  updateTag,
 } from "next/cache";
 
 import {
   redirect,
 } from "next/navigation";
+
+import {
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+} from "@/lib/portfolio-cache";
 
 import {
   createClient,
@@ -129,6 +134,10 @@ async function requireAdmin() {
 
 
 function revalidateCategoryRoutes() {
+  updateTag(
+    PUBLIC_PORTFOLIO_CACHE_TAG,
+  );
+
   revalidatePath(
     "/admin",
   );

@@ -3,6 +3,15 @@ import {
 } from "react";
 
 import {
+  unstable_cache,
+} from "next/cache";
+
+import {
+  PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+  PUBLIC_PORTFOLIO_CACHE_TAG,
+} from "@/lib/portfolio-cache";
+
+import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
@@ -237,14 +246,31 @@ async function loadPublicWorkTaxonomy():
 }
 
 
+const getCachedPublicWorkTaxonomy =
+  unstable_cache(
+    loadPublicWorkTaxonomy,
+    [
+      "natsx-public-work-taxonomy-v1",
+    ],
+    {
+      tags: [
+        PUBLIC_PORTFOLIO_CACHE_TAG,
+      ],
+
+      revalidate:
+        PUBLIC_PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    },
+  );
+
 /*
- * React cache hanya mendeduplikasi
- * pembacaan dalam render server.
+ * unstable_cache menghindari query kategori
+ * + relasi Supabase pada setiap request /work.
  *
- * Public page cache / revalidation tetap
- * dimiliki oleh Next route.
+ * React cache tetap dipakai untuk dedupe
+ * di dalam render server yang sama.
  */
 export const getPublicWorkTaxonomy =
   cache(
-    loadPublicWorkTaxonomy,
+    async () =>
+      getCachedPublicWorkTaxonomy(),
   );
