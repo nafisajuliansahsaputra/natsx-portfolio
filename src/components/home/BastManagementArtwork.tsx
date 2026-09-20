@@ -28,7 +28,7 @@ const BastEditorialScene =
   );
 
 const SCENE_PRELOAD_MARGIN =
-  "300px 0px";
+  "800px 0px";
 
 type Props = {
   project:
