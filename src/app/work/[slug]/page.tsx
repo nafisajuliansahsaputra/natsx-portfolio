@@ -851,7 +851,11 @@ export async function ProjectPageContent({
         ) : null}
       </main>
 
-      <InnerFooter />
+      <InnerFooter
+        locale={
+          locale
+        }
+      />
     </>
   );
 }
