@@ -73,6 +73,16 @@ export default function SelectedWorkImmersiveGate() {
         "(min-width: 701px)",
       );
 
+    const work =
+      document.getElementById(
+        "work",
+      );
+
+    let nearWork =
+      typeof IntersectionObserver ===
+      "undefined" ||
+      !work;
+
     function commit() {
       if (
         frameRef.current !==
@@ -90,7 +100,8 @@ export default function SelectedWorkImmersiveGate() {
               null;
 
             const next =
-              supportedViewport.matches;
+              supportedViewport.matches &&
+              nearWork;
 
             setEnabled(
               (
@@ -105,6 +116,43 @@ export default function SelectedWorkImmersiveGate() {
         );
     }
 
+    const observer =
+      !nearWork &&
+      work
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              if (
+                !entry
+                  ?.isIntersecting
+              ) {
+                return;
+              }
+
+              nearWork =
+                true;
+
+              observer.disconnect();
+
+              commit();
+            },
+            {
+              rootMargin:
+                "100% 0px 100% 0px",
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
+    observer?.observe(
+      work,
+    );
+
     commit();
 
     supportedViewport.addEventListener(
@@ -117,6 +165,8 @@ export default function SelectedWorkImmersiveGate() {
         "change",
         commit,
       );
+
+      observer?.disconnect();
 
       if (
         frameRef.current !==
