@@ -73,20 +73,6 @@ function isAnimatedImage(
   );
 }
 
-function shouldBypassImageOptimizer(
-  mimeType: string,
-  fileSize: number,
-) {
-  return (
-    isAnimatedImage(
-      mimeType,
-    ) ||
-    fileSize >=
-      2_000_000
-  );
-}
-
-
 function getSectionFallbackLabel(
   sectionType: string,
   locale: Locale,
@@ -606,16 +592,16 @@ function getGalleryImageSizes(
       "tall"
   ) {
     return (
-      "(max-width: 700px) 50vw, " +
-      "(max-width: 960px) 34vw, " +
-      "25vw"
+      "(max-width: 700px) calc((100vw - 48px) / 2), " +
+      "(max-width: 960px) 30vw, " +
+      "328px"
     );
   }
 
   return (
-    "(max-width: 700px) 100vw, " +
-    "(max-width: 960px) 67vw, " +
-    "50vw"
+    "(max-width: 700px) calc(100vw - 40px), " +
+    "(max-width: 960px) 62vw, " +
+    "666px"
   );
 }
 
@@ -909,16 +895,14 @@ function GallerySection({
                         sizes={
                           imageSizes
                         }
-                        unoptimized={shouldBypassImageOptimizer(
+                        unoptimized={isAnimatedImage(
                           item.asset
                             .mimeType,
-
-                          item.asset
-                            .size,
                         )}
                         className={
                           mediaStyles.galleryMedia
                         }
+                        loading="lazy"
                       />
                     </div>
 
