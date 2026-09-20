@@ -28,6 +28,11 @@ type Props = {
 };
 
 export default function BastManagementArtwork({
+  project,
+  primaryVisual,
+  secondaryVisual,
+  visualLabel,
+}: Props) {
   const optimizedScreenUrl =
     getWebglTextureUrl(
       primaryVisual,
