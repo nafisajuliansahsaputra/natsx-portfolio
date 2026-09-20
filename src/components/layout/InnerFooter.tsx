@@ -1,19 +1,14 @@
 "use client";
 
-import {
-  usePathname,
-} from "next/navigation";
-
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import {
   site,
 } from "@/data/site";
 
 import {
-  getLocaleFromPathname,
   localizePath,
-  stripLocaleFromPathname,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -56,45 +51,22 @@ const navigation = [
   },
 ] as const;
 
-export default function InnerFooter() {
-  const pathname =
-    usePathname();
+type InnerFooterProps = {
+  locale:
+    Locale;
 
-  const locale =
-    getLocaleFromPathname(
-      pathname,
-    );
+  isCv?:
+    boolean;
+};
 
+export default function InnerFooter({
+  locale,
+  isCv = false,
+}: InnerFooterProps) {
   const copy =
     getMessages(
       locale,
     );
-
-  const basePath =
-    stripLocaleFromPathname(
-      pathname,
-    );
-
-  const shouldRender =
-    basePath ===
-      "/work" ||
-    basePath.startsWith(
-      "/work/",
-    ) ||
-    basePath ===
-      "/about" ||
-    basePath ===
-      "/playground" ||
-    basePath ===
-      "/contact" ||
-    basePath ===
-      "/cv";
-
-  if (
-    !shouldRender
-  ) {
-    return null;
-  }
 
   const fallbackSocial =
     site.socials.find(
@@ -172,8 +144,8 @@ export default function InnerFooter() {
     styles.brandRow
   }
 >
-  <LocaleLink
-    href="/"
+  <Link
+    href={localizePath("/", locale)}
     className={
       styles.brand
     }
@@ -188,7 +160,7 @@ export default function InnerFooter() {
       }
       aria-hidden="true"
     />
-  </LocaleLink>
+  </Link>
 
   <div
     className={
@@ -225,9 +197,12 @@ export default function InnerFooter() {
               (
                 item,
               ) => (
-                <LocaleLink
+                <Link
                   href={
-                    item.href
+                    localizePath(
+                      item.href,
+                      locale,
+                    )
                   }
                   key={
                     item.href
@@ -238,7 +213,7 @@ export default function InnerFooter() {
                       item.key
                     ]
                   }
-                </LocaleLink>
+                </Link>
               ),
             )}
           </nav>
@@ -289,8 +264,8 @@ export default function InnerFooter() {
             </span>
 
             {primaryContactIsInternal ? (
-              <LocaleLink
-                href="/contact"
+              <Link
+                href={localizePath("/contact", locale)}
                 className={
                   styles.metaLink
                 }
@@ -298,7 +273,7 @@ export default function InnerFooter() {
                 {
                   primaryContact.label
                 }
-              </LocaleLink>
+              </Link>
             ) : (
               <a
                 href={
@@ -383,10 +358,9 @@ export default function InnerFooter() {
               }
             </span>
 
-            {basePath !==
-            "/cv" ? (
-              <LocaleLink
-                href="/cv"
+            {!isCv ? (
+              <Link
+                href={localizePath("/cv", locale)}
                 className={
                   styles.metaLink
                 }
@@ -404,7 +378,7 @@ export default function InnerFooter() {
                 >
                   ↗
                 </span>
-              </LocaleLink>
+              </Link>
             ) : (
               <span>
                 CV / Resume
