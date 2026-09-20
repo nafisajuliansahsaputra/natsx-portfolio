@@ -83,7 +83,7 @@ const MACBOOK_ROTATION = {
 };
 
 const MACBOOK_POSITION = {
-  x: -1.9,
+  x: -1.2,
   y: 0.02,
   z: 0.14,
 };
@@ -93,7 +93,7 @@ const MACBOOK_POSITION = {
 ========================================================= */
 
 const PRINTER_TARGET_SIZE =
-  3.02;
+  2.5;
 
 const PRINTER_ROTATION = {
   x: -0.025,
@@ -102,7 +102,7 @@ const PRINTER_ROTATION = {
 };
 
 const PRINTER_POSITION = {
-  x: 2.35,
+  x: 2.7,
   y: -1.16,
   z: -1.05,
 };
@@ -125,25 +125,25 @@ const FLOATING_DOC_CARD_ROTATION = {
 
 const SUCCESS_CARD_POSITION = {
   x: 2.38,
-  y: 1.18,
+  y: 1.7,
   z: 0.98,
 };
 
 const SUCCESS_CARD_ROTATION = {
   x: -0.015,
-  y: -0.11,
+  y: -0.5,
   z: 0.03,
 };
 
 const STATS_CARD_POSITION = {
-  x: 2.15,
-  y: -1.9,
+  x: 2.5,
+  y: -2.5,
   z: 1.08,
 };
 
 const STATS_CARD_ROTATION = {
   x: 0.022,
-  y: -0.12,
+  y: 0.2,
   z: 0.075,
 };
 

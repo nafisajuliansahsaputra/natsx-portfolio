@@ -15,7 +15,7 @@ const SCANNER_MODEL_URL = "/models/attendance/scanner.glb";
 const BADGE_MODEL_URL = "/models/attendance/badge.glb";
 
 /* =========================================================
-   COMPOSITION — CARD REBUILD PASS
+   STATIC COMPOSITION — pointer offsets and floating poses stay below
 ========================================================= */
 
 const CAMERA_FOV = 30;
@@ -35,28 +35,28 @@ const CAMERA_BASE_DISTANCE = Math.hypot(
  * iMac is the calm, near-frontal hero.
  * Supporting hardware/cards orbit around it instead of competing with it.
  */
-const IMAC_TARGET_SIZE = 6.92;
-const IMAC_POSITION = { x: 1.05, y: -0.08, z: -0.62 };
+const IMAC_TARGET_SIZE = 8.15;
+const IMAC_POSITION = { x: 0.72, y: -0.3, z: -0.62 };
 const IMAC_ROTATION = { x: -0.2, y: -1.2, z: -0.20 };
 
-const SCANNER_TARGET_SIZE = 2.48;
-const SCANNER_POSITION = { x: 2.62, y: -2.42, z: 3.72 };
-const SCANNER_ROTATION = { x: -0.16, y: -0.16, z: -0.045 };
+const SCANNER_TARGET_SIZE = 3.05;
+const SCANNER_POSITION = { x: 2.83, y: -2.64, z: 3.72 };
+const SCANNER_ROTATION = { x: -0.27, y: -0.24, z: -0.10 };
 
-const BADGE_TARGET_SIZE = 1.48;
-const BADGE_POSITION = { x: -0.82, y: -2.02, z: 2.92 };
+const BADGE_TARGET_SIZE = 1.82;
+const BADGE_POSITION = { x: -1.55, y: -2.32, z: 2.92 };
 const BADGE_ROTATION = { x: -0.08, y: 0.12, z: -0.105 };
 
-const TOTAL_CARD_POSITION = { x: -1.45, y: 3.08, z: 1.08 };
-const TOTAL_CARD_ROTATION = { x: 0.035, y: 0.16, z: 0.075 };
+const TOTAL_CARD_POSITION = { x: -1.75, y: 3.22, z: 1.08 };
+const TOTAL_CARD_ROTATION = { x: 0.035, y: 0.08, z: 0.12 };
 
-const QUOTE_CARD_POSITION = { x: 4.62, y: 2.72, z: 1.62 };
+const QUOTE_CARD_POSITION = { x: 4.86, y: 2.36, z: 1.62 };
 const QUOTE_CARD_ROTATION = { x: -0.01, y: -0.11, z: 0.055 };
 
-const CONNECT_CARD_POSITION = { x: 4.58, y: 0.32, z: 1.72 };
+const CONNECT_CARD_POSITION = { x: 4.82, y: -0.12, z: 1.72 };
 const CONNECT_CARD_ROTATION = { x: 0.01, y: -0.08, z: -0.025 };
 
-const CHECKIN_CARD_POSITION = { x: 3.42, y: -1.02, z: 4.18 };
+const CHECKIN_CARD_POSITION = { x: 3.68, y: -1.12, z: 4.18 };
 const CHECKIN_CARD_ROTATION = { x: 0, y: -0.075, z: -0.018 };
 
 /* =========================================================
@@ -106,282 +106,148 @@ function createFallbackDashboardTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 1600;
   canvas.height = 900;
-
   const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Dashboard canvas unavailable");
 
-  if (!ctx) {
-    throw new Error("Dashboard canvas unavailable");
-  }
-
-  const green = "#12ad74";
-  const deep = "#0a4334";
-  const text = "#173b31";
-  const muted = "#7d9188";
-  const bg = "#f6faf8";
-  const card = "#ffffff";
-
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = deep;
-  ctx.fillRect(0, 0, 255, 900);
-
-  ctx.fillStyle = "#f7fbf9";
-  roundedRect(ctx, 320, 56, 790, 46, 23);
-  ctx.fill();
-
-  ctx.fillStyle = "#cfd9d5";
-  ctx.font = "500 20px Arial";
-  ctx.fillText("Search people, ID or department...", 358, 86);
+  const text = "#10232d";
+  const muted = "#63788a";
+  const green = "#00a778";
+  ctx.fillStyle = "#f5f8f9";
+  ctx.fillRect(0, 0, 1600, 900);
+  const sidebar = ctx.createLinearGradient(0, 0, 280, 900);
+  sidebar.addColorStop(0, "#005442");
+  sidebar.addColorStop(1, "#00372d");
+  ctx.fillStyle = sidebar;
+  ctx.fillRect(0, 0, 280, 900);
 
   ctx.fillStyle = green;
-  roundedRect(ctx, 46, 47, 52, 52, 14);
+  ctx.beginPath();
+  ctx.arc(57, 68, 27, 0, Math.PI * 2);
   ctx.fill();
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "700 29px Arial";
-  ctx.fillText("A", 62, 83);
-
-  ctx.font = "700 29px Arial";
-  ctx.fillText("AttendaPro", 116, 82);
-
-  ctx.fillStyle = "#9fd5c0";
-  ctx.font = "500 16px Arial";
-  ctx.fillText("SMART WORKSPACE", 116, 106);
-
-  const sidebarItems = [
-    "Dashboard",
-    "Attendance",
-    "People",
-    "Reports",
-    "Settings",
-  ];
-
-  sidebarItems.forEach((label, index) => {
-    const y = 180 + index * 76;
-
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "700 34px Arial";
+  ctx.fillText("A", 45, 80);
+  ctx.font = "italic 600 34px Arial";
+  ctx.fillText("Attendix", 96, 81);
+  ["Dashboard", "Attendance", "People", "Reports", "Settings"].forEach((label, index) => {
+    const y = 191 + index * 98;
     if (index === 0) {
-      ctx.fillStyle = "#0d7959";
-      roundedRect(ctx, 28, y - 33, 190, 56, 16);
+      ctx.fillStyle = "#087d60";
+      roundedRect(ctx, 24, y - 39, 232, 65, 10);
       ctx.fill();
     }
-
-    ctx.fillStyle = index === 0 ? "#ffffff" : "#a8c8bc";
-    ctx.beginPath();
-    ctx.arc(55, y, 9, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.font = "600 21px Arial";
-    ctx.fillText(label, 78, y + 7);
+    ctx.strokeStyle = "#c9e9dc";
+    ctx.lineWidth = 2;
+    roundedRect(ctx, 46, y - 15, 19, 19, 4);
+    ctx.stroke();
+    ctx.fillStyle = "#f2fff9";
+    ctx.font = "500 23px Arial";
+    ctx.fillText(label, 87, y + 3);
   });
 
   ctx.fillStyle = text;
-  ctx.font = "700 36px Arial";
-  ctx.fillText("Good Morning,", 320, 140);
-
+  ctx.font = "700 40px Arial";
+  ctx.fillText("Good Morning,", 328, 127);
   ctx.fillStyle = muted;
-  ctx.font = "500 18px Arial";
-  ctx.fillText("Productive people build brighter tomorrows.", 320, 169);
-
-  ctx.fillStyle = "#5f746b";
-  ctx.font = "500 18px Arial";
-  ctx.fillText("Mon, Apr 28, 2025", 1255, 96);
-
+  ctx.font = "500 21px Arial";
+  ctx.fillText("Here's what's happening today:", 328, 163);
+  ctx.font = "500 20px Arial";
+  ctx.fillText("Mon, Apr 28, 2025", 1162, 62);
   ctx.fillStyle = text;
   ctx.font = "700 48px Arial";
-  ctx.fillText("09:24 AM", 1230, 145);
+  ctx.fillText("09:24 AM", 1162, 119);
 
-  const statCards = [
-    ["Present", "142", "+12%", "#10b072"],
-    ["Absent", "18", "-4%", "#eb6c64"],
-    ["Late", "7", "-20%", "#d5a321"],
-    ["Total", "167", "Active employees", "#3f9a84"],
-  ] as const;
-
-  statCards.forEach(([label, value, change, accent], index) => {
-    const x = 320 + index * 222;
-    const y = 206;
-
-    ctx.fillStyle = card;
-    roundedRect(ctx, x, y, 198, 124, 22);
+  const stats = [
+    ["142", "Present", green],
+    ["18", "Absent", "#ff634f"],
+    ["7", "Late", "#efa900"],
+    ["167", "Total Today", "#00835f"],
+  ];
+  stats.forEach(([value, label, color], index) => {
+    const x = 328 + index * 303;
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "#e7edf0";
+    ctx.lineWidth = 2;
+    roundedRect(ctx, x, 211, 278, 185, 15);
     ctx.fill();
-
-    ctx.fillStyle = accent;
+    ctx.stroke();
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(x + 35, y + 36, 12, 0, Math.PI * 2);
+    ctx.arc(x + 39, 249, 10, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.fillStyle = "#6f837a";
-    ctx.font = "600 16px Arial";
-    ctx.fillText(label, x + 56, y + 41);
-
+    roundedRect(ctx, x + 26, 262, 26, 16, 6);
+    ctx.fill();
     ctx.fillStyle = text;
-    ctx.font = "700 38px Arial";
-    ctx.fillText(value, x + 26, y + 90);
-
-    if (index !== 3) {
-      ctx.fillStyle =
-        change.startsWith("+")
-          ? "#18b073"
-          : index === 2
-            ? "#93a64a"
-            : "#e1655f";
-      ctx.font = "600 15px Arial";
-      ctx.fillText(change, x + 26, y + 112);
-
-      ctx.fillStyle = "#90a097";
-      ctx.font = "500 15px Arial";
-      ctx.fillText("from yesterday", x + 70, y + 112);
-    } else {
-      ctx.fillStyle = "#90a097";
-      ctx.font = "500 15px Arial";
-      ctx.fillText(change, x + 26, y + 112);
-    }
+    ctx.font = "600 44px Arial";
+    ctx.fillText(value, x + 26, 326);
+    ctx.fillStyle = muted;
+    ctx.font = "500 23px Arial";
+    ctx.fillText(label, x + 26, 367);
   });
 
-  ctx.fillStyle = card;
-  roundedRect(ctx, 320, 360, 402, 324, 24);
-  ctx.fill();
-
-  ctx.fillStyle = text;
-  ctx.font = "700 24px Arial";
-  ctx.fillText("Attendance Today", 350, 406);
-
-  ctx.fillStyle = "#f3f7f5";
-  roundedRect(ctx, 590, 378, 98, 36, 15);
-  ctx.fill();
-
-  ctx.fillStyle = "#6e8178";
-  ctx.font = "600 15px Arial";
-  ctx.fillText("Today", 620, 401);
-
-  const chartBars = [118, 160, 208, 250, 218, 188, 130, 42, 20];
-  chartBars.forEach((height, index) => {
-    const x = 370 + index * 33;
-    const y = 635 - height;
-
-    ctx.fillStyle = "#10b072";
-    roundedRect(ctx, x, y, 21, height, 10);
+  [[328, 574], [932, 580]].forEach(([x, width]) => {
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "#e5ecef";
+    roundedRect(ctx, x, 435, width, 417, 16);
     ctx.fill();
-  });
-
-  ctx.strokeStyle = "#e9efec";
-  ctx.lineWidth = 2;
-  [470, 538, 606].forEach((y) => {
-    ctx.beginPath();
-    ctx.moveTo(360, y);
-    ctx.lineTo(690, y);
     ctx.stroke();
   });
-
-  ctx.fillStyle = card;
-  roundedRect(ctx, 750, 360, 212, 324, 24);
-  ctx.fill();
-
   ctx.fillStyle = text;
-  ctx.font = "700 24px Arial";
-  ctx.fillText("Recent Activity", 778, 406);
-
+  ctx.font = "600 28px Arial";
+  ctx.fillText("Attendance Trend", 357, 487);
+  ctx.fillText("Recent Activity", 962, 487);
   ctx.fillStyle = green;
-  ctx.font = "600 16px Arial";
-  ctx.fillText("View All", 882, 406);
+  ctx.font = "500 22px Arial";
+  ctx.fillText("View All", 1410, 487);
+  ctx.fillStyle = muted;
+  ctx.font = "500 20px Arial";
+  ctx.fillText("Today⌄", 796, 484);
 
-  const people = [
-    ["Alex Chen", "Checked in", "08:24 AM"],
-    ["Priya Sharma", "Checked in", "09:11 AM"],
-    ["Daniel Kim", "Checked in", "09:12 AM"],
-    ["Maria Lopez", "Checked in", "08:56 AM"],
-    ["James Wilson", "Checked in", "08:41 AM"],
-  ];
-
-  people.forEach(([name, status, time], index) => {
-    const y = 468 + index * 46;
-
-    ctx.fillStyle = "#d8e8e1";
+  ctx.strokeStyle = "#edf1f3";
+  ctx.lineWidth = 1;
+  [561, 631, 701, 771].forEach((y, index) => {
     ctx.beginPath();
-    ctx.arc(795, y - 5, 15, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#173b31";
-    ctx.font = "600 16px Arial";
-    ctx.fillText(name, 822, y);
-
-    ctx.fillStyle = "#7f9189";
-    ctx.font = "500 14px Arial";
-    ctx.fillText(status, 822, y + 18);
-
-    ctx.fillStyle = "#7f9189";
-    ctx.font = "500 14px Arial";
-    ctx.fillText(time, 910, y + 4);
+    ctx.moveTo(382, y);
+    ctx.lineTo(870, y);
+    ctx.stroke();
+    ctx.fillStyle = muted;
+    ctx.font = "16px Arial";
+    ctx.fillText(String(60 - index * 20), 349, y + 5);
   });
+  [80, 122, 177, 231, 190, 130, 92, 67, 22, 10].forEach((height, index) => {
+    const bar = ctx.createLinearGradient(0, 771 - height, 0, 771);
+    bar.addColorStop(0, "#00b786");
+    bar.addColorStop(1, "#008a62");
+    ctx.fillStyle = bar;
+    roundedRect(ctx, 388 + index * 47, 771 - height, 28, height, 4);
+    ctx.fill();
+  });
+  ctx.fillStyle = muted;
+  ctx.font = "18px Arial";
+  ["6AM", "9AM", "12PM", "3PM", "6PM"].forEach((label, i) => ctx.fillText(label, 389 + i * 112, 810));
 
-  ctx.fillStyle = card;
-  roundedRect(ctx, 987, 360, 290, 324, 24);
-  ctx.fill();
-
-  ctx.fillStyle = text;
-  ctx.font = "700 24px Arial";
-  ctx.fillText("Verification", 1016, 406);
-
-  ctx.strokeStyle = "#10b072";
-  ctx.lineWidth = 5;
-
-  const fx = 1080;
-  const fy = 472;
-  const fw = 106;
-  const fh = 106;
-  const corner = 24;
-
-  ctx.beginPath();
-  ctx.moveTo(fx, fy + corner);
-  ctx.lineTo(fx, fy);
-  ctx.lineTo(fx + corner, fy);
-
-  ctx.moveTo(fx + fw - corner, fy);
-  ctx.lineTo(fx + fw, fy);
-  ctx.lineTo(fx + fw, fy + corner);
-
-  ctx.moveTo(fx + fw, fy + fh - corner);
-  ctx.lineTo(fx + fw, fy + fh);
-  ctx.lineTo(fx + fw - corner, fy + fh);
-
-  ctx.moveTo(fx + corner, fy + fh);
-  ctx.lineTo(fx, fy + fh);
-  ctx.lineTo(fx, fy + fh - corner);
-  ctx.stroke();
-
-  ctx.strokeStyle = "#9eb7ad";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.arc(1133, 505, 27, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(1133, 566, 48, Math.PI * 1.12, Math.PI * 1.88);
-  ctx.stroke();
-
-  ctx.fillStyle = "#10b072";
-  ctx.beginPath();
-  ctx.arc(1040, 626, 24, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 6;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.moveTo(1030, 627);
-  ctx.lineTo(1038, 636);
-  ctx.lineTo(1052, 618);
-  ctx.stroke();
-
-  ctx.fillStyle = text;
-  ctx.font = "700 22px Arial";
-  ctx.fillText("Face Verified", 1078, 632);
-
-  ctx.fillStyle = "#8ca096";
-  ctx.font = "500 15px Arial";
-  ctx.fillText("Identity confirmed", 1078, 654);
-
+  [
+    ["John Doe", "Check-in", "09:24 AM"],
+    ["Sarah Kim", "Check-in", "08:18 AM"],
+    ["Michael Tan", "Check-out", "08:52 AM"],
+    ["Priya Sharma", "Check-in", "08:31 AM"],
+  ].forEach(([name, status, time], i) => {
+    const y = 554 + i * 82;
+    ctx.fillStyle = "#e4ecec";
+    ctx.beginPath();
+    ctx.arc(985, y + 13, 23, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#779587";
+    ctx.font = "600 18px Arial";
+    ctx.fillText(name.split(" ").map(part => part[0]).join(""), 973, y + 19);
+    ctx.fillStyle = text;
+    ctx.font = "500 23px Arial";
+    ctx.fillText(name, 1024, y + 4);
+    ctx.fillStyle = muted;
+    ctx.font = "19px Arial";
+    ctx.fillText("◉ " + status, 1024, y + 32);
+    ctx.fillText(time, 1390, y + 7);
+  });
   return canvasTexture(canvas);
 }
 
@@ -392,49 +258,28 @@ function createFallbackDashboardTexture() {
 function createTotalAttendanceTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 1200;
-  canvas.height = 700;
-
+  canvas.height = 520;
   const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    throw new Error("Total attendance canvas unavailable");
-  }
-
-  ctx.clearRect(0, 0, 1200, 700);
-
-  const green = "#12b476";
-  const dark = "#15352b";
-  const muted = "#789086";
-
-  ctx.fillStyle = green;
-  [
-    [110, 338, 38, 120],
-    [172, 286, 38, 172],
-    [234, 212, 38, 246],
-  ].forEach(([x, y, w, h]) => {
-    roundedRect(ctx, x, y, w, h, 16);
+  if (!ctx) throw new Error("Total attendance canvas unavailable");
+  ctx.fillStyle = "#00a778";
+  [104, 154, 204].forEach((x, i) => {
+    roundedRect(ctx, x, 324 - i * 56, 34, 80 + i * 56, 12);
     ctx.fill();
   });
-
-  ctx.fillStyle = dark;
-  ctx.font = "600 52px Arial";
-  ctx.fillText("Total Attendance", 372, 205);
-
-  ctx.font = "700 148px Arial";
-  ctx.fillText("167", 372, 382);
-
-  ctx.fillStyle = "rgba(18,180,118,.12)";
-  roundedRect(ctx, 760, 295, 220, 92, 46);
+  ctx.fillStyle = "#10232d";
+  ctx.font = "500 54px Arial";
+  ctx.fillText("Total Attendance", 355, 156);
+  ctx.font = "700 142px Arial";
+  ctx.fillText("167", 355, 320);
+  ctx.fillStyle = "#dbfaf0";
+  roundedRect(ctx, 718, 230, 252, 91, 45);
   ctx.fill();
-
-  ctx.fillStyle = green;
-  ctx.font = "700 42px Arial";
-  ctx.fillText("↑ 14%", 812, 356);
-
-  ctx.fillStyle = muted;
-  ctx.font = "500 34px Arial";
-  ctx.fillText("vs. last week", 372, 470);
-
+  ctx.fillStyle = "#00885e";
+  ctx.font = "500 42px Arial";
+  ctx.fillText("↑ +12%", 749, 290);
+  ctx.fillStyle = "#63788a";
+  ctx.font = "500 36px Arial";
+  ctx.fillText("Compared to last week", 355, 414);
   return canvasTexture(canvas);
 }
 
@@ -451,12 +296,12 @@ function createQuoteCardTexture() {
 
   ctx.clearRect(0, 0, 780, 1320);
 
-  ctx.fillStyle = "#2c4d42";
-  ctx.font = "500 62px Arial";
+  ctx.fillStyle = "#435c72";
+  ctx.font = "500 70px Arial";
   ctx.fillText("SAME", 128, 255);
-  ctx.fillText("PEOPLE.", 128, 370);
+  ctx.fillText("PEOPLE", 128, 370);
   ctx.fillText("HIGHER", 128, 485);
-  ctx.fillText("POTENTIAL.", 128, 600);
+  ctx.fillText("POTENTIAL", 128, 600);
 
   ctx.fillStyle = "#18aa72";
   ctx.fillRect(128, 700, 124, 10);
@@ -466,102 +311,58 @@ function createQuoteCardTexture() {
 
 function createConnectCardTexture() {
   const canvas = document.createElement("canvas");
-  canvas.width = 680;
-  canvas.height = 1180;
-
+  canvas.width = 780;
+  canvas.height = 1320;
   const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    throw new Error("Connect card canvas unavailable");
-  }
-
-  ctx.clearRect(0, 0, 680, 1180);
-
-  ctx.fillStyle = "#12b476";
-  ctx.beginPath();
-  ctx.arc(340, 208, 78, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  ctx.arc(340, 182, 22, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(304, 228, 16, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(376, 228, 16, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(340, 252, 34, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#5d756d";
-  ctx.font = "500 46px Arial";
-  ctx.fillText("ATTEND", 184, 500);
-  ctx.fillText("CONNECT", 154, 584);
-  ctx.fillText("GROW", 232, 668);
-
-  ctx.fillStyle = "#18aa72";
-  ctx.fillRect(182, 760, 96, 8);
-
+  if (!ctx) throw new Error("Connect card canvas unavailable");
+  ctx.fillStyle = "#00a778";
+  [[390, 255, 45], [304, 282, 27], [476, 282, 27]].forEach(([x, y, r]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    roundedRect(ctx, x - r * 1.2, y + r + 12, r * 2.4, r * 1.9, r);
+    ctx.fill();
+  });
+  ctx.fillStyle = "#435c72";
+  ctx.font = "500 66px Arial";
+  ["BETTER", "TEAMS", "BRIGHTER", "TOMORROW"].forEach((line, i) => ctx.fillText(line, 118, 675 + i * 122));
+  ctx.fillStyle = "#009d70";
+  ctx.fillRect(118, 1165, 142, 9);
   return canvasTexture(canvas);
 }
 
 function createCheckInTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 1850;
-  canvas.height = 760;
-
+  canvas.height = 475;
   const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    throw new Error("Check-in canvas unavailable");
-  }
-
-  ctx.clearRect(0, 0, 1850, 760);
-
-  const green = "#12b476";
-  const dark = "#15352b";
-  const muted = "#789086";
-
-  ctx.fillStyle = "rgba(18,180,118,.14)";
+  if (!ctx) throw new Error("Check-in canvas unavailable");
+  ctx.fillStyle = "#d7f7ea";
   ctx.beginPath();
-  ctx.arc(235, 380, 138, 0, Math.PI * 2);
+  ctx.arc(216, 238, 135, 0, Math.PI * 2);
   ctx.fill();
-
-  ctx.fillStyle = green;
+  ctx.fillStyle = "#00a778";
   ctx.beginPath();
-  ctx.arc(235, 380, 98, 0, Math.PI * 2);
+  ctx.arc(216, 238, 98, 0, Math.PI * 2);
   ctx.fill();
-
   ctx.strokeStyle = "#ffffff";
   ctx.lineWidth = 24;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.beginPath();
-  ctx.moveTo(188, 382);
-  ctx.lineTo(226, 422);
-  ctx.lineTo(298, 336);
+  ctx.moveTo(170, 236);
+  ctx.lineTo(208, 276);
+  ctx.lineTo(275, 201);
   ctx.stroke();
-
-  ctx.fillStyle = dark;
-  ctx.font = "700 86px Arial";
-  ctx.fillText("Check-in Successful", 430, 360);
-
-  ctx.fillStyle = muted;
-  ctx.font = "500 46px Arial";
-  ctx.fillText("Welcome back!", 430, 448);
-
+  ctx.fillStyle = "#10232d";
+  ctx.font = "600 84px Arial";
+  ctx.fillText("Check-in Successful", 425, 213);
+  ctx.fillStyle = "#63788a";
+  ctx.font = "500 60px Arial";
+  ctx.fillText("Welcome back!", 425, 322);
+  ctx.font = "500 44px Arial";
   ctx.textAlign = "right";
-  ctx.fillStyle = "#8ba097";
-  ctx.font = "500 38px Arial";
-  ctx.fillText("09:24 AM", 1732, 246);
-  ctx.textAlign = "left";
-
+  ctx.fillText("09:24 AM", 1770, 178);
   return canvasTexture(canvas);
 }
 
@@ -823,12 +624,12 @@ function createFloatingCard(
 
   const frontMaterial = new THREE.MeshPhysicalMaterial({
     color: "#fbfffd",
-    roughness: 0.17,
+    roughness: 0.55,
     metalness: 0,
-    transmission: 0.22,
+    transmission: 0,
     thickness: 0.09,
     ior: 1.44,
-    clearcoat: 1,
+    clearcoat: 0.15,
     clearcoatRoughness: 0.075,
     envMapIntensity: 1.05,
   });
@@ -837,7 +638,7 @@ function createFloatingCard(
     color: "#d8eee5",
     roughness: 0.2,
     metalness: 0.04,
-    transmission: 0.14,
+    transmission: 0,
     thickness: 0.12,
     ior: 1.44,
     clearcoat: 1,
@@ -1164,7 +965,66 @@ function styleScanner(
   });
 }
 
-function softenBadge(object: THREE.Object3D) {
+function createBadgeTexture() {
+  // The existing GLB uses two vertically flipped faces in a single UV atlas.
+  // Print the new identity at runtime; keep the source model and UVs intact.
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 2048;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Badge canvas unavailable");
+  ctx.fillStyle = "#eef5f2";
+  ctx.fillRect(0, 0, 1024, 2048);
+
+  [996, 1936].forEach((bottom) => {
+    ctx.save();
+    ctx.translate(72, bottom);
+    ctx.scale(880 / 1200, -900 / 760);
+    ctx.fillStyle = "#fafffd";
+    ctx.fillRect(0, 0, 1200, 760);
+    ctx.fillStyle = "#245f5b";
+    ctx.fillRect(0, 0, 1200, 292);
+    ctx.fillStyle = "#9db9b5";
+    ctx.beginPath();
+    ctx.arc(144, 145, 93, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "italic 700 128px Arial";
+    ctx.fillText("A", 98, 191);
+    ctx.font = "italic 600 112px Arial";
+    ctx.fillText("Attendix", 273, 187);
+
+    // Decorative access-code motif, deliberately not a functional credential.
+    ctx.fillRect(913, 38, 236, 220);
+    ctx.fillStyle = "#245f5b";
+    for (let row = 0; row < 21; row += 1) {
+      for (let col = 0; col < 21; col += 1) {
+        if ((row * 13 + col * 7 + row * col) % 5 < 3) {
+          ctx.fillRect(925 + col * 10, 48 + row * 9.5, 8, 8);
+        }
+      }
+    }
+    [[925, 48], [1065, 48], [925, 181]].forEach(([x, y]) => {
+      ctx.fillRect(x, y, 60, 60);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(x + 9, y + 9, 42, 42);
+      ctx.fillStyle = "#245f5b";
+      ctx.fillRect(x + 18, y + 18, 24, 24);
+    });
+    ctx.fillStyle = "#142c37";
+    ctx.font = "italic 700 118px Arial";
+    ctx.fillText("05 KEYCARD", 68, 480);
+    ctx.fillStyle = "#63788a";
+    ctx.font = "500 37px Arial";
+    ctx.fillText("P E O P L E  ·  A C C E S S  ·  P R O G R E S S", 68, 640);
+    ctx.restore();
+  });
+  const texture = canvasTexture(canvas);
+  texture.flipY = false;
+  return texture;
+}
+
+function softenBadge(object: THREE.Object3D, badgeTexture: THREE.Texture) {
   object.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) {
       return;
@@ -1179,8 +1039,10 @@ function softenBadge(object: THREE.Object3D) {
         return;
       }
 
-      material.metalness = Math.min(material.metalness ?? 0, 0.18);
-      material.roughness = Math.max(material.roughness ?? 0.4, 0.36);
+      material.map = badgeTexture;
+      material.color.set("#ffffff");
+      material.metalness = 0.05;
+      material.roughness = 0.65;
       material.needsUpdate = true;
     });
   });
@@ -1312,17 +1174,19 @@ useEffect(() => {
         }
 
         const scannerScreenTexture = createScannerScreenTexture();
+        const badgeTexture = createBadgeTexture();
         const shadowTexture = createShadowTexture();
         const glowTexture = createGlowTexture();
 
         trackTexture(dashboardTexture);
         trackTexture(scannerScreenTexture);
+        trackTexture(badgeTexture);
         trackTexture(shadowTexture);
         trackTexture(glowTexture);
 
         styleImac(imacGltf.scene);
         styleScanner(scannerGltf.scene, scannerScreenTexture);
-        softenBadge(badgeGltf.scene);
+        softenBadge(badgeGltf.scene, badgeTexture);
 
         collectObject(imacGltf.scene);
         collectObject(scannerGltf.scene);
@@ -1338,10 +1202,10 @@ useEffect(() => {
 
         const webgl = renderer;
 
-        webgl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
+        webgl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         webgl.outputColorSpace = THREE.SRGBColorSpace;
         webgl.toneMapping = THREE.ACESFilmicToneMapping;
-        webgl.toneMappingExposure = 1.06;
+        webgl.toneMappingExposure = 0.95;
         webgl.setClearColor(0x000000, 0);
         webgl.domElement.setAttribute("aria-label", label);
         webgl.domElement.style.width = "100%";
@@ -1350,6 +1214,12 @@ useEffect(() => {
         webgl.domElement.style.pointerEvents = "none";
 
         hostElement.appendChild(webgl.domElement);
+
+        // Preserve print/UI contrast at the oblique resting angles.
+        const anisotropy = Math.min(8, webgl.capabilities.getMaxAnisotropy());
+        textures.forEach((texture) => {
+          texture.anisotropy = anisotropy;
+        });
 
         const camera = new THREE.PerspectiveCamera(
           CAMERA_FOV,
@@ -1390,7 +1260,7 @@ useEffect(() => {
         rimLight.position.set(2.6, 4.6, -4.2);
         scene.add(rimLight);
 
-        const sceneGlow = createGlowSprite(glowTexture, 8.55, 5.72, 0.47);
+        const sceneGlow = createGlowSprite(glowTexture, 8.55, 5.72, 0.025);
         sceneGlow.sprite.position.set(1.92, 0.18, -0.85);
         scene.add(sceneGlow.sprite);
         trackMaterial(sceneGlow.material);
@@ -1511,8 +1381,8 @@ useEffect(() => {
 
         /* TOTAL ATTENDANCE */
         const totalCardData = createFloatingCard(
-          2.38,
-          1.08,
+          3.0,
+          1.3,
           0.092,
           0.16,
           createTotalAttendanceTexture(),
@@ -1589,8 +1459,8 @@ useEffect(() => {
 
         /* CONNECT CARD */
         const connectCardData = createFloatingCard(
-          1.2,
-          2.04,
+          1.46,
+          2.34,
           0.09,
           0.18,
           createConnectCardTexture(),
@@ -1628,8 +1498,8 @@ useEffect(() => {
 
         /* CHECK-IN CARD */
 const checkInCardData = createFloatingCard(
-  2.88,
-  0.9,
+  3.05,
+  0.78,
   0.096,
   0.14,
   createCheckInTexture(),
