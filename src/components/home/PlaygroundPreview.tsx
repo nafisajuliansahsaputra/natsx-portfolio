@@ -1,13 +1,3 @@
-"use client";
-
-import {
-  useRef,
-} from "react";
-
-import type {
-  PointerEvent as ReactPointerEvent,
-} from "react";
-
 import Link from "next/link";
 
 import {
@@ -18,6 +8,8 @@ import {
 import {
   getHomeMessages,
 } from "@/i18n/home-messages";
+
+import PlaygroundPreviewLab from "./PlaygroundPreviewLab";
 
 import styles from "./PlaygroundPreview.module.css";
 
@@ -44,37 +36,6 @@ const experiments = [
   },
 ] as const;
 
-function canUseInteractivePointer() {
-  if (
-    typeof window ===
-    "undefined"
-  ) {
-    return false;
-  }
-
-  const reducedMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-  if (
-    reducedMotion
-  ) {
-    return false;
-  }
-
-  /*
-   * Pointer-driven Live Lab motion is
-   * purely decorative.
-   *
-   * Running layout reads on touch devices
-   * provides no useful interaction.
-   */
-  return window.matchMedia(
-    "(min-width: 961px) and (hover: hover) and (pointer: fine)",
-  ).matches;
-}
-
 export default function PlaygroundPreview({
   locale,
 }: PlaygroundPreviewProps) {
@@ -82,137 +43,6 @@ export default function PlaygroundPreview({
     getHomeMessages(
       locale,
     ).playground;
-
-  const visualRef =
-    useRef<HTMLDivElement>(
-      null,
-    );
-
-  function handlePointerMove(
-    event: ReactPointerEvent<HTMLDivElement>,
-  ) {
-    /*
-     * IMPORTANT:
-     *
-     * Do not call getBoundingClientRect()
-     * unless this device can actually
-     * use the pointer interaction.
-     */
-    if (
-      !canUseInteractivePointer()
-    ) {
-      return;
-    }
-
-    const element =
-      visualRef.current;
-
-    if (!element) {
-      return;
-    }
-
-    const rect =
-      element.getBoundingClientRect();
-
-    if (
-      rect.width <=
-        0 ||
-      rect.height <=
-        0
-    ) {
-      return;
-    }
-
-    const x =
-      (
-        (
-          event.clientX -
-          rect.left
-        ) /
-          rect.width -
-        0.5
-      ) *
-      2;
-
-    const y =
-      (
-        (
-          event.clientY -
-          rect.top
-        ) /
-          rect.height -
-        0.5
-      ) *
-      2;
-
-    element.style.setProperty(
-      "--lab-x",
-      `${x * 24}px`,
-    );
-
-    element.style.setProperty(
-      "--lab-y",
-      `${y * 18}px`,
-    );
-
-    element.style.setProperty(
-      "--lab-x-reverse",
-      `${x * -18}px`,
-    );
-
-    element.style.setProperty(
-      "--lab-y-reverse",
-      `${y * -12}px`,
-    );
-
-    element.style.setProperty(
-      "--lab-rotate",
-      `${x * 2.2}deg`,
-    );
-
-    element.style.setProperty(
-      "--cursor-x",
-      `${
-        event.clientX -
-        rect.left
-      }px`,
-    );
-
-    element.style.setProperty(
-      "--cursor-y",
-      `${
-        event.clientY -
-        rect.top
-      }px`,
-    );
-  }
-
-  function resetPointer() {
-    const element =
-      visualRef.current;
-
-    if (!element) {
-      return;
-    }
-
-    [
-      "--lab-x",
-      "--lab-y",
-      "--lab-x-reverse",
-      "--lab-y-reverse",
-      "--lab-rotate",
-      "--cursor-x",
-      "--cursor-y",
-    ].forEach(
-      (
-        property,
-      ) => {
-        element.style.removeProperty(
-          property,
-        );
-      },
-    );
-  }
 
   return (
     <section
@@ -313,114 +143,7 @@ export default function PlaygroundPreview({
             copy.explore
           }
         >
-          <div
-            ref={
-              visualRef
-            }
-            className={
-              styles.lab
-            }
-            onPointerMove={
-              handlePointerMove
-            }
-            onPointerLeave={
-              resetPointer
-            }
-            data-motion-scroll="home-playground-lab"
-          >
-            <div
-              className={
-                styles.labTop
-              }
-              data-motion-piece="top"
-            >
-              <span>
-                NATSX / LIVE LAB
-              </span>
-
-              <span>
-                04 EXPERIMENTS
-              </span>
-            </div>
-
-            <div
-              className={
-                styles.labType
-              }
-              aria-hidden="true"
-              data-motion-piece="type"
-            >
-              <span
-                className={
-                  styles.wordPlay
-                }
-              >
-                PLAY
-              </span>
-
-              <span
-                className={
-                  styles.wordWith
-                }
-              >
-                WITH
-              </span>
-
-              <span
-                className={
-                  styles.wordIdeas
-                }
-              >
-                IDEAS
-              </span>
-            </div>
-
-            <div
-              className={
-                styles.labField
-              }
-              aria-hidden="true"
-              data-motion-piece="field"
-            >
-              {Array.from(
-                {
-                  length: 24,
-                },
-                (
-                  _,
-                  index,
-                ) => (
-                  <span
-                    key={
-                      index
-                    }
-                  />
-                ),
-              )}
-            </div>
-
-            <div
-              className={
-                styles.cursor
-              }
-              aria-hidden="true"
-            />
-
-            <div
-              className={
-                styles.labBottom
-              }
-              data-motion-piece="bottom"
-            >
-              <span>
-                MOVE / HOVER / INTERRUPT
-              </span>
-
-              <span>
-                OPEN LAB ↗
-              </span>
-            </div>
-          </div>
+          <PlaygroundPreviewLab />
         </Link>
 
         <div
