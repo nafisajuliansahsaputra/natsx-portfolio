@@ -14,6 +14,7 @@ import {
 
 import WorkArchiveHomepagePreview, {
   hasHomepageArchiveArtwork,
+  type WorkArchivePreviewCopy,
 } from "./WorkArchiveHomepagePreview";
 
 import Link from "next/link";
@@ -79,6 +80,9 @@ type WorkArchiveFilterProps = {
 
   initialCategory:
     string;
+
+  previewCopy:
+    WorkArchivePreviewCopy;
 };
 
 
@@ -140,6 +144,7 @@ export default function WorkArchiveFilter({
   projects,
   categories,
   initialCategory,
+  previewCopy,
 }: WorkArchiveFilterProps) {
   /*
    * activeCategory:
@@ -1063,8 +1068,8 @@ const hasPreview =
         fallbackImage={
           previewImage
         }
-        locale={
-          locale
+        copy={
+          previewCopy
         }
       />
     </div>
