@@ -7,6 +7,7 @@ import {
   type Locale,
 } from "@/i18n/config";
 
+import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import Link from "next/link";
@@ -508,6 +509,8 @@ export async function WorkPageContent({
           </div>
         </section>
       </main>
+
+      <InnerFooter />
     </>
   );
 }
