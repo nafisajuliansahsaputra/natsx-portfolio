@@ -715,7 +715,11 @@ export function AboutPageContent({
         <AboutInteractionPolish />
       </main>
 
-      <InnerFooter />
+      <InnerFooter
+        locale={
+          locale
+        }
+      />
     </>
   );
 }
