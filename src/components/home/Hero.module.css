@@ -895,36 +895,6 @@ path {
   .hero[
     data-ambient-active="true"
   ]
-    .arrowDown {
-    animation:
-      natsx-arrow-down-idle
-      2.8s
-      ease-in-out
-      infinite;
-  }
-
-  .hero[
-    data-ambient-active="true"
-  ]
-    .arrowUp {
-    animation:
-      natsx-arrow-up-idle
-      3.1s
-      ease-in-out
-      0.35s
-      infinite;
-  }
-
-  .primaryLink:hover
-    .arrowDown,
-  .secondaryLink:hover
-    .arrowUp {
-    animation: none;
-  }
-
-  .hero[
-    data-ambient-active="true"
-  ]
     .eyebrowDot::after {
     animation:
       natsx-eyebrow-pulse
