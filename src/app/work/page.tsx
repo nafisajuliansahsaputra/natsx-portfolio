@@ -218,9 +218,6 @@ export async function WorkPageContent({
 
             accentColor:
               project.accentColor,
-
-            secondaryColor:
-              project.secondaryColor,
           },
 
           categorySlugs:
@@ -238,8 +235,7 @@ export async function WorkPageContent({
             ? (
               <WorkArchiveHomepagePreview
                 project={
-                  archiveProject
-                    .project
+                  project
                 }
                 primaryVisual={
                   primaryVisual

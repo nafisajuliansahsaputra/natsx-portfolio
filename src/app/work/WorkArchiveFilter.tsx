@@ -44,7 +44,6 @@ export type WorkArchiveProject = {
       | "year"
       | "disciplines"
       | "accentColor"
-      | "secondaryColor"
     >;
 
   categorySlugs:
