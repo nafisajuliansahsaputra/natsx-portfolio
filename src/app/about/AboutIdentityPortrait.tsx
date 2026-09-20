@@ -73,6 +73,41 @@ export default function AboutIdentityPortrait({
         "(prefers-reduced-motion: reduce)",
       );
 
+    let active =
+      typeof IntersectionObserver ===
+      "undefined";
+
+    const visibilityObserver =
+      typeof IntersectionObserver !==
+      "undefined"
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              active =
+                Boolean(
+                  entry
+                    ?.isIntersecting,
+                );
+
+              if (
+                active
+              ) {
+                requestUpdate();
+              }
+            },
+            {
+              rootMargin:
+                "75% 0px 75% 0px",
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
     const update =
       () => {
         const viewportHeight =
@@ -179,8 +214,9 @@ export default function AboutIdentityPortrait({
     const requestUpdate =
       () => {
         if (
+          !active ||
           frameRef.current !==
-          null
+            null
         ) {
           return;
         }
@@ -190,6 +226,11 @@ export default function AboutIdentityPortrait({
             update,
           );
       };
+
+    visibilityObserver
+      ?.observe(
+        column,
+      );
 
     window.addEventListener(
       "scroll",
@@ -241,6 +282,9 @@ export default function AboutIdentityPortrait({
       );
 
       resizeObserver?.disconnect();
+
+      visibilityObserver
+        ?.disconnect();
 
       if (
         frameRef.current !==
