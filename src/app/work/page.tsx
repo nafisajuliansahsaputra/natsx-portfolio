@@ -375,6 +375,9 @@ export async function WorkPageContent({
             </div>
 
             <WorkArchiveFilter
+              locale={
+                locale
+              }
               projects={
                 archiveProjects
               }
