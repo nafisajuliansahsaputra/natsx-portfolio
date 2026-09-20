@@ -1880,7 +1880,7 @@ const checkInCardData = createFloatingCard(
             },
             {
               root: null,
-              rootMargin: "120px 0px",
+              rootMargin: "0px",
               threshold: 0.01,
             },
           );
