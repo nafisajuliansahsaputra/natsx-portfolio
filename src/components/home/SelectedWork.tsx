@@ -25,7 +25,6 @@ import {
 
 import AttendanceSystemArtwork from "./AttendanceSystemArtwork";
 import BastManagementArtwork from "./BastManagementArtwork";
-import FeaturedProjectParallax from "./FeaturedProjectParallax";
 import FiveAmVisionArtwork from "./FiveAmVisionArtwork";
 import SpallSpillArtwork from "./SpallSpillArtwork";
 
@@ -365,45 +364,17 @@ export default async function SelectedWork({
                         styles.visual
                       }
                     >
-                      {
-                        visual ===
-                        "vision"
-                          ? (
-                            <ProjectArtwork
-                              project={
-                                project
-                              }
-                              variant={
-                                visual
-                              }
-                              copy={
-                                copy
-                              }
-                            />
-                          )
-                          : (
-                            <FeaturedProjectParallax
-                              variant={
-                                visual ===
-                                "attendance"
-                                  ? "stay"
-                                  : visual
-                              }
-                            >
-                              <ProjectArtwork
-                                project={
-                                  project
-                                }
-                                variant={
-                                  visual
-                                }
-                                copy={
-                                  copy
-                                }
-                              />
-                            </FeaturedProjectParallax>
-                          )
-                      }
+                      <ProjectArtwork
+                        project={
+                          project
+                        }
+                        variant={
+                          visual
+                        }
+                        copy={
+                          copy
+                        }
+                      />
                     </div>
 
                     <div
@@ -533,9 +504,6 @@ function ProjectArtwork({
       <SpallSpillArtwork
         project={
           project
-        }
-        primaryVisual={
-          primaryVisual
         }
         secondaryVisual={
           secondaryVisual
