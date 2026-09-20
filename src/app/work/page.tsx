@@ -234,6 +234,9 @@ export async function WorkPageContent({
           hasPreview
             ? (
               <WorkArchiveHomepagePreview
+                key={
+                  `work-preview-${project.id}`
+                }
                 project={
                   project
                 }
