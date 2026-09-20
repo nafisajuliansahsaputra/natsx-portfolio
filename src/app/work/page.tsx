@@ -151,17 +151,49 @@ export async function WorkPageContent({
       (
         project,
       ) => {
-        const previewImage =
+        const primaryVisual =
           getProjectPrimaryVisualUrl(
             project,
-          ) ??
+          );
+
+        const secondaryVisual =
           getProjectSecondaryVisualUrl(
             project,
           );
 
-        return {
-          project,
+        const previewImage =
+          primaryVisual ??
+          secondaryVisual;
 
+        return {
+          project: {
+            id:
+              project.id,
+
+            slug:
+              project.slug,
+
+            number:
+              project.number,
+
+            title:
+              project.title,
+
+            year:
+              project.year,
+
+            disciplines:
+              project.disciplines,
+
+            accentColor:
+              project.accentColor,
+
+            secondaryColor:
+              project.secondaryColor,
+          },
+
+          primaryVisual,
+          secondaryVisual,
           previewImage,
 
           categorySlugs:
