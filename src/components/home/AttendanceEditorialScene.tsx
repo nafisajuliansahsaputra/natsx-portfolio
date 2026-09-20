@@ -1202,7 +1202,12 @@ useEffect(() => {
 
         const webgl = renderer;
 
-        webgl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        webgl.setPixelRatio(
+          Math.min(
+            window.devicePixelRatio || 1,
+            1.6,
+          ),
+        );
         webgl.outputColorSpace = THREE.SRGBColorSpace;
         webgl.toneMapping = THREE.ACESFilmicToneMapping;
         webgl.toneMappingExposure = 0.95;
