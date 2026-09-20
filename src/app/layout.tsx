@@ -14,7 +14,6 @@ import DocumentLocaleController from "@/components/i18n/DocumentLocaleController
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
-import RouteTransitionHandoff from "@/components/motion/RouteTransitionHandoff";
 
 import {
   site,
@@ -385,8 +384,6 @@ export default function RootLayout({
         <MotionController />
 
         <RouteTransitionController />
-
-        <RouteTransitionHandoff />
 
         {children}
 
