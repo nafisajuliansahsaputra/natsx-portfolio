@@ -1,13 +1,14 @@
 import Image from "next/image";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import {
   site,
 } from "@/data/site";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -125,8 +126,8 @@ export default function ContactFooter({
             }
           </p>
 
-          <LocaleLink
-            href="/contact"
+          <Link
+            href={localizePath("/contact", locale)}
             className={
               styles.mainLink
             }
@@ -185,7 +186,7 @@ export default function ContactFooter({
             >
               ↗
             </span>
-          </LocaleLink>
+          </Link>
         </div>
 
         <div
