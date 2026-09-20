@@ -35,29 +35,29 @@ const CAMERA_BASE_DISTANCE = Math.hypot(
  * iMac is the calm, near-frontal hero.
  * Supporting hardware/cards orbit around it instead of competing with it.
  */
-const IMAC_TARGET_SIZE = 8.15;
-const IMAC_POSITION = { x: 0.72, y: -0.3, z: -0.62 };
+const IMAC_TARGET_SIZE = 7.72;
+const IMAC_POSITION = { x: 1.02, y: -0.22, z: -0.62 };
 const IMAC_ROTATION = { x: -0.2, y: -1.2, z: -0.20 };
 
-const SCANNER_TARGET_SIZE = 3.05;
-const SCANNER_POSITION = { x: 2.83, y: -2.64, z: 3.72 };
-const SCANNER_ROTATION = { x: -0.27, y: -0.24, z: -0.10 };
+const SCANNER_TARGET_SIZE = 2.72;
+const SCANNER_POSITION = { x: 3.38, y: -2.88, z: 3.78 };
+const SCANNER_ROTATION = { x: -0.24, y: -0.26, z: -0.08 };
 
-const BADGE_TARGET_SIZE = 1.82;
-const BADGE_POSITION = { x: -1.55, y: -2.32, z: 2.92 };
-const BADGE_ROTATION = { x: -0.08, y: 0.12, z: -0.105 };
+const BADGE_TARGET_SIZE = 1.5;
+const BADGE_POSITION = { x: -2.02, y: -2.62, z: 3.02 };
+const BADGE_ROTATION = { x: -0.06, y: 0.08, z: -0.08 };
 
-const TOTAL_CARD_POSITION = { x: -1.75, y: 3.22, z: 1.08 };
-const TOTAL_CARD_ROTATION = { x: 0.035, y: 0.08, z: 0.12 };
+const TOTAL_CARD_POSITION = { x: -2.24, y: 3.48, z: 1.0 };
+const TOTAL_CARD_ROTATION = { x: 0.025, y: 0.04, z: 0.09 };
 
-const QUOTE_CARD_POSITION = { x: 4.86, y: 2.36, z: 1.62 };
-const QUOTE_CARD_ROTATION = { x: -0.01, y: -0.11, z: 0.055 };
+const QUOTE_CARD_POSITION = { x: 5.22, y: 2.7, z: 1.58 };
+const QUOTE_CARD_ROTATION = { x: -0.01, y: -0.07, z: 0.04 };
 
-const CONNECT_CARD_POSITION = { x: 4.82, y: -0.12, z: 1.72 };
-const CONNECT_CARD_ROTATION = { x: 0.01, y: -0.08, z: -0.025 };
+const CONNECT_CARD_POSITION = { x: 5.18, y: -0.52, z: 1.68 };
+const CONNECT_CARD_ROTATION = { x: 0.01, y: -0.05, z: -0.015 };
 
-const CHECKIN_CARD_POSITION = { x: 3.68, y: -1.12, z: 4.18 };
-const CHECKIN_CARD_ROTATION = { x: 0, y: -0.075, z: -0.018 };
+const CHECKIN_CARD_POSITION = { x: 4.42, y: -1.36, z: 4.28 };
+const CHECKIN_CARD_ROTATION = { x: 0, y: -0.035, z: -0.01 };
 
 /* =========================================================
    CANVAS HELPERS
@@ -1381,8 +1381,8 @@ useEffect(() => {
 
         /* TOTAL ATTENDANCE */
         const totalCardData = createFloatingCard(
-          3.0,
-          1.3,
+          2.72,
+          1.16,
           0.092,
           0.16,
           createTotalAttendanceTexture(),
@@ -1420,8 +1420,8 @@ useEffect(() => {
 
         /* QUOTE CARD */
         const quoteCardData = createFloatingCard(
-          1.46,
-          2.34,
+          1.28,
+          2.08,
           0.094,
           0.18,
           createQuoteCardTexture(),
@@ -1459,8 +1459,8 @@ useEffect(() => {
 
         /* CONNECT CARD */
         const connectCardData = createFloatingCard(
-          1.46,
-          2.34,
+          1.28,
+          2.08,
           0.09,
           0.18,
           createConnectCardTexture(),
@@ -1498,8 +1498,8 @@ useEffect(() => {
 
         /* CHECK-IN CARD */
 const checkInCardData = createFloatingCard(
-  3.05,
-  0.78,
+  2.72,
+  0.7,
   0.096,
   0.14,
   createCheckInTexture(),
