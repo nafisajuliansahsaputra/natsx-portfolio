@@ -2486,9 +2486,13 @@ group.rotation.set(
           const loader =
             new GLTFLoader();
 
+          const textureLoader =
+            new THREE.TextureLoader();
+
           const [
             macbookGltf,
             printerGltf,
+            screenTexture,
           ] =
             await Promise.all(
               [
@@ -2499,12 +2503,23 @@ group.rotation.set(
                 loader.loadAsync(
                   PRINTER_MODEL_URL,
                 ),
+
+                screenUrl
+                  ? textureLoader.loadAsync(
+                      screenUrl,
+                    )
+                  : Promise.resolve(
+                      undefined,
+                    ),
               ],
             );
 
           if (
             disposed
           ) {
+            screenTexture
+              ?.dispose();
+
             return;
           }
 
@@ -2522,35 +2537,12 @@ group.rotation.set(
             printer,
           );
 
-          /* =================================================
-             DASHBOARD TEXTURE
-          ================================================= */
-
-          const textureLoader =
-            new THREE.TextureLoader();
-
-          let screenTexture:
-            | THREE.Texture
-            | undefined;
-
           if (
-            screenUrl
+            screenTexture
           ) {
-            screenTexture =
-              await textureLoader
-                .loadAsync(
-                  screenUrl,
-                );
-
             textures.add(
               screenTexture,
             );
-          }
-
-          if (
-            disposed
-          ) {
-            return;
           }
 
           /* =================================================
