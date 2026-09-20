@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -59,17 +60,87 @@ export default function HomeSectionChoreographyGate() {
       false,
     );
 
+  const frameRef =
+    useRef<number | null>(
+      null,
+    );
+
   useEffect(() => {
     const supportedEnvironment =
       window.matchMedia(
         "(min-width: 961px) and (prefers-reduced-motion: no-preference)",
       );
 
-    function sync() {
-      setEnabled(
-        supportedEnvironment.matches,
+    const firstAnimatedSection =
+      document.getElementById(
+        "capabilities",
       );
+
+    let nearAnimatedSections =
+      typeof IntersectionObserver ===
+      "undefined" ||
+      !firstAnimatedSection;
+
+    function sync() {
+      if (
+        frameRef.current !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          frameRef.current,
+        );
+      }
+
+      frameRef.current =
+        window.requestAnimationFrame(
+          () => {
+            frameRef.current =
+              null;
+
+            setEnabled(
+              supportedEnvironment.matches &&
+              nearAnimatedSections,
+            );
+          },
+        );
     }
+
+    const observer =
+      !nearAnimatedSections &&
+      firstAnimatedSection
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              if (
+                !entry
+                  ?.isIntersecting
+              ) {
+                return;
+              }
+
+              nearAnimatedSections =
+                true;
+
+              observer.disconnect();
+
+              sync();
+            },
+            {
+              rootMargin:
+                "120% 0px 120% 0px",
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
+    observer?.observe(
+      firstAnimatedSection,
+    );
 
     sync();
 
@@ -83,6 +154,17 @@ export default function HomeSectionChoreographyGate() {
         "change",
         sync,
       );
+
+      observer?.disconnect();
+
+      if (
+        frameRef.current !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          frameRef.current,
+        );
+      }
     };
   }, []);
 
