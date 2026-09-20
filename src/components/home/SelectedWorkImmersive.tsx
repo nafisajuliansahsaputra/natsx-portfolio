@@ -461,6 +461,9 @@ export default function SelectedWorkImmersive() {
     let destroyed =
       false;
 
+    let sectionActive =
+      true;
+
     const pointerCleanups:
       Array<
         () => void
@@ -679,8 +682,9 @@ export default function SelectedWorkImmersive() {
     const requestMeasure =
       () => {
         if (
+          !sectionActive ||
           measureFrame !==
-          0
+            0
         ) {
           return;
         }
@@ -993,6 +997,51 @@ export default function SelectedWorkImmersive() {
      * =====================================================
      */
 
+    const visibilityObserver =
+      typeof IntersectionObserver !==
+      "undefined"
+        ? new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              sectionActive =
+                Boolean(
+                  entry
+                    ?.isIntersecting,
+                );
+
+              if (
+                sectionActive
+              ) {
+                requestMeasure();
+              } else if (
+                measureFrame !==
+                0
+              ) {
+                window.cancelAnimationFrame(
+                  measureFrame,
+                );
+
+                measureFrame =
+                  0;
+              }
+            },
+            {
+              rootMargin:
+                "100% 0px 100% 0px",
+
+              threshold:
+                0,
+            },
+          )
+        : null;
+
+    visibilityObserver?.observe(
+      section,
+    );
+
     window.addEventListener(
       "scroll",
       requestMeasure,
@@ -1047,6 +1096,9 @@ export default function SelectedWorkImmersive() {
       );
 
       resizeObserver?.disconnect();
+
+      visibilityObserver
+        ?.disconnect();
 
       pointerCleanups.forEach(
         (
