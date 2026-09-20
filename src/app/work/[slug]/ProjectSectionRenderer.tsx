@@ -73,6 +73,48 @@ function isAnimatedImage(
   );
 }
 
+function shouldUseGalleryDerivative(
+  mimeType:
+    string,
+  fileSize:
+    number,
+) {
+  return (
+    mimeType ===
+      "image/png" &&
+    fileSize >=
+      1_700_000
+  );
+}
+
+function getGalleryDerivativeUrl(
+  path:
+    string,
+  size:
+    GalleryItemSize,
+) {
+  const width =
+    size ===
+      "small" ||
+    size ===
+      "tall"
+      ? 720
+      : 1440;
+
+  const params =
+    new URLSearchParams({
+      path,
+      w:
+        String(
+          width,
+        ),
+      q:
+        "78",
+    });
+
+  return `/api/project-image?${params.toString()}`;
+}
+
 function getSectionFallbackLabel(
   sectionType: string,
   locale: Locale,
@@ -824,20 +866,37 @@ function GallerySection({
                 item,
                 index,
               ) => {
-                const imageUrl =
-                  getPortfolioMediaPublicUrl(
-                    item.asset
-                      .bucket,
-
-                    item.asset
-                      .path,
-                  );
-
-
                 const size:
                   GalleryItemSize =
                   item.size ??
                   "small";
+
+
+                const useDerivative =
+                  shouldUseGalleryDerivative(
+                    item.asset
+                      .mimeType,
+
+                    item.asset
+                      .size,
+                  );
+
+
+                const imageUrl =
+                  useDerivative
+                    ? getGalleryDerivativeUrl(
+                        item.asset
+                          .path,
+
+                        size,
+                      )
+                    : getPortfolioMediaPublicUrl(
+                        item.asset
+                          .bucket,
+
+                        item.asset
+                          .path,
+                      );
 
 
                 const imageSizes =
@@ -895,10 +954,13 @@ function GallerySection({
                         sizes={
                           imageSizes
                         }
-                        unoptimized={isAnimatedImage(
-                          item.asset
-                            .mimeType,
-                        )}
+                        unoptimized={
+                          useDerivative ||
+                          isAnimatedImage(
+                            item.asset
+                              .mimeType,
+                          )
+                        }
                         className={
                           mediaStyles.galleryMedia
                         }
