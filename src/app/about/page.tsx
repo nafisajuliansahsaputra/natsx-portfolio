@@ -1,15 +1,16 @@
 import "@/app/about-motion.css";
 import "@/app/about-motion-fit.css";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
   site,
 } from "@/data/site";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -355,8 +356,8 @@ export function AboutPageContent({
                     }
                   </span>
 
-                  <LocaleLink
-                    href="/cv"
+                  <Link
+                    href={localizePath("/cv", locale)}
                     className={
                       styles.cvLink
                     }
@@ -373,7 +374,7 @@ export function AboutPageContent({
                     >
                       ↗
                     </span>
-                  </LocaleLink>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -687,8 +688,8 @@ export function AboutPageContent({
                   </span>
                 </p>
 
-                <LocaleLink
-                  href="/work"
+                <Link
+                  href={localizePath("/work", locale)}
                   className={
                     styles.closingLink
                   }
@@ -704,7 +705,7 @@ export function AboutPageContent({
                   >
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
               </div>
             </div>
           </div>
