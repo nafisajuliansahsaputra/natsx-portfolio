@@ -8,20 +8,25 @@ import {
   useState,
 } from "react";
 
+import {
+  getSceneMargin,
+  warmSceneResources,
+} from "./scene-resource-preload";
+
+const loadSpallEditorialScene =
+  () =>
+    import(
+      "./SpallEditorialScene"
+    );
+
 const SpallEditorialScene =
   dynamic(
-    () =>
-      import(
-        "./SpallEditorialScene"
-      ),
+    loadSpallEditorialScene,
     {
       ssr:
         false,
     },
   );
-
-const SCENE_PRELOAD_MARGIN =
-  "500px 0px";
 
 type SpallSceneGateProps = {
   className:
@@ -60,10 +65,27 @@ export default function SpallSceneGate({
       return;
     }
 
+    const preload =
+      () => {
+        void loadSpallEditorialScene()
+          .catch(
+            () => undefined,
+          );
+
+        void warmSceneResources(
+          [
+            "/models/iphone-17-pro-max.glb",
+            screenUrl,
+          ],
+        );
+      };
+
     if (
       typeof IntersectionObserver ===
       "undefined"
     ) {
+      preload();
+
       const frame =
         window.requestAnimationFrame(
           () => {
@@ -80,17 +102,48 @@ export default function SpallSceneGate({
       };
     }
 
-    const observer =
+    const preloadObserver =
       new IntersectionObserver(
         (
-          entries,
+          [
+            entry,
+          ],
         ) => {
-          const entry =
-            entries[0];
-
           if (
-            !entry ||
-            !entry.isIntersecting
+            !entry
+              ?.isIntersecting
+          ) {
+            return;
+          }
+
+          preload();
+
+          preloadObserver.disconnect();
+        },
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              2,
+            ),
+
+          threshold:
+            0,
+        },
+      );
+
+    const prepareObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            !entry
+              ?.isIntersecting
           ) {
             return;
           }
@@ -99,28 +152,37 @@ export default function SpallSceneGate({
             true,
           );
 
-          observer.disconnect();
+          prepareObserver.disconnect();
         },
         {
           root:
             null,
 
           rootMargin:
-            SCENE_PRELOAD_MARGIN,
+            getSceneMargin(
+              1,
+            ),
 
           threshold:
-            0.01,
+            0,
         },
       );
 
-    observer.observe(
+    preloadObserver.observe(
+      scene,
+    );
+
+    prepareObserver.observe(
       scene,
     );
 
     return () => {
-      observer.disconnect();
+      preloadObserver.disconnect();
+      prepareObserver.disconnect();
     };
-  }, []);
+  }, [
+    screenUrl,
+  ]);
 
   return (
     <div
