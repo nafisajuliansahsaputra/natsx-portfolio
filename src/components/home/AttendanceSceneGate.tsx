@@ -104,7 +104,17 @@ export default function AttendanceSceneGate({
       };
     }
 
-    const preloadObserver =
+    let preloadObserver:
+      IntersectionObserver |
+      null =
+      null;
+
+    let prepareObserver:
+      IntersectionObserver |
+      null =
+      null;
+
+    preloadObserver =
       new IntersectionObserver(
         (
           [
@@ -120,7 +130,8 @@ export default function AttendanceSceneGate({
 
           preload();
 
-          preloadObserver.disconnect();
+          preloadObserver
+            ?.disconnect();
         },
         {
           root:
@@ -136,7 +147,7 @@ export default function AttendanceSceneGate({
         },
       );
 
-    const prepareObserver =
+    prepareObserver =
       new IntersectionObserver(
         (
           [
@@ -154,7 +165,8 @@ export default function AttendanceSceneGate({
             true,
           );
 
-          prepareObserver.disconnect();
+          prepareObserver
+            ?.disconnect();
         },
         {
           root:
@@ -179,8 +191,11 @@ export default function AttendanceSceneGate({
     );
 
     return () => {
-      preloadObserver.disconnect();
-      prepareObserver.disconnect();
+      preloadObserver
+        ?.disconnect();
+
+      prepareObserver
+        ?.disconnect();
     };
   }, [
     dashboardImageUrl,
