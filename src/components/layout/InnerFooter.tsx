@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 import {
@@ -14,6 +12,8 @@ import {
 import {
   getMessages,
 } from "@/i18n/messages";
+
+import InnerFooterBackToTop from "./InnerFooterBackToTop";
 
 import styles from "./InnerFooter.module.css";
 
@@ -116,16 +116,6 @@ export default function InnerFooter({
     primaryContact.href.startsWith(
       "http",
     );
-
-  function scrollToTop() {
-    window.scrollTo({
-      top:
-        0,
-
-      behavior:
-        "smooth",
-    });
-  }
 
   return (
     <footer
@@ -405,26 +395,12 @@ export default function InnerFooter({
   </span>
 </div>
 
-            <button
-              type="button"
-              className={
-                styles.backToTop
-              }
-              onClick={
-                scrollToTop
-              }
-            >
-              {
+            <InnerFooterBackToTop
+              label={
                 copy.footer
                   .backToTop
               }
-
-              <span
-                aria-hidden="true"
-              >
-                ↑
-              </span>
-            </button>
+            />
           </div>
         </div>
       </div>
