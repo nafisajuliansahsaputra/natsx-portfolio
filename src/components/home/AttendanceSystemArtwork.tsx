@@ -244,19 +244,6 @@ export default function AttendanceSystemArtwork({
       className={styles.artwork}
       data-attendance-featured="true"
     >
-      {/* Background layer */}
-      <div className={styles.light} aria-hidden="true" />
-      <div className={styles.sparkles} aria-hidden="true" />
-      <div className={styles.orbit} aria-hidden="true" />
-      <div className={styles.orbitSecondary} aria-hidden="true" />
-      <div className={styles.orbitTertiary} aria-hidden="true" />
-
-      <div className={styles.orbOne} aria-hidden="true" />
-      <div className={styles.orbTwo} aria-hidden="true" />
-      <div className={styles.orbThree} aria-hidden="true" />
-      <div className={styles.orbFour} aria-hidden="true" />
-      <div className={styles.sceneGlow} aria-hidden="true" />
-
       {/* Copy */}
       <div className={styles.copy} aria-hidden="true">
         <h4 className={styles.headline}>
