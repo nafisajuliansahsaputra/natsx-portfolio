@@ -20,9 +20,6 @@ type Props = {
   screenUrl:
     string | null;
 
-  documentUrl:
-    string | null;
-
   label:
     string;
 };
@@ -110,18 +107,6 @@ const PRINTER_POSITION = {
 /* =========================================================
    SUPPORTING OBJECTS
 ========================================================= */
-
-const FLOATING_DOC_CARD_POSITION = {
-  x: -3.15,
-  y: 1.08,
-  z: 0.82,
-};
-
-const FLOATING_DOC_CARD_ROTATION = {
-  x: 0.03,
-  y: 0.12,
-  z: -0.1,
-};
 
 const SUCCESS_CARD_POSITION = {
   x: 2.38,
@@ -244,7 +229,7 @@ export default function BastEditorialScene(
 ) {
   return (
     <Scene
-      key={`${props.screenUrl ?? "screen"}-${props.documentUrl ?? "document"}`}
+      key={props.screenUrl ?? "screen"}
       {...props}
     />
   );
@@ -1765,162 +1750,6 @@ function getCardFrontZ(
   );
 }
 
-function createFloatingDocCard() {
-  const group =
-    new THREE.Group();
-
-  const width =
-    0.82;
-
-  const height =
-    0.82;
-
-  const depth =
-    0.095;
-
-  const frontZ =
-    getCardFrontZ(
-      depth,
-    );
-
-  const body =
-    createCardBody(
-      width,
-      height,
-      depth,
-      0.16,
-    );
-
-  /*
-   * DOCUMENT ICON
-   */
-
-  const printTexture =
-    createCanvasTexture(
-      (
-        context,
-        size,
-      ) => {
-        context.clearRect(
-          0,
-          0,
-          size,
-          size,
-        );
-
-        drawDocumentGlyph(
-          context,
-          size * 0.33,
-          size * 0.25,
-          size * 0.27,
-          size * 0.36,
-          "#4e9cf3",
-        );
-      },
-      512,
-    );
-
-  const printMaterial =
-    keepMaterial(
-      new THREE.MeshBasicMaterial(
-        {
-          map:
-            printTexture,
-
-          transparent:
-            true,
-
-          alphaTest:
-            0.01,
-
-          depthWrite:
-            false,
-
-          depthTest:
-            true,
-
-          toneMapped:
-            false,
-
-          side:
-            THREE.DoubleSide,
-        },
-      ),
-    );
-
-  const print =
-    new THREE.Mesh(
-      keepGeometry(
-        new THREE.PlaneGeometry(
-          width * 0.82,
-          height * 0.82,
-        ),
-      ),
-
-      printMaterial,
-    );
-
-  /*
-   * IMPORTANT:
-   * print ditempatkan DI DEPAN bevel.
-   */
-
-  print.position.z =
-    frontZ;
-
-  print.renderOrder =
-    10;
-
-  /*
-   * SOFT SHADOW
-   */
-
-  const shadow =
-    createCardShadow(
-      1.02,
-      0.5,
-      0.2,
-    );
-
-  shadow.position.set(
-    0.04,
-    -0.12,
-    -0.08,
-  );
-
-  shadow.scale.set(
-    1,
-    1,
-    1,
-  );
-
-  group.add(
-    shadow,
-  );
-
-  group.add(
-    body,
-  );
-
-  group.add(
-    print,
-  );
-
-  group.position.set(
-    FLOATING_DOC_CARD_POSITION.x,
-    FLOATING_DOC_CARD_POSITION.y,
-    FLOATING_DOC_CARD_POSITION.z,
-  );
-
-  group.rotation.set(
-    FLOATING_DOC_CARD_ROTATION.x,
-    FLOATING_DOC_CARD_ROTATION.y,
-    FLOATING_DOC_CARD_ROTATION.z,
-  );
-
-  return group;
-}
-
 function createRectCanvasTexture(
   draw: (
     context: CanvasRenderingContext2D,
@@ -3011,12 +2840,6 @@ composition.add(
   printerRig,
 );
 
-const floatingDocCard =
-  createFloatingDocCard();
-
-// The foreground document already tells this story; keep the scene uncluttered.
-floatingDocCard.visible = false;
-
 const successCard =
   createSuccessCard();
 
@@ -3024,19 +2847,11 @@ const statsCard =
   createStatsCard();
 
 freezeStaticDescendants(
-  floatingDocCard,
-);
-
-freezeStaticDescendants(
   successCard,
 );
 
 freezeStaticDescendants(
   statsCard,
-);
-
-composition.add(
-  floatingDocCard,
 );
 
 composition.add(
@@ -3140,42 +2955,6 @@ function applyPointerPose() {
     PRINTER_ROTATION.z +
     x *
       PRINTER_POINTER_ROTATION.z;
-
-  /*
-   * FLOATING DOCUMENT CARD
-   */
-
-  floatingDocCard.position.x =
-    FLOATING_DOC_CARD_POSITION.x -
-    x *
-      0.14;
-
-  floatingDocCard.position.y =
-    FLOATING_DOC_CARD_POSITION.y +
-    y *
-      0.08;
-
-  floatingDocCard.position.z =
-    FLOATING_DOC_CARD_POSITION.z -
-    Math.abs(
-      x,
-    ) *
-      0.03;
-
-  floatingDocCard.rotation.x =
-    FLOATING_DOC_CARD_ROTATION.x -
-    y *
-      0.018;
-
-  floatingDocCard.rotation.y =
-    FLOATING_DOC_CARD_ROTATION.y -
-    x *
-      0.035;
-
-  floatingDocCard.rotation.z =
-    FLOATING_DOC_CARD_ROTATION.z +
-    x *
-      0.02;
 
   /*
    * SUCCESS CARD
