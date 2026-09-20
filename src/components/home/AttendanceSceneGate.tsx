@@ -8,20 +8,25 @@ import {
   useState,
 } from "react";
 
+import {
+  getSceneMargin,
+  warmSceneResources,
+} from "./scene-resource-preload";
+
+const loadAttendanceEditorialScene =
+  () =>
+    import(
+      "./AttendanceEditorialScene"
+    );
+
 const AttendanceEditorialScene =
   dynamic(
-    () =>
-      import(
-        "./AttendanceEditorialScene"
-      ),
+    loadAttendanceEditorialScene,
     {
       ssr:
         false,
     },
   );
-
-const SCENE_PRELOAD_MARGIN =
-  "800px 0px";
 
 type AttendanceSceneGateProps = {
   className:
@@ -60,10 +65,29 @@ export default function AttendanceSceneGate({
       return;
     }
 
+    const preload =
+      () => {
+        void loadAttendanceEditorialScene()
+          .catch(
+            () => undefined,
+          );
+
+        void warmSceneResources(
+          [
+            "/models/attendance/imac.glb",
+            "/models/attendance/scanner.glb",
+            "/models/attendance/badge.glb",
+            dashboardImageUrl,
+          ],
+        );
+      };
+
     if (
       typeof IntersectionObserver ===
       "undefined"
     ) {
+      preload();
+
       const frame =
         window.requestAnimationFrame(
           () => {
@@ -80,17 +104,48 @@ export default function AttendanceSceneGate({
       };
     }
 
-    const observer =
+    const preloadObserver =
       new IntersectionObserver(
         (
-          entries,
+          [
+            entry,
+          ],
         ) => {
-          const entry =
-            entries[0];
-
           if (
-            !entry ||
-            !entry.isIntersecting
+            !entry
+              ?.isIntersecting
+          ) {
+            return;
+          }
+
+          preload();
+
+          preloadObserver.disconnect();
+        },
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              2,
+            ),
+
+          threshold:
+            0,
+        },
+      );
+
+    const prepareObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            !entry
+              ?.isIntersecting
           ) {
             return;
           }
@@ -99,28 +154,37 @@ export default function AttendanceSceneGate({
             true,
           );
 
-          observer.disconnect();
+          prepareObserver.disconnect();
         },
         {
           root:
             null,
 
           rootMargin:
-            SCENE_PRELOAD_MARGIN,
+            getSceneMargin(
+              1,
+            ),
 
           threshold:
-            0.01,
+            0,
         },
       );
 
-    observer.observe(
+    preloadObserver.observe(
+      scene,
+    );
+
+    prepareObserver.observe(
       scene,
     );
 
     return () => {
-      observer.disconnect();
+      preloadObserver.disconnect();
+      prepareObserver.disconnect();
     };
-  }, []);
+  }, [
+    dashboardImageUrl,
+  ]);
 
   return (
     <div
