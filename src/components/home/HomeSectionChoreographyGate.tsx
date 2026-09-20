@@ -124,7 +124,7 @@ export default function HomeSectionChoreographyGate() {
               nearAnimatedSections =
                 true;
 
-              observer.disconnect();
+              observer?.disconnect();
 
               sync();
             },
@@ -138,9 +138,14 @@ export default function HomeSectionChoreographyGate() {
           )
         : null;
 
-    observer?.observe(
-      firstAnimatedSection,
-    );
+    if (
+      observer &&
+      firstAnimatedSection
+    ) {
+      observer.observe(
+        firstAnimatedSection,
+      );
+    }
 
     sync();
 

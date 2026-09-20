@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   usePathname,
 } from "next/navigation";
-
-import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -14,6 +14,7 @@ import {
 
 import {
   getLocaleFromPathname,
+  localizePath,
 } from "@/i18n/config";
 
 import {
@@ -159,8 +160,8 @@ export default function NotFound() {
                 }
                 data-motion-not-found-piece="actions"
               >
-                <LocaleLink
-                  href="/"
+                <Link
+                  href={localizePath("/", locale)}
                   className={
                     styles.primaryAction
                   }
@@ -174,10 +175,10 @@ export default function NotFound() {
                   >
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
 
-                <LocaleLink
-                  href="/work"
+                <Link
+                  href={localizePath("/work", locale)}
                   className={
                     styles.secondaryAction
                   }
@@ -191,7 +192,7 @@ export default function NotFound() {
                   >
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
               </div>
             </div>
           </div>

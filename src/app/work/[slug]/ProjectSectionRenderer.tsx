@@ -3,11 +3,11 @@ import type {
 } from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
-
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -1238,9 +1238,12 @@ function FinaleSection({
               finale.ctaUrl.startsWith(
                 "/",
               ) ? (
-                <LocaleLink
+                <Link
                   href={
-                    finale.ctaUrl
+                    localizePath(
+                      finale.ctaUrl,
+                      locale,
+                    )
                   }
                   className={
                     styles.finaleCta
@@ -1253,7 +1256,7 @@ function FinaleSection({
                   <span>
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
               ) : (
                 <a
                   href={

@@ -1,15 +1,16 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   usePathname,
 } from "next/navigation";
-
-import LocaleLink from "@/components/i18n/LocaleLink";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
 import {
   getLocaleFromPathname,
+  localizePath,
 } from "@/i18n/config";
 
 import {
@@ -124,8 +125,8 @@ export default function PublicRouteError({
                 </span>
               </button>
 
-              <LocaleLink
-                href="/"
+              <Link
+                href={localizePath("/", locale)}
                 className={
                   styles.secondary
                 }
@@ -133,7 +134,7 @@ export default function PublicRouteError({
                 {
                   copy.backHome
                 }
-              </LocaleLink>
+              </Link>
             </div>
           </div>
         </div>

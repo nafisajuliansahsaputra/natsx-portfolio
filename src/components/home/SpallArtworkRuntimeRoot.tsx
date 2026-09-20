@@ -46,6 +46,10 @@ export default function SpallArtworkRuntimeRoot({
       return;
     }
 
+    const artworkElement:
+      HTMLDivElement =
+      artwork;
+
     const finePointer =
       window.matchMedia(
         "(hover: hover) and (pointer: fine)",
@@ -88,37 +92,37 @@ export default function SpallArtworkRuntimeRoot({
       0;
 
     function applyMotion() {
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-copy-x",
         `${currentX * -22}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-copy-y",
         `${currentY * -13}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-copy-rotate",
         `${currentX * -0.18}deg`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-top-x",
         `${currentX * -12}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-top-y",
         `${currentY * -7}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-footer-x",
         `${currentX * -9}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--spall-footer-y",
         `${currentY * -5}px`,
       );
@@ -200,7 +204,7 @@ export default function SpallArtworkRuntimeRoot({
         0;
 
       const bounds =
-        artwork.getBoundingClientRect();
+        artworkElement.getBoundingClientRect();
 
       if (
         bounds.width <=
@@ -291,7 +295,7 @@ export default function SpallArtworkRuntimeRoot({
       requestTick();
     }
 
-    artwork.addEventListener(
+    artworkElement.addEventListener(
       "pointermove",
       handlePointerMove,
       {
@@ -300,12 +304,12 @@ export default function SpallArtworkRuntimeRoot({
       },
     );
 
-    artwork.addEventListener(
+    artworkElement.addEventListener(
       "pointerleave",
       resetMotion,
     );
 
-    artwork.addEventListener(
+    artworkElement.addEventListener(
       "pointercancel",
       resetMotion,
     );
@@ -316,17 +320,17 @@ export default function SpallArtworkRuntimeRoot({
     );
 
     return () => {
-      artwork.removeEventListener(
+      artworkElement.removeEventListener(
         "pointermove",
         handlePointerMove,
       );
 
-      artwork.removeEventListener(
+      artworkElement.removeEventListener(
         "pointerleave",
         resetMotion,
       );
 
-      artwork.removeEventListener(
+      artworkElement.removeEventListener(
         "pointercancel",
         resetMotion,
       );
@@ -364,7 +368,7 @@ export default function SpallArtworkRuntimeRoot({
         (
           property,
         ) => {
-          artwork.style.removeProperty(
+          artworkElement.style.removeProperty(
             property,
           );
         },

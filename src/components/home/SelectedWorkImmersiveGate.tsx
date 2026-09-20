@@ -135,7 +135,7 @@ export default function SelectedWorkImmersiveGate() {
               nearWork =
                 true;
 
-              observer.disconnect();
+              observer?.disconnect();
 
               commit();
             },
@@ -149,9 +149,14 @@ export default function SelectedWorkImmersiveGate() {
           )
         : null;
 
-    observer?.observe(
-      work,
-    );
+    if (
+      observer &&
+      work
+    ) {
+      observer.observe(
+        work,
+      );
+    }
 
     commit();
 

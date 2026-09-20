@@ -46,6 +46,10 @@ export default function AttendanceArtworkRuntimeRoot({
       return;
     }
 
+    const artworkElement:
+      HTMLDivElement =
+      artwork;
+
     const finePointer =
       window.matchMedia(
         "(hover: hover) and (pointer: fine)",
@@ -89,7 +93,7 @@ export default function AttendanceArtworkRuntimeRoot({
         (
           property,
         ) => {
-          artwork.style.removeProperty(
+          artworkElement.style.removeProperty(
             property,
           );
         },
@@ -97,17 +101,17 @@ export default function AttendanceArtworkRuntimeRoot({
     }
 
     function applyMotion() {
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--attendance-copy-x",
         `${currentX * -22}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--attendance-copy-y",
         `${currentY * -13}px`,
       );
 
-      artwork.style.setProperty(
+      artworkElement.style.setProperty(
         "--attendance-copy-rotate",
         `${currentX * -0.16}deg`,
       );
@@ -196,7 +200,7 @@ export default function AttendanceArtworkRuntimeRoot({
       }
 
       const bounds =
-        artwork.getBoundingClientRect();
+        artworkElement.getBoundingClientRect();
 
       if (
         bounds.width <=
@@ -302,7 +306,7 @@ export default function AttendanceArtworkRuntimeRoot({
       requestTick();
     }
 
-    artwork.addEventListener(
+    artworkElement.addEventListener(
       "pointermove",
       handlePointerMove,
       {
@@ -311,12 +315,12 @@ export default function AttendanceArtworkRuntimeRoot({
       },
     );
 
-    artwork.addEventListener(
+    artworkElement.addEventListener(
       "pointerleave",
       resetMotion,
     );
 
-    artwork.addEventListener(
+    artworkElement.addEventListener(
       "pointercancel",
       resetMotion,
     );
@@ -337,17 +341,17 @@ export default function AttendanceArtworkRuntimeRoot({
     );
 
     return () => {
-      artwork.removeEventListener(
+      artworkElement.removeEventListener(
         "pointermove",
         handlePointerMove,
       );
 
-      artwork.removeEventListener(
+      artworkElement.removeEventListener(
         "pointerleave",
         resetMotion,
       );
 
-      artwork.removeEventListener(
+      artworkElement.removeEventListener(
         "pointercancel",
         resetMotion,
       );
