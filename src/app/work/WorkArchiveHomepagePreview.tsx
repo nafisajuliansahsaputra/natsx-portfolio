@@ -6,17 +6,13 @@ import type {
 
 import Image from "next/image";
 
-import {
-  usePathname,
-} from "next/navigation";
-
 import FiveAmVisionArtwork from "@/components/home/FiveAmVisionArtwork";
 
 import artworkStyles from "./WorkArchiveArtwork.module.css";
 import phoneStyles from "@/components/home/SpallPhone.module.css";
 
-import {
-  getLocaleFromPathname,
+import type {
+  Locale,
 } from "@/i18n/config";
 
 import {
@@ -49,6 +45,9 @@ type WorkArchiveHomepagePreviewProps = {
   fallbackImage:
     | string
     | null;
+
+  locale:
+    Locale;
 };
 
 
@@ -92,15 +91,8 @@ export function hasHomepageArchiveArtwork(
 export default function WorkArchiveHomepagePreview({
   project,
   fallbackImage,
+  locale,
 }: WorkArchiveHomepagePreviewProps) {
-  const pathname =
-    usePathname();
-
-  const locale =
-    getLocaleFromPathname(
-      pathname,
-    );
-
   const copy =
     getHomeMessages(
       locale,
