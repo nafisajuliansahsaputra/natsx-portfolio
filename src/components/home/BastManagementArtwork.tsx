@@ -13,6 +13,10 @@ import type {
   PublicProject,
 } from "@/lib/public-projects";
 
+import {
+  getWebglTextureUrl,
+} from "@/lib/webgl-texture-url";
+
 import styles from "./BastManagementArtwork.module.css";
 
 const BastEditorialScene =
@@ -153,6 +157,12 @@ export default function BastManagementArtwork({
     [],
   );
 
+  const optimizedScreenUrl =
+    getWebglTextureUrl(
+      primaryVisual,
+      1920,
+    );
+
   return (
     <div ref={artworkRef} className={styles.artwork} data-bast-featured="true">
       <div className={styles.orbit} aria-hidden="true" />
@@ -175,7 +185,7 @@ export default function BastManagementArtwork({
       <div className={styles.scene}>
         {shouldLoadScene ? (
           <BastEditorialScene
-            screenUrl={primaryVisual}
+            screenUrl={optimizedScreenUrl}
             label={project.title + " — " + visualLabel}
           />
         ) : null}
