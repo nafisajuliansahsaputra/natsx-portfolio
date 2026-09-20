@@ -40,11 +40,11 @@ const IMAC_POSITION = { x: 1.02, y: -0.22, z: -0.62 };
 const IMAC_ROTATION = { x: -0.2, y: -1.2, z: -0.20 };
 
 const SCANNER_TARGET_SIZE = 2.72;
-const SCANNER_POSITION = { x: 3.38, y: -2.88, z: 3.78 };
+const SCANNER_POSITION = { x: 2.38, y: -2.88, z: 3.78 };
 const SCANNER_ROTATION = { x: -0.24, y: -0.26, z: -0.08 };
 
 const BADGE_TARGET_SIZE = 1.5;
-const BADGE_POSITION = { x: -2.02, y: -2.62, z: 3.02 };
+const BADGE_POSITION = { x: -2.02, y: -2, z: 3.02 };
 const BADGE_ROTATION = { x: -0.06, y: 0.08, z: -0.08 };
 
 const TOTAL_CARD_POSITION = { x: -2.24, y: 3.48, z: 1.0 };
@@ -53,10 +53,10 @@ const TOTAL_CARD_ROTATION = { x: 0.025, y: 0.04, z: 0.09 };
 const QUOTE_CARD_POSITION = { x: 5.22, y: 2.7, z: 1.58 };
 const QUOTE_CARD_ROTATION = { x: -0.01, y: -0.07, z: 0.04 };
 
-const CONNECT_CARD_POSITION = { x: 5.18, y: -0.52, z: 1.68 };
+const CONNECT_CARD_POSITION = { x: 5.18, y: 0, z: 1.68 };
 const CONNECT_CARD_ROTATION = { x: 0.01, y: -0.05, z: -0.015 };
 
-const CHECKIN_CARD_POSITION = { x: 4.42, y: -1.36, z: 4.28 };
+const CHECKIN_CARD_POSITION = { x: 4, y: -1.36, z: 4.28 };
 const CHECKIN_CARD_ROTATION = { x: 0, y: -0.035, z: -0.01 };
 
 /* =========================================================
