@@ -48,24 +48,6 @@
   background: rgb(196 220 246 / 43%);
 }
 
-.index {
-  position: absolute;
-  top: 12%;
-  left: 5%;
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  color: #0055b6;
-  font-size: 1.2cqw;
-  font-weight: 650;
-}
-
-.index i {
-  width: 5.8cqw;
-  height: 1px;
-  background: #7888a0;
-}
-
 .copy {
   position: absolute;
   z-index: 8;
@@ -195,7 +177,6 @@
 
 /* A taller mobile cover gives the copy and models their own space. */
 @container (max-width: 650px) {
-  .index { top: 6%; font-size: 2cqw; }
   .copy { top: 13%; width: 45%; }
   .headline { font-size: 15cqw; }
   .systemName { margin-top: 2cqw; font-size: 2.1cqw; letter-spacing: 0.14em; }
