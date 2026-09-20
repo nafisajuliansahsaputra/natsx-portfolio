@@ -157,6 +157,82 @@ export default function BastManagementArtwork({
     [],
   );
 
+  useEffect(
+    () => {
+      const artwork =
+        artworkRef.current;
+
+      if (!artwork) {
+        return;
+      }
+
+      let inView =
+        typeof IntersectionObserver ===
+        "undefined";
+
+      const syncActivity =
+        () => {
+          artwork.dataset.bastActive =
+            inView &&
+            !document.hidden
+              ? "true"
+              : "false";
+        };
+
+      const observer =
+        typeof IntersectionObserver !==
+        "undefined"
+          ? new IntersectionObserver(
+              (
+                [
+                  entry,
+                ],
+              ) => {
+                inView =
+                  Boolean(
+                    entry
+                      ?.isIntersecting,
+                  );
+
+                syncActivity();
+              },
+              {
+                rootMargin:
+                  "15% 0px 15% 0px",
+
+                threshold:
+                  0,
+              },
+            )
+          : null;
+
+      observer?.observe(
+        artwork,
+      );
+
+      syncActivity();
+
+      document.addEventListener(
+        "visibilitychange",
+        syncActivity,
+      );
+
+      return () => {
+        observer
+          ?.disconnect();
+
+        document.removeEventListener(
+          "visibilitychange",
+          syncActivity,
+        );
+
+        delete artwork.dataset
+          .bastActive;
+      };
+    },
+    [],
+  );
+
   const optimizedScreenUrl =
     getWebglTextureUrl(
       primaryVisual,
@@ -164,7 +240,12 @@ export default function BastManagementArtwork({
     );
 
   return (
-    <div ref={artworkRef} className={styles.artwork} data-bast-featured="true">
+    <div
+      ref={artworkRef}
+      className={styles.artwork}
+      data-bast-featured="true"
+      data-bast-active="false"
+    >
       <div className={styles.orbit} aria-hidden="true" />
       <div className={styles.orbitBubble} aria-hidden="true" />
 
@@ -200,7 +281,8 @@ export default function BastManagementArtwork({
               alt=""
               fill
               sizes="(max-width: 700px) 30vw, 24vw"
-              className={styles.documentImage}            />
+              className={styles.documentImage}
+            />
           </div>
         </div>
       ) : null}
