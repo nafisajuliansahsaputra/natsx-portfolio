@@ -12,7 +12,6 @@ import {
 
 import DocumentLocaleController from "@/components/i18n/DocumentLocaleController";
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
-import InnerFooter from "@/components/layout/InnerFooter";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
 import RouteTransitionHandoff from "@/components/motion/RouteTransitionHandoff";
@@ -390,8 +389,6 @@ export default function RootLayout({
         <RouteTransitionHandoff />
 
         {children}
-
-        <InnerFooter />
 
         {isVercelDeployment ? (
           <Analytics />
