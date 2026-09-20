@@ -19,11 +19,6 @@ import {
   getHomeMessages,
 } from "@/i18n/home-messages";
 
-import {
-  getProjectPrimaryVisualUrl,
-  getProjectSecondaryVisualUrl,
-} from "@/lib/public-media";
-
 import type {
   PublicProject,
 } from "@/lib/public-projects";
@@ -40,7 +35,23 @@ type HomepageArchiveVariant =
 
 type WorkArchiveHomepagePreviewProps = {
   project:
-    PublicProject;
+    Pick<
+      PublicProject,
+      | "slug"
+      | "number"
+      | "title"
+      | "disciplines"
+      | "accentColor"
+      | "secondaryColor"
+    >;
+
+  primaryVisual:
+    | string
+    | null;
+
+  secondaryVisual:
+    | string
+    | null;
 
   fallbackImage:
     | string
@@ -90,6 +101,8 @@ export function hasHomepageArchiveArtwork(
 
 export default function WorkArchiveHomepagePreview({
   project,
+  primaryVisual,
+  secondaryVisual,
   fallbackImage,
   locale,
 }: WorkArchiveHomepagePreviewProps) {
@@ -195,16 +208,6 @@ export default function WorkArchiveHomepagePreview({
     );
   }
 
-
-  const primaryVisual =
-    getProjectPrimaryVisualUrl(
-      project,
-    );
-
-  const secondaryVisual =
-    getProjectSecondaryVisualUrl(
-      project,
-    );
 
   const visualLabel =
     project.disciplines
