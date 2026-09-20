@@ -2,8 +2,6 @@
   --attendance-copy-x: 0px;
   --attendance-copy-y: 0px;
   --attendance-copy-rotate: 0deg;
-  --attendance-features-x: 0px;
-  --attendance-features-y: 0px;
 
   position: absolute;
   inset: 0;
@@ -35,7 +33,7 @@
 .copy {
   position: absolute;
   z-index: 8;
-  top: 12.8%;
+  top: 50%;
   left: 4.8%;
   width: 36.2%;
   transform:
@@ -44,6 +42,7 @@
       var(--attendance-copy-y),
       0
     )
+    translateY(-50%)
     rotate(var(--attendance-copy-rotate));
   transform-origin: left center;
   will-change: transform;
@@ -143,70 +142,18 @@
   filter: drop-shadow(0 1.25cqw 1.65cqw rgba(21, 93, 66, 0.12));
 }
 
-.features {
-  position: absolute;
-  z-index: 8;
-  left: 4.8%;
-  top: 76%;
-  display: grid;
-  grid-template-columns: repeat(4, max-content);
-  gap: 0;
-  transform: translate3d(
-    var(--attendance-features-x),
-    var(--attendance-features-y),
-    0
-  );
-  will-change: transform;
-  pointer-events: none;
-}
-
-.feature {
-  position: relative;
-  display: flex;
-  min-width: 7.9cqw;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.85cqw;
-  padding: 0 1.65cqw;
-}
-
-.feature:first-child {
-  padding-left: 0;
-}
-
-.feature:not(:first-child)::before {
-  content: "";
-  position: absolute;
-  top: 0.15cqw;
-  bottom: 0.2cqw;
-  left: 0;
-  width: 1px;
-  background: rgba(75, 121, 119, 0.24);
-}
-
-.feature strong {
-  display: grid;
-  place-items: center;
-  width: 2.6cqw;
-  height: 2.6cqw;
-  color: #00916c;
-  line-height: 1;
-  font-weight: 500;
-}
-
-.feature span {
-  color: #3f696d;
-  font-size: 0.76cqw;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  line-height: 1.6;
-}
-
 @container (max-width: 650px) {
   .copy {
     top: 7%;
     left: 4%;
     width: 47%;
+    transform:
+      translate3d(
+        var(--attendance-copy-x),
+        var(--attendance-copy-y),
+        0
+      )
+      rotate(var(--attendance-copy-rotate));
   }
 
   .eyebrow {
@@ -239,24 +186,6 @@
     height: 64%;
   }
 
-  .features {
-    left: 4%;
-    top: auto;
-    bottom: 8%;
-    grid-template-columns: repeat(2, auto);
-    gap: 2.5cqw;
-  }
-
-  .feature strong {
-    width: 3.5cqw;
-    height: 3.5cqw;
-    font-size: 3.3cqw;
-  }
-
-  .feature span {
-    font-size: 0.95cqw;
-  }
-
   .orbit,
   .orbitSecondary,
   .orbitTertiary {
@@ -266,9 +195,7 @@
 
 
 @media (prefers-reduced-motion: reduce) {
-  .copy,
-  .features {
-    transform: none !important;
+  .copy {
     will-change: auto;
   }
 }
