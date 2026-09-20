@@ -854,7 +854,11 @@ export function ContactPageContent({
         <ContactConversionPolish />
       </main>
 
-      <InnerFooter />
+      <InnerFooter
+        locale={
+          locale
+        }
+      />
     </>
   );
 }
