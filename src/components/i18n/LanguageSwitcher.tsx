@@ -85,7 +85,13 @@ export default function LanguageSwitcher({
    * the active route locale.
    */
   useEffect(() => {
-    document.documentElement.lang =
+    const root =
+      document.documentElement;
+
+    root.lang =
+      currentLocale;
+
+    root.dataset.locale =
       currentLocale;
   }, [
     currentLocale,

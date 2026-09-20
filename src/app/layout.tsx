@@ -10,7 +10,6 @@ import {
   Analytics,
 } from "@vercel/analytics/next";
 
-import DocumentLocaleController from "@/components/i18n/DocumentLocaleController";
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
@@ -377,8 +376,6 @@ export default function RootLayout({
           plusJakartaSans.variable
         }
       >
-        <DocumentLocaleController />
-
         <PortfolioIntro />
 
         <MotionController />
