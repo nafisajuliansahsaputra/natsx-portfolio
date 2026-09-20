@@ -1,12 +1,13 @@
 import "@/app/playground-motion.css";
 import "@/app/playground-motion-fit.css";
 
-import LocaleLink from "@/components/i18n/LocaleLink";
+import Link from "next/link";
 
 import SiteHeader from "@/components/layout/SiteHeader";
 
-import type {
-  Locale,
+import {
+  localizePath,
+  type Locale,
 } from "@/i18n/config";
 
 import {
@@ -329,8 +330,8 @@ export function PlaygroundPageContent({
                   </span>
                 </p>
 
-                <LocaleLink
-                  href="/work"
+                <Link
+                  href={localizePath("/work", locale)}
                   className={
                     styles.closingLink
                   }
@@ -343,7 +344,7 @@ export function PlaygroundPageContent({
                   <span>
                     ↗
                   </span>
-                </LocaleLink>
+                </Link>
               </div>
             </div>
           </div>
