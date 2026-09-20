@@ -38,6 +38,10 @@ import WorkArchiveFilter, {
   type WorkArchiveProject,
 } from "./WorkArchiveFilter";
 
+import WorkArchiveHomepagePreview, {
+  hasHomepageArchiveArtwork,
+} from "./WorkArchiveHomepagePreview";
+
 import styles from "./Work.module.css";
 
 import "@/app/work-motion.css";
@@ -164,8 +168,7 @@ export async function WorkPageContent({
       : "all";
 
 
-  const archiveProjects:
-    WorkArchiveProject[] =
+  const archiveEntries =
     projects.map(
       (
         project,
@@ -184,7 +187,16 @@ export async function WorkPageContent({
           primaryVisual ??
           secondaryVisual;
 
-        return {
+        const hasPreview =
+          hasHomepageArchiveArtwork(
+            project.slug,
+          ) ||
+          Boolean(
+            previewImage,
+          );
+
+        const archiveProject:
+          WorkArchiveProject = {
           project: {
             id:
               project.id,
@@ -211,18 +223,61 @@ export async function WorkPageContent({
               project.secondaryColor,
           },
 
-          primaryVisual,
-          secondaryVisual,
-          previewImage,
-
           categorySlugs:
             taxonomy
               .categorySlugsByProjectId[
               project.id
             ] ??
             [],
+
+          hasPreview,
+        };
+
+        const preview =
+          hasPreview
+            ? (
+              <WorkArchiveHomepagePreview
+                project={
+                  archiveProject
+                    .project
+                }
+                primaryVisual={
+                  primaryVisual
+                }
+                secondaryVisual={
+                  secondaryVisual
+                }
+                fallbackImage={
+                  previewImage
+                }
+                copy={
+                  previewCopy
+                }
+              />
+            )
+            : null;
+
+        return {
+          archiveProject,
+          preview,
         };
       },
+    );
+
+  const archiveProjects =
+    archiveEntries.map(
+      (
+        entry,
+      ) =>
+        entry.archiveProject,
+    );
+
+  const archivePreviews =
+    archiveEntries.map(
+      (
+        entry,
+      ) =>
+        entry.preview,
     );
 
 
@@ -439,8 +494,8 @@ export async function WorkPageContent({
               initialCategory={
                 resolvedInitialCategory
               }
-              previewCopy={
-                previewCopy
+              previews={
+                archivePreviews
               }
             />
 

@@ -1,5 +1,3 @@
-"use client";
-
 import type {
   CSSProperties,
 } from "react";
@@ -25,7 +23,7 @@ type HomepageArchiveVariant =
   | "bast";
 
 
-export type WorkArchivePreviewCopy = {
+type WorkArchivePreviewCopy = {
   selectedProject:
     string;
 
@@ -562,7 +560,10 @@ function SpallPhone({
   image,
 }: {
   project:
-    PublicProject;
+    Pick<
+      PublicProject,
+      "title"
+    >;
 
   image:
     string;

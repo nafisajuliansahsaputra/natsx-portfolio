@@ -2,6 +2,7 @@
 
 import type {
   CSSProperties,
+  ReactNode,
 } from "react";
 
 import {
@@ -11,11 +12,6 @@ import {
   useRef,
   useState,
 } from "react";
-
-import WorkArchiveHomepagePreview, {
-  hasHomepageArchiveArtwork,
-  type WorkArchivePreviewCopy,
-} from "./WorkArchiveHomepagePreview";
 
 import Link from "next/link";
 
@@ -51,20 +47,11 @@ export type WorkArchiveProject = {
       | "secondaryColor"
     >;
 
-  primaryVisual:
-    | string
-    | null;
-
-  secondaryVisual:
-    | string
-    | null;
-
-  previewImage:
-    | string
-    | null;
-
   categorySlugs:
     string[];
+
+  hasPreview:
+    boolean;
 };
 
 
@@ -81,8 +68,8 @@ type WorkArchiveFilterProps = {
   initialCategory:
     string;
 
-  previewCopy:
-    WorkArchivePreviewCopy;
+  previews:
+    ReactNode[];
 };
 
 
@@ -144,7 +131,7 @@ export default function WorkArchiveFilter({
   projects,
   categories,
   initialCategory,
-  previewCopy,
+  previews,
 }: WorkArchiveFilterProps) {
   /*
    * activeCategory:
@@ -892,29 +879,21 @@ export default function WorkArchiveFilter({
           ) => {
             const {
               project,
-              primaryVisual,
-              secondaryVisual,
-              previewImage,
               categorySlugs,
+              hasPreview,
             } =
               item;
+
+            const preview =
+              previews[
+                index
+              ];
 
             const matchesRenderedCategory =
               getProjectMatchesCategory(
                 renderedCategory,
                 categorySlugs,
               );
-
-              const hasHomepageArtwork =
-  hasHomepageArchiveArtwork(
-    project.slug,
-  );
-
-const hasPreview =
-  hasHomepageArtwork ||
-  Boolean(
-    previewImage,
-  );
 
             const projectStyle = {
               "--row-accent":
@@ -1042,36 +1021,23 @@ const hasPreview =
                     </div>
                   </div>
 
-{hasPreview ? (
-<div
-  className={
-    styles.previewStage
-  }
-  data-work-preview-stage="true"
-  aria-hidden="true"
->
+{hasPreview &&
+preview ? (
+  <div
+    className={
+      styles.previewStage
+    }
+    data-work-preview-stage="true"
+    aria-hidden="true"
+  >
     <div
       className={
         styles.previewFrame
       }
     >
-      <WorkArchiveHomepagePreview
-        project={
-          project
-        }
-        primaryVisual={
-          primaryVisual
-        }
-        secondaryVisual={
-          secondaryVisual
-        }
-        fallbackImage={
-          previewImage
-        }
-        copy={
-          previewCopy
-        }
-      />
+      {
+        preview
+      }
     </div>
   </div>
 ) : null}
