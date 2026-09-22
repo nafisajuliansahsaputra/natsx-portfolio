@@ -15,9 +15,9 @@
 .copy {
   position: absolute;
   z-index: 8;
-  top: 50%;
-  left: 4.8%;
-  width: 36.2%;
+  top: 49.5%;
+  left: 4.55%;
+  width: 35.4%;
   transform:
     translate3d(
       var(--attendance-copy-x),
@@ -36,7 +36,7 @@
   width: 112%;
   color: #071d21;
   font-family: var(--font-plus-jakarta), Arial, Helvetica, sans-serif;
-  font-size: 6.95cqw;
+  font-size: 6.78cqw;
   font-weight: 800;
   line-height: 0.84;
   letter-spacing: -0.075em;
@@ -88,12 +88,12 @@
 .scene {
   position: absolute;
   z-index: 4;
-  top: 1%;
-  left: 31.8%;
-  width: 68.2%;
-  height: 96%;
+  top: 0;
+  left: 29.4%;
+  width: 72.8%;
+  height: 99%;
   pointer-events: none;
-  filter: drop-shadow(0 1.25cqw 1.65cqw rgba(21, 93, 66, 0.12));
+  filter: drop-shadow(0 1.35cqw 1.75cqw rgba(21, 93, 66, 0.13));
 }
 
 @container (max-width: 650px) {
