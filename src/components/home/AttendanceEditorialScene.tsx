@@ -1388,9 +1388,19 @@ function softenBadge(object: THREE.Object3D, badgeTexture: THREE.Texture) {
       }
 
       material.map = badgeTexture;
-      material.color.set("#ffffff");
-      material.metalness = 0.05;
-      material.roughness = 0.65;
+
+      /*
+       * The badge sits directly under several strong scene lights.
+       * A pure-white material was multiplying that lighting into the
+       * uploaded card and washing out its greens / gray details.
+       * Keep the print readable but closer to the source artwork.
+       */
+      material.color.set("#c4ccc8");
+      material.emissive.set("#000000");
+      material.emissiveIntensity = 0;
+      material.metalness = 0;
+      material.roughness = 0.96;
+      material.envMapIntensity = 0.16;
       material.needsUpdate = true;
     });
   });
