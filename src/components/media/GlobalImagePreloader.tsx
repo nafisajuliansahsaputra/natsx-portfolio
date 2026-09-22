@@ -48,7 +48,7 @@ const warmedUrls =
 const inFlightImages =
   new Map<
     string,
-    HTMLImageElement
+    Promise<void>
   >();
 
 const PRELOAD_CONCURRENCY =
@@ -66,28 +66,36 @@ function warmImage(
     return Promise.resolve();
   }
 
-  return new Promise<void>(
-    (
-      resolve,
-    ) => {
-      const image =
-        new Image();
+  const existing =
+    inFlightImages.get(
+      url,
+    );
 
-      inFlightImages.set(
-        url,
-        image,
-      );
+  if (existing) {
+    return existing;
+  }
 
-      image.decoding =
-        "async";
+  const request =
+    fetch(
+      url,
+      {
+        cache:
+          "force-cache",
 
-      image.loading =
-        "eager";
+        mode:
+          "no-cors",
 
-      image.fetchPriority =
-        "low";
-
-      const finish =
+        priority:
+          "low",
+      } as RequestInit,
+    )
+      .then(
+        () => undefined,
+      )
+      .catch(
+        () => undefined,
+      )
+      .finally(
         () => {
           warmedUrls.add(
             url,
@@ -96,32 +104,15 @@ function warmImage(
           inFlightImages.delete(
             url,
           );
-
-          resolve();
-        };
-
-      image.addEventListener(
-        "load",
-        finish,
-        {
-          once:
-            true,
         },
       );
 
-      image.addEventListener(
-        "error",
-        finish,
-        {
-          once:
-            true,
-        },
-      );
-
-      image.src =
-        url;
-    },
+  inFlightImages.set(
+    url,
+    request,
   );
+
+  return request;
 }
 
 async function warmQueue(
