@@ -1378,31 +1378,42 @@ function softenBadge(object: THREE.Object3D, badgeTexture: THREE.Texture) {
       return;
     }
 
-    const materials = Array.isArray(child.material)
+    const sourceMaterials = Array.isArray(child.material)
       ? child.material
       : [child.material];
 
-    materials.forEach((material) => {
-      if (!(material instanceof THREE.MeshStandardMaterial)) {
-        return;
-      }
-
-      material.map = badgeTexture;
-
+    const badgeMaterials = sourceMaterials.map((material) => {
       /*
-       * The badge sits directly under several strong scene lights.
-       * A pure-white material was multiplying that lighting into the
-       * uploaded card and washing out its greens / gray details.
-       * Keep the print readable but closer to the source artwork.
+       * Use an unlit print material for the card face.
+       * The previous Standard/Physical material was still receiving
+       * the scene's strong key/fill lights, so white areas kept
+       * blowing out even after lowering metalness/env intensity.
+       *
+       * MeshBasicMaterial keeps the uploaded artwork stable and the
+       * neutral tint pulls pure white down slightly without changing
+       * the green/gray balance of the source design.
        */
-      material.color.set("#c4ccc8");
-      material.emissive.set("#000000");
-      material.emissiveIntensity = 0;
-      material.metalness = 0;
-      material.roughness = 0.96;
-      material.envMapIntensity = 0.16;
-      material.needsUpdate = true;
+      const badgeMaterial = new THREE.MeshBasicMaterial({
+        map: badgeTexture,
+        color: "#d0d7d3",
+        transparent: material.transparent,
+        opacity: material.opacity,
+        alphaTest: material.alphaTest,
+        side: material.side,
+        depthTest: material.depthTest,
+        depthWrite: material.depthWrite,
+        toneMapped: false,
+      });
+
+      badgeMaterial.name = material.name;
+      badgeMaterial.needsUpdate = true;
+
+      return badgeMaterial;
     });
+
+    child.material = Array.isArray(child.material)
+      ? badgeMaterials
+      : badgeMaterials[0];
   });
 }
 
