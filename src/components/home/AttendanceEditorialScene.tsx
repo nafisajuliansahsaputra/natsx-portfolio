@@ -911,7 +911,6 @@ function styleImac(object: THREE.Object3D) {
 
 function styleScanner(
   object: THREE.Object3D,
-  screenTexture: THREE.Texture,
 ) {
   object.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) {
@@ -953,10 +952,13 @@ function styleScanner(
       }
 
       if (name === "screen") {
-        material.map = screenTexture;
-        material.color.set("#ffffff");
-        material.emissive.set("#0a3525");
-        material.emissiveIntensity = 0.25;
+        // Keep the GLB screen as a dark backing layer.
+        // The uploaded dashboard image is rendered on a clean overlay
+        // with independent 0..1 UVs so the GLB's atlas cannot crop it.
+        material.map = null;
+        material.color.set("#07140f");
+        material.emissive.set("#07140f");
+        material.emissiveIntensity = 0.18;
         material.metalness = 0;
         material.roughness = 0.3;
       }
@@ -964,6 +966,231 @@ function styleScanner(
       material.needsUpdate = true;
     });
   });
+}
+
+function createScannerScreenOverlay(
+  scanner: THREE.Object3D,
+  texture: THREE.Texture,
+) {
+  let screenMesh:
+    THREE.Mesh |
+    null =
+    null;
+
+  scanner.traverse((child) => {
+    if (
+      screenMesh ||
+      !(child instanceof THREE.Mesh)
+    ) {
+      return;
+    }
+
+    const materials =
+      Array.isArray(child.material)
+        ? child.material
+        : [child.material];
+
+    if (
+      materials.some(
+        (material) =>
+          material.name
+            .trim()
+            .toLowerCase() ===
+          "screen",
+      )
+    ) {
+      screenMesh =
+        child;
+    }
+  });
+
+  if (!screenMesh) {
+    return null;
+  }
+
+  const target =
+    screenMesh as THREE.Mesh;
+
+  target.geometry.computeBoundingBox();
+
+  const bounds =
+    target.geometry.boundingBox;
+
+  if (!bounds) {
+    return null;
+  }
+
+  const size =
+    new THREE.Vector3();
+
+  const center =
+    new THREE.Vector3();
+
+  bounds.getSize(
+    size,
+  );
+
+  bounds.getCenter(
+    center,
+  );
+
+  const dimensions = [
+    {
+      axis:
+        "x" as const,
+      value:
+        size.x,
+    },
+    {
+      axis:
+        "y" as const,
+      value:
+        size.y,
+    },
+    {
+      axis:
+        "z" as const,
+      value:
+        size.z,
+    },
+  ].sort(
+    (
+      left,
+      right,
+    ) =>
+      left.value -
+      right.value,
+  );
+
+  const thinAxis =
+    dimensions[0]
+      .axis;
+
+  let screenWidth =
+    size.x;
+
+  let screenHeight =
+    size.y;
+
+  if (
+    thinAxis ===
+    "y"
+  ) {
+    screenWidth =
+      size.x;
+
+    screenHeight =
+      size.z;
+  } else if (
+    thinAxis ===
+    "x"
+  ) {
+    screenWidth =
+      size.z;
+
+    screenHeight =
+      size.y;
+  }
+
+  if (
+    screenWidth <=
+      0 ||
+    screenHeight <=
+      0
+  ) {
+    return null;
+  }
+
+  const imageAspect =
+    2;
+
+  const screenAspect =
+    screenWidth /
+    screenHeight;
+
+  let overlayWidth =
+    screenWidth *
+    0.985;
+
+  let overlayHeight =
+    screenHeight *
+    0.985;
+
+  if (
+    screenAspect >
+    imageAspect
+  ) {
+    overlayWidth =
+      overlayHeight *
+      imageAspect;
+  } else {
+    overlayHeight =
+      overlayWidth /
+      imageAspect;
+  }
+
+  const geometry =
+    new THREE.PlaneGeometry(
+      overlayWidth,
+      overlayHeight,
+    );
+
+  const material =
+    new THREE.MeshBasicMaterial({
+      map:
+        texture,
+
+      toneMapped:
+        false,
+
+      side:
+        THREE.DoubleSide,
+
+      depthTest:
+        false,
+
+      depthWrite:
+        false,
+    });
+
+  const overlay =
+    new THREE.Mesh(
+      geometry,
+      material,
+    );
+
+  overlay.position.copy(
+    center,
+  );
+
+  if (
+    thinAxis ===
+    "y"
+  ) {
+    overlay.rotation.x =
+      -Math.PI /
+      2;
+  } else if (
+    thinAxis ===
+    "x"
+  ) {
+    overlay.rotation.y =
+      Math.PI /
+      2;
+  }
+
+  overlay.renderOrder =
+    20;
+
+  target.add(
+    overlay,
+  );
+
+  return {
+    geometry,
+    material,
+    texture,
+  };
 }
 
 function createBadgeTexture() {
@@ -1224,8 +1451,28 @@ useEffect(() => {
         trackTexture(glowTexture);
 
         styleImac(imacGltf.scene);
-        styleScanner(scannerGltf.scene, scannerScreenTexture);
+        styleScanner(scannerGltf.scene);
         softenBadge(badgeGltf.scene, badgeTexture);
+
+        const scannerScreenOverlay =
+          createScannerScreenOverlay(
+            scannerGltf.scene,
+            scannerScreenTexture,
+          );
+
+        if (scannerScreenOverlay) {
+          trackGeometry(
+            scannerScreenOverlay.geometry,
+          );
+
+          trackMaterial(
+            scannerScreenOverlay.material,
+          );
+
+          trackTexture(
+            scannerScreenOverlay.texture,
+          );
+        }
 
         collectObject(imacGltf.scene);
         collectObject(scannerGltf.scene);
