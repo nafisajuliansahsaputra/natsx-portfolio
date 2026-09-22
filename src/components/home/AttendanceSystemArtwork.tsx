@@ -29,6 +29,14 @@ export default function AttendanceSystemArtwork({
 }: AttendanceSystemArtworkProps) {
   const dashboardImageUrl =
     getWebglTextureUrl(
+      primaryVisual ??
+        secondaryVisual ??
+        null,
+      1200,
+    );
+
+  const scannerImageUrl =
+    getWebglTextureUrl(
       secondaryVisual ??
         primaryVisual ??
         null,
@@ -101,6 +109,9 @@ export default function AttendanceSystemArtwork({
         }
         dashboardImageUrl={
           dashboardImageUrl
+        }
+        scannerImageUrl={
+          scannerImageUrl
         }
       />
     </AttendanceArtworkRuntimeRoot>

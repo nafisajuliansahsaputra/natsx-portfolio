@@ -8,6 +8,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 type Props = {
   label: string;
   dashboardImageUrl?: string | null;
+  scannerImageUrl?: string | null;
 };
 
 const IMAC_MODEL_URL = "/models/attendance/imac.glb";
@@ -1073,6 +1074,38 @@ async function loadDashboardTexture(
   }
 }
 
+async function loadScannerScreenTexture(
+  scannerImageUrl?: string | null,
+) {
+  if (!scannerImageUrl) {
+    return createScannerScreenTexture();
+  }
+
+  try {
+    const loader = new THREE.TextureLoader();
+    loader.setCrossOrigin("anonymous");
+
+    const texture = await loader.loadAsync(
+      scannerImageUrl,
+    );
+
+    texture.colorSpace =
+      THREE.SRGBColorSpace;
+
+    // Scanner GLB UVs expect the same orientation
+    // as the existing runtime canvas texture.
+    texture.flipY =
+      true;
+
+    texture.needsUpdate =
+      true;
+
+    return texture;
+  } catch {
+    return createScannerScreenTexture();
+  }
+}
+
 /* =========================================================
    COMPONENT
 ========================================================= */
@@ -1080,6 +1113,7 @@ async function loadDashboardTexture(
 export default function AttendanceEditorialScene({
   label,
   dashboardImageUrl,
+  scannerImageUrl,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
@@ -1161,19 +1195,24 @@ useEffect(() => {
       try {
         const loader = new GLTFLoader();
 
-        const [imacGltf, scannerGltf, badgeGltf, dashboardTexture] =
+        const [
+          imacGltf,
+          scannerGltf,
+          badgeGltf,
+          dashboardTexture,
+          scannerScreenTexture,
+        ] =
           await Promise.all([
             loader.loadAsync(IMAC_MODEL_URL),
             loader.loadAsync(SCANNER_MODEL_URL),
             loader.loadAsync(BADGE_MODEL_URL),
             loadDashboardTexture(dashboardImageUrl),
+            loadScannerScreenTexture(scannerImageUrl),
           ]);
 
         if (disposed) {
           return;
         }
-
-        const scannerScreenTexture = createScannerScreenTexture();
         const badgeTexture = createBadgeTexture();
         const shadowTexture = createShadowTexture();
         const glowTexture = createGlowTexture();
@@ -1924,7 +1963,11 @@ const checkInCardData = createFloatingCard(
 
       disposeAssets();
     };
-  }, [dashboardImageUrl, label]);
+  }, [
+    dashboardImageUrl,
+    label,
+    scannerImageUrl,
+  ]);
 
   return (
     <div

@@ -37,12 +37,16 @@ type AttendanceSceneGateProps = {
 
   dashboardImageUrl:
     string | null;
+
+  scannerImageUrl:
+    string | null;
 };
 
 export default function AttendanceSceneGate({
   className,
   label,
   dashboardImageUrl,
+  scannerImageUrl,
 }: AttendanceSceneGateProps) {
   const sceneRef =
     useRef<HTMLDivElement>(
@@ -78,6 +82,7 @@ export default function AttendanceSceneGate({
             "/models/attendance/scanner.glb",
             "/models/attendance/badge.glb",
             dashboardImageUrl,
+            scannerImageUrl,
           ],
         );
       };
@@ -199,6 +204,7 @@ export default function AttendanceSceneGate({
     };
   }, [
     dashboardImageUrl,
+    scannerImageUrl,
   ]);
 
   return (
@@ -217,6 +223,9 @@ export default function AttendanceSceneGate({
           }
           dashboardImageUrl={
             dashboardImageUrl
+          }
+          scannerImageUrl={
+            scannerImageUrl
           }
         />
       ) : null}
