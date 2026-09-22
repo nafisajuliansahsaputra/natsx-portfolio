@@ -1395,7 +1395,12 @@ function softenBadge(object: THREE.Object3D, badgeTexture: THREE.Texture) {
        */
       const badgeMaterial = new THREE.MeshBasicMaterial({
         map: badgeTexture,
-        color: "#d0d7d3",
+
+        // Preserve the uploaded card artwork as-authored.
+        // The unlit material already removes scene-light washout, so
+        // no extra gray tint is needed here.
+        color: "#ffffff",
+
         transparent: material.transparent,
         opacity: material.opacity,
         alphaTest: material.alphaTest,
