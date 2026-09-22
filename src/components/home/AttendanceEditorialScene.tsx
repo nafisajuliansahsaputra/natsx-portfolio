@@ -21,16 +21,10 @@ const BADGE_MODEL_URL = "/models/attendance/badge.glb";
 ========================================================= */
 
 const CAMERA_FOV = 30;
-const CAMERA_TARGET = { x: 1.08, y: -0.18, z: 0 };
+const CAMERA_TARGET = { x: 1.05, y: -0.12, z: 0 };
 const CAMERA_POSITION = { x: 1.12, y: 0.82, z: 13.62 };
-
-/*
- * Attendance needs a stronger hero read than the old wide-safe framing.
- * Keep enough air for the floating UI, but let the hardware fill the card
- * more like Spall / BAST instead of sitting as a small cluster in the middle.
- */
-const CAMERA_FIT_HALF_WIDTH = 5.15;
-const CAMERA_FIT_HALF_HEIGHT = 3.72;
+const CAMERA_FIT_HALF_WIDTH = 5.9;
+const CAMERA_FIT_HALF_HEIGHT = 4.05;
 
 const CAMERA_BASE_DISTANCE = Math.hypot(
   CAMERA_POSITION.x - CAMERA_TARGET.x,
@@ -43,29 +37,29 @@ const CAMERA_BASE_DISTANCE = Math.hypot(
  * iMac is the calm, near-frontal hero.
  * Supporting hardware/cards orbit around it instead of competing with it.
  */
-const IMAC_TARGET_SIZE = 8.18;
-const IMAC_POSITION = { x: 1.18, y: -0.08, z: -0.48 };
-const IMAC_ROTATION = { x: -0.19, y: -1.16, z: -0.185 };
+const IMAC_TARGET_SIZE = 7.72;
+const IMAC_POSITION = { x: 1.02, y: -0.22, z: -0.62 };
+const IMAC_ROTATION = { x: -0.2, y: -1.2, z: -0.20 };
 
-const SCANNER_TARGET_SIZE = 3.0;
-const SCANNER_POSITION = { x: 2.72, y: -2.56, z: 3.92 };
-const SCANNER_ROTATION = { x: -0.22, y: -0.24, z: -0.07 };
+const SCANNER_TARGET_SIZE = 2.72;
+const SCANNER_POSITION = { x: 2.38, y: -2.88, z: 3.78 };
+const SCANNER_ROTATION = { x: -0.24, y: -0.26, z: -0.08 };
 
-const BADGE_TARGET_SIZE = 1.72;
-const BADGE_POSITION = { x: -1.48, y: -2.1, z: 3.38 };
-const BADGE_ROTATION = { x: -0.055, y: 0.065, z: -0.065 };
+const BADGE_TARGET_SIZE = 1.5;
+const BADGE_POSITION = { x: -2.02, y: -2, z: 3.02 };
+const BADGE_ROTATION = { x: -0.06, y: 0.08, z: -0.08 };
 
-const TOTAL_CARD_POSITION = { x: -1.92, y: 3.18, z: 1.18 };
-const TOTAL_CARD_ROTATION = { x: 0.02, y: 0.035, z: 0.075 };
+const TOTAL_CARD_POSITION = { x: -2.24, y: 3.48, z: 1.0 };
+const TOTAL_CARD_ROTATION = { x: 0.025, y: 0.04, z: 0.09 };
 
-const QUOTE_CARD_POSITION = { x: 4.62, y: 2.46, z: 1.72 };
-const QUOTE_CARD_ROTATION = { x: -0.008, y: -0.06, z: 0.032 };
+const QUOTE_CARD_POSITION = { x: 5.22, y: 2.7, z: 1.58 };
+const QUOTE_CARD_ROTATION = { x: -0.01, y: -0.07, z: 0.04 };
 
-const CONNECT_CARD_POSITION = { x: 4.68, y: -0.12, z: 1.82 };
-const CONNECT_CARD_ROTATION = { x: 0.008, y: -0.045, z: -0.012 };
+const CONNECT_CARD_POSITION = { x: 5.18, y: 0, z: 1.68 };
+const CONNECT_CARD_ROTATION = { x: 0.01, y: -0.05, z: -0.015 };
 
-const CHECKIN_CARD_POSITION = { x: 3.72, y: -1.18, z: 4.36 };
-const CHECKIN_CARD_ROTATION = { x: 0, y: -0.03, z: -0.008 };
+const CHECKIN_CARD_POSITION = { x: 4, y: -1.36, z: 4.28 };
+const CHECKIN_CARD_ROTATION = { x: 0, y: -0.035, z: -0.01 };
 
 /* =========================================================
    CANVAS HELPERS
@@ -1780,8 +1774,8 @@ useEffect(() => {
 
         composition.add(imac);
 
-        const imacShadow = createShadowSprite(shadowTexture, 5.35, 1.42, 0.26);
-        imacShadow.sprite.position.set(1.28, -2.42, -0.64);
+        const imacShadow = createShadowSprite(shadowTexture, 4.9, 1.32, 0.24);
+        imacShadow.sprite.position.set(1.18, -2.38, -0.7);
         composition.add(imacShadow.sprite);
         trackMaterial(imacShadow.material);
 
@@ -1806,8 +1800,8 @@ useEffect(() => {
         freezeStaticDescendants(scanner);
         composition.add(scanner);
 
-        const scannerShadow = createShadowSprite(shadowTexture, 2.32, 0.8, 0.21);
-        scannerShadow.sprite.position.set(2.9, -2.62, 1.5);
+        const scannerShadow = createShadowSprite(shadowTexture, 2.08, 0.72, 0.2);
+        scannerShadow.sprite.position.set(2.76, -2.72, 1.38);
         composition.add(scannerShadow.sprite);
         trackMaterial(scannerShadow.material);
 
@@ -1838,8 +1832,8 @@ useEffect(() => {
         freezeStaticDescendants(badge);
         composition.add(badge);
 
-        const badgeShadow = createShadowSprite(shadowTexture, 1.5, 0.48, 0.14);
-        badgeShadow.sprite.position.set(-1.18, -2.24, 1.56);
+        const badgeShadow = createShadowSprite(shadowTexture, 1.28, 0.42, 0.12);
+        badgeShadow.sprite.position.set(-0.92, -2.22, 1.42);
         composition.add(badgeShadow.sprite);
         trackMaterial(badgeShadow.material);
 
