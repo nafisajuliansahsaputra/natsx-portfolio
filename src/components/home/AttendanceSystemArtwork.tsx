@@ -43,6 +43,9 @@ export default function AttendanceSystemArtwork({
       1200,
     );
 
+  const badgeImageUrl =
+    "/images/projects/attendance/student-card-modern.png";
+
   return (
     <AttendanceArtworkRuntimeRoot
       className={
@@ -112,6 +115,9 @@ export default function AttendanceSystemArtwork({
         }
         scannerImageUrl={
           scannerImageUrl
+        }
+        badgeImageUrl={
+          badgeImageUrl
         }
       />
     </AttendanceArtworkRuntimeRoot>

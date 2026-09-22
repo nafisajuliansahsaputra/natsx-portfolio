@@ -9,6 +9,7 @@ type Props = {
   label: string;
   dashboardImageUrl?: string | null;
   scannerImageUrl?: string | null;
+  badgeImageUrl?: string | null;
 };
 
 const IMAC_MODEL_URL = "/models/attendance/imac.glb";
@@ -1252,6 +1253,125 @@ function createBadgeTexture() {
   return texture;
 }
 
+function createUploadedBadgeTexture(
+  image: HTMLImageElement,
+) {
+  const canvas =
+    document.createElement(
+      "canvas",
+    );
+
+  canvas.width =
+    1024;
+
+  canvas.height =
+    2048;
+
+  const ctx =
+    canvas.getContext(
+      "2d",
+    );
+
+  if (!ctx) {
+    throw new Error(
+      "Uploaded badge canvas unavailable",
+    );
+  }
+
+  ctx.fillStyle =
+    "#eef5f2";
+
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+  );
+
+  const sourceWidth =
+    image.naturalWidth ||
+    image.width;
+
+  const sourceHeight =
+    image.naturalHeight ||
+    image.height;
+
+  [996, 1936].forEach(
+    (
+      bottom,
+    ) => {
+      ctx.save();
+
+      ctx.translate(
+        72,
+        bottom,
+      );
+
+      ctx.scale(
+        880 / 1200,
+        -900 / 760,
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        1200,
+        760,
+      );
+
+      const scale =
+        Math.min(
+          1200 /
+            sourceWidth,
+          760 /
+            sourceHeight,
+        );
+
+      const drawWidth =
+        sourceWidth *
+        scale;
+
+      const drawHeight =
+        sourceHeight *
+        scale;
+
+      ctx.drawImage(
+        image,
+        (
+          1200 -
+          drawWidth
+        ) /
+          2,
+        (
+          760 -
+          drawHeight
+        ) /
+          2,
+        drawWidth,
+        drawHeight,
+      );
+
+      ctx.restore();
+    },
+  );
+
+  const texture =
+    canvasTexture(
+      canvas,
+    );
+
+  texture.flipY =
+    false;
+
+  texture.needsUpdate =
+    true;
+
+  return texture;
+}
+
 function softenBadge(object: THREE.Object3D, badgeTexture: THREE.Texture) {
   object.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) {
@@ -1333,6 +1453,34 @@ async function loadScannerScreenTexture(
   }
 }
 
+async function loadBadgeTexture(
+  badgeImageUrl?: string | null,
+) {
+  if (!badgeImageUrl) {
+    return createBadgeTexture();
+  }
+
+  try {
+    const loader =
+      new THREE.ImageLoader();
+
+    loader.setCrossOrigin(
+      "anonymous",
+    );
+
+    const image =
+      await loader.loadAsync(
+        badgeImageUrl,
+      );
+
+    return createUploadedBadgeTexture(
+      image,
+    );
+  } catch {
+    return createBadgeTexture();
+  }
+}
+
 /* =========================================================
    COMPONENT
 ========================================================= */
@@ -1341,6 +1489,7 @@ export default function AttendanceEditorialScene({
   label,
   dashboardImageUrl,
   scannerImageUrl,
+  badgeImageUrl,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
@@ -1428,6 +1577,7 @@ useEffect(() => {
           badgeGltf,
           dashboardTexture,
           scannerScreenTexture,
+          badgeTexture,
         ] =
           await Promise.all([
             loader.loadAsync(IMAC_MODEL_URL),
@@ -1435,12 +1585,12 @@ useEffect(() => {
             loader.loadAsync(BADGE_MODEL_URL),
             loadDashboardTexture(dashboardImageUrl),
             loadScannerScreenTexture(scannerImageUrl),
+            loadBadgeTexture(badgeImageUrl),
           ]);
 
         if (disposed) {
           return;
         }
-        const badgeTexture = createBadgeTexture();
         const shadowTexture = createShadowTexture();
         const glowTexture = createGlowTexture();
 
@@ -2211,6 +2361,7 @@ const checkInCardData = createFloatingCard(
       disposeAssets();
     };
   }, [
+    badgeImageUrl,
     dashboardImageUrl,
     label,
     scannerImageUrl,
