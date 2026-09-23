@@ -4,6 +4,20 @@ const warmedResources =
     Promise<void>
   >();
 
+type NetworkInformationLike = {
+  saveData?:
+    boolean;
+
+  effectiveType?:
+    string;
+};
+
+type NavigatorWithConnection =
+  Navigator & {
+    connection?:
+      NetworkInformationLike;
+  };
+
 async function consumeResponse(
   response: Response,
 ) {
@@ -33,6 +47,39 @@ async function consumeResponse(
   }
 }
 
+export function canWarmSceneResources() {
+  if (
+    typeof navigator ===
+    "undefined"
+  ) {
+    return false;
+  }
+
+  const connection =
+    (
+      navigator as
+        NavigatorWithConnection
+    ).connection;
+
+  if (
+    connection
+      ?.saveData
+  ) {
+    return false;
+  }
+
+  const effectiveType =
+    connection
+      ?.effectiveType;
+
+  return (
+    effectiveType !==
+      "slow-2g" &&
+    effectiveType !==
+      "2g"
+  );
+}
+
 export function warmSceneResource(
   url:
     | string
@@ -58,7 +105,10 @@ export function warmSceneResource(
       {
         cache:
           "force-cache",
-      },
+
+        priority:
+          "low",
+      } as RequestInit,
     )
       .then(
         consumeResponse,
@@ -81,20 +131,70 @@ export function warmSceneResource(
   return request;
 }
 
-export function warmSceneResources(
+export async function warmSceneResources(
   urls:
     Array<
       | string
       | null
       | undefined
     >,
+
+  concurrency =
+    1,
 ) {
-  return Promise.all(
-    urls.map(
-      warmSceneResource,
+  if (
+    !canWarmSceneResources()
+  ) {
+    return;
+  }
+
+  const queue =
+    urls.filter(
+      (
+        url,
+      ): url is string =>
+        Boolean(
+          url,
+        ),
+    );
+
+  let cursor =
+    0;
+
+  async function worker() {
+    while (
+      cursor <
+      queue.length
+    ) {
+      const index =
+        cursor;
+
+      cursor +=
+        1;
+
+      await warmSceneResource(
+        queue[
+          index
+        ],
+      );
+    }
+  }
+
+  await Promise.all(
+    Array.from(
+      {
+        length:
+          Math.min(
+            Math.max(
+              concurrency,
+              1,
+            ),
+            queue.length,
+          ),
+      },
+      () =>
+        worker(),
     ),
-  ).then(
-    () => undefined,
   );
 }
 
