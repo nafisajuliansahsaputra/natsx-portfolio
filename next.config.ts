@@ -223,6 +223,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns,
 
+    minimumCacheTTL:
+      86400,
+
     formats: [
       "image/avif",
       "image/webp",
