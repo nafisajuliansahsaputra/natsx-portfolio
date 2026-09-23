@@ -54,6 +54,10 @@ type AttendanceSceneGateProps = {
 
   badgeImageUrl:
     string;
+
+  loadStrategy?:
+    | "viewport"
+    | "archive";
 };
 
 export default function AttendanceSceneGate({
@@ -62,6 +66,7 @@ export default function AttendanceSceneGate({
   dashboardImageUrl,
   scannerImageUrl,
   badgeImageUrl,
+  loadStrategy = "viewport",
 }: AttendanceSceneGateProps) {
   const introDone =
     useIntroCompletion();
@@ -103,6 +108,33 @@ export default function AttendanceSceneGate({
 
     const warmResources =
       () => {
+        if (
+          loadStrategy ===
+          "archive"
+        ) {
+          void warmSceneResources(
+            [
+              dashboardImageUrl,
+              scannerImageUrl,
+              badgeImageUrl,
+            ],
+            3,
+            "high",
+          );
+
+          void warmSceneResources(
+            [
+              "/models/attendance/imac.glb",
+              "/models/attendance/scanner.glb",
+              "/models/attendance/badge.glb",
+            ],
+            1,
+            "low",
+          );
+
+          return;
+        }
+
         void warmSceneResources(
           [
             "/models/attendance/imac.glb",
@@ -194,7 +226,10 @@ export default function AttendanceSceneGate({
     const resourceObserver =
       createOneShotObserver(
         warmResources,
-        ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
+        loadStrategy ===
+          "archive"
+          ? 2.25
+          : ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
       );
 
     const prepareObserver =
@@ -216,6 +251,7 @@ export default function AttendanceSceneGate({
     badgeImageUrl,
     dashboardImageUrl,
     introDone,
+    loadStrategy,
     scannerImageUrl,
   ]);
 
