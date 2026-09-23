@@ -36,9 +36,6 @@ type Props = {
 
   label:
     string;
-
-  instantReveal?:
-    boolean;
 };
 
 const MODEL_URL =
@@ -84,7 +81,6 @@ export default function SpallEditorialScene(
 function Scene({
   screenUrl,
   label,
-  instantReveal = false,
 }: Props) {
   const hostRef =
     useRef<HTMLDivElement>(
@@ -2499,9 +2495,7 @@ function Scene({
               : 0,
 
           transition:
-            instantReveal
-              ? "none"
-              : "opacity 420ms cubic-bezier(0.16, 1, 0.3, 1)",
+            "opacity 420ms cubic-bezier(0.16, 1, 0.3, 1)",
 
           willChange:
             ready
