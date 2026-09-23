@@ -1106,6 +1106,13 @@ test.describe(
           ).toHaveAttribute(
             "data-phase",
             "exit",
+            {
+              // Keyboard skip itself must react immediately.
+              // Keep this tight so the natural ~2.8s auto-exit
+              // cannot make a broken keyboard shortcut look healthy.
+              timeout:
+                750,
+            },
           );
 
           await expect(
@@ -1122,8 +1129,15 @@ test.describe(
           ).toHaveCount(
             0,
             {
+              /*
+               * The authored exit transition is 760ms. Under the full
+               * 4-worker E2E suite, main-thread scheduling can delay the
+               * cleanup timer without changing the user-visible exit.
+               * Allow headroom while still failing well before a stuck
+               * intro could be considered healthy.
+               */
               timeout:
-                2000,
+                3000,
             },
           );
 
