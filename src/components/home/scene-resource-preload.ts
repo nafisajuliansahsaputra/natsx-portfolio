@@ -18,11 +18,6 @@ type NavigatorWithConnection =
       NetworkInformationLike;
   };
 
-export type SceneResourcePriority =
-  | "high"
-  | "low"
-  | "auto";
-
 async function consumeResponse(
   response: Response,
 ) {
@@ -90,10 +85,6 @@ export function warmSceneResource(
     | string
     | null
     | undefined,
-
-  priority:
-    SceneResourcePriority =
-      "low",
 ) {
   if (!url) {
     return Promise.resolve();
@@ -115,7 +106,8 @@ export function warmSceneResource(
         cache:
           "force-cache",
 
-        priority,
+        priority:
+          "low",
       } as RequestInit,
     )
       .then(
@@ -149,10 +141,6 @@ export async function warmSceneResources(
 
   concurrency =
     1,
-
-  priority:
-    SceneResourcePriority =
-      "low",
 ) {
   if (
     !canWarmSceneResources()
@@ -188,7 +176,6 @@ export async function warmSceneResources(
         queue[
           index
         ],
-        priority,
       );
     }
   }
