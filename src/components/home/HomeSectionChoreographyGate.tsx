@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 /*
  * =========================================================
  * HOME SECTION CHOREOGRAPHY — DESKTOP RUNTIME GATE
@@ -52,6 +54,9 @@ const HomeSectionChoreography =
   );
 
 export default function HomeSectionChoreographyGate() {
+  const introDone =
+    useIntroCompletion();
+
   const [
     enabled,
     setEnabled,
@@ -98,6 +103,7 @@ export default function HomeSectionChoreographyGate() {
               null;
 
             setEnabled(
+              introDone &&
               supportedEnvironment.matches &&
               nearAnimatedSections,
             );
@@ -171,7 +177,9 @@ export default function HomeSectionChoreographyGate() {
         );
       }
     };
-  }, []);
+  }, [
+    introDone,
+  ]);
 
   if (!enabled) {
     return null;
