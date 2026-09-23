@@ -44,6 +44,10 @@ export default function AttendanceSystemArtwork({
     );
 
   const badgeImageUrl =
+    getWebglTextureUrl(
+      "/images/projects/attendance/student-card-modern.png",
+      1200,
+    ) ??
     "/images/projects/attendance/student-card-modern.png";
 
   return (
