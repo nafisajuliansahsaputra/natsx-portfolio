@@ -48,12 +48,17 @@ type BastSceneGateProps = {
 
   screenUrl:
     string | null;
+
+  loadStrategy?:
+    | "viewport"
+    | "archive";
 };
 
 export default function BastSceneGate({
   className,
   label,
   screenUrl,
+  loadStrategy = "viewport",
 }: BastSceneGateProps) {
   const introDone =
     useIntroCompletion();
@@ -95,6 +100,30 @@ export default function BastSceneGate({
 
     const warmResources =
       () => {
+        if (
+          loadStrategy ===
+          "archive"
+        ) {
+          void warmSceneResources(
+            [
+              screenUrl,
+            ],
+            1,
+            "high",
+          );
+
+          void warmSceneResources(
+            [
+              "/models/bast/macbook-pro.glb",
+              "/models/bast/printer.glb",
+            ],
+            1,
+            "low",
+          );
+
+          return;
+        }
+
         void warmSceneResources(
           [
             "/models/bast/macbook-pro.glb",
@@ -104,6 +133,30 @@ export default function BastSceneGate({
           1,
         );
       };
+
+    if (
+      loadStrategy ===
+      "archive"
+    ) {
+      loadCode();
+      warmResources();
+
+      const timeoutId =
+        window.setTimeout(
+          () => {
+            setShouldLoadScene(
+              true,
+            );
+          },
+          80,
+        );
+
+      return () => {
+        window.clearTimeout(
+          timeoutId,
+        );
+      };
+    }
 
     if (
       typeof IntersectionObserver ===
@@ -203,6 +256,7 @@ export default function BastSceneGate({
     };
   }, [
     introDone,
+    loadStrategy,
     screenUrl,
   ]);
 
