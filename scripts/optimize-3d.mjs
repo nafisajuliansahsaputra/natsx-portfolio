@@ -45,7 +45,6 @@ const safeOptimizeArgs = [
   "--no-instance",
   "--no-palette",
   "--no-simplify",
-  "--no-prune",
   "--no-sparse",
   "--no-flatten",
   "--no-join",
