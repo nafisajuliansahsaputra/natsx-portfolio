@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 import {
   getSceneMargin,
   warmSceneResources,
@@ -50,6 +52,9 @@ export default function BastSceneGate({
   label,
   screenUrl,
 }: BastSceneGateProps) {
+  const introDone =
+    useIntroCompletion();
+
   const sceneRef =
     useRef<HTMLDivElement>(
       null,
@@ -64,6 +69,12 @@ export default function BastSceneGate({
     );
 
   useEffect(() => {
+    if (
+      !introDone
+    ) {
+      return;
+    }
+
     const scene =
       sceneRef.current;
 
@@ -203,6 +214,7 @@ export default function BastSceneGate({
         ?.disconnect();
     };
   }, [
+    introDone,
     screenUrl,
   ]);
 
