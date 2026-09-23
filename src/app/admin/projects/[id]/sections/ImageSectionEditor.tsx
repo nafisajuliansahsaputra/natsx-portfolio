@@ -544,7 +544,7 @@ export default function ImageSectionEditor({
           pendingFile,
           {
             cacheControl:
-              "3600",
+              "31536000",
 
             contentType:
               mimeType,
