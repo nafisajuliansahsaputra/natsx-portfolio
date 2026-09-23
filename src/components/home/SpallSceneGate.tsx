@@ -133,30 +133,6 @@ export default function SpallSceneGate({
       };
 
     if (
-      loadStrategy ===
-      "archive"
-    ) {
-      loadCode();
-      warmResources();
-
-      const timeoutId =
-        window.setTimeout(
-          () => {
-            setShouldLoadScene(
-              true,
-            );
-          },
-          0,
-        );
-
-      return () => {
-        window.clearTimeout(
-          timeoutId,
-        );
-      };
-    }
-
-    if (
       typeof IntersectionObserver ===
       "undefined"
     ) {
