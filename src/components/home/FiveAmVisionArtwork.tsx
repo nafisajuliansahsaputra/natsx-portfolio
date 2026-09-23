@@ -104,7 +104,11 @@ export default function FiveAmVisionArtwork({
             src="/images/projects/5am-vision/5am-logo.png"
             alt=""
             fill
-            loading="lazy"
+            loading={
+              archive
+                ? "eager"
+                : "lazy"
+            }
             sizes={
               archive
                 ? "24px"
@@ -223,7 +227,11 @@ export default function FiveAmVisionArtwork({
           src="/images/projects/5am-vision/aven-cutout.png"
           alt=""
           fill
-          loading="lazy"
+          loading={
+              archive
+                ? "eager"
+                : "lazy"
+            }
           sizes={
             archive
               ? "360px"
