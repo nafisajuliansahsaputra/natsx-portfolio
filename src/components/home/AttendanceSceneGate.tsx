@@ -122,16 +122,6 @@ export default function AttendanceSceneGate({
             "high",
           );
 
-          void warmSceneResources(
-            [
-              "/models/attendance/imac.glb",
-              "/models/attendance/scanner.glb",
-              "/models/attendance/badge.glb",
-            ],
-            1,
-            "low",
-          );
-
           return;
         }
 
@@ -147,6 +137,29 @@ export default function AttendanceSceneGate({
           1,
         );
       };
+
+    if (
+      loadStrategy ===
+      "archive"
+    ) {
+      loadCode();
+      warmResources();
+
+      const frame =
+        window.requestAnimationFrame(
+          () => {
+            setShouldLoadScene(
+              true,
+            );
+          },
+        );
+
+      return () => {
+        window.cancelAnimationFrame(
+          frame,
+        );
+      };
+    }
 
     if (
       typeof IntersectionObserver ===
