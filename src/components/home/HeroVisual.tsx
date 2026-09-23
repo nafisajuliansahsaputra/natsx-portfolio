@@ -8,6 +8,8 @@ import {
 
 import Image from "next/image";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 import type {
   Locale,
 } from "@/i18n/config";
@@ -211,6 +213,9 @@ export default function HeroVisual({
       locale,
     );
 
+  const introDone =
+    useIntroCompletion();
+
   const [
     portraitLoaded,
     setPortraitLoaded,
@@ -258,7 +263,8 @@ export default function HeroVisual({
 
   useEffect(() => {
     if (
-      !portraitLoaded
+      !portraitLoaded ||
+      !introDone
     ) {
       return;
     }
@@ -366,6 +372,7 @@ export default function HeroVisual({
       );
     };
   }, [
+    introDone,
     portraitLoaded,
   ]);
 
@@ -408,6 +415,7 @@ export default function HeroVisual({
 
     function syncAmbientState() {
       const active =
+        introDone &&
         isInView &&
         !document.hidden &&
         !reducedMotion.matches;
@@ -470,7 +478,9 @@ export default function HeroVisual({
       delete heroElement.dataset
         .ambientActive;
     };
-  }, []);
+  }, [
+    introDone,
+  ]);
 
 
   /*
