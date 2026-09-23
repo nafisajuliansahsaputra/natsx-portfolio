@@ -132,7 +132,7 @@
   [data-spall-featured="true"] {
   transform:
     scale(
-      0.96
+      1
     );
 
   transform-origin:
@@ -333,7 +333,7 @@
   [data-bast-featured="true"] {
   transform:
     scale(
-      0.95
+      1
     );
 
   transform-origin:
@@ -371,7 +371,7 @@
   [data-attendance-featured="true"] {
   transform:
     scale(
-      0.92
+      1
     );
 
   transform-origin:
