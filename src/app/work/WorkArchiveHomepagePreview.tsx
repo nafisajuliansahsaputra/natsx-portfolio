@@ -226,7 +226,6 @@ export default function WorkArchiveHomepagePreview({
             visualLabel={
               visualLabel
             }
-            mode="archive"
           />
         ) : null}
 
@@ -270,7 +269,6 @@ export default function WorkArchiveHomepagePreview({
             secondaryVisual={
               secondaryVisual
             }
-            mode="archive"
           />
         ) : null}
       </div>
