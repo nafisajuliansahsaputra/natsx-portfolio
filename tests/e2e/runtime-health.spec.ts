@@ -102,12 +102,21 @@ async function assertRuntimeHealthy(
       page,
     );
 
+  /*
+   * The app intentionally warms project images in the background after
+   * hydration. Waiting for "networkidle" therefore no longer describes
+   * runtime health: the page can be fully interactive while low-priority
+   * cache warming is still active.
+   *
+   * Use DOM readiness, then explicitly assert the hydrated app shell and
+   * give client effects a short window to surface real runtime errors.
+   */
   const response =
     await page.goto(
       route,
       {
         waitUntil:
-          "networkidle",
+          "domcontentloaded",
       },
     );
 
