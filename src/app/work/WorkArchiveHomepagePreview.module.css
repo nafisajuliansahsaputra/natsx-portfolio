@@ -324,9 +324,9 @@
 ========================================================= */
 
 /*
- * Same homepage 3D artwork; only the whole internal canvas is
- * backed off slightly so laptop, printer and document remain
- * comfortably inside the existing archive frame.
+ * Archive-only composition.
+ * Keep the artwork full bleed, but separate copy, 3D hardware
+ * and document so they read as one clean editorial thumbnail.
  */
 
 .root[data-archive-home-preview="bast"]
@@ -341,10 +341,139 @@
 }
 
 
-/*
- * BAST includes a Next/Image document sheet. Keep it intact
- * instead of letting the generic archive image crop it.
- */
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="copy"] {
+  top:
+    16% !important;
+
+  left:
+    4.8% !important;
+
+  width:
+    24% !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="headline"] {
+  font-size:
+    8.1cqw !important;
+
+  line-height:
+    0.92 !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="system-name"] {
+  margin-top:
+    1.25cqw !important;
+
+  font-size:
+    1.08cqw !important;
+
+  line-height:
+    1.42 !important;
+
+  letter-spacing:
+    0.18em !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="copy-rule"] {
+  width:
+    3.1cqw !important;
+
+  margin-top:
+    1.55cqw !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="description"] {
+  margin-top:
+    1.45cqw !important;
+
+  font-size:
+    1.42cqw !important;
+
+  line-height:
+    1.38 !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="scene"]
+  > * {
+  top:
+    5% !important;
+
+  left:
+    36% !important;
+
+  width:
+    66% !important;
+
+  height:
+    93% !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="document"] {
+  left:
+    26.5% !important;
+
+  bottom:
+    5.5% !important;
+
+  width:
+    16.5% !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="orbit"] {
+  top:
+    15% !important;
+
+  left:
+    51% !important;
+
+  width:
+    39% !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="orbit-bubble"] {
+  top:
+    10% !important;
+
+  left:
+    44% !important;
+
+  width:
+    13.5% !important;
+}
+
+
+.root[data-archive-home-preview="bast"]
+  [data-bast-part="top-note"] {
+  top:
+    5.5% !important;
+
+  right:
+    3.5% !important;
+
+  gap:
+    1cqw !important;
+
+  font-size:
+    0.64cqw !important;
+}
+
 
 .root[data-archive-home-preview="bast"]
   img {
@@ -361,10 +490,10 @@
 ========================================================= */
 
 /*
- * Attendance is taller/more object-dense than Spall/BAST.
- * A slightly stronger internal scale keeps iMac, scanner,
- * badge and floating cards visible together without changing
- * the thumbnail frame itself.
+ * Archive-only composition.
+ * Copy owns a clean left column; the iMac/scanner/card group
+ * owns the right side. Nothing is scaled away from the edges,
+ * so the thumbnail stays full bleed.
  */
 
 .root[data-archive-home-preview="attendance"]
@@ -376,6 +505,91 @@
 
   transform-origin:
     center center;
+}
+
+
+.root[data-archive-home-preview="attendance"]
+  [data-attendance-part="copy"] {
+  top:
+    49% !important;
+
+  left:
+    4.5% !important;
+
+  width:
+    30% !important;
+}
+
+
+.root[data-archive-home-preview="attendance"]
+  [data-attendance-part="headline"] {
+  width:
+    100% !important;
+
+  font-size:
+    6.05cqw !important;
+
+  line-height:
+    0.88 !important;
+
+  letter-spacing:
+    -0.068em !important;
+}
+
+
+.root[data-archive-home-preview="attendance"]
+  [data-attendance-part="system-name"] {
+  margin-top:
+    1.55cqw !important;
+
+  font-size:
+    1.05cqw !important;
+
+  letter-spacing:
+    0.22em !important;
+}
+
+
+.root[data-archive-home-preview="attendance"]
+  [data-attendance-part="rule"] {
+  width:
+    3.2cqw !important;
+
+  margin-top:
+    1.15cqw !important;
+}
+
+
+.root[data-archive-home-preview="attendance"]
+  [data-attendance-part="description"] {
+  margin-top:
+    1.65cqw !important;
+
+  font-size:
+    1.2cqw !important;
+
+  line-height:
+    1.42 !important;
+
+  letter-spacing:
+    0.055em !important;
+}
+
+
+.root[data-archive-home-preview="attendance"]
+  [data-attendance-part="scene"]
+  > * {
+  top:
+    3% !important;
+
+  left:
+    36% !important;
+
+  width:
+    64% !important;
+
+  height:
+    94% !important;
 }
 
 
