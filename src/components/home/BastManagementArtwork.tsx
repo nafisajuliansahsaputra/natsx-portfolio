@@ -45,39 +45,41 @@ export default function BastManagementArtwork({
         styles.artwork
       }
     >
-      <div className={styles.orbit} aria-hidden="true" />
-      <div className={styles.orbitBubble} aria-hidden="true" />
+      <div className={styles.orbit} data-bast-part="orbit" aria-hidden="true" />
+      <div className={styles.orbitBubble} data-bast-part="orbit-bubble" aria-hidden="true" />
 
-      <div className={styles.copy} aria-hidden="true">
-        <h4 className={styles.headline}>BAST</h4>
-        <p className={styles.systemName}>
+      <div className={styles.copy} data-bast-part="copy" aria-hidden="true">
+        <h4 className={styles.headline} data-bast-part="headline">BAST</h4>
+        <p className={styles.systemName} data-bast-part="system-name">
           BERITA ACARA<br />
           SERAH TERIMA<br />
           MANAGEMENT SYSTEM
         </p>
-        <span className={styles.copyRule} />
-        <p className={styles.description}>
+        <span className={styles.copyRule} data-bast-part="copy-rule" />
+        <p className={styles.description} data-bast-part="description">
           From process to proof.<br />
           All in one system.
         </p>
       </div>
 
-      <BastSceneGate
-        className={
-          styles.scene
-        }
-        screenUrl={
+      <div data-bast-part="scene">
+        <BastSceneGate
+          className={
+            styles.scene
+          }
+          screenUrl={
           optimizedScreenUrl
         }
-        label={
-          project.title +
-          " — " +
-          visualLabel
-        }
-      />
+          label={
+            project.title +
+            " — " +
+            visualLabel
+          }
+        />
+      </div>
 
       {secondaryVisual ? (
-        <div className={styles.documentStage} aria-hidden="true">
+        <div className={styles.documentStage} data-bast-part="document" aria-hidden="true">
           <div className={styles.documentShadow} />
           <div className={styles.documentSheet}>
             <Image
@@ -91,7 +93,7 @@ export default function BastManagementArtwork({
         </div>
       ) : null}
 
-      <div className={styles.topNote} aria-hidden="true">
+      <div className={styles.topNote} data-bast-part="top-note" aria-hidden="true">
         <i />
         <p>DOKUMEN LEBIH TERATUR,<br />KERJA LEBIH MAJU.</p>
       </div>
