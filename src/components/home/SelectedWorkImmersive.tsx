@@ -466,106 +466,142 @@ export default function SelectedWorkImmersive() {
           viewportHeight *
           profile.focusLine;
 
+        /*
+         * Keep every layout read together.
+         *
+         * Previously each visual rect read was
+         * immediately followed by style writes,
+         * which could force the browser to bounce
+         * between layout and style work during
+         * scroll. The math below is unchanged;
+         * only the read/write order is improved.
+         */
+        const measurements =
+          states.map(
+            (
+              state,
+              index,
+            ) => {
+              const rect =
+                state.visual
+                  .getBoundingClientRect();
+
+              const visualCenter =
+                rect.top +
+                rect.height /
+                  2;
+
+              const distance =
+                visualCenter -
+                focusLine;
+
+              const absoluteDistance =
+                Math.abs(
+                  distance,
+                );
+
+              const progress =
+                clamp(
+                  distance /
+                    (
+                      viewportHeight *
+                      profile.progressRange
+                    ),
+                  -1,
+                  1,
+                );
+
+              const activeStrength =
+                clamp(
+                  1 -
+                    absoluteDistance /
+                      (
+                        viewportHeight *
+                        profile.activeRange
+                      ),
+                  0,
+                  1,
+                );
+
+              return {
+                state,
+                index,
+                absoluteDistance,
+
+                visualY:
+                  -progress *
+                  profile.visualTravel,
+
+                headerY:
+                  -progress *
+                  profile.headerTravel,
+
+                footerY:
+                  progress *
+                  profile.footerTravel,
+
+                visualScale:
+                  1 +
+                  activeStrength *
+                    profile.scaleStrength,
+
+                frameOpacity:
+                  activeStrength *
+                  profile.frameOpacity,
+
+                metaOpacity:
+                  profile.metaBaseOpacity +
+                  activeStrength *
+                    (
+                      1 -
+                      profile.metaBaseOpacity
+                    ),
+              };
+            },
+          );
+
         let nearestIndex =
           0;
 
         let nearestDistance =
           Number.POSITIVE_INFINITY;
 
-        states.forEach(
+        measurements.forEach(
           (
-            state,
-            index,
+            measurement,
           ) => {
-            const rect =
-              state.visual
-                .getBoundingClientRect();
-
-            const visualCenter =
-              rect.top +
-              rect.height /
-                2;
-
-            const distance =
-              visualCenter -
-              focusLine;
-
-            const absoluteDistance =
-              Math.abs(
-                distance,
-              );
-
             if (
-              absoluteDistance <
+              measurement
+                .absoluteDistance <
               nearestDistance
             ) {
               nearestDistance =
-                absoluteDistance;
+                measurement
+                  .absoluteDistance;
 
               nearestIndex =
-                index;
+                measurement
+                  .index;
             }
+          },
+        );
 
-            const progress =
-              clamp(
-                distance /
-                  (
-                    viewportHeight *
-                    profile.progressRange
-                  ),
-                -1,
-                1,
-              );
-
-            const activeStrength =
-              clamp(
-                1 -
-                  absoluteDistance /
-                    (
-                      viewportHeight *
-                      profile.activeRange
-                    ),
-                0,
-                1,
-              );
-
-            /*
-             * Visual bergerak berlawanan
-             * arah perjalanan viewport.
-             */
-            const visualY =
-              -progress *
-              profile.visualTravel;
-
-            /*
-             * Header & footer dipisah
-             * sedikit untuk layered depth.
-             */
-            const headerY =
-              -progress *
-              profile.headerTravel;
-
-            const footerY =
-              progress *
-              profile.footerTravel;
-
-            const visualScale =
-              1 +
-              activeStrength *
-                profile.scaleStrength;
-
-            const frameOpacity =
-              activeStrength *
-              profile.frameOpacity;
-
-            const metaOpacity =
-              profile.metaBaseOpacity +
-              activeStrength *
-                (
-                  1 -
-                  profile.metaBaseOpacity
-                );
-
+        /*
+         * All style writes happen only after
+         * every getBoundingClientRect() read.
+         */
+        measurements.forEach(
+          (
+            {
+              state,
+              visualY,
+              headerY,
+              footerY,
+              visualScale,
+              frameOpacity,
+              metaOpacity,
+            },
+          ) => {
             setMotionProperty(
               state.project,
               "--sw-scroll-y",
