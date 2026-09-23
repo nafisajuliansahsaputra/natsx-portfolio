@@ -1,9 +1,5 @@
 "use client";
 
-import type {
-  CSSProperties,
-} from "react";
-
 import {
   useEffect,
   useRef,
@@ -70,12 +66,14 @@ export default function PortfolioIntro() {
       "running",
     );
 
-  const [
-    progress,
-    setProgress,
-  ] =
-    useState(
-      0,
+  const introRef =
+    useRef<HTMLDivElement>(
+      null,
+    );
+
+  const progressNumberRef =
+    useRef<HTMLSpanElement>(
+      null,
     );
 
   const animationFrame =
@@ -194,6 +192,57 @@ export default function PortfolioIntro() {
     let keyboardAttached =
       false;
 
+    let lastProgress =
+      -1;
+
+    function setProgressVisual(
+      value: number,
+    ) {
+      const next =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(
+              value,
+            ),
+          ),
+        );
+
+      if (
+        next ===
+        lastProgress
+      ) {
+        return;
+      }
+
+      lastProgress =
+        next;
+
+      introRef.current
+        ?.style.setProperty(
+          "--intro-progress",
+          `${next}%`,
+        );
+
+      if (
+        progressNumberRef.current
+      ) {
+        progressNumberRef.current
+          .textContent =
+          String(
+            next,
+          ).padStart(
+            2,
+            "0",
+          );
+      }
+    }
+
+    setProgressVisual(
+      0,
+    );
+
     document.documentElement
       .dataset.intro =
       "running";
@@ -274,7 +323,7 @@ export default function PortfolioIntro() {
           null;
       }
 
-      setProgress(
+      setProgressVisual(
         100,
       );
 
@@ -349,11 +398,9 @@ export default function PortfolioIntro() {
           1,
         );
 
-      setProgress(
-        Math.round(
-          normalized *
-            100,
-        ),
+      setProgressVisual(
+        normalized *
+          100,
       );
 
       if (
@@ -428,30 +475,17 @@ export default function PortfolioIntro() {
     return null;
   }
 
-  const progressLabel =
-    String(
-      progress,
-    ).padStart(
-      2,
-      "0",
-    );
-
-  const progressStyle = {
-    "--intro-progress":
-      `${progress}%`,
-  } as CSSProperties;
-
   return (
     <div
+      ref={
+        introRef
+      }
       className={
         styles.intro
       }
       data-portfolio-intro
       data-phase={
         phase
-      }
-      style={
-        progressStyle
       }
       aria-hidden="true"
       onPointerDown={() => {
@@ -686,13 +720,14 @@ export default function PortfolioIntro() {
             }
           >
             <span
+              ref={
+                progressNumberRef
+              }
               className={
                 styles.progressNumber
               }
             >
-              {
-                progressLabel
-              }
+              00
             </span>
 
             <div
