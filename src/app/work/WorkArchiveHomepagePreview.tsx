@@ -4,11 +4,6 @@ import type {
 
 import Image from "next/image";
 
-import AttendanceSystemArtwork from "@/components/home/AttendanceSystemArtwork";
-import BastManagementArtwork from "@/components/home/BastManagementArtwork";
-import FiveAmVisionArtwork from "@/components/home/FiveAmVisionArtwork";
-import SpallSpillArtwork from "@/components/home/SpallSpillArtwork";
-
 import type {
   PublicProject,
 } from "@/lib/public-projects";
@@ -76,6 +71,25 @@ type WorkArchiveHomepagePreviewProps = {
 };
 
 
+const STATIC_THUMBNAILS:
+  Record<
+    HomepageArchiveVariant,
+    string
+  > = {
+    spall:
+      "/images/work-thumbnails/spall.webp",
+
+    vision:
+      "/images/work-thumbnails/vision.webp",
+
+    bast:
+      "/images/work-thumbnails/bast.webp",
+
+    attendance:
+      "/images/work-thumbnails/attendance.webp",
+  };
+
+
 function getHomepageArchiveVariant(
   slug:
     string,
@@ -120,10 +134,7 @@ export function hasHomepageArchiveArtwork(
 
 export default function WorkArchiveHomepagePreview({
   project,
-  primaryVisual,
-  secondaryVisual,
   fallbackImage,
-  copy,
 }: WorkArchiveHomepagePreviewProps) {
   const variant =
     getHomepageArchiveVariant(
@@ -140,12 +151,6 @@ export default function WorkArchiveHomepagePreview({
   } as CSSProperties;
 
 
-  /*
-   * Projects without a coded Selected Work visual keep the
-   * original image preview. The /work frame itself is owned
-   * by the existing archive layout and is intentionally not
-   * changed here.
-   */
   if (
     !variant
   ) {
@@ -182,18 +187,6 @@ export default function WorkArchiveHomepagePreview({
   }
 
 
-  const visualLabel =
-    project.disciplines
-      .slice(
-        0,
-        2,
-      )
-      .join(
-        " / ",
-      ) ||
-    copy.selectedProject;
-
-
   return (
     <div
       className={
@@ -206,72 +199,21 @@ export default function WorkArchiveHomepagePreview({
         rootStyle
       }
     >
-      <div
+      <Image
+        src={
+          STATIC_THUMBNAILS[
+            variant
+          ]
+        }
+        alt=""
+        fill
+        unoptimized
+        loading="eager"
+        sizes="1400px"
         className={
-          styles.selectedArtwork
+          styles.staticSnapshot
         }
-        data-archive-selected-artwork={
-          variant
-        }
-      >
-        {variant ===
-        "spall" ? (
-          <SpallSpillArtwork
-            project={
-              project
-            }
-            secondaryVisual={
-              secondaryVisual
-            }
-            visualLabel={
-              visualLabel
-            }
-          />
-        ) : null}
-
-        {variant ===
-        "vision" ? (
-          <FiveAmVisionArtwork
-            copy={
-              copy.visionArtwork
-            }
-            mode="archive"
-          />
-        ) : null}
-
-        {variant ===
-        "bast" ? (
-          <BastManagementArtwork
-            project={
-              project
-            }
-            primaryVisual={
-              primaryVisual
-            }
-            secondaryVisual={
-              secondaryVisual
-            }
-            visualLabel={
-              visualLabel
-            }
-          />
-        ) : null}
-
-        {variant ===
-        "attendance" ? (
-          <AttendanceSystemArtwork
-            project={
-              project
-            }
-            primaryVisual={
-              primaryVisual
-            }
-            secondaryVisual={
-              secondaryVisual
-            }
-          />
-        ) : null}
-      </div>
+      />
     </div>
   );
 }
