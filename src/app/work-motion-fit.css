@@ -1047,6 +1047,46 @@
 }
 
 
+
+/* =========================================================
+   LONG PROJECT TITLES
+========================================================= */
+
+/*
+ * Keep the archive layout and single-line title behavior.
+ * Only long project names get a smaller desktop title so the
+ * complete name remains visible instead of ending in "...".
+ */
+
+@media (
+  min-width: 961px
+) {
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-project-slug="smart-attendance-system"]
+    > div:first-of-type
+    > h2 {
+    font-size:
+      clamp(
+        42px,
+        4.55vw,
+        70px
+      );
+  }
+
+  [data-motion-page="work"]
+    [data-motion-scroll="work-project"][data-project-slug="bast-management-system"]
+    > div:first-of-type
+    > h2 {
+    font-size:
+      clamp(
+        36px,
+        3.8vw,
+        58px
+      );
+  }
+}
+
+
 /* =========================================================
    REDUCED MOTION
 ========================================================= */
