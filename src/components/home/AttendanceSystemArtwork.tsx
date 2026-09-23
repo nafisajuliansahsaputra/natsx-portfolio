@@ -20,17 +20,12 @@ type AttendanceSystemArtworkProps = {
 
   secondaryVisual:
     string | null;
-
-  mode?:
-    | "home"
-    | "archive";
 };
 
 export default function AttendanceSystemArtwork({
   project,
   primaryVisual,
   secondaryVisual,
-  mode = "home",
 }: AttendanceSystemArtworkProps) {
   const dashboardImageUrl =
     getWebglTextureUrl(
@@ -133,12 +128,6 @@ export default function AttendanceSystemArtwork({
         }
           badgeImageUrl={
             badgeImageUrl
-          }
-          loadStrategy={
-            mode ===
-              "archive"
-              ? "archive"
-              : "viewport"
           }
         />
       </div>
