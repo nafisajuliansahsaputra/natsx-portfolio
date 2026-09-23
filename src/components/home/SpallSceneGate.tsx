@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 import {
   getSceneMargin,
   warmSceneResources,
@@ -44,6 +46,9 @@ export default function SpallSceneGate({
   label,
   screenUrl,
 }: SpallSceneGateProps) {
+  const introDone =
+    useIntroCompletion();
+
   const sceneRef =
     useRef<HTMLDivElement>(
       null,
@@ -58,6 +63,12 @@ export default function SpallSceneGate({
     );
 
   useEffect(() => {
+    if (
+      !introDone
+    ) {
+      return;
+    }
+
     const scene =
       sceneRef.current;
 
@@ -196,6 +207,7 @@ export default function SpallSceneGate({
         ?.disconnect();
     };
   }, [
+    introDone,
     screenUrl,
   ]);
 
