@@ -2270,7 +2270,7 @@ const checkInCardData = createFloatingCard(
           const width = hostElement.clientWidth;
           const height = hostElement.clientHeight;
 
-          if (!width || !height) {
+          if (!width || !height || !visible) {
             return;
           }
 
@@ -2330,10 +2330,11 @@ const checkInCardData = createFloatingCard(
                 }
 
                 previousMotionFrameTime = 0;
+                webgl.setSize(1, 1, false);
                 return;
               }
 
-              webgl.render(scene, camera);
+              resize();
 
               if (!animationFrameId) {
                 animationFrameId =
