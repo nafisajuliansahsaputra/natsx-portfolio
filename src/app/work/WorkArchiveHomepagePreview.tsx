@@ -4,10 +4,10 @@ import type {
 
 import Image from "next/image";
 
+import AttendanceSystemArtwork from "@/components/home/AttendanceSystemArtwork";
+import BastManagementArtwork from "@/components/home/BastManagementArtwork";
 import FiveAmVisionArtwork from "@/components/home/FiveAmVisionArtwork";
-
-import artworkStyles from "./WorkArchiveArtwork.module.css";
-import phoneStyles from "@/components/home/SpallPhone.module.css";
+import SpallSpillArtwork from "@/components/home/SpallSpillArtwork";
 
 import type {
   PublicProject,
@@ -16,11 +16,11 @@ import type {
 import styles from "./WorkArchiveHomepagePreview.module.css";
 
 
-
 type HomepageArchiveVariant =
   | "spall"
   | "vision"
-  | "bast";
+  | "bast"
+  | "attendance";
 
 
 type WorkArchivePreviewCopy = {
@@ -57,15 +57,7 @@ type WorkArchivePreviewCopy = {
 
 type WorkArchiveHomepagePreviewProps = {
   project:
-    Pick<
-      PublicProject,
-      | "slug"
-      | "number"
-      | "title"
-      | "disciplines"
-      | "accentColor"
-      | "secondaryColor"
-    >;
+    PublicProject;
 
   primaryVisual:
     | string
@@ -101,6 +93,11 @@ function getHomepageArchiveVariant(
 
     case "bast-management-system":
       return "bast";
+
+    case "nusantara-stay":
+    case "attendance-system":
+    case "smart-attendance-system":
+      return "attendance";
 
     default:
       return null;
@@ -144,14 +141,11 @@ export default function WorkArchiveHomepagePreview({
 
 
   /*
-   * ==========================================
-   * NON-HOMEPAGE PROJECT
-   * ==========================================
-   *
-   * Project yang tidak punya coded homepage
-   * artwork tetap memakai preview lama.
+   * Projects without a coded Selected Work visual keep the
+   * original image preview. The /work frame itself is owned
+   * by the existing archive layout and is intentionally not
+   * changed here.
    */
-
   if (
     !variant
   ) {
@@ -188,44 +182,6 @@ export default function WorkArchiveHomepagePreview({
   }
 
 
-  /*
-   * ==========================================
-   * 5AM VISION
-   * ==========================================
-   *
-   * Ini component YANG SAMA dengan homepage.
-   * Bukan screenshot baru dan bukan duplicate.
-   *
-   * mode="archive" cuma mengubah bagaimana
-   * composition merespons canvas yang lebih
-   * lebar.
-   */
-
-  if (
-    variant ===
-    "vision"
-  ) {
-    return (
-      <div
-        className={
-          styles.root
-        }
-        data-archive-home-preview="vision"
-        style={
-          rootStyle
-        }
-      >
-        <FiveAmVisionArtwork
-          copy={
-            copy.visionArtwork
-          }
-          mode="archive"
-        />
-      </div>
-    );
-  }
-
-
   const visualLabel =
     project.disciplines
       .slice(
@@ -238,580 +194,84 @@ export default function WorkArchiveHomepagePreview({
     copy.selectedProject;
 
 
-  /*
-   * ==========================================
-   * SPALL SPILL
-   * ==========================================
-   *
-   * Struktur artwork sama dengan homepage.
-   * CSS utama juga memakai class yang sama.
-   */
-
-  if (
-    variant ===
-    "spall"
-  ) {
-    const titleLines =
-      getTitleLines(
-        project.title,
-      );
-
-    return (
-      <div
-        className={`${styles.root} ${artworkStyles.visual_spall}`}
-        data-archive-home-preview="spall"
-        style={
-          rootStyle
-        }
-      >
-        <div
-          className={
-            artworkStyles.spallArtwork
-          }
-        >
-          <div
-            className={
-              artworkStyles.spallBrowser
-            }
-            data-archive-part="spall-browser"
-          >
-            <BrowserChrome
-              className={
-                artworkStyles.spallBrowserTop
-              }
-              part="spall-browser-top"
-            />
-
-            <div
-              className={
-                artworkStyles.spallBrowserBody
-              }
-            >
-              {primaryVisual ? (
-<ShowcaseImage
-  src={
-    primaryVisual
-  }
-  alt={`${project.title} desktop interface`}
-  className={
-    artworkStyles.spallPrimaryImage
-  }
-  part="spall-primary-image"
-  sizes="420px"
-/>
-              ) : (
-                <div
-                  className={
-                    artworkStyles.spallFallback
-                  }
-                  data-archive-part="spall-fallback"
-                >
-                  <span
-                    className={
-                      artworkStyles.spallMiniLabel
-                    }
-                    data-archive-part="spall-mini-label"
-                  >
-                    {
-                      project.number
-                    }{" "}
-                    / NATSX
-                  </span>
-
-                  <strong>
-                    {
-                      titleLines[0]
-                    }
-
-                    {titleLines[1] ? (
-                      <>
-                        <br />
-
-                        {
-                          titleLines[1]
-                        }
-                      </>
-                    ) : null}
-                  </strong>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {secondaryVisual ? (
-            <SpallPhone
-              project={
-                project
-              }
-              image={
-                secondaryVisual
-              }
-            />
-          ) : (
-            <div
-              className={
-                artworkStyles.spallCard
-              }
-              data-archive-part="spall-card"
-            >
-              <span>
-                {
-                  project.number
-                }
-              </span>
-
-              <strong>
-                SELECTED
-              </strong>
-
-              <strong>
-                WORK
-              </strong>
-            </div>
-          )}
-
-          <span
-            className={
-              artworkStyles.visualLabel
-            }
-            data-archive-part="visual-label"
-          >
-            {
-              visualLabel
-            }
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-
-  /*
-   * ==========================================
-   * BAST
-   * ==========================================
-   */
-
   return (
     <div
-      className={`${styles.root} ${artworkStyles.visual_bast}`}
-      data-archive-home-preview="bast"
+      className={
+        styles.root
+      }
+      data-archive-home-preview={
+        variant
+      }
       style={
         rootStyle
       }
     >
       <div
         className={
-          artworkStyles.bastArtwork
+          styles.selectedArtwork
+        }
+        data-archive-selected-artwork={
+          variant
         }
       >
-        <div
-          className={
-            artworkStyles.bastGrid
-          }
-          data-archive-part="bast-grid"
-          aria-hidden="true"
-        />
-
-        <div
-          className={
-            artworkStyles.bastIndex
-          }
-          data-archive-part="bast-index"
-          aria-hidden="true"
-        >
-          <span>
-            SYSTEM
-          </span>
-
-          <strong>
-            BAST
-          </strong>
-
-          <span>
-            2024—26
-          </span>
-        </div>
-
-        <div
-          className={
-            artworkStyles.bastDashboard
-          }
-          data-archive-part="bast-dashboard"
-        >
-          <div
-            className={
-              artworkStyles.bastDashboardTop
+        {variant ===
+        "spall" ? (
+          <SpallSpillArtwork
+            project={
+              project
             }
-            data-archive-part="bast-dashboard-top"
-          >
-            <div>
-              <span />
-              <span />
-              <span />
-            </div>
-
-            <span>
-              MANAGEMENT SYSTEM
-            </span>
-          </div>
-
-          <div
-            className={
-              artworkStyles.bastDashboardViewport
+            secondaryVisual={
+              secondaryVisual
             }
-          >
-            {primaryVisual ? (
-<ShowcaseImage
-  src={
-    primaryVisual
-  }
-  alt={`${project.title} main system interface`}
-  className={
-    artworkStyles.bastPrimaryImage
-  }
-  part="bast-primary-image"
-  sizes="420px"
-/>
-            ) : (
-              <BastFallback />
-            )}
-          </div>
-        </div>
-
-        <div
-          className={
-            artworkStyles.bastDocument
-          }
-          data-archive-part="bast-document"
-        >
-          {secondaryVisual ? (
-<ShowcaseImage
-  src={
-    secondaryVisual
-  }
-  alt={`${project.title} supporting workflow visual`}
-  className={
-    artworkStyles.bastSecondaryImage
-  }
-  part="bast-secondary-image"
-  sizes="140px"
-/>
-          ) : (
-            <div
-              className={
-                artworkStyles.bastDocumentFallback
-              }
-              data-archive-part="bast-document-fallback"
-            >
-              <span>
-                BAST / DOC
-              </span>
-
-              <div />
-              <div />
-              <div />
-
-              <strong>
-                VERIFIED
-              </strong>
-            </div>
-          )}
-        </div>
-
-        <div
-          className={
-            artworkStyles.bastStatus
-          }
-          data-archive-part="bast-status"
-          aria-hidden="true"
-        >
-          <span />
-
-          <div>
-            <small>
-              STATUS
-            </small>
-
-            <strong>
-              ACTIVE
-            </strong>
-          </div>
-        </div>
-
-        <span
-          className={
-            artworkStyles.visualLabel
-          }
-          data-archive-part="visual-label"
-        >
-          {
-            visualLabel
-          }
-        </span>
-      </div>
-    </div>
-  );
-}
-
-
-function SpallPhone({
-  project,
-  image,
-}: {
-  project:
-    Pick<
-      PublicProject,
-      "title"
-    >;
-
-  image:
-    string;
-}) {
-  return (
-    <div
-      className={
-        phoneStyles.stage
-      }
-      data-archive-part="spall-phone"
-    >
-      <div
-        className={
-          phoneStyles.phone
-        }
-        data-archive-part="spall-phone-device"
-      >
-        <div
-          className={
-            phoneStyles.screen
-          }
-          data-archive-part="spall-phone-screen"
-        >
-<ShowcaseImage
-  src={
-    image
-  }
-  alt={`${project.title} mobile interface`}
-  className={
-    phoneStyles.image
-  }
-  part="spall-phone-image"
-  sizes="100px"
-/>
-        </div>
-
-        <div
-          className={
-            phoneStyles.hardware
-          }
-          data-archive-part="spall-phone-hardware"
-          aria-hidden="true"
-        >
-          <span
-            className={
-              phoneStyles.speaker
+            visualLabel={
+              visualLabel
             }
-            data-archive-part="spall-phone-speaker"
           />
+        ) : null}
 
-          <span
-            className={
-              phoneStyles.camera
+        {variant ===
+        "vision" ? (
+          <FiveAmVisionArtwork
+            copy={
+              copy.visionArtwork
             }
-            data-archive-part="spall-phone-camera"
+            mode="archive"
           />
-        </div>
+        ) : null}
+
+        {variant ===
+        "bast" ? (
+          <BastManagementArtwork
+            project={
+              project
+            }
+            primaryVisual={
+              primaryVisual
+            }
+            secondaryVisual={
+              secondaryVisual
+            }
+            visualLabel={
+              visualLabel
+            }
+          />
+        ) : null}
+
+        {variant ===
+        "attendance" ? (
+          <AttendanceSystemArtwork
+            project={
+              project
+            }
+            primaryVisual={
+              primaryVisual
+            }
+            secondaryVisual={
+              secondaryVisual
+            }
+          />
+        ) : null}
       </div>
     </div>
-  );
-}
-
-
-function BrowserChrome({
-  className,
-  part,
-}: {
-  className:
-    string;
-
-  part:
-    string;
-}) {
-  return (
-    <div
-      className={
-        className
-      }
-      data-archive-part={
-        part
-      }
-      aria-hidden="true"
-    >
-      <span />
-      <span />
-      <span />
-    </div>
-  );
-}
-
-
-function ShowcaseImage({
-  src,
-  alt,
-  className,
-  part,
-  sizes,
-}: {
-  src:
-    string;
-
-  alt:
-    string;
-
-  className:
-    string;
-
-  part:
-    string;
-
-  sizes:
-    string;
-}) {
-  return (
-    <Image
-      src={
-        src
-      }
-      alt={
-        alt
-      }
-      fill
-      loading="lazy"
-      sizes={
-        sizes
-      }
-      className={
-        className
-      }
-      data-archive-part={
-        part
-      }
-    />
-  );
-}
-
-
-function BastFallback() {
-  return (
-    <div
-      className={
-        artworkStyles.bastFallback
-      }
-      data-archive-part="bast-fallback"
-    >
-      <aside>
-        <span>
-          NATSX
-        </span>
-
-        <i />
-        <i />
-        <i />
-        <i />
-      </aside>
-
-      <div
-        className={
-          artworkStyles.bastFallbackMain
-        }
-      >
-        <div
-          className={
-            artworkStyles.bastFallbackHeader
-          }
-        >
-          <span>
-            Dashboard
-          </span>
-
-          <span>
-            ●
-          </span>
-        </div>
-
-        <div
-          className={
-            artworkStyles.bastFallbackCards
-          }
-        >
-          <span />
-          <span />
-          <span />
-        </div>
-
-        <div
-          className={
-            artworkStyles.bastFallbackTable
-          }
-        >
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-function getTitleLines(
-  title:
-    string,
-) {
-  const words =
-    title
-      .trim()
-      .split(
-        /\s+/,
-      )
-      .filter(
-        Boolean,
-      );
-
-  if (
-    words.length <=
-    1
-  ) {
-    return [
-      title.trim(),
-    ];
-  }
-
-  const midpoint =
-    Math.ceil(
-      words.length /
-        2,
-    );
-
-  return [
-    words
-      .slice(
-        0,
-        midpoint,
-      )
-      .join(
-        " ",
-      ),
-
-    words
-      .slice(
-        midpoint,
-      )
-      .join(
-        " ",
-      ),
-  ].filter(
-    Boolean,
   );
 }
