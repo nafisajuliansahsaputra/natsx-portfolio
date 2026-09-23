@@ -50,6 +50,63 @@
 
 
 /* =========================================================
+   STATIC WORK SNAPSHOT
+========================================================= */
+
+/*
+ * Snapshot files contain the complete approved hover row.
+ * The archive preview frame owns only the left visual pane,
+ * so display the left 39.1% slice at its native proportion.
+ * This replaces WebGL/GLB rendering without changing the
+ * surrounding /work layout or hover motion.
+ */
+
+.staticSnapshot {
+  position:
+    absolute !important;
+
+  top:
+    0 !important;
+
+  right:
+    auto !important;
+
+  bottom:
+    auto !important;
+
+  left:
+    0 !important;
+
+  width:
+    255.5% !important;
+
+  max-width:
+    none !important;
+
+  height:
+    100% !important;
+
+  object-fit:
+    fill !important;
+
+  object-position:
+    left center !important;
+
+  transform:
+    none !important;
+
+  filter:
+    none !important;
+
+  transition:
+    none !important;
+
+  will-change:
+    auto !important;
+}
+
+
+/* =========================================================
    SELECTED WORK CONTENT CANVAS
 ========================================================= */
 
