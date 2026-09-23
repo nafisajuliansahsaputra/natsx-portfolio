@@ -523,6 +523,19 @@
 
   width:
     30% !important;
+
+  transform:
+    translate3d(
+      var(--attendance-copy-x),
+      var(--attendance-copy-y),
+      0
+    )
+    translateY(
+      -50%
+    )
+    rotate(
+      var(--attendance-copy-rotate)
+    ) !important;
 }
 
 
