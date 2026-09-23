@@ -149,6 +149,30 @@ export default function AttendanceSceneGate({
       };
 
     if (
+      loadStrategy ===
+      "archive"
+    ) {
+      loadCode();
+      warmResources();
+
+      const timeoutId =
+        window.setTimeout(
+          () => {
+            setShouldLoadScene(
+              true,
+            );
+          },
+          260,
+        );
+
+      return () => {
+        window.clearTimeout(
+          timeoutId,
+        );
+      };
+    }
+
+    if (
       typeof IntersectionObserver ===
       "undefined"
     ) {
