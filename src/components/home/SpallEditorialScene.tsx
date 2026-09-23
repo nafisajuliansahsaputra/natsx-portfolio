@@ -1568,7 +1568,8 @@ function Scene({
 
             if (
               !width ||
-              !height
+              !height ||
+              !visible
             ) {
               return;
             }
@@ -2364,6 +2365,7 @@ function Scene({
                 if (
                   visible
                 ) {
+                  resize();
                   schedule();
                 } else {
                   if (
@@ -2379,6 +2381,17 @@ function Scene({
 
                   previous =
                     0;
+
+                  /*
+                   * Keep model/material GPU resources warm,
+                   * but release the large off-screen
+                   * drawing buffer until the scene returns.
+                   */
+                  webgl.setSize(
+                    1,
+                    1,
+                    false,
+                  );
                 }
               },
             );
