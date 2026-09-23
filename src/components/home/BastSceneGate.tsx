@@ -30,11 +30,14 @@ const BastEditorialScene =
     },
   );
 
-const BAST_PRELOAD_VIEWPORTS =
-  3;
+const BAST_CODE_PRELOAD_VIEWPORTS =
+  2.5;
+
+const BAST_RESOURCE_PRELOAD_VIEWPORTS =
+  1.5;
 
 const BAST_PREPARE_VIEWPORTS =
-  2;
+  0.85;
 
 type BastSceneGateProps = {
   className:
@@ -82,19 +85,23 @@ export default function BastSceneGate({
       return;
     }
 
-    const preload =
+    const loadCode =
       () => {
         void loadBastEditorialScene()
           .catch(
             () => undefined,
           );
+      };
 
+    const warmResources =
+      () => {
         void warmSceneResources(
           [
             "/models/bast/macbook-pro.glb",
             "/models/bast/printer.glb",
             screenUrl,
           ],
+          1,
         );
       };
 
@@ -102,7 +109,8 @@ export default function BastSceneGate({
       typeof IntersectionObserver ===
       "undefined"
     ) {
-      preload();
+      loadCode();
+      warmResources();
 
       const frame =
         window.requestAnimationFrame(
@@ -120,98 +128,78 @@ export default function BastSceneGate({
       };
     }
 
-    let preloadObserver:
-      IntersectionObserver |
-      null =
-      null;
+    const createOneShotObserver =
+      (
+        callback:
+          () => void,
+        viewportMargin:
+          number,
+      ) => {
+        const observer =
+          new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              if (
+                !entry
+                  ?.isIntersecting
+              ) {
+                return;
+              }
 
-    let prepareObserver:
-      IntersectionObserver |
-      null =
-      null;
+              callback();
 
-    preloadObserver =
-      new IntersectionObserver(
-        (
-          [
-            entry,
-          ],
-        ) => {
-          if (
-            !entry
-              ?.isIntersecting
-          ) {
-            return;
-          }
+              observer.disconnect();
+            },
+            {
+              root:
+                null,
 
-          preload();
+              rootMargin:
+                getSceneMargin(
+                  viewportMargin,
+                ),
 
-          preloadObserver
-            ?.disconnect();
-        },
-        {
-          root:
-            null,
+              threshold:
+                0,
+            },
+          );
 
-          rootMargin:
-            getSceneMargin(
-              BAST_PRELOAD_VIEWPORTS,
-            ),
+        observer.observe(
+          scene,
+        );
 
-          threshold:
-            0,
-        },
+        return observer;
+      };
+
+    const codeObserver =
+      createOneShotObserver(
+        loadCode,
+        BAST_CODE_PRELOAD_VIEWPORTS,
       );
 
-    prepareObserver =
-      new IntersectionObserver(
-        (
-          [
-            entry,
-          ],
-        ) => {
-          if (
-            !entry
-              ?.isIntersecting
-          ) {
-            return;
-          }
+    const resourceObserver =
+      createOneShotObserver(
+        warmResources,
+        BAST_RESOURCE_PRELOAD_VIEWPORTS,
+      );
 
+    const prepareObserver =
+      createOneShotObserver(
+        () => {
           setShouldLoadScene(
             true,
           );
-
-          prepareObserver
-            ?.disconnect();
         },
-        {
-          root:
-            null,
-
-          rootMargin:
-            getSceneMargin(
-              BAST_PREPARE_VIEWPORTS,
-            ),
-
-          threshold:
-            0,
-        },
+        BAST_PREPARE_VIEWPORTS,
       );
 
-    preloadObserver.observe(
-      scene,
-    );
-
-    prepareObserver.observe(
-      scene,
-    );
-
     return () => {
-      preloadObserver
-        ?.disconnect();
-
-      prepareObserver
-        ?.disconnect();
+      codeObserver.disconnect();
+      resourceObserver.disconnect();
+      prepareObserver.disconnect();
     };
   }, [
     introDone,
