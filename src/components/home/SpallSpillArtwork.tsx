@@ -21,17 +21,12 @@ type Props = {
 
   visualLabel:
     string;
-
-  mode?:
-    | "home"
-    | "archive";
 };
 
 export default function SpallSpillArtwork({
   project,
   secondaryVisual,
   visualLabel,
-  mode = "home",
 }: Props) {
   const optimizedScreenUrl =
     getWebglTextureUrl(
@@ -118,12 +113,6 @@ export default function SpallSpillArtwork({
         }
         label={
           `${project.title} — ${visualLabel}`
-        }
-        loadStrategy={
-          mode ===
-            "archive"
-            ? "archive"
-            : "viewport"
         }
       />
 
