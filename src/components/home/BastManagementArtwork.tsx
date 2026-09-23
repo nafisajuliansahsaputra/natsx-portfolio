@@ -25,6 +25,10 @@ type Props = {
 
   visualLabel:
     string;
+
+  mode?:
+    | "home"
+    | "archive";
 };
 
 export default function BastManagementArtwork({
@@ -32,6 +36,7 @@ export default function BastManagementArtwork({
   primaryVisual,
   secondaryVisual,
   visualLabel,
+  mode = "home",
 }: Props) {
   const optimizedScreenUrl =
     getWebglTextureUrl(
@@ -74,6 +79,12 @@ export default function BastManagementArtwork({
             project.title +
             " — " +
             visualLabel
+          }
+          loadStrategy={
+            mode ===
+              "archive"
+              ? "archive"
+              : "viewport"
           }
         />
       </div>
