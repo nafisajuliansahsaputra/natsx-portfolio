@@ -426,7 +426,7 @@ function ShowcaseSlot({
             pendingFile,
             {
               cacheControl:
-                "3600",
+                "31536000",
 
               contentType:
                 pendingFile.type,
