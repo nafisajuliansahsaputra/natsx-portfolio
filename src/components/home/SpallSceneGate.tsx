@@ -112,14 +112,6 @@ export default function SpallSceneGate({
             "high",
           );
 
-          void warmSceneResources(
-            [
-              "/models/iphone-17-pro-max.glb",
-            ],
-            1,
-            "low",
-          );
-
           return;
         }
 
@@ -131,6 +123,29 @@ export default function SpallSceneGate({
           1,
         );
       };
+
+    if (
+      loadStrategy ===
+      "archive"
+    ) {
+      loadCode();
+      warmResources();
+
+      const frame =
+        window.requestAnimationFrame(
+          () => {
+            setShouldLoadScene(
+              true,
+            );
+          },
+        );
+
+      return () => {
+        window.cancelAnimationFrame(
+          frame,
+        );
+      };
+    }
 
     if (
       typeof IntersectionObserver ===
@@ -253,6 +268,10 @@ export default function SpallSceneGate({
           }
           label={
             label
+          }
+          instantReveal={
+            loadStrategy ===
+            "archive"
           }
         />
       ) : null}
