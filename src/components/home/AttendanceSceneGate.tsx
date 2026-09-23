@@ -30,6 +30,15 @@ const AttendanceEditorialScene =
     },
   );
 
+const ATTENDANCE_CODE_PRELOAD_VIEWPORTS =
+  2;
+
+const ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS =
+  1.15;
+
+const ATTENDANCE_PREPARE_VIEWPORTS =
+  0.65;
+
 type AttendanceSceneGateProps = {
   className:
     string;
@@ -84,13 +93,16 @@ export default function AttendanceSceneGate({
       return;
     }
 
-    const preload =
+    const loadCode =
       () => {
         void loadAttendanceEditorialScene()
           .catch(
             () => undefined,
           );
+      };
 
+    const warmResources =
+      () => {
         void warmSceneResources(
           [
             "/models/attendance/imac.glb",
@@ -100,6 +112,7 @@ export default function AttendanceSceneGate({
             scannerImageUrl,
             badgeImageUrl,
           ],
+          1,
         );
       };
 
@@ -107,7 +120,8 @@ export default function AttendanceSceneGate({
       typeof IntersectionObserver ===
       "undefined"
     ) {
-      preload();
+      loadCode();
+      warmResources();
 
       const frame =
         window.requestAnimationFrame(
@@ -125,98 +139,78 @@ export default function AttendanceSceneGate({
       };
     }
 
-    let preloadObserver:
-      IntersectionObserver |
-      null =
-      null;
+    const createOneShotObserver =
+      (
+        callback:
+          () => void,
+        viewportMargin:
+          number,
+      ) => {
+        const observer =
+          new IntersectionObserver(
+            (
+              [
+                entry,
+              ],
+            ) => {
+              if (
+                !entry
+                  ?.isIntersecting
+              ) {
+                return;
+              }
 
-    let prepareObserver:
-      IntersectionObserver |
-      null =
-      null;
+              callback();
 
-    preloadObserver =
-      new IntersectionObserver(
-        (
-          [
-            entry,
-          ],
-        ) => {
-          if (
-            !entry
-              ?.isIntersecting
-          ) {
-            return;
-          }
+              observer.disconnect();
+            },
+            {
+              root:
+                null,
 
-          preload();
+              rootMargin:
+                getSceneMargin(
+                  viewportMargin,
+                ),
 
-          preloadObserver
-            ?.disconnect();
-        },
-        {
-          root:
-            null,
+              threshold:
+                0,
+            },
+          );
 
-          rootMargin:
-            getSceneMargin(
-              2,
-            ),
+        observer.observe(
+          scene,
+        );
 
-          threshold:
-            0,
-        },
+        return observer;
+      };
+
+    const codeObserver =
+      createOneShotObserver(
+        loadCode,
+        ATTENDANCE_CODE_PRELOAD_VIEWPORTS,
       );
 
-    prepareObserver =
-      new IntersectionObserver(
-        (
-          [
-            entry,
-          ],
-        ) => {
-          if (
-            !entry
-              ?.isIntersecting
-          ) {
-            return;
-          }
+    const resourceObserver =
+      createOneShotObserver(
+        warmResources,
+        ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
+      );
 
+    const prepareObserver =
+      createOneShotObserver(
+        () => {
           setShouldLoadScene(
             true,
           );
-
-          prepareObserver
-            ?.disconnect();
         },
-        {
-          root:
-            null,
-
-          rootMargin:
-            getSceneMargin(
-              1,
-            ),
-
-          threshold:
-            0,
-        },
+        ATTENDANCE_PREPARE_VIEWPORTS,
       );
 
-    preloadObserver.observe(
-      scene,
-    );
-
-    prepareObserver.observe(
-      scene,
-    );
-
     return () => {
-      preloadObserver
-        ?.disconnect();
-
-      prepareObserver
-        ?.disconnect();
+      codeObserver.disconnect();
+      resourceObserver.disconnect();
+      prepareObserver.disconnect();
     };
   }, [
     badgeImageUrl,
