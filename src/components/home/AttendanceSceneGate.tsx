@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 import {
   getSceneMargin,
   warmSceneResources,
@@ -52,6 +54,9 @@ export default function AttendanceSceneGate({
   scannerImageUrl,
   badgeImageUrl,
 }: AttendanceSceneGateProps) {
+  const introDone =
+    useIntroCompletion();
+
   const sceneRef =
     useRef<HTMLDivElement>(
       null,
@@ -66,6 +71,12 @@ export default function AttendanceSceneGate({
     );
 
   useEffect(() => {
+    if (
+      !introDone
+    ) {
+      return;
+    }
+
     const scene =
       sceneRef.current;
 
@@ -210,6 +221,7 @@ export default function AttendanceSceneGate({
   }, [
     badgeImageUrl,
     dashboardImageUrl,
+    introDone,
     scannerImageUrl,
   ]);
 
