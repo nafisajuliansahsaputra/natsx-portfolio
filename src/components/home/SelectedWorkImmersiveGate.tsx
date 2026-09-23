@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 /*
  * =========================================================
  * SELECTED WORK — MOBILE PERFORMANCE GATE
@@ -54,6 +56,9 @@ const SelectedWorkImmersive =
   );
 
 export default function SelectedWorkImmersiveGate() {
+  const introDone =
+    useIntroCompletion();
+
   const [
     enabled,
     setEnabled,
@@ -100,6 +105,7 @@ export default function SelectedWorkImmersiveGate() {
               null;
 
             const next =
+              introDone &&
               supportedViewport.matches &&
               nearWork;
 
@@ -182,7 +188,9 @@ export default function SelectedWorkImmersiveGate() {
         );
       }
     };
-  }, []);
+  }, [
+    introDone,
+  ]);
 
   if (!enabled) {
     return null;
