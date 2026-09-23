@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 /*
  * =========================================================
  * HERO AMBIENT — RUNTIME GATE
@@ -16,24 +18,16 @@ import {
  * The visual ambient grid is already hidden
  * by CSS at <= 960px.
  *
- * Previously:
+ * The ambient module is also kept asleep while
+ * the first-entry intro owns the screen. This
+ * prevents SVG geometry work and animation setup
+ * from competing with the intro choreography.
  *
- * mobile/tablet
- * → component hydrated
- * → grid vertices created
- * → SVG paths calculated
- * → ResizeObserver attached
- * → CSS hides the result
- *
- * Now:
- *
- * <= 960px
- * → heavy module is never loaded
- *
- * > 960px
+ * > 960px + intro complete:
  * → exact existing component is loaded
  *
- * Desktop visual behaviour remains untouched.
+ * Desktop visual behaviour after the intro
+ * remains untouched.
  */
 
 const HeroAmbientSignature =
@@ -52,6 +46,9 @@ const HeroAmbientSignature =
   );
 
 export default function HeroAmbientSignatureGate() {
+  const introDone =
+    useIntroCompletion();
+
   const [
     enabled,
     setEnabled,
@@ -88,6 +85,7 @@ export default function HeroAmbientSignatureGate() {
               null;
 
             const next =
+              introDone &&
               desktop.matches;
 
             setEnabled(
@@ -125,7 +123,9 @@ export default function HeroAmbientSignatureGate() {
         );
       }
     };
-  }, []);
+  }, [
+    introDone,
+  ]);
 
   if (!enabled) {
     return null;
