@@ -48,17 +48,12 @@ type SpallSceneGateProps = {
 
   screenUrl:
     string | null;
-
-  loadStrategy?:
-    | "viewport"
-    | "archive";
 };
 
 export default function SpallSceneGate({
   className,
   label,
   screenUrl,
-  loadStrategy = "viewport",
 }: SpallSceneGateProps) {
   const introDone =
     useIntroCompletion();
@@ -100,29 +95,6 @@ export default function SpallSceneGate({
 
     const warmResources =
       () => {
-        if (
-          loadStrategy ===
-          "archive"
-        ) {
-          void warmSceneResources(
-            [
-              screenUrl,
-            ],
-            1,
-            "high",
-          );
-
-          void warmSceneResources(
-            [
-              "/models/iphone-17-pro-max.glb",
-            ],
-            1,
-            "low",
-          );
-
-          return;
-        }
-
         void warmSceneResources(
           [
             "/models/iphone-17-pro-max.glb",
@@ -210,10 +182,7 @@ export default function SpallSceneGate({
     const resourceObserver =
       createOneShotObserver(
         warmResources,
-        loadStrategy ===
-          "archive"
-          ? 2.25
-          : SPALL_RESOURCE_PRELOAD_VIEWPORTS,
+        SPALL_RESOURCE_PRELOAD_VIEWPORTS,
       );
 
     const prepareObserver =
@@ -233,7 +202,6 @@ export default function SpallSceneGate({
     };
   }, [
     introDone,
-    loadStrategy,
     screenUrl,
   ]);
 
