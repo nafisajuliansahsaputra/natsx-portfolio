@@ -255,6 +255,7 @@ export default function WorkArchiveHomepagePreview({
             visualLabel={
               visualLabel
             }
+            mode="archive"
           />
         ) : null}
 
