@@ -760,3 +760,56 @@
       1
     ) !important;
 }
+
+/* =========================================================
+   STATIC SNAPSHOT FINAL OVERRIDE
+========================================================= */
+
+:global(#work-project-list)
+  .root:not(
+    [data-archive-home-preview="fallback"]
+  )
+  .staticSnapshot {
+  position:
+    absolute !important;
+
+  top:
+    0 !important;
+
+  right:
+    auto !important;
+
+  bottom:
+    auto !important;
+
+  left:
+    0 !important;
+
+  width:
+    255.5% !important;
+
+  max-width:
+    none !important;
+
+  height:
+    100% !important;
+
+  object-fit:
+    fill !important;
+
+  object-position:
+    left center !important;
+
+  transform:
+    none !important;
+
+  filter:
+    none !important;
+
+  transition:
+    none !important;
+
+  will-change:
+    auto !important;
+}
+
