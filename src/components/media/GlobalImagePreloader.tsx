@@ -4,6 +4,8 @@ import {
   useEffect,
 } from "react";
 
+import useIntroCompletion from "@/components/intro/useIntroCompletion";
+
 type ManifestImage = {
   url:
     string;
@@ -21,24 +23,50 @@ type ManifestResponse = {
     ManifestImage[];
 };
 
-const STATIC_IMAGE_URLS = [
-  "/images/branding/natsx-logo-animated.svg",
-  "/images/branding/natsx-logo-black.png",
-  "/images/branding/natsx-logo-motion-ready.svg",
-  "/images/branding/natsx-logo.svg",
-  "/images/branding/natsx-symbol.png",
-  "/images/branding/natsx-wordmark-a.png",
-  "/images/branding/natsx-wordmark-n.png",
-  "/images/branding/natsx-wordmark-s.png",
-  "/images/branding/natsx-wordmark-t.png",
-  "/images/branding/natsx-wordmark-x.png",
-  "/images/branding/natsx-wordmark.png",
-  "/images/natsx-abt.webp",
-  "/images/natsx-portrait-hero-altes.png",
-  "/images/natsx-portrait-hero-bases.png",
-  "/images/projects/5am-vision/5am-logo.png",
-  "/images/projects/5am-vision/aven-cutout.png",
-] as const;
+type NetworkInformationLike = {
+  saveData?:
+    boolean;
+
+  effectiveType?:
+    string;
+};
+
+type NavigatorWithConnection =
+  Navigator & {
+    connection?:
+      NetworkInformationLike;
+  };
+
+type IdleDeadlineLike = {
+  didTimeout:
+    boolean;
+
+  timeRemaining:
+    () => number;
+};
+
+type WindowWithIdleCallback =
+  Window &
+  typeof globalThis & {
+    requestIdleCallback?:
+      (
+        callback:
+          (
+            deadline:
+              IdleDeadlineLike,
+          ) => void,
+        options?: {
+          timeout:
+            number;
+        },
+      ) => number;
+
+    cancelIdleCallback?:
+      (
+        handle:
+          number,
+      ) => void;
+  };
 
 const warmedUrls =
   new Set<
@@ -51,8 +79,44 @@ const inFlightImages =
     Promise<void>
   >();
 
+/*
+ * One background transfer at a time.
+ *
+ * This preloader is opportunistic only;
+ * visible images and scene-specific loaders
+ * always have priority over it.
+ */
 const PRELOAD_CONCURRENCY =
-  3;
+  1;
+
+const POST_INTRO_DELAY_MS =
+  1800;
+
+function shouldWarmImages() {
+  const connection =
+    (
+      navigator as
+        NavigatorWithConnection
+    ).connection;
+
+  if (
+    connection
+      ?.saveData
+  ) {
+    return false;
+  }
+
+  const effectiveType =
+    connection
+      ?.effectiveType;
+
+  return (
+    effectiveType !==
+      "slow-2g" &&
+    effectiveType !==
+      "2g"
+  );
+}
 
 function warmImage(
   url:
@@ -157,13 +221,31 @@ async function warmQueue(
 }
 
 export default function GlobalImagePreloader() {
+  const introDone =
+    useIntroCompletion();
+
   useEffect(() => {
+    if (
+      !introDone ||
+      !shouldWarmImages()
+    ) {
+      return;
+    }
+
     let cancelled =
       false;
 
     let timer:
       number | null =
       null;
+
+    let idleHandle:
+      number | null =
+      null;
+
+    const idleWindow =
+      window as
+        WindowWithIdleCallback;
 
     const start =
       async () => {
@@ -174,7 +256,10 @@ export default function GlobalImagePreloader() {
               {
                 cache:
                   "force-cache",
-              },
+
+                priority:
+                  "low",
+              } as RequestInit,
             );
 
           if (
@@ -188,24 +273,39 @@ export default function GlobalImagePreloader() {
             await response.json() as
               ManifestResponse;
 
-          const dynamicUrls =
-            payload.images
-              .map(
-                (
-                  item,
-                ) =>
-                  item.url,
-              )
-              .filter(
-                Boolean,
-              );
-
+          /*
+           * Only warm lightweight navigation-critical
+           * project covers globally.
+           *
+           * Full project media used to be fetched in
+           * the background as well, which could compete
+           * with scrolling, Three.js parsing and visible
+           * Next/Image requests for no immediate benefit.
+           *
+           * Scene-specific screen textures are already
+           * warmed by their own SceneGate.
+           */
           const urls =
             Array.from(
-              new Set([
-                ...STATIC_IMAGE_URLS,
-                ...dynamicUrls,
-              ]),
+              new Set(
+                payload.images
+                  .filter(
+                    (
+                      item,
+                    ) =>
+                      item.group ===
+                      "project-cover",
+                  )
+                  .map(
+                    (
+                      item,
+                    ) =>
+                      item.url,
+                  )
+                  .filter(
+                    Boolean,
+                  ),
+              ),
             );
 
           if (
@@ -239,9 +339,37 @@ export default function GlobalImagePreloader() {
     timer =
       window.setTimeout(
         () => {
+          if (
+            cancelled
+          ) {
+            return;
+          }
+
+          if (
+            idleWindow
+              .requestIdleCallback
+          ) {
+            idleHandle =
+              idleWindow
+                .requestIdleCallback(
+                  () => {
+                    idleHandle =
+                      null;
+
+                    void start();
+                  },
+                  {
+                    timeout:
+                      2500,
+                  },
+                );
+
+            return;
+          }
+
           void start();
         },
-        150,
+        POST_INTRO_DELAY_MS,
       );
 
     return () => {
@@ -256,8 +384,22 @@ export default function GlobalImagePreloader() {
           timer,
         );
       }
+
+      if (
+        idleHandle !==
+          null &&
+        idleWindow
+          .cancelIdleCallback
+      ) {
+        idleWindow
+          .cancelIdleCallback(
+            idleHandle,
+          );
+      }
     };
-  }, []);
+  }, [
+    introDone,
+  ]);
 
   return null;
 }
