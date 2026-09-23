@@ -69,6 +69,25 @@ html[data-intro="exit"] {
     hidden;
 }
 
+/*
+ * While the intro is fully covering the screen,
+ * keep destination layout measurable but skip
+ * painting it. The page becomes visible again
+ * at data-intro="exit", preserving the existing
+ * panel handoff choreography.
+ */
+html[data-intro="pending"]
+  #main-content,
+html[data-intro="running"]
+  #main-content,
+html[data-intro="pending"]
+  .site-header__inner,
+html[data-intro="running"]
+  .site-header__inner {
+  visibility:
+    hidden;
+}
+
 /* =========================================================
    HARD REFRESH BOOTSTRAP
 ========================================================= */
