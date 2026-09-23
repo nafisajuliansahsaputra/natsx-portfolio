@@ -1046,7 +1046,7 @@ export default function GallerySectionEditor({
           file,
           {
             cacheControl:
-              "3600",
+              "31536000",
 
             contentType:
               mimeType,
