@@ -344,13 +344,18 @@
 .root[data-archive-home-preview="bast"]
   [data-bast-part="copy"] {
   top:
-    16% !important;
+    50% !important;
 
   left:
     4.8% !important;
 
   width:
     24% !important;
+
+  transform:
+    translateY(
+      -50%
+    );
 }
 
 
@@ -511,7 +516,7 @@
 .root[data-archive-home-preview="attendance"]
   [data-attendance-part="copy"] {
   top:
-    49% !important;
+    50% !important;
 
   left:
     4.5% !important;
