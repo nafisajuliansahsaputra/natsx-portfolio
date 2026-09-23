@@ -60,12 +60,14 @@ export default function AttendanceSystemArtwork({
         className={
           styles.copy
         }
+        data-attendance-part="copy"
         aria-hidden="true"
       >
         <h4
           className={
             styles.headline
           }
+          data-attendance-part="headline"
         >
           <span>
             Smart
@@ -84,6 +86,7 @@ export default function AttendanceSystemArtwork({
           className={
             styles.systemName
           }
+          data-attendance-part="system-name"
         >
           IDENTITY VERIFICATION SYSTEM
         </p>
@@ -92,12 +95,14 @@ export default function AttendanceSystemArtwork({
           className={
             styles.rule
           }
+          data-attendance-part="rule"
         />
 
         <p
           className={
             styles.description
           }
+          data-attendance-part="description"
         >
           Check in faster.
           <br />
@@ -107,10 +112,11 @@ export default function AttendanceSystemArtwork({
         </p>
       </div>
 
-      <AttendanceSceneGate
-        className={
-          styles.scene
-        }
+      <div data-attendance-part="scene">
+        <AttendanceSceneGate
+          className={
+            styles.scene
+          }
         label={
           `${project.title} — floating attendance hardware`
         }
@@ -120,10 +126,11 @@ export default function AttendanceSystemArtwork({
         scannerImageUrl={
           scannerImageUrl
         }
-        badgeImageUrl={
-          badgeImageUrl
-        }
-      />
+          badgeImageUrl={
+            badgeImageUrl
+          }
+        />
+      </div>
     </AttendanceArtworkRuntimeRoot>
   );
 }
