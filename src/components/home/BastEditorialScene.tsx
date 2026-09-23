@@ -3342,7 +3342,8 @@ function resize() {
 
   if (
     !width ||
-    !height
+    !height ||
+    !visible
   ) {
     return;
   }
@@ -3476,10 +3477,16 @@ function resize() {
                     previousFrameTime =
                       0;
 
+                    webgl.setSize(
+                      1,
+                      1,
+                      false,
+                    );
+
                     return;
                   }
 
-                  render();
+                  resize();
 
                   if (
                     currentPointer.distanceTo(
