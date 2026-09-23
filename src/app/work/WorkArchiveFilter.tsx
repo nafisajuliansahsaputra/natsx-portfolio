@@ -957,6 +957,9 @@ export default function WorkArchiveFilter({
                   data-route-transition-project-number={
                     project.number
                   }
+                  data-project-slug={
+                    project.slug
+                  }
                   data-preview-variant={
                     getPreviewVariant(
                       index,
