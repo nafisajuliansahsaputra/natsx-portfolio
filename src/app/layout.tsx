@@ -11,7 +11,6 @@ import {
 } from "@vercel/analytics/next";
 
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
-import GlobalImagePreloader from "@/components/media/GlobalImagePreloader";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
 
@@ -407,8 +406,6 @@ export default function RootLayout({
         }
       >
         <PortfolioIntro />
-
-        <GlobalImagePreloader />
 
         <MotionController />
 
