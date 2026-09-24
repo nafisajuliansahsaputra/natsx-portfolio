@@ -241,7 +241,7 @@ function Scene({
                         "middle";
 
                       context.fillText(
-                        "soon",
+                        "Soon",
                         256,
                         256,
                       );

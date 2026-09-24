@@ -175,66 +175,6 @@
 
 
 /* =========================================================
-   SPALL SPILL
-========================================================= */
-
-/*
- * The Selected Work Spall composition is naturally wider.
- * In the archive frame we keep the background full bleed and
- * gently tighten the foreground composition instead of
- * shrinking the whole canvas or adding letterbox padding.
- */
-
-.root[data-archive-home-preview="spall"]
-  [data-spall-featured="true"] {
-  transform:
-    scale(
-      1
-    );
-
-  transform-origin:
-    center center;
-}
-
-
-.spallSoonOverlay {
-  position:
-    absolute;
-
-  z-index:
-    2;
-
-  top:
-    0;
-
-  left:
-    0;
-
-  width:
-    255.5%;
-
-  max-width:
-    none;
-
-  height:
-    100%;
-
-  overflow:
-    visible;
-
-  pointer-events:
-    none;
-}
-
-
-/*
- * Scene occupies the full artwork canvas. The small scale
- * above gives the phone + floating cards breathing room in
- * the shorter archive frame.
- */
-
-
-/* =========================================================
    5AM VISION
 ========================================================= */
 
@@ -843,3 +783,9 @@
     auto !important;
 }
 
+/* Spall is a complete artwork capture, rather than a slice of a full row. */
+:global(#work-project-list)
+  .root[data-archive-home-preview="spall"]
+  .staticSnapshot {
+  width: 100% !important;
+}
