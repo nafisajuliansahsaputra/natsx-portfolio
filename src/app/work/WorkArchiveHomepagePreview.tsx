@@ -215,6 +215,50 @@ export default function WorkArchiveHomepagePreview({
         }
       />
 
+      {variant ===
+      "spall" ? (
+        <svg
+          className={
+            styles.spallSoonOverlay
+          }
+          viewBox="0 0 1666 374"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M389 32 L507 56 Q516 58 514 68 L461 337 Q459 347 449 345 L335 315 Q325 313 327 303 L377 42 Q379 32 389 32 Z"
+            fill="#234c37"
+            stroke="#111713"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+
+          <rect
+            x="422.5"
+            y="43"
+            width="45"
+            height="14"
+            rx="7"
+            fill="#050608"
+            transform="rotate(10.3 445 50)"
+          />
+
+          <text
+            x="422"
+            y="194"
+            fill="#f3f0e8"
+            fontFamily="Arial, sans-serif"
+            fontSize="31"
+            fontWeight="700"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            transform="rotate(10.3 422 194)"
+          >
+            soon
+          </text>
+        </svg>
+      ) : null}
+
     </div>
   );
 }
