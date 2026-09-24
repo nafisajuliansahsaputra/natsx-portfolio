@@ -211,111 +211,27 @@
   z-index:
     2;
 
-  top:
-    49.87%;
-
-  left:
-    64.07%;
+  inset:
+    0;
 
   width:
-    20.55%;
+    100%;
 
   height:
-    78.1%;
+    100%;
 
   overflow:
-    hidden;
-
-  border-radius:
-    12% / 5.2%;
-
-  background:
-    #234c37;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    )
-    rotate(
-      10.3deg
-    );
-
-  transform-origin:
-    center center;
+    visible;
 
   pointer-events:
     none;
 }
 
 
-.spallSoonOverlay::before {
-  content:
-    "";
-
-  position:
-    absolute;
-
-  top:
-    4.1%;
-
-  left:
-    50%;
-
-  width:
-    35%;
-
-  height:
-    5.8%;
-
-  border-radius:
-    999px;
-
-  background:
-    #050608;
-
-  transform:
-    translateX(
-      -50%
-    );
-}
-
-
 .spallSoonOverlay
-  span {
-  position:
-    absolute;
-
-  top:
-    50%;
-
-  left:
-    50%;
-
-  color:
-    #f3f0e8;
-
-  font-size:
-    clamp(
-      9px,
-      1.15vw,
-      18px
-    );
-
-  font-weight:
-    700;
-
-  line-height:
-    1;
-
-  letter-spacing:
-    -0.04em;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    );
+  text {
+  font-family:
+    inherit;
 }
 
 
