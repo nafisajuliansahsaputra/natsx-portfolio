@@ -198,6 +198,127 @@
 
 
 /*
+ * /work uses a static snapshot for performance.
+ * Cover only the app display inside the photographed phone
+ * so the archive stays visually aligned with Selected Work
+ * while communicating that Spall Spill is not launched yet.
+ */
+
+.spallSoonOverlay {
+  position:
+    absolute;
+
+  z-index:
+    2;
+
+  inset:
+    0;
+
+  pointer-events:
+    none;
+}
+
+
+.spallSoonOverlay::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  background:
+    #234c37;
+
+  clip-path:
+    polygon(
+      60% 10.7%,
+      77.8% 17.1%,
+      68.7% 90.4%,
+      50.9% 82.1%
+    );
+}
+
+
+.spallSoonOverlay::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  top:
+    12.2%;
+
+  left:
+    65.9%;
+
+  width:
+    6.7%;
+
+  height:
+    3.4%;
+
+  border-radius:
+    999px;
+
+  background:
+    #050608;
+
+  transform:
+    rotate(
+      13.5deg
+    );
+}
+
+
+.spallSoonOverlay
+  span {
+  position:
+    absolute;
+
+  z-index:
+    1;
+
+  top:
+    51%;
+
+  left:
+    64.2%;
+
+  color:
+    #f3f0e8;
+
+  font-size:
+    clamp(
+      11px,
+      1.45vw,
+      20px
+    );
+
+  font-weight:
+    700;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    -0.04em;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    )
+    rotate(
+      13.5deg
+    );
+}
+
+
+/*
  * Scene occupies the full artwork canvas. The small scale
  * above gives the phone + floating cards breathing room in
  * the shorter archive frame.
