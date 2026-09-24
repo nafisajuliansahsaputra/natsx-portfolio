@@ -228,25 +228,6 @@ function Scene({
                         512,
                       );
 
-                      /*
-                       * Screen UV pada model
-                       * dibalik di sumbu X.
-                       * Mirror copy di canvas
-                       * membuat teks tampil
-                       * normal di device.
-                       */
-                      context.save();
-
-                      context.translate(
-                        512,
-                        0,
-                      );
-
-                      context.scale(
-                        -1,
-                        1,
-                      );
-
                       context.fillStyle =
                         "#f3f0e8";
 
@@ -264,8 +245,6 @@ function Scene({
                         256,
                         256,
                       );
-
-                      context.restore();
                     },
                   ),
                 ),
