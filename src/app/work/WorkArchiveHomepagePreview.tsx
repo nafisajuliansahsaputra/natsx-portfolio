@@ -215,45 +215,6 @@ export default function WorkArchiveHomepagePreview({
         }
       />
 
-      {variant ===
-      "spall" ? (
-        <svg
-          className={
-            styles.spallSoonOverlay
-          }
-          viewBox="0 0 652 374"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M391.8 36.9 L505.2 59.1 Q515 61 513 70.8 L459 332.2 Q457 342 447.3 339.5 L342.7 312.5 Q333 310 334.8 300.2 L380.2 44.8 Q382 35 391.8 36.9 Z"
-            fill="#234c37"
-          />
-
-          <rect
-            x="423"
-            y="44"
-            width="45"
-            height="14"
-            rx="7"
-            fill="#050608"
-            transform="rotate(10.3 445.5 51)"
-          />
-
-          <text
-            x="423"
-            y="194"
-            fill="#f3f0e8"
-            fontSize="28"
-            fontWeight="700"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            transform="rotate(10.3 423 194)"
-          >
-            soon
-          </text>
-        </svg>
-      ) : null}
     </div>
   );
 }
