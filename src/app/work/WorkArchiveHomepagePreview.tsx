@@ -214,6 +214,20 @@ export default function WorkArchiveHomepagePreview({
           styles.staticSnapshot
         }
       />
+
+      {variant ===
+      "spall" ? (
+        <div
+          className={
+            styles.spallSoonOverlay
+          }
+          aria-hidden="true"
+        >
+          <span>
+            soon
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }
