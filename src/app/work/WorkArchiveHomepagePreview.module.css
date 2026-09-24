@@ -197,6 +197,36 @@
 }
 
 
+.spallSoonOverlay {
+  position:
+    absolute;
+
+  z-index:
+    2;
+
+  top:
+    0;
+
+  left:
+    0;
+
+  width:
+    255.5%;
+
+  max-width:
+    none;
+
+  height:
+    100%;
+
+  overflow:
+    visible;
+
+  pointer-events:
+    none;
+}
+
+
 /*
  * Scene occupies the full artwork canvas. The small scale
  * above gives the phone + floating cards breathing room in
