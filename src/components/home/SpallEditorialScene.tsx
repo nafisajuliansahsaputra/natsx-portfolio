@@ -203,9 +203,6 @@ function Scene({
           const modelLoader =
             new GLTFLoader();
 
-          const textureLoader =
-            new THREE.TextureLoader();
-
           const [
             gltf,
             screenshot,
@@ -216,18 +213,62 @@ function Scene({
                   MODEL_URL,
                 ),
 
-                screenUrl
-                  ? textureLoader
-                      .loadAsync(
-                        screenUrl,
-                      )
-                      .catch(
-                        () =>
-                          undefined,
-                      )
-                  : Promise.resolve(
-                      undefined,
-                    ),
+                Promise.resolve(
+                  canvasTexture(
+                    (
+                      context,
+                    ) => {
+                      context.fillStyle =
+                        "#234c37";
+
+                      context.fillRect(
+                        0,
+                        0,
+                        512,
+                        512,
+                      );
+
+                      /*
+                       * Screen UV pada model
+                       * dibalik di sumbu X.
+                       * Mirror copy di canvas
+                       * membuat teks tampil
+                       * normal di device.
+                       */
+                      context.save();
+
+                      context.translate(
+                        512,
+                        0,
+                      );
+
+                      context.scale(
+                        -1,
+                        1,
+                      );
+
+                      context.fillStyle =
+                        "#f3f0e8";
+
+                      context.font =
+                        "700 72px Arial";
+
+                      context.textAlign =
+                        "center";
+
+                      context.textBaseline =
+                        "middle";
+
+                      context.fillText(
+                        "soon",
+                        256,
+                        256,
+                      );
+
+                      context.restore();
+                    },
+                  ),
+                ),
               ],
             );
 
