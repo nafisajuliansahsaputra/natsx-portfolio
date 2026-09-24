@@ -211,8 +211,38 @@
   z-index:
     2;
 
-  inset:
-    0;
+  top:
+    51.27%;
+
+  left:
+    63.69%;
+
+  width:
+    18.71%;
+
+  height:
+    67.91%;
+
+  overflow:
+    hidden;
+
+  border-radius:
+    10% / 4.5%;
+
+  background:
+    #234c37;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    )
+    rotate(
+      10.3deg
+    );
+
+  transform-origin:
+    center center;
 
   pointer-events:
     none;
@@ -226,40 +256,17 @@
   position:
     absolute;
 
-  inset:
-    0;
-
-  background:
-    #234c37;
-
-  clip-path:
-    polygon(
-      60% 10.7%,
-      77.8% 17.1%,
-      68.7% 90.4%,
-      50.9% 82.1%
-    );
-}
-
-
-.spallSoonOverlay::after {
-  content:
-    "";
-
-  position:
-    absolute;
-
   top:
-    12.2%;
+    4.1%;
 
   left:
-    65.9%;
+    50%;
 
   width:
-    6.7%;
+    35%;
 
   height:
-    3.4%;
+    5.8%;
 
   border-radius:
     999px;
@@ -268,8 +275,8 @@
     #050608;
 
   transform:
-    rotate(
-      13.5deg
+    translateX(
+      -50%
     );
 }
 
@@ -279,23 +286,20 @@
   position:
     absolute;
 
-  z-index:
-    1;
-
   top:
-    51%;
+    50%;
 
   left:
-    64.2%;
+    50%;
 
   color:
     #f3f0e8;
 
   font-size:
     clamp(
-      11px,
-      1.45vw,
-      20px
+      9px,
+      1.15vw,
+      18px
     );
 
   font-weight:
@@ -311,9 +315,6 @@
     translate(
       -50%,
       -50%
-    )
-    rotate(
-      13.5deg
     );
 }
 
