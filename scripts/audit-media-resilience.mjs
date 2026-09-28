@@ -277,6 +277,41 @@ if (
   }
 }
 
+const projectMetadataPath =
+  join(
+    root,
+    "src",
+    "app",
+    "work",
+    "[slug]",
+    "page.tsx",
+  );
+
+if (
+  existsSync(
+    projectMetadataPath,
+  )
+) {
+  const projectMetadata =
+    await readFile(
+      projectMetadataPath,
+      "utf8",
+    );
+
+  if (
+    !projectMetadata.includes(
+      '"/_next/image?"',
+    ) ||
+    !projectMetadata.includes(
+      "socialPreviewImage",
+    )
+  ) {
+    failures.push(
+      "Project social preview images no longer appear to use the same-origin Next Image cache.",
+    );
+  }
+}
+
 const preloaderPath =
   join(
     root,
