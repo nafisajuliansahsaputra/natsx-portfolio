@@ -15,6 +15,8 @@ import {
   RoomEnvironment,
 } from "three/addons/environments/RoomEnvironment.js";
 
+import sceneModels from "@/data/scene-models.json";
+
 import {
   createShadowFactory,
   createTileFactory,
@@ -39,7 +41,7 @@ type Props = {
 };
 
 const MODEL_URL =
-  "/models/iphone-17-pro-max.glb";
+  sceneModels.spall.phone.runtime;
 
 function freezeStaticDescendants(
   root:

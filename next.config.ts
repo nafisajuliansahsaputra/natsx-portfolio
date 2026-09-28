@@ -333,7 +333,7 @@ const nextConfig: NextConfig = {
 
       {
         source:
-          "/models/:path*",
+          "/runtime-models/:path*",
 
         headers: [
           {
@@ -341,7 +341,7 @@ const nextConfig: NextConfig = {
               "Cache-Control",
 
             value:
-              "public, max-age=86400, stale-while-revalidate=604800",
+              "public, max-age=31536000, immutable",
           },
         ],
       },

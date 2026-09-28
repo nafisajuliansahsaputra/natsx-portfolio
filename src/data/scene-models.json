@@ -1,0 +1,26 @@
+{
+  "attendance": {
+    "imac": {
+      "runtime": "/runtime-models/attendance/imac.pending.glb"
+    },
+    "scanner": {
+      "runtime": "/runtime-models/attendance/scanner.pending.glb"
+    },
+    "badge": {
+      "runtime": "/runtime-models/attendance/badge.pending.glb"
+    }
+  },
+  "bast": {
+    "macbook": {
+      "runtime": "/runtime-models/bast/macbook-pro.pending.glb"
+    },
+    "printer": {
+      "runtime": "/runtime-models/bast/printer.pending.glb"
+    }
+  },
+  "spall": {
+    "phone": {
+      "runtime": "/runtime-models/spall/iphone-17-pro-max.pending.glb"
+    }
+  }
+}

@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
+import sceneModels from "@/data/scene-models.json";
+
 type Props = {
   label: string;
   dashboardImageUrl?: string | null;
@@ -12,9 +14,14 @@ type Props = {
   badgeImageUrl?: string | null;
 };
 
-const IMAC_MODEL_URL = "/models/attendance/imac.glb";
-const SCANNER_MODEL_URL = "/models/attendance/scanner.glb";
-const BADGE_MODEL_URL = "/models/attendance/badge.glb";
+const IMAC_MODEL_URL =
+  sceneModels.attendance.imac.runtime;
+
+const SCANNER_MODEL_URL =
+  sceneModels.attendance.scanner.runtime;
+
+const BADGE_MODEL_URL =
+  sceneModels.attendance.badge.runtime;
 
 /* =========================================================
    STATIC COMPOSITION — pointer offsets and floating poses stay below
@@ -1538,7 +1545,10 @@ useEffect(() => {
     let environment: THREE.WebGLRenderTarget | undefined;
     let animationFrameId = 0;
     let cleanupPointerMotion: (() => void) | undefined;
+    let cleanupPageVisibility: (() => void) | undefined;
     let visible = true;
+    let pageVisible =
+      !document.hidden;
 
     const geometries = new Set<THREE.BufferGeometry>();
     const materials = new Set<THREE.Material>();
@@ -2217,7 +2227,11 @@ const checkInCardData = createFloatingCard(
         };
 
         function renderFrame(time: number) {
-          if (disposed || !visible) {
+          if (
+            disposed ||
+            !visible ||
+            !pageVisible
+          ) {
             animationFrameId = 0;
             previousMotionFrameTime = 0;
             return;
@@ -2270,7 +2284,12 @@ const checkInCardData = createFloatingCard(
           const width = hostElement.clientWidth;
           const height = hostElement.clientHeight;
 
-          if (!width || !height || !visible) {
+          if (
+            !width ||
+            !height ||
+            !visible ||
+            !pageVisible
+          ) {
             return;
           }
 
@@ -2317,6 +2336,65 @@ const checkInCardData = createFloatingCard(
 
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(hostElement);
+
+        function syncPageVisibility() {
+          pageVisible =
+            !document.hidden;
+
+          if (
+            !pageVisible
+          ) {
+            if (
+              animationFrameId
+            ) {
+              window.cancelAnimationFrame(
+                animationFrameId,
+              );
+
+              animationFrameId =
+                0;
+            }
+
+            previousMotionFrameTime =
+              0;
+
+            webgl.setSize(
+              1,
+              1,
+              false,
+            );
+
+            return;
+          }
+
+          if (
+            visible
+          ) {
+            resize();
+
+            if (
+              !animationFrameId
+            ) {
+              animationFrameId =
+                window.requestAnimationFrame(
+                  renderFrame,
+                );
+            }
+          }
+        }
+
+        document.addEventListener(
+          "visibilitychange",
+          syncPageVisibility,
+        );
+
+        cleanupPageVisibility =
+          () => {
+            document.removeEventListener(
+              "visibilitychange",
+              syncPageVisibility,
+            );
+          };
 
         if (typeof IntersectionObserver !== "undefined") {
           visibilityObserver = new IntersectionObserver(
@@ -2372,6 +2450,8 @@ const checkInCardData = createFloatingCard(
       cleanupPointerMotion?.();
       resizeObserver?.disconnect();
       visibilityObserver?.disconnect();
+
+      cleanupPageVisibility?.();
 
       if (renderer) {
         renderer.dispose();

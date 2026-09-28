@@ -230,3 +230,45 @@ incident.
 CMS image sizes are also checked twice: first in the browser after optimization
 and again by the server action before project content is accepted. This makes
 the bandwidth guard harder to bypass accidentally.
+
+
+## Three.js runtime model delivery
+
+Source GLB files live under `assets/models/`, outside the public web root. They
+are not directly downloadable by visitors.
+
+Before `next dev` and `next build`, the scene preparation script creates a
+runtime-only copy under `public/runtime-models/`:
+
+```text
+assets/models/attendance/imac.glb
+        ↓ safe texture optimization
+        ↓ SHA-256 of final bytes
+public/runtime-models/attendance/imac.<12-char-hash>.glb
+```
+
+The generated `src/data/scene-models.json` points all scene loaders and
+speculative warmers to those content-addressed URLs.
+
+Benefits:
+
+- source and runtime GLBs are no longer both publicly served;
+- changed model bytes automatically produce a new URL;
+- runtime GLBs can use a one-year immutable cache safely;
+- the existing model hierarchy, materials, geometry, scene composition, and
+  motion code are not changed;
+- production still uses the conservative GLTF Transform settings that avoid
+  simplify/join/weld/flatten operations.
+
+Scene resource warming is also abortable. Navigating away before a large model
+finishes warming stops the speculative request instead of continuing to spend
+bandwidth in the background. Hidden tabs do not start new scene warming.
+
+On constrained devices (3G, <=4 GB reported device memory, or <=4 logical CPU
+cores), only the *distance* of speculative resource warming is reduced. The
+actual scene mount threshold, artwork, interaction, and animation remain the
+same.
+
+The continuously floating Attendance scene now stops its animation loop and
+releases its drawing buffer while the browser tab is hidden, then restores the
+same scene when the tab becomes visible again.

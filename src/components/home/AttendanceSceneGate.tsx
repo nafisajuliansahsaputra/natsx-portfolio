@@ -10,8 +10,11 @@ import {
 
 import useIntroCompletion from "@/components/intro/useIntroCompletion";
 
+import sceneModels from "@/data/scene-models.json";
+
 import {
   getSceneMargin,
+  getSceneWarmMargin,
   warmSceneResources,
 } from "./scene-resource-preload";
 
@@ -38,6 +41,9 @@ const ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS =
 
 const ATTENDANCE_PREPARE_VIEWPORTS =
   0.65;
+
+const ATTENDANCE_KEEP_ALIVE_VIEWPORTS =
+  2.25;
 
 type AttendanceSceneGateProps = {
   className:
@@ -93,6 +99,9 @@ export default function AttendanceSceneGate({
       return;
     }
 
+    const resourceController =
+      new AbortController();
+
     const loadCode =
       () => {
         void loadAttendanceEditorialScene()
@@ -105,14 +114,15 @@ export default function AttendanceSceneGate({
       () => {
         void warmSceneResources(
           [
-            "/models/attendance/imac.glb",
-            "/models/attendance/scanner.glb",
-            "/models/attendance/badge.glb",
+            sceneModels.attendance.imac.runtime,
+            sceneModels.attendance.scanner.runtime,
+            sceneModels.attendance.badge.runtime,
             dashboardImageUrl,
             scannerImageUrl,
             badgeImageUrl,
           ],
           1,
+          resourceController.signal,
         );
       };
 
@@ -133,6 +143,8 @@ export default function AttendanceSceneGate({
         );
 
       return () => {
+        resourceController.abort();
+
         window.cancelAnimationFrame(
           frame,
         );
@@ -143,8 +155,8 @@ export default function AttendanceSceneGate({
       (
         callback:
           () => void,
-        viewportMargin:
-          number,
+        rootMargin:
+          string,
       ) => {
         const observer =
           new IntersectionObserver(
@@ -168,10 +180,7 @@ export default function AttendanceSceneGate({
               root:
                 null,
 
-              rootMargin:
-                getSceneMargin(
-                  viewportMargin,
-                ),
+              rootMargin,
 
               threshold:
                 0,
@@ -188,29 +197,102 @@ export default function AttendanceSceneGate({
     const codeObserver =
       createOneShotObserver(
         loadCode,
-        ATTENDANCE_CODE_PRELOAD_VIEWPORTS,
+        getSceneMargin(
+          ATTENDANCE_CODE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const resourceObserver =
       createOneShotObserver(
         warmResources,
-        ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
+        getSceneWarmMargin(
+          ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
+        ),
       );
 
-    const prepareObserver =
-      createOneShotObserver(
-        () => {
-          setShouldLoadScene(
-            true,
-          );
+    /*
+     * Hysteresis lifecycle:
+     * mount shortly before the scene is visible, but keep it alive until it
+     * is much farther away. This preserves the current visual/motion while
+     * releasing WebGL geometry, textures, and renderer memory after the user
+     * has moved well past the project.
+     */
+    const mountObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            entry
+              ?.isIntersecting
+          ) {
+            setShouldLoadScene(
+              true,
+            );
+          }
         },
-        ATTENDANCE_PREPARE_VIEWPORTS,
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              ATTENDANCE_PREPARE_VIEWPORTS,
+            ),
+
+          threshold:
+            0,
+        },
       );
+
+    const unloadObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            entry &&
+            !entry
+              .isIntersecting
+          ) {
+            setShouldLoadScene(
+              false,
+            );
+          }
+        },
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              ATTENDANCE_KEEP_ALIVE_VIEWPORTS,
+            ),
+
+          threshold:
+            0,
+        },
+      );
+
+    mountObserver.observe(
+      scene,
+    );
+
+    unloadObserver.observe(
+      scene,
+    );
 
     return () => {
+      resourceController.abort();
+
       codeObserver.disconnect();
       resourceObserver.disconnect();
-      prepareObserver.disconnect();
+      mountObserver.disconnect();
+      unloadObserver.disconnect();
     };
   }, [
     badgeImageUrl,

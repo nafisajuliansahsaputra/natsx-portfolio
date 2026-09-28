@@ -16,13 +16,23 @@ type NavigatorWithConnection =
   Navigator & {
     connection?:
       NetworkInformationLike;
+
+    deviceMemory?:
+      number;
   };
 
 async function consumeResponse(
   response: Response,
 ) {
   if (
-    !response.ok ||
+    !response.ok
+  ) {
+    throw new Error(
+      `Scene resource warm failed with HTTP ${response.status}.`,
+    );
+  }
+
+  if (
     !response.body
   ) {
     return;
@@ -47,19 +57,73 @@ async function consumeResponse(
   }
 }
 
-export function canWarmSceneResources() {
+function getRuntimeNavigator() {
   if (
     typeof navigator ===
     "undefined"
+  ) {
+    return null;
+  }
+
+  return navigator as
+    NavigatorWithConnection;
+}
+
+function isConstrainedSceneWarmDevice() {
+  const runtimeNavigator =
+    getRuntimeNavigator();
+
+  if (
+    !runtimeNavigator
+  ) {
+    return false;
+  }
+
+  const effectiveType =
+    runtimeNavigator
+      .connection
+      ?.effectiveType;
+
+  const deviceMemory =
+    runtimeNavigator
+      .deviceMemory;
+
+  return (
+    effectiveType ===
+      "3g" ||
+    (
+      typeof deviceMemory ===
+        "number" &&
+      deviceMemory <=
+        4
+    ) ||
+    runtimeNavigator
+      .hardwareConcurrency <=
+      4
+  );
+}
+
+export function canWarmSceneResources() {
+  const runtimeNavigator =
+    getRuntimeNavigator();
+
+  if (
+    !runtimeNavigator
+  ) {
+    return false;
+  }
+
+  if (
+    typeof document !==
+      "undefined" &&
+    document.hidden
   ) {
     return false;
   }
 
   const connection =
-    (
-      navigator as
-        NavigatorWithConnection
-    ).connection;
+    runtimeNavigator
+      .connection;
 
   if (
     connection
@@ -85,8 +149,15 @@ export function warmSceneResource(
     | string
     | null
     | undefined,
+
+  signal?:
+    AbortSignal,
 ) {
-  if (!url) {
+  if (
+    !url ||
+    signal
+      ?.aborted
+  ) {
     return Promise.resolve();
   }
 
@@ -99,7 +170,10 @@ export function warmSceneResource(
     return existing;
   }
 
-  const request =
+  let request:
+    Promise<void>;
+
+  request =
     fetch(
       url,
       {
@@ -108,6 +182,8 @@ export function warmSceneResource(
 
         priority:
           "low",
+
+        signal,
       } as RequestInit,
     )
       .then(
@@ -116,10 +192,19 @@ export function warmSceneResource(
       .catch(
         () => {
           /*
-           * Preloading is opportunistic.
-           * The actual scene loader still
-           * owns the visible-state fallback.
+           * A failed/aborted speculative warm must be retryable.
+           * The visible scene loader remains the source of truth.
            */
+          if (
+            warmedResources.get(
+              url,
+            ) ===
+            request
+          ) {
+            warmedResources.delete(
+              url,
+            );
+          }
         },
       );
 
@@ -141,21 +226,30 @@ export async function warmSceneResources(
 
   concurrency =
     1,
+
+  signal?:
+    AbortSignal,
 ) {
   if (
-    !canWarmSceneResources()
+    !canWarmSceneResources() ||
+    signal
+      ?.aborted
   ) {
     return;
   }
 
   const queue =
-    urls.filter(
-      (
-        url,
-      ): url is string =>
-        Boolean(
-          url,
+    Array.from(
+      new Set(
+        urls.filter(
+          (
+            url,
+          ): url is string =>
+            Boolean(
+              url,
+            ),
         ),
+      ),
     );
 
   let cursor =
@@ -164,7 +258,9 @@ export async function warmSceneResources(
   async function worker() {
     while (
       cursor <
-      queue.length
+        queue.length &&
+      !signal
+        ?.aborted
     ) {
       const index =
         cursor;
@@ -176,6 +272,7 @@ export async function warmSceneResources(
         queue[
           index
         ],
+        signal,
       );
     }
   }
@@ -216,4 +313,22 @@ export function getSceneMargin(
     ),
     1,
   )}px 0px`;
+}
+
+export function getSceneWarmMargin(
+  viewportMultiplier:
+    number,
+) {
+  const adaptiveMultiplier =
+    isConstrainedSceneWarmDevice()
+      ? Math.max(
+          viewportMultiplier *
+            0.55,
+          0.4,
+        )
+      : viewportMultiplier;
+
+  return getSceneMargin(
+    adaptiveMultiplier,
+  );
 }

@@ -1,0 +1,44 @@
+[
+  {
+    "group": "attendance",
+    "name": "imac",
+    "source": "assets/models/attendance/imac.glb",
+    "stem": "imac",
+    "optimize": true
+  },
+  {
+    "group": "attendance",
+    "name": "scanner",
+    "source": "assets/models/attendance/scanner.glb",
+    "stem": "scanner",
+    "optimize": true
+  },
+  {
+    "group": "attendance",
+    "name": "badge",
+    "source": "assets/models/attendance/badge.glb",
+    "stem": "badge",
+    "optimize": false
+  },
+  {
+    "group": "bast",
+    "name": "macbook",
+    "source": "assets/models/bast/macbook-pro.glb",
+    "stem": "macbook-pro",
+    "optimize": true
+  },
+  {
+    "group": "bast",
+    "name": "printer",
+    "source": "assets/models/bast/printer.glb",
+    "stem": "printer",
+    "optimize": false
+  },
+  {
+    "group": "spall",
+    "name": "phone",
+    "source": "assets/models/iphone-17-pro-max.glb",
+    "stem": "iphone-17-pro-max",
+    "optimize": true
+  }
+]
