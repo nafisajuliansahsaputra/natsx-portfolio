@@ -478,6 +478,246 @@ if (
   }
 }
 
+const sceneModelSourceManifestPath =
+  join(
+    root,
+    "config",
+    "scene-model-sources.json",
+  );
+
+const sceneModelRuntimeManifestPath =
+  join(
+    root,
+    "src",
+    "data",
+    "scene-models.json",
+  );
+
+if (
+  !existsSync(
+    sceneModelSourceManifestPath,
+  ) ||
+  !existsSync(
+    sceneModelRuntimeManifestPath,
+  )
+) {
+  failures.push(
+    "Scene model source/runtime manifest is missing.",
+  );
+} else {
+  const sourceManifest =
+    JSON.parse(
+      await readFile(
+        sceneModelSourceManifestPath,
+        "utf8",
+      ),
+    );
+
+  const runtimeManifest =
+    JSON.parse(
+      await readFile(
+        sceneModelRuntimeManifestPath,
+        "utf8",
+      ),
+    );
+
+  if (
+    !Array.isArray(
+      sourceManifest,
+    ) ||
+    sourceManifest.length ===
+      0
+  ) {
+    failures.push(
+      "Scene model source manifest is empty or invalid.",
+    );
+  } else {
+    for (
+      const entry of
+      sourceManifest
+    ) {
+      const source =
+        typeof entry?.source ===
+          "string"
+          ? entry.source
+          : "";
+
+      const group =
+        typeof entry?.group ===
+          "string"
+          ? entry.group
+          : "";
+
+      const name =
+        typeof entry?.name ===
+          "string"
+          ? entry.name
+          : "";
+
+      const stem =
+        typeof entry?.stem ===
+          "string"
+          ? entry.stem
+          : "";
+
+      if (
+        !source ||
+        !group ||
+        !name ||
+        !stem
+      ) {
+        failures.push(
+          "Scene model source manifest contains an invalid entry.",
+        );
+
+        continue;
+      }
+
+      const sourceAbsolute =
+        join(
+          root,
+          ...source
+            .split(
+              "/",
+            ),
+        );
+
+      if (
+        !existsSync(
+          sourceAbsolute,
+        )
+      ) {
+        failures.push(
+          `Scene source model is missing: ${source}`,
+        );
+      }
+
+      const runtime =
+        runtimeManifest
+          ?.[
+            group
+          ]
+          ?.[
+            name
+          ]
+          ?.runtime;
+
+      if (
+        typeof runtime !==
+          "string"
+      ) {
+        failures.push(
+          `Generated runtime URL missing for ${group}.${name}.`,
+        );
+
+        continue;
+      }
+
+      const expectedPrefix =
+        `/runtime-models/${group}/${stem}.`;
+
+      if (
+        !runtime.startsWith(
+          expectedPrefix,
+        ) ||
+        !/\.[a-f0-9]{12}\.glb$/i.test(
+          runtime,
+        )
+      ) {
+        failures.push(
+          `Runtime model URL is not content-versioned: ${runtime}`,
+        );
+
+        continue;
+      }
+
+      const runtimeAbsolute =
+        join(
+          publicRoot,
+          ...runtime
+            .slice(
+              1,
+            )
+            .split(
+              "/",
+            ),
+        );
+
+      if (
+        !existsSync(
+          runtimeAbsolute,
+        )
+      ) {
+        failures.push(
+          `Generated runtime model is missing: ${runtime}`,
+        );
+
+        continue;
+      }
+
+      const runtimeBytes =
+        await readFile(
+          runtimeAbsolute,
+        );
+
+      const actualHash =
+        createHash(
+          "sha256",
+        )
+          .update(
+            runtimeBytes,
+          )
+          .digest(
+            "hex",
+          )
+          .slice(
+            0,
+            12,
+          );
+
+      if (
+        !runtime.includes(
+          `.${actualHash}.glb`
+        )
+      ) {
+        failures.push(
+          `Runtime model checksum does not match its URL: ${runtime}`,
+        );
+      }
+    }
+  }
+}
+
+const legacyPublicModelRoot =
+  join(
+    publicRoot,
+    "models",
+  );
+
+const legacyPublicModels =
+  (
+    await walk(
+      legacyPublicModelRoot,
+    )
+  ).filter(
+    (
+      file,
+    ) =>
+      extname(
+        file,
+      ).toLowerCase() ===
+      ".glb",
+  );
+
+if (
+  legacyPublicModels.length >
+    0
+) {
+  failures.push(
+    "Unversioned GLB files are still publicly exposed under /models/. Move source models to assets/models and generate /runtime-models instead.",
+  );
+}
+
 const totalBytes =
   sizedFiles.reduce(
     (
