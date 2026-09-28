@@ -6,6 +6,15 @@ export const MAX_PORTFOLIO_MEDIA_FILE_SIZE =
 
 
 /*
+ * Finale videos autoplay once they are near the viewport, so a very large
+ * object can still become a major egress multiplier. Larger films should use
+ * a dedicated streaming/CDN provider rather than raw portfolio Storage.
+ */
+export const MAX_PORTFOLIO_VIDEO_FILE_SIZE =
+  12 * 1024 * 1024;
+
+
+/*
  * Server-side safety net for public image payloads.
  *
  * The client optimizer has tighter per-placement targets, but client code can
