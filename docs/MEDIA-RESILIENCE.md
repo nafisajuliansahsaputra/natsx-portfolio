@@ -297,3 +297,28 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Independent CI guardrails
+
+Vercel preview builds are useful, but they must not be the only verification
+path. Hobby build-rate limits can temporarily prevent preview deployments.
+
+GitHub Actions now runs a lightweight guardrail job on every pull request and
+on `main`:
+
+1. `npm ci`
+2. prepare the generated runtime GLB aliases without production recompression;
+3. TypeScript typecheck;
+4. ESLint;
+5. the media resilience audit.
+
+The workflow intentionally does not run a second full Next production build or
+Playwright suite, avoiding unnecessary CI minutes and duplicate heavy work.
+
+Concurrency cancellation is enabled, so superseded commits on the same branch
+do not keep consuming runner time.
+
+Vercel remains the final deployment/build verification path; GitHub Actions is
+an independent early signal when Vercel preview capacity is temporarily
+unavailable.
