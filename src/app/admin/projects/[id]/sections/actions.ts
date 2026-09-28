@@ -19,6 +19,7 @@ import {
 
 import {
   MAX_PORTFOLIO_MEDIA_FILE_SIZE,
+  MAX_PORTFOLIO_VIDEO_FILE_SIZE,
   PORTFOLIO_MEDIA_BUCKET,
   getContentRecord,
   getFinaleMediaKind,
@@ -793,7 +794,7 @@ function validateFinaleMedia(
       ? getPortfolioImageServerLimit(
           media.asset.mimeType,
         )
-      : MAX_PORTFOLIO_MEDIA_FILE_SIZE;
+      : MAX_PORTFOLIO_VIDEO_FILE_SIZE;
 
   if (
     !Number.isFinite(
@@ -808,7 +809,7 @@ function validateFinaleMedia(
       expectedKind ===
         "image"
         ? "Ukuran finale image melewati batas aman media publik setelah optimasi."
-        : "Ukuran finale media tidak valid atau melebihi 50 MB."
+        : "Ukuran finale video tidak valid atau melebihi 12 MB. Gunakan streaming/CDN untuk video yang lebih besar."
     );
   }
 
