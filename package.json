@@ -18,7 +18,8 @@
     "audit:media": "node scripts/audit-media-resilience.mjs",
     "predev": "node scripts/optimize-3d.mjs --prepare-only",
     "audit:orphans": "node scripts/audit-portfolio-orphans.mjs",
-    "cleanup:orphans": "node scripts/audit-portfolio-orphans.mjs --delete"
+    "cleanup:orphans": "node scripts/audit-portfolio-orphans.mjs --delete",
+    "backup:portfolio:full": "node scripts/backup-portfolio-media.mjs --include-orphans"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
