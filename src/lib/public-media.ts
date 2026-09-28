@@ -11,6 +11,10 @@ import type {
 } from "@/lib/public-projects";
 
 import {
+  getPortfolioMediaMirrorUrl,
+} from "@/lib/media-delivery";
+
+import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
@@ -35,6 +39,24 @@ export function getPortfolioMediaPublicUrl(
   bucket: string,
   path: string,
 ) {
+  /*
+   * Prefer a mirrored delivery origin when configured.
+   *
+   * Supabase remains the source-of-truth fallback so existing deployments
+   * and the admin CMS keep working until the mirror has been populated.
+   */
+  const mirrorUrl =
+    getPortfolioMediaMirrorUrl(
+      bucket,
+      path,
+    );
+
+  if (
+    mirrorUrl
+  ) {
+    return mirrorUrl;
+  }
+
   return getPublicClient()
     .storage
     .from(
