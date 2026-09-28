@@ -25,6 +25,7 @@ import {
 
 import {
   getOptimizationSavings,
+  getPortfolioImageBudgetIssue,
   optimizePortfolioImage,
 } from "@/lib/client-image-optimizer";
 
@@ -346,6 +347,29 @@ function ShowcaseSlot({
         file,
         "cover",
       );
+
+    const budgetIssue =
+      await getPortfolioImageBudgetIssue(
+        optimizedFile,
+        "cover",
+      );
+
+    if (
+      budgetIssue
+    ) {
+      setState({
+        status:
+          "error",
+
+        message:
+          budgetIssue,
+      });
+
+      event.target.value =
+        "";
+
+      return;
+    }
 
     clearObjectUrl();
 

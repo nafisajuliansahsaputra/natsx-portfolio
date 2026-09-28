@@ -14,10 +14,6 @@ import {
 } from "@/lib/portfolio-cache";
 
 import {
-  PORTFOLIO_MEDIA_BUCKET,
-} from "@/lib/portfolio-media";
-
-import {
   createClient,
 } from "@/lib/supabase/server";
 
@@ -266,43 +262,14 @@ function refreshProject(
   );
 }
 
-async function removeUnusedStoragePath(
-  supabase:
-    Awaited<
-      ReturnType<
-        typeof createClient
-      >
-    >,
-
-  path:
-    | string
-    | null,
-
-  retainedPath:
-    | string
-    | null,
-) {
-  if (
-    !path ||
-    path ===
-      retainedPath
-  ) {
-    return null;
-  }
-
-  const {
-    error,
-  } =
-    await supabase.storage
-      .from(
-        PORTFOLIO_MEDIA_BUCKET,
-      )
-      .remove([
-        path,
-      ]);
-
-  return error;
-}
+/*
+ * Recovery-first retention policy
+ * --------------------------------
+ * Replacing or detaching a cover no longer deletes the previous Storage
+ * object automatically. Old objects are intentionally left orphaned so an
+ * accidental CMS change can be recovered. A separate audited cleanup process
+ * may remove old orphaned assets only after backup/retention checks.
+ */
 
 export async function saveProjectCover(
   projectId: string,
@@ -380,22 +347,6 @@ export async function saveProjectCover(
     };
   }
 
-  const previousPath =
-    slot ===
-      "card"
-      ? project
-          .card_image_path
-      : project
-          .hero_image_path;
-
-  const retainedPath =
-    slot ===
-      "card"
-      ? project
-          .hero_image_path
-      : project
-          .card_image_path;
-
   const updatePayload =
     slot ===
       "card"
@@ -444,32 +395,10 @@ export async function saveProjectCover(
     };
   }
 
-  const cleanupError =
-    await removeUnusedStoragePath(
-      supabase,
-      previousPath,
-      retainedPath,
-    );
-
   refreshProject(
     normalizedProjectId,
     project.slug,
   );
-
-  if (
-    cleanupError
-  ) {
-    return {
-      status:
-        "success",
-
-      message:
-        "Cover berhasil disimpan. File cover lama belum berhasil dibersihkan dari Storage.",
-
-      path:
-        normalizedPath,
-    };
-  }
 
   return {
     status:
@@ -551,14 +480,6 @@ export async function removeProjectCover(
       : project
           .hero_image_path;
 
-  const retainedPath =
-    slot ===
-      "card"
-      ? project
-          .hero_image_path
-      : project
-          .card_image_path;
-
   if (
     !currentPath
   ) {
@@ -622,32 +543,10 @@ export async function removeProjectCover(
     };
   }
 
-  const cleanupError =
-    await removeUnusedStoragePath(
-      supabase,
-      currentPath,
-      retainedPath,
-    );
-
   refreshProject(
     normalizedProjectId,
     project.slug,
   );
-
-  if (
-    cleanupError
-  ) {
-    return {
-      status:
-        "success",
-
-      message:
-        "Cover sudah dilepas dari project. File lama belum berhasil dibersihkan dari Storage.",
-
-      path:
-        null,
-    };
-  }
 
   return {
     status:
@@ -656,8 +555,8 @@ export async function removeProjectCover(
     message:
       slot ===
         "card"
-        ? "Card cover berhasil dihapus."
-        : "Hero cover berhasil dihapus.",
+        ? "Card cover berhasil dilepas. File lama disimpan sebagai recovery copy."
+        : "Hero cover berhasil dilepas. File lama disimpan sebagai recovery copy.",
 
     path:
       null,

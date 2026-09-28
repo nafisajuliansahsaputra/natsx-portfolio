@@ -20,7 +20,6 @@ import {
 import {
   MAX_PORTFOLIO_MEDIA_FILE_SIZE,
   PORTFOLIO_MEDIA_BUCKET,
-  collectPortfolioMediaPaths,
   getContentRecord,
   getFinaleMediaKind,
   getFinaleSectionMedia,
@@ -893,6 +892,15 @@ function validateFinaleContent(
 
   return null;
 }
+
+/*
+ * Recovery-first retention policy
+ * --------------------------------
+ * removeStoragePath() is reserved for rollback of a newly uploaded file when
+ * the matching database write fails. Successfully published/replaced/detached
+ * media is never deleted automatically; it remains available for recovery
+ * until a separate audited cleanup is run after backup.
+ */
 
 async function removeStoragePath(
   supabase: Awaited<
@@ -2015,34 +2023,6 @@ export async function saveImageSectionMedia(
     };
   }
 
-  let cleanupWarning =
-    "";
-
-  if (
-    previousMedia &&
-    previousMedia
-      .asset.path !==
-      normalizedMedia
-        .asset.path
-  ) {
-    const {
-      error:
-        cleanupError,
-    } =
-      await removeStoragePath(
-        supabase,
-        previousMedia
-          .asset.path,
-      );
-
-    if (
-      cleanupError
-    ) {
-      cleanupWarning =
-        " Media baru tersimpan, tetapi file lama gagal dibersihkan dari Storage.";
-    }
-  }
-
   revalidateSectionPages(
     projectId,
   );
@@ -2052,7 +2032,7 @@ export async function saveImageSectionMedia(
       "success",
 
     message:
-      `Media gambar berhasil disimpan.${cleanupWarning}`,
+      "Media gambar berhasil disimpan. File sebelumnya dipertahankan sebagai recovery copy.",
   };
 }
 
@@ -2188,16 +2168,6 @@ export async function removeImageSectionMedia(
     };
   }
 
-  const {
-    error:
-      storageError,
-  } =
-    await removeStoragePath(
-      supabase,
-      currentMedia
-        .asset.path,
-    );
-
   revalidateSectionPages(
     projectId,
   );
@@ -2207,9 +2177,7 @@ export async function removeImageSectionMedia(
       "success",
 
     message:
-      storageError
-        ? "Media dilepas dari section, tetapi file gagal dibersihkan dari Storage."
-        : "Media gambar berhasil dihapus.",
+      "Media dilepas dari section. File disimpan sebagai recovery copy.",
   };
 }
 
@@ -2372,18 +2340,6 @@ export async function saveGallerySectionMedia(
         ),
     );
 
-  const removedPaths =
-    Array.from(
-      previousPaths,
-    ).filter(
-      (
-        path,
-      ) =>
-        !nextPaths.has(
-          path,
-        ),
-    );
-
   const nextContent = {
     ...getContentRecord(
       section.content,
@@ -2444,33 +2400,6 @@ export async function saveGallerySectionMedia(
     };
   }
 
-  let cleanupWarning =
-    "";
-
-  if (
-    removedPaths.length >
-    0
-  ) {
-    const {
-      error:
-        cleanupError,
-    } =
-      await supabase.storage
-        .from(
-          PORTFOLIO_MEDIA_BUCKET,
-        )
-        .remove(
-          removedPaths,
-        );
-
-    if (
-      cleanupError
-    ) {
-      cleanupWarning =
-        " Gallery tersimpan, tetapi beberapa file lama gagal dibersihkan dari Storage.";
-    }
-  }
-
   revalidateSectionPages(
     projectId,
   );
@@ -2483,8 +2412,8 @@ export async function saveGallerySectionMedia(
       normalizedGallery
         .items.length ===
       0
-        ? `Gallery dikosongkan.${cleanupWarning}`
-        : `Gallery dengan ${normalizedGallery.items.length} gambar berhasil disimpan.${cleanupWarning}`,
+        ? "Gallery dikosongkan. File lama dipertahankan sebagai recovery copy."
+        : `Gallery dengan ${normalizedGallery.items.length} gambar berhasil disimpan. File yang diganti/dilepas dipertahankan sebagai recovery copy.`,
   };
 }
 
@@ -3041,31 +2970,6 @@ export async function saveFinaleSectionContent(
     };
   }
 
-  let cleanupWarning =
-    "";
-
-  if (
-    previousPath &&
-    previousPath !==
-      nextPath
-  ) {
-    const {
-      error:
-        cleanupError,
-    } =
-      await removeStoragePath(
-        supabase,
-        previousPath,
-      );
-
-    if (
-      cleanupError
-    ) {
-      cleanupWarning =
-        " Finale tersimpan, tetapi file media lama gagal dibersihkan dari Storage.";
-    }
-  }
-
   revalidateSectionPages(
     projectId,
   );
@@ -3075,7 +2979,7 @@ export async function saveFinaleSectionContent(
       "success",
 
     message:
-      `Finale berhasil disimpan.${cleanupWarning}`,
+      "Finale berhasil disimpan. Media sebelumnya dipertahankan sebagai recovery copy.",
   };
 }
 
@@ -3154,44 +3058,6 @@ export async function deleteSection(
     await getAdminClient();
 
   const {
-    data:
-      section,
-
-    error:
-      sectionLookupError,
-  } =
-    await supabase
-      .from(
-        "project_sections",
-      )
-      .select(
-        "content",
-      )
-      .eq(
-        "id",
-        sectionId,
-      )
-      .eq(
-        "project_id",
-        projectId,
-      )
-      .maybeSingle();
-
-  if (
-    sectionLookupError
-  ) {
-    throw new Error(
-      `Gagal membaca media section: ${sectionLookupError.message}`,
-    );
-  }
-
-  const storagePaths =
-    collectPortfolioMediaPaths(
-      section
-        ?.content,
-    );
-
-  const {
     error,
   } =
     await supabase
@@ -3214,32 +3080,6 @@ export async function deleteSection(
     throw new Error(
       `Gagal menghapus section: ${error.message}`,
     );
-  }
-
-  if (
-    storagePaths.length >
-    0
-  ) {
-    const {
-      error:
-        storageError,
-    } =
-      await supabase.storage
-        .from(
-          PORTFOLIO_MEDIA_BUCKET,
-        )
-        .remove(
-          storagePaths,
-        );
-
-    if (
-      storageError
-    ) {
-      console.error(
-        "Section deleted, but media cleanup failed:",
-        storageError,
-      );
-    }
   }
 
   revalidateSectionPages(

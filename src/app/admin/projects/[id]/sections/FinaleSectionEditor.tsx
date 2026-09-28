@@ -37,6 +37,7 @@ import {
 
 import {
   getOptimizationSavings,
+  getPortfolioImageBudgetIssue,
   optimizePortfolioImage,
 } from "@/lib/client-image-optimizer";
 
@@ -587,6 +588,35 @@ export default function FinaleSectionEditor({
             "finale",
           )
         : file;
+
+    if (
+      file.type.startsWith(
+        "image/",
+      )
+    ) {
+      const budgetIssue =
+        await getPortfolioImageBudgetIssue(
+          optimizedFile,
+          "finale",
+        );
+
+      if (
+        budgetIssue
+      ) {
+        setSharedStatus({
+          status:
+            "error",
+
+          message:
+            budgetIssue,
+        });
+
+        event.target.value =
+          "";
+
+        return;
+      }
+    }
 
     clearPendingPreview();
 

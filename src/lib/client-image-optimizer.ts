@@ -474,6 +474,92 @@ export async function optimizePortfolioImage(
   }
 }
 
+const HARD_OUTPUT_LIMITS:
+  Record<
+    PortfolioImagePreset,
+    number
+  > = {
+    cover:
+      1250 *
+      1024,
+
+    section:
+      1750 *
+      1024,
+
+    gallery:
+      1500 *
+      1024,
+
+    finale:
+      2 *
+      1024 *
+      1024,
+  };
+
+const MAX_ANIMATED_IMAGE_BYTES =
+  8 *
+  1024 *
+  1024;
+
+function formatBudgetSize(
+  bytes: number,
+) {
+  return `${(
+    bytes /
+    1024 /
+    1024
+  ).toFixed(
+    1,
+  )} MB`;
+}
+
+export async function getPortfolioImageBudgetIssue(
+  file: File,
+  presetName:
+    PortfolioImagePreset,
+) {
+  const animated =
+    file.type ===
+      "image/gif" ||
+    await isAnimatedWebp(
+      file,
+    );
+
+  const hardLimit =
+    animated
+      ? MAX_ANIMATED_IMAGE_BYTES
+      : HARD_OUTPUT_LIMITS[
+          presetName
+        ];
+
+  if (
+    file.size <=
+    hardLimit
+  ) {
+    return null;
+  }
+
+  if (
+    animated
+  ) {
+    return (
+      "Animated image terlalu besar setelah validasi. " +
+      `Maksimal ${formatBudgetSize(
+        hardLimit,
+      )} agar bandwidth portfolio tetap aman.`
+    );
+  }
+
+  return (
+    "Image masih terlalu besar setelah optimasi otomatis. " +
+    `Maksimal ${formatBudgetSize(
+      hardLimit,
+    )} untuk preset ${presetName}. ` +
+    "Export ulang image dengan dimensi/kompresi yang lebih efisien."
+  );
+}
+
 export function getOptimizationSavings(
   original: File,
   optimized: File,

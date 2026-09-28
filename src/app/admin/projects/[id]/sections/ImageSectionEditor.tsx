@@ -32,6 +32,7 @@ import {
 
 import {
   getOptimizationSavings,
+  getPortfolioImageBudgetIssue,
   optimizePortfolioImage,
 } from "@/lib/client-image-optimizer";
 
@@ -447,6 +448,29 @@ export default function ImageSectionEditor({
         file,
         "section",
       );
+
+    const budgetIssue =
+      await getPortfolioImageBudgetIssue(
+        optimizedFile,
+        "section",
+      );
+
+    if (
+      budgetIssue
+    ) {
+      setMediaStatus({
+        status:
+          "error",
+
+        message:
+          budgetIssue,
+      });
+
+      event.target.value =
+        "";
+
+      return;
+    }
 
     clearPendingPreview();
 

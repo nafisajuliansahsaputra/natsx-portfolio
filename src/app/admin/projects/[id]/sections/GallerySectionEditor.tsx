@@ -36,6 +36,7 @@ import {
 
 import {
   getOptimizationSavings,
+  getPortfolioImageBudgetIssue,
   optimizePortfolioImage,
 } from "@/lib/client-image-optimizer";
 
@@ -699,11 +700,34 @@ export default function GallerySectionEditor({
       const file of
       selectedFiles
     ) {
-      optimizedFiles.push(
+      const optimizedFile =
         await optimizePortfolioImage(
           file,
           "gallery",
-        ),
+        );
+
+      const budgetIssue =
+        await getPortfolioImageBudgetIssue(
+          optimizedFile,
+          "gallery",
+        );
+
+      if (
+        budgetIssue
+      ) {
+        setMediaStatus({
+          status:
+            "error",
+
+          message:
+            `${file.name}: ${budgetIssue}`,
+        });
+
+        return;
+      }
+
+      optimizedFiles.push(
+        optimizedFile,
       );
     }
 
@@ -858,6 +882,29 @@ export default function GallerySectionEditor({
         file,
         "gallery",
       );
+
+    const budgetIssue =
+      await getPortfolioImageBudgetIssue(
+        optimizedFile,
+        "gallery",
+      );
+
+    if (
+      budgetIssue
+    ) {
+      setMediaStatus({
+        status:
+          "error",
+
+        message:
+          budgetIssue,
+      });
+
+      event.target.value =
+        "";
+
+      return;
+    }
 
     setItems(
       (

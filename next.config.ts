@@ -10,11 +10,25 @@ const supabaseUrl =
 const remotePatterns: URL[] =
   [];
 
+const portfolioMediaCdnPrefix =
+  process.env
+    .NEXT_PUBLIC_PORTFOLIO_MEDIA_CDN_PREFIX
+    ?.trim()
+    .replace(
+      /\/+$/,
+      "",
+    ) ??
+  "";
+
 let supabaseOrigin:
   | string
   | null = null;
 
 let supabaseWebSocketOrigin:
+  | string
+  | null = null;
+
+let portfolioMediaCdnOrigin:
   | string
   | null = null;
 
@@ -39,6 +53,40 @@ if (supabaseUrl) {
       parsedSupabaseUrl,
     ),
   );
+}
+
+
+if (
+  portfolioMediaCdnPrefix
+) {
+  try {
+    const parsedMediaCdn =
+      new URL(
+        portfolioMediaCdnPrefix,
+      );
+
+    portfolioMediaCdnOrigin =
+      parsedMediaCdn.origin;
+
+    const normalizedPath =
+      parsedMediaCdn.pathname
+        .replace(
+          /\/+$/,
+          "",
+        );
+
+    remotePatterns.push(
+      new URL(
+        `${normalizedPath || ""}/**`,
+        parsedMediaCdn,
+      ),
+    );
+  } catch {
+    /*
+     * Relative prefixes such as /portfolio-media are same-origin and do not
+     * need a remotePatterns entry.
+     */
+  }
 }
 
 const isDevelopment =
@@ -100,6 +148,17 @@ if (
 }
 
 if (
+  portfolioMediaCdnOrigin &&
+  !connectSources.includes(
+    portfolioMediaCdnOrigin,
+  )
+) {
+  connectSources.push(
+    portfolioMediaCdnOrigin,
+  );
+}
+
+if (
   supabaseWebSocketOrigin
 ) {
   connectSources.push(
@@ -108,9 +167,28 @@ if (
 }
 
 const externalMediaSources =
-  supabaseOrigin
-    ? ` ${supabaseOrigin}`
-    : "";
+  Array.from(
+    new Set(
+      [
+        supabaseOrigin,
+        portfolioMediaCdnOrigin,
+      ].filter(
+        (
+          value,
+        ): value is string =>
+          Boolean(
+            value,
+          ),
+      ),
+    ),
+  )
+    .map(
+      (
+        origin,
+      ) =>
+        ` ${origin}`,
+    )
+    .join("");
 
 const contentSecurityPolicy =
   [
@@ -223,8 +301,12 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns,
 
+    /*
+     * Portfolio media paths are immutable UUID/versioned keys. Keep optimized
+     * variants warm for 30 days so one origin fetch serves many visits.
+     */
     minimumCacheTTL:
-      86400,
+      30 * 24 * 60 * 60,
 
     formats: [
       "image/avif",
@@ -234,6 +316,21 @@ const nextConfig: NextConfig = {
 
   async headers() {
     return [
+      {
+        source:
+          "/media/:path*",
+
+        headers: [
+          {
+            key:
+              "Cache-Control",
+
+            value:
+              "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+
       {
         source:
           "/models/:path*",
