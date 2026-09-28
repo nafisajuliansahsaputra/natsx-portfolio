@@ -305,6 +305,40 @@ if (
   }
 }
 
+const sectionActionsPath =
+  join(
+    root,
+    "src",
+    "app",
+    "admin",
+    "projects",
+    "[id]",
+    "sections",
+    "actions.ts",
+  );
+
+if (
+  existsSync(
+    sectionActionsPath,
+  )
+) {
+  const sectionActions =
+    await readFile(
+      sectionActionsPath,
+      "utf8",
+    );
+
+  if (
+    !sectionActions.includes(
+      "grandfatheredPaths",
+    )
+  ) {
+    warnings.push(
+      "Legacy oversized project media may no longer remain editable without bypassing new-upload budgets.",
+    );
+  }
+}
+
 const projectRendererPath =
   join(
     root,
