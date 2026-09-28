@@ -297,3 +297,26 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Public data runtime circuit breaker
+
+The checked-in portfolio snapshot is not only a one-off incident fallback.
+
+After the current Supabase restriction window ends, public loaders return to
+Supabase as the primary source. If a public project/taxonomy refresh then
+fails, the server process opens a short five-minute runtime circuit and serves
+the checked-in snapshot instead of making every following visitor repeat the
+same failing origin request.
+
+The circuit:
+
+- does not alter CMS writes;
+- does not permanently hide fresh content;
+- self-expires after five minutes;
+- works in addition to the 24-hour tagged data cache;
+- keeps the existing static snapshot as the fail-safe response.
+
+Because Vercel is serverless, the runtime circuit is process-local by design.
+The persistent protection remains the tagged cache + snapshot fallback, while
+the process-local circuit absorbs repeated failures within a warm instance.
