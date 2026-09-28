@@ -35,6 +35,30 @@ const PAGE_SIZE =
 const DOWNLOAD_CONCURRENCY =
   3;
 
+
+function getArgument(
+  name,
+) {
+  const prefix =
+    `--${name}=`;
+
+  const match =
+    process.argv.find(
+      (
+        argument,
+      ) =>
+        argument.startsWith(
+          prefix,
+        ),
+    );
+
+  return match
+    ? match.slice(
+        prefix.length,
+      )
+    : null;
+}
+
 function loadSimpleEnvFile(
   path,
 ) {
@@ -171,6 +195,12 @@ const includeOrphans =
     "--include-orphans",
   );
 
+
+const resumeArgument =
+  getArgument(
+    "resume",
+  );
+
 if (
   !supabaseUrl ||
   !supabaseKey
@@ -204,12 +234,69 @@ const stamp =
     );
 
 const outputRoot =
-  join(
-    process.cwd(),
-    "backups",
-    "portfolio",
-    stamp,
+  resumeArgument
+    ? resolve(
+        resumeArgument,
+      )
+    : join(
+        process.cwd(),
+        "backups",
+        "portfolio",
+        stamp,
+      );
+
+if (
+  resumeArgument &&
+  !existsSync(
+    outputRoot,
+  )
+) {
+  throw new Error(
+    `Resume backup folder does not exist: ${outputRoot}`,
   );
+}
+
+if (
+  resumeArgument
+) {
+  const existingDataPath =
+    join(
+      outputRoot,
+      "data.json",
+    );
+
+  if (
+    !existsSync(
+      existingDataPath,
+    )
+  ) {
+    throw new Error(
+      "Resume folder is not a portfolio backup: data.json is missing.",
+    );
+  }
+
+  const existingData =
+    JSON.parse(
+      await readFile(
+        existingDataPath,
+        "utf8",
+      ),
+    );
+
+  if (
+    Boolean(
+      existingData
+        ?.includeOrphans,
+    ) !==
+      includeOrphans
+  ) {
+    throw new Error(
+      includeOrphans
+        ? "This backup was not created as a full --include-orphans backup."
+        : "This backup was created with --include-orphans; resume it with the same flag.",
+    );
+  }
+}
 
 const mediaRoot =
   join(
@@ -763,6 +850,62 @@ const manifest =
 const failures =
   [];
 
+const resumableMedia =
+  new Map();
+
+if (
+  resumeArgument
+) {
+  const previousManifestPath =
+    join(
+      outputRoot,
+      "media-manifest.json",
+    );
+
+  if (
+    existsSync(
+      previousManifestPath,
+    )
+  ) {
+    const previousManifest =
+      JSON.parse(
+        await readFile(
+          previousManifestPath,
+          "utf8",
+        ),
+      );
+
+    if (
+      Array.isArray(
+        previousManifest,
+      )
+    ) {
+      for (
+        const item of
+        previousManifest
+      ) {
+        if (
+          item?.bucket &&
+          item?.path &&
+          typeof item?.sha256 ===
+            "string" &&
+          item.sha256.length ===
+            64
+        ) {
+          resumableMedia.set(
+            `${item.bucket}/${item.path}`,
+            item,
+          );
+        }
+      }
+    }
+  }
+
+  console.log(
+    `[resume] ${resumableMedia.size} previously verified manifest item(s) available for local checksum reuse.`,
+  );
+}
+
 let cursor =
   0;
 
@@ -783,6 +926,79 @@ function isStorageRestriction(
       message,
     )
   );
+}
+
+
+async function reuseVerifiedLocalMedia(
+  entry,
+  relativePath,
+  destination,
+) {
+  if (
+    !resumeArgument
+  ) {
+    return false;
+  }
+
+  const previous =
+    resumableMedia.get(
+      `${entry.bucket}/${entry.path}`,
+    );
+
+  if (
+    !previous ||
+    previous.relativePath !==
+      relativePath ||
+    !existsSync(
+      destination,
+    )
+  ) {
+    return false;
+  }
+
+  try {
+    const bytes =
+      await readFile(
+        destination,
+      );
+
+    const sha256 =
+      createHash(
+        "sha256",
+      )
+        .update(
+          bytes,
+        )
+        .digest(
+          "hex",
+        );
+
+    if (
+      sha256 !==
+      previous.sha256
+    ) {
+      return false;
+    }
+
+    manifest.push({
+      ...previous,
+
+      bucket:
+        entry.bucket,
+
+      path:
+        entry.path,
+
+      bytes:
+        bytes.length,
+
+      relativePath,
+    });
+
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function downloadWorker() {
@@ -828,6 +1044,20 @@ async function downloadWorker() {
     process.stdout.write(
       `[media ${index + 1}/${entries.length}] ${entry.path} ... `,
     );
+
+    if (
+      await reuseVerifiedLocalMedia(
+        entry,
+        relativePath,
+        destination,
+      )
+    ) {
+      console.log(
+        "REUSED (local SHA-256 verified)",
+      );
+
+      continue;
+    }
 
     try {
       if (
@@ -1042,6 +1272,15 @@ console.log(
 console.log(
   `Backup written to: ${outputRoot}`,
 );
+
+
+if (
+  resumeArgument
+) {
+  console.log(
+    "Resume mode only downloaded missing/corrupt objects; verified local copies were reused without Storage egress.",
+  );
+}
 
 console.log(
   `Media recovered: ${manifest.length}/${entries.length}`,
