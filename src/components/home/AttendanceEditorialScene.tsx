@@ -1545,6 +1545,7 @@ useEffect(() => {
     let environment: THREE.WebGLRenderTarget | undefined;
     let animationFrameId = 0;
     let cleanupPointerMotion: (() => void) | undefined;
+    let cleanupPageVisibility: (() => void) | undefined;
     let visible = true;
     let pageVisible =
       !document.hidden;
@@ -2387,6 +2388,14 @@ const checkInCardData = createFloatingCard(
           syncPageVisibility,
         );
 
+        cleanupPageVisibility =
+          () => {
+            document.removeEventListener(
+              "visibilitychange",
+              syncPageVisibility,
+            );
+          };
+
         if (typeof IntersectionObserver !== "undefined") {
           visibilityObserver = new IntersectionObserver(
             ([entry]) => {
@@ -2442,10 +2451,7 @@ const checkInCardData = createFloatingCard(
       resizeObserver?.disconnect();
       visibilityObserver?.disconnect();
 
-      document.removeEventListener(
-        "visibilitychange",
-        syncPageVisibility,
-      );
+      cleanupPageVisibility?.();
 
       if (renderer) {
         renderer.dispose();
