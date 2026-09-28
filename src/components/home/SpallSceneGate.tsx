@@ -10,8 +10,11 @@ import {
 
 import useIntroCompletion from "@/components/intro/useIntroCompletion";
 
+import sceneModels from "@/data/scene-models.json";
+
 import {
   getSceneMargin,
+  getSceneWarmMargin,
   warmSceneResources,
 } from "./scene-resource-preload";
 
@@ -85,6 +88,9 @@ export default function SpallSceneGate({
       return;
     }
 
+    const resourceController =
+      new AbortController();
+
     const loadCode =
       () => {
         void loadSpallEditorialScene()
@@ -97,10 +103,11 @@ export default function SpallSceneGate({
       () => {
         void warmSceneResources(
           [
-            "/models/iphone-17-pro-max.glb",
+            sceneModels.spall.phone.runtime,
             screenUrl,
           ],
           1,
+          resourceController.signal,
         );
       };
 
@@ -121,6 +128,8 @@ export default function SpallSceneGate({
         );
 
       return () => {
+        resourceController.abort();
+
         window.cancelAnimationFrame(
           frame,
         );
@@ -131,8 +140,8 @@ export default function SpallSceneGate({
       (
         callback:
           () => void,
-        viewportMargin:
-          number,
+        rootMargin:
+          string,
       ) => {
         const observer =
           new IntersectionObserver(
@@ -156,10 +165,7 @@ export default function SpallSceneGate({
               root:
                 null,
 
-              rootMargin:
-                getSceneMargin(
-                  viewportMargin,
-                ),
+              rootMargin,
 
               threshold:
                 0,
@@ -176,13 +182,17 @@ export default function SpallSceneGate({
     const codeObserver =
       createOneShotObserver(
         loadCode,
-        SPALL_CODE_PRELOAD_VIEWPORTS,
+        getSceneMargin(
+          SPALL_CODE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const resourceObserver =
       createOneShotObserver(
         warmResources,
-        SPALL_RESOURCE_PRELOAD_VIEWPORTS,
+        getSceneWarmMargin(
+          SPALL_RESOURCE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const prepareObserver =
@@ -192,10 +202,14 @@ export default function SpallSceneGate({
             true,
           );
         },
-        SPALL_PREPARE_VIEWPORTS,
+        getSceneMargin(
+          SPALL_PREPARE_VIEWPORTS,
+        ),
       );
 
     return () => {
+      resourceController.abort();
+
       codeObserver.disconnect();
       resourceObserver.disconnect();
       prepareObserver.disconnect();
