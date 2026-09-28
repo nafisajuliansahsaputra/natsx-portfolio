@@ -20,6 +20,10 @@ import {
   FALLBACK_WORK_CATEGORY_ROWS,
 } from "@/lib/public-portfolio-fallback-data";
 
+import {
+  shouldUsePublicPortfolioSnapshot,
+} from "@/lib/public-portfolio-fallback-mode";
+
 
 type WorkCategoryRow = {
   id:
@@ -377,6 +381,12 @@ const getCachedPublicWorkTaxonomy =
 export const getPublicWorkTaxonomy =
   cache(
     async () => {
+      if (
+        shouldUsePublicPortfolioSnapshot()
+      ) {
+        return getFallbackPublicWorkTaxonomy();
+      }
+
       try {
         return await getCachedPublicWorkTaxonomy();
       } catch {

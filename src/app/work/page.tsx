@@ -49,7 +49,7 @@ import "@/app/work-motion-fit.css";
 
 
 export const revalidate =
-  3600;
+  86400;
 
 
 const description =

@@ -36,7 +36,7 @@ type LocalizedWorkPageProps = {
 
 
 export const revalidate =
-  3600;
+  86400;
 
 
 function getRequestedCategory(
