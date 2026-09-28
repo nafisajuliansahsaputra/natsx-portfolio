@@ -15,7 +15,12 @@ import {
 import {
   dirname,
   join,
+  resolve,
 } from "node:path";
+
+import {
+  pathToFileURL,
+} from "node:url";
 
 import {
   createClient,
@@ -285,7 +290,78 @@ const tableNames = [
   "project_work_categories",
 ];
 
+async function loadCheckedInFallbackDatabase() {
+  const fallbackModuleUrl =
+    pathToFileURL(
+      resolve(
+        process.cwd(),
+        "src",
+        "lib",
+        "public-portfolio-fallback-data.ts",
+      ),
+    ).href;
+
+  const fallback =
+    await import(
+      fallbackModuleUrl
+    );
+
+  return {
+    projects:
+      fallback
+        .FALLBACK_PROJECT_ROWS ??
+      [],
+
+    project_translations:
+      fallback
+        .FALLBACK_PROJECT_TRANSLATION_ROWS ??
+      [],
+
+    project_sections:
+      fallback
+        .FALLBACK_SECTION_ROWS ??
+      [],
+
+    project_section_translations:
+      fallback
+        .FALLBACK_SECTION_TRANSLATION_ROWS ??
+      [],
+
+    work_categories:
+      fallback
+        .FALLBACK_WORK_CATEGORY_ROWS ??
+      [],
+
+    project_work_categories:
+      fallback
+        .FALLBACK_PROJECT_CATEGORY_ROWS ??
+      [],
+  };
+}
+
+let fallbackDatabase =
+  null;
+
+async function getFallbackRows(
+  table,
+) {
+  if (
+    !fallbackDatabase
+  ) {
+    fallbackDatabase =
+      await loadCheckedInFallbackDatabase();
+  }
+
+  return fallbackDatabase[
+    table
+  ] ??
+  [];
+}
+
 const database =
+  {};
+
+const dataSources =
   {};
 
 for (
@@ -296,18 +372,57 @@ for (
     `[data] ${table} ... `,
   );
 
-  database[
-    table
-  ] =
-    await readAllRows(
-      table,
-    );
-
-  console.log(
+  try {
     database[
       table
-    ].length,
-  );
+    ] =
+      await readAllRows(
+        table,
+      );
+
+    dataSources[
+      table
+    ] =
+      "live";
+
+    console.log(
+      `${database[
+        table
+      ].length} (live)`,
+    );
+  } catch (
+    error
+  ) {
+    const message =
+      error instanceof
+      Error
+        ? error.message
+        : String(
+            error,
+          );
+
+    database[
+      table
+    ] =
+      await getFallbackRows(
+        table,
+      );
+
+    dataSources[
+      table
+    ] =
+      "checked-in-fallback";
+
+    console.log(
+      `${database[
+        table
+      ].length} (checked-in fallback; live API unavailable)`,
+    );
+
+    console.warn(
+      `       ${message}`,
+    );
+  }
 }
 
 await writeFile(
@@ -323,6 +438,8 @@ await writeFile(
 
       projectUrl:
         supabaseUrl,
+
+      dataSources,
 
       tables:
         database,
@@ -495,6 +612,25 @@ const failures =
 let cursor =
   0;
 
+let storageRestricted =
+  false;
+
+let storageRestrictionMessage =
+  "";
+
+function isStorageRestriction(
+  status,
+  message,
+) {
+  return (
+    status ===
+      402 ||
+    /exceed_cached_egress_quota|service.*restricted|cached egress/i.test(
+      message,
+    )
+  );
+}
+
 async function downloadWorker() {
   while (
     cursor <
@@ -535,6 +671,15 @@ async function downloadWorker() {
     );
 
     try {
+      if (
+        storageRestricted
+      ) {
+        throw new Error(
+          storageRestrictionMessage ||
+          "HTTP 402 - Supabase Storage restricted; request skipped",
+        );
+      }
+
       const response =
         await fetch(
           url,
@@ -552,8 +697,38 @@ async function downloadWorker() {
       if (
         !response.ok
       ) {
+        let responseMessage =
+          "";
+
+        try {
+          responseMessage =
+            await response
+              .text();
+        } catch {
+          responseMessage =
+            "";
+        }
+
+        const failureMessage =
+          responseMessage
+            ? `HTTP ${response.status}: ${responseMessage}`
+            : `HTTP ${response.status}`;
+
+        if (
+          isStorageRestriction(
+            response.status,
+            failureMessage,
+          )
+        ) {
+          storageRestricted =
+            true;
+
+          storageRestrictionMessage =
+            "HTTP 402 - Supabase Storage restricted by cached egress quota; remaining media requests skipped";
+        }
+
         throw new Error(
-          `HTTP ${response.status}`,
+          failureMessage,
         );
       }
 
@@ -713,12 +888,36 @@ console.log(
 );
 
 if (
+  Object.values(
+    dataSources,
+  ).some(
+    (
+      source,
+    ) =>
+      source !==
+      "live",
+  )
+) {
+  console.warn(
+    "Database export used the checked-in emergency snapshot for one or more tables because the live Supabase API is restricted.",
+  );
+}
+
+if (
   failures.length >
   0
 ) {
   console.error(
-    "Backup is incomplete. Keep the generated files for diagnosis and retry after Storage access is restored.",
+    "Backup is incomplete. Database/snapshot metadata was saved, but media must be retried after Supabase Storage access is restored.",
   );
+
+  if (
+    storageRestricted
+  ) {
+    console.error(
+      "Supabase Storage is still HTTP 402. This is expected during the cached-egress restriction; no repeated Storage hammering was performed.",
+    );
+  }
 
   process.exitCode =
     2;
