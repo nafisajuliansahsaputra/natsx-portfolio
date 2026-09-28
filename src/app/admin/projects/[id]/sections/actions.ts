@@ -25,6 +25,7 @@ import {
   getFinaleSectionMedia,
   getGallerySectionMedia,
   getImageSectionMedia,
+  getPortfolioImageServerLimit,
   isAllowedFinaleMediaMimeType,
   isAllowedImageMimeType,
   type FinaleSectionMedia,
@@ -443,6 +444,11 @@ function validateImageMedia(
     return "Format gambar tidak didukung.";
   }
 
+  const serverImageLimit =
+    getPortfolioImageServerLimit(
+      media.asset.mimeType,
+    );
+
   if (
     !Number.isFinite(
       media.asset.size,
@@ -450,9 +456,12 @@ function validateImageMedia(
     media.asset.size <=
       0 ||
     media.asset.size >
-      MAX_PORTFOLIO_MEDIA_FILE_SIZE
+      serverImageLimit
   ) {
-    return "Ukuran gambar tidak valid atau melebihi 50 MB.";
+    return (
+      "Ukuran gambar tidak valid atau melewati batas aman " +
+      "media publik setelah optimasi."
+    );
   }
 
   if (
@@ -778,6 +787,14 @@ function validateFinaleMedia(
     return "Jenis finale media tidak valid.";
   }
 
+  const finaleSizeLimit =
+    expectedKind ===
+      "image"
+      ? getPortfolioImageServerLimit(
+          media.asset.mimeType,
+        )
+      : MAX_PORTFOLIO_MEDIA_FILE_SIZE;
+
   if (
     !Number.isFinite(
       media.asset.size,
@@ -785,9 +802,14 @@ function validateFinaleMedia(
     media.asset.size <=
       0 ||
     media.asset.size >
-      MAX_PORTFOLIO_MEDIA_FILE_SIZE
+      finaleSizeLimit
   ) {
-    return "Ukuran finale media tidak valid atau melebihi 50 MB.";
+    return (
+      expectedKind ===
+        "image"
+        ? "Ukuran finale image melewati batas aman media publik setelah optimasi."
+        : "Ukuran finale media tidak valid atau melebihi 50 MB."
+    );
   }
 
   if (
