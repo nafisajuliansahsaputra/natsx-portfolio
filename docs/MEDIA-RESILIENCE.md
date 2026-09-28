@@ -316,3 +316,14 @@ This prevents a deployed portfolio from exposing local backup paths, original
 backup bookkeeping, or checksum metadata through a public URL. The build-time
 media audit still uses the private config manifest to verify every mirrored
 file byte-for-byte.
+
+
+### Mirror garbage collection
+
+The generated mirror directory is rebuilt from scratch on every successful
+`mirror:portfolio` run. Only objects present in the verified backup manifest
+are copied back into `public/media/`.
+
+This prevents replaced/detached historical files from silently accumulating in
+Vercel deployments. Recovery copies still live in the separate backup/Storage
+retention workflow; the public mirror only contains the current verified set.
