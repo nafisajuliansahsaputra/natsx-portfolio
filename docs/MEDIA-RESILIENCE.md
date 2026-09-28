@@ -199,3 +199,34 @@ When access is restored:
 
 This sequence makes the portfolio independent of a future Supabase Storage
 restriction without changing its visual design or motion system.
+
+
+## Regression guardrails
+
+Run:
+
+```bash
+npm run audit:media
+```
+
+The production build now runs the same audit automatically before the normal
+Three.js optimization step.
+
+The audit blocks deployment when it detects regression-level media risks such
+as:
+
+- large still gallery images bypassing Next Image because of file size;
+- global image warming no longer being restricted to same-origin covers;
+- a checked-in static mirror entry pointing to a missing file;
+- a mirrored file no longer matching its SHA-256 manifest;
+- a local public image above 8 MB;
+- a GLB above 40 MB.
+
+Large-but-currently-accepted assets produce warnings rather than changing the
+artwork automatically. This keeps visual parity under human control while
+preventing the high-risk delivery patterns that caused the previous egress
+incident.
+
+CMS image sizes are also checked twice: first in the browser after optimization
+and again by the server action before project content is accepted. This makes
+the bandwidth guard harder to bypass accidentally.

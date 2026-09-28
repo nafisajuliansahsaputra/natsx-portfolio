@@ -188,11 +188,20 @@ for (
       index
     ];
 
+  const relativeSegments =
+    item.relativePath
+      .split(
+        /[\\/]+/,
+      )
+      .filter(
+        Boolean,
+      );
+
   const source =
     join(
       backupRoot,
       "media",
-      item.relativePath,
+      ...relativeSegments,
     );
 
   if (
@@ -208,7 +217,7 @@ for (
   const destination =
     join(
       publicRoot,
-      item.relativePath,
+      ...relativeSegments,
     );
 
   await mkdir(

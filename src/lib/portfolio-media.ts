@@ -4,6 +4,30 @@ export const PORTFOLIO_MEDIA_BUCKET =
 export const MAX_PORTFOLIO_MEDIA_FILE_SIZE =
   50 * 1024 * 1024;
 
+
+/*
+ * Server-side safety net for public image payloads.
+ *
+ * The client optimizer has tighter per-placement targets, but client code can
+ * fail open on unsupported decoders and can always be bypassed. These limits
+ * stop a multi-megabyte still image from being accepted into project content
+ * and becoming a future egress liability.
+ */
+export const MAX_PORTFOLIO_STILL_IMAGE_FILE_SIZE =
+  2 * 1024 * 1024;
+
+export const MAX_PORTFOLIO_ANIMATED_IMAGE_FILE_SIZE =
+  8 * 1024 * 1024;
+
+export function getPortfolioImageServerLimit(
+  mimeType: string,
+) {
+  return mimeType ===
+    "image/gif"
+    ? MAX_PORTFOLIO_ANIMATED_IMAGE_FILE_SIZE
+    : MAX_PORTFOLIO_STILL_IMAGE_FILE_SIZE;
+}
+
 export const IMAGE_MEDIA_MIME_TYPES = [
   "image/jpeg",
   "image/png",
