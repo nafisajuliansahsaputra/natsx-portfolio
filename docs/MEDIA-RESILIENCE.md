@@ -297,3 +297,25 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Legacy media compatibility
+
+Some portfolio images uploaded before the new CMS budgets are larger than the
+current safe upload limits.
+
+Those existing Storage paths are grandfathered only for **editing their
+metadata/content in place**. For example, changing a gallery caption, alt text,
+or neighboring gallery arrangement does not force the old file to be
+re-uploaded or make the section unsaveable.
+
+The exception is path-based:
+
+- an asset path already referenced by that section may keep its historical
+  size while the section is edited;
+- any new/replacement asset path must satisfy the current server-side size
+  budget;
+- MIME/path/ownership/text validation still applies to legacy assets.
+
+This keeps the CMS usable during the recovery/migration period without
+weakening the guardrails for future uploads.
