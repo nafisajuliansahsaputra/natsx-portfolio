@@ -479,9 +479,9 @@ if (
 
 const mirrorManifestPath =
   join(
-    publicRoot,
-    "media",
-    "manifest.json",
+    root,
+    "config",
+    "portfolio-media-mirror-manifest.json",
   );
 
 if (
