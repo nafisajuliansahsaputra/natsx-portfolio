@@ -297,3 +297,17 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Vercel preview build budget
+
+Automatic previews remain enabled for normal branches and `main`, but branches
+matching `codex-work-*` do not trigger Vercel deployments.
+
+Use that prefix for iterative implementation branches so multiple small commits
+do not consume the Hobby preview build allowance. When a change is ready for
+visual/deployment verification, create a normal review branch from the final
+commit (for example `codex-preview-...`) and let Vercel build that branch once.
+
+This changes only the Git deployment trigger policy. Production `main`
+deployments remain enabled.
