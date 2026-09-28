@@ -10,8 +10,11 @@ import {
 
 import useIntroCompletion from "@/components/intro/useIntroCompletion";
 
+import sceneModels from "@/data/scene-models.json";
+
 import {
   getSceneMargin,
+  getSceneWarmMargin,
   warmSceneResources,
 } from "./scene-resource-preload";
 
@@ -85,6 +88,9 @@ export default function BastSceneGate({
       return;
     }
 
+    const resourceController =
+      new AbortController();
+
     const loadCode =
       () => {
         void loadBastEditorialScene()
@@ -97,11 +103,12 @@ export default function BastSceneGate({
       () => {
         void warmSceneResources(
           [
-            "/models/bast/macbook-pro.glb",
-            "/models/bast/printer.glb",
+            sceneModels.bast.macbook.runtime,
+            sceneModels.bast.printer.runtime,
             screenUrl,
           ],
           1,
+          resourceController.signal,
         );
       };
 
@@ -122,6 +129,8 @@ export default function BastSceneGate({
         );
 
       return () => {
+        resourceController.abort();
+
         window.cancelAnimationFrame(
           frame,
         );
@@ -132,8 +141,8 @@ export default function BastSceneGate({
       (
         callback:
           () => void,
-        viewportMargin:
-          number,
+        rootMargin:
+          string,
       ) => {
         const observer =
           new IntersectionObserver(
@@ -157,10 +166,7 @@ export default function BastSceneGate({
               root:
                 null,
 
-              rootMargin:
-                getSceneMargin(
-                  viewportMargin,
-                ),
+              rootMargin,
 
               threshold:
                 0,
@@ -177,13 +183,17 @@ export default function BastSceneGate({
     const codeObserver =
       createOneShotObserver(
         loadCode,
-        BAST_CODE_PRELOAD_VIEWPORTS,
+        getSceneMargin(
+          BAST_CODE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const resourceObserver =
       createOneShotObserver(
         warmResources,
-        BAST_RESOURCE_PRELOAD_VIEWPORTS,
+        getSceneWarmMargin(
+          BAST_RESOURCE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const prepareObserver =
@@ -193,10 +203,14 @@ export default function BastSceneGate({
             true,
           );
         },
-        BAST_PREPARE_VIEWPORTS,
+        getSceneMargin(
+          BAST_PREPARE_VIEWPORTS,
+        ),
       );
 
     return () => {
+      resourceController.abort();
+
       codeObserver.disconnect();
       resourceObserver.disconnect();
       prepareObserver.disconnect();
