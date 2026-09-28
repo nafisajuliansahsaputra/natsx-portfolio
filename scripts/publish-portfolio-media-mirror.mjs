@@ -3,6 +3,7 @@ import {
   mkdir,
   readFile,
   readdir,
+  rm,
   writeFile,
 } from "node:fs/promises";
 
@@ -163,6 +164,22 @@ const publicRoot =
     "public",
     "media",
   );
+
+/*
+ * The mirror is generated state, not an append-only archive. Start from a
+ * clean directory so detached/replaced media cannot linger in deployments
+ * after it disappears from the verified backup manifest.
+ */
+await rm(
+  publicRoot,
+  {
+    recursive:
+      true,
+
+    force:
+      true,
+  },
+);
 
 await mkdir(
   publicRoot,
