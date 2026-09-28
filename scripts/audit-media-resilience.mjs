@@ -301,7 +301,7 @@ if (
     !preloader.includes(
       "window.location.origin",
     ) ||
-    !/item\\.group\\s*!==\\s*"project-cover"/m.test(
+    !/item\.group\s*!==\s*"project-cover"/m.test(
       preloader,
     )
   ) {
