@@ -76,19 +76,17 @@ function isAnimatedImage(
 function shouldServeOriginalGalleryImage(
   mimeType:
     string,
-  fileSize:
-    number,
 ) {
-  return (
-    isAnimatedImage(
-      mimeType,
-    ) ||
-    (
-      mimeType ===
-        "image/png" &&
-      fileSize >=
-        1_500_000
-    )
+  /*
+   * Never bypass the image optimizer merely because an image is large.
+   *
+   * The previous >= 1.5 MB PNG escape hatch made the heaviest gallery
+   * assets hit Storage directly for every visitor. Animated GIFs are the
+   * only intentional original-delivery exception because flattening motion
+   * would change the artwork.
+   */
+  return isAnimatedImage(
+    mimeType,
   );
 }
 
@@ -918,9 +916,6 @@ function GallerySection({
                         unoptimized={shouldServeOriginalGalleryImage(
                           item.asset
                             .mimeType,
-
-                          item.asset
-                            .size,
                         )}
                         loading="lazy"
                         decoding="async"
