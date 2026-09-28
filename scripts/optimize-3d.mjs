@@ -1,5 +1,6 @@
 import {
   copyFile,
+  readFile,
   rm,
   stat,
 } from "node:fs/promises";
@@ -27,12 +28,29 @@ if (
   );
 }
 
+const sceneModels =
+  JSON.parse(
+    await readFile(
+      new URL(
+        "../src/data/scene-models.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
+
 const models = [
-  "public/models/iphone-17-pro-max.glb",
-  "public/models/attendance/imac.glb",
-  "public/models/attendance/scanner.glb",
-  "public/models/bast/macbook-pro.glb",
-];
+  sceneModels.spall.phone.runtime,
+  sceneModels.attendance.imac.runtime,
+  sceneModels.attendance.scanner.runtime,
+  sceneModels.bast.macbook.runtime,
+]
+  .map(
+    (
+      runtimePath,
+    ) =>
+      `public${runtimePath}`,
+  );
 
 const npxCommand =
   process.platform ===
