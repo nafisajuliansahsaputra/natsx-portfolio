@@ -305,6 +305,40 @@ if (
   }
 }
 
+const publicSupabaseClientPath =
+  join(
+    root,
+    "src",
+    "lib",
+    "supabase",
+    "public.ts",
+  );
+
+if (
+  existsSync(
+    publicSupabaseClientPath,
+  )
+) {
+  const publicSupabaseClient =
+    await readFile(
+      publicSupabaseClientPath,
+      "utf8",
+    );
+
+  if (
+    !publicSupabaseClient.includes(
+      "PUBLIC_SUPABASE_TIMEOUT_MS",
+    ) ||
+    !publicSupabaseClient.includes(
+      'cache:\n          "no-store"',
+    )
+  ) {
+    warnings.push(
+      "Public Supabase reads no longer appear to have an explicit timeout + no-store origin fetch policy.",
+    );
+  }
+}
+
 const projectRendererPath =
   join(
     root,
