@@ -839,17 +839,18 @@ async function downloadWorker() {
         );
       }
 
+      /*
+       * portfolio-media is a public bucket. Never attach the publishable or
+       * service-role key to the public object URL: the bytes do not require
+       * authorization, and keeping credentials out of media requests avoids
+       * leaking privileged headers into intermediary/debug logs.
+       */
       const response =
         await fetch(
           url,
           {
-            headers: {
-              apikey:
-                supabaseKey,
-
-              Authorization:
-                `Bearer ${supabaseKey}`,
-            },
+            cache:
+              "no-store",
           },
         );
 
