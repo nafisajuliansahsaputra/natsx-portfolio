@@ -26,6 +26,29 @@ test(
     const gltfErrors:
       string[] = [];
 
+    const glbRequests:
+      string[] = [];
+
+    page.on(
+      "request",
+      (
+        request,
+      ) => {
+        const url =
+          request.url();
+
+        if (
+          /\.glb(?:\?|$)/i.test(
+            url,
+          )
+        ) {
+          glbRequests.push(
+            url,
+          );
+        }
+      },
+    );
+
     page.on(
       "console",
       (
@@ -95,5 +118,38 @@ test(
     ).toEqual(
       [],
     );
+
+
+    await expect
+      .poll(
+        () =>
+          glbRequests.length,
+      )
+      .toBeGreaterThan(
+        0,
+      );
+
+    for (
+      const requestUrl of
+      glbRequests
+    ) {
+      const pathname =
+        new URL(
+          requestUrl,
+        ).pathname;
+
+      expect(
+        pathname,
+        `GLB must use content-addressed runtime delivery: ${pathname}`,
+      ).toMatch(
+        /^\/runtime-models\/.+\.[a-f0-9]{12}\.glb$/i,
+      );
+
+      expect(
+        pathname,
+      ).not.toMatch(
+        /^\/models\//,
+      );
+    }
   },
 );

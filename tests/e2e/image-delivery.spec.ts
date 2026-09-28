@@ -434,3 +434,167 @@ test(
     }
   },
 );
+
+
+/*
+ * =========================================================
+ * NO DIRECT STORAGE EGRESS
+ * =========================================================
+ *
+ * Public browsing must not fetch portfolio-media objects straight from
+ * Supabase. Browser-visible delivery should stay same-origin through
+ * Next Image, static mirrors, or content-addressed runtime assets.
+ */
+for (
+  const route of
+  [
+    "/",
+    "/work",
+  ] as const
+) {
+  test(
+    `${route} does not directly request Supabase portfolio Storage`,
+    async ({
+      page,
+    }) => {
+      const directStorageRequests:
+        string[] =
+        [];
+
+      page.on(
+        "request",
+        (
+          request,
+        ) => {
+          const url =
+            request.url();
+
+          if (
+            url.includes(
+              ".supabase.co/storage/v1/object/public/portfolio-media/",
+            )
+          ) {
+            directStorageRequests.push(
+              url,
+            );
+          }
+        },
+      );
+
+      const response =
+        await page.goto(
+          route,
+          {
+            waitUntil:
+              "domcontentloaded",
+          },
+        );
+
+      expect(
+        response,
+      ).not.toBeNull();
+
+      expect(
+        response?.status(),
+      ).toBeLessThan(
+        400,
+      );
+
+      /*
+       * Give idle warmers / near-viewport scene gates time to run. A former
+       * regression downloaded project media in the background after paint.
+       */
+      await page.waitForTimeout(
+        2500,
+      );
+
+      expect(
+        directStorageRequests,
+        `Direct Supabase Storage requests detected on ${route}:\n${directStorageRequests.join(
+          "\n",
+        )}`,
+      ).toEqual(
+        [],
+      );
+    },
+  );
+}
+
+
+test(
+  "project social preview metadata uses the same-origin image cache",
+  async ({
+    page,
+  }) => {
+    const response =
+      await page.goto(
+        "/work/bast-management-system",
+      );
+
+    expect(
+      response,
+    ).not.toBeNull();
+
+    expect(
+      response?.status(),
+    ).toBeLessThan(
+      400,
+    );
+
+    const openGraphImage =
+      page.locator(
+        'meta[property="og:image"]',
+      );
+
+    await expect(
+      openGraphImage,
+    ).toHaveCount(
+      1,
+    );
+
+    const openGraphUrl =
+      await openGraphImage.getAttribute(
+        "content",
+      );
+
+    expect(
+      openGraphUrl,
+    ).toContain(
+      "/_next/image?",
+    );
+
+    expect(
+      openGraphUrl,
+    ).not.toContain(
+      ".supabase.co/storage/v1/object/public/portfolio-media/",
+    );
+
+    const twitterImage =
+      page.locator(
+        'meta[name="twitter:image"]',
+      );
+
+    await expect(
+      twitterImage,
+    ).toHaveCount(
+      1,
+    );
+
+    const twitterUrl =
+      await twitterImage.getAttribute(
+        "content",
+      );
+
+    expect(
+      twitterUrl,
+    ).toContain(
+      "/_next/image?",
+    );
+
+    expect(
+      twitterUrl,
+    ).not.toContain(
+      ".supabase.co/storage/v1/object/public/portfolio-media/",
+    );
+  },
+);
