@@ -36,6 +36,11 @@ import {
 } from "@/lib/supabase/client";
 
 import {
+  getOptimizationSavings,
+  optimizePortfolioImage,
+} from "@/lib/client-image-optimizer";
+
+import {
   saveFinaleSectionLocalizedCopy,
   saveFinaleSectionSharedData,
   type FinaleTranslationState,
@@ -510,7 +515,7 @@ export default function FinaleSectionEditor({
     }
   }
 
-  function handleFileChange(
+  async function handleFileChange(
     event:
       ChangeEvent<HTMLInputElement>,
   ) {
@@ -561,11 +566,33 @@ export default function FinaleSectionEditor({
       return;
     }
 
+    setSharedStatus({
+      status:
+        "success",
+
+      message:
+        file.type.startsWith(
+          "image/",
+        )
+          ? "Optimizing finale image before upload..."
+          : "Video will be uploaded without image recompression.",
+    });
+
+    const optimizedFile =
+      file.type.startsWith(
+        "image/",
+      )
+        ? await optimizePortfolioImage(
+            file,
+            "finale",
+          )
+        : file;
+
     clearPendingPreview();
 
     const objectUrl =
       URL.createObjectURL(
-        file,
+        optimizedFile,
       );
 
     previewUrlRef.current =
@@ -576,12 +603,28 @@ export default function FinaleSectionEditor({
     );
 
     setPendingFile(
-      file,
+      optimizedFile,
     );
 
-    setSharedStatus(
-      initialState,
-    );
+    const savings =
+      getOptimizationSavings(
+        file,
+        optimizedFile,
+      );
+
+    setSharedStatus({
+      status:
+        "success",
+
+      message:
+        savings
+          ? `Finale image optimized automatically: ${formatFileSize(file.size)} → ${formatFileSize(optimizedFile.size)} (-${savings}%).`
+          : file.type.startsWith(
+              "image/",
+            )
+            ? "Image is already efficient or animated; original quality is preserved."
+            : "Video selected. Video compression is intentionally unchanged to avoid quality or playback regressions.",
+    });
   }
 
   function handleRemoveMedia() {
