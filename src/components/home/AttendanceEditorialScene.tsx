@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
+import sceneModels from "@/data/scene-models.json";
+
 type Props = {
   label: string;
   dashboardImageUrl?: string | null;
@@ -12,9 +14,14 @@ type Props = {
   badgeImageUrl?: string | null;
 };
 
-const IMAC_MODEL_URL = "/models/attendance/imac.glb";
-const SCANNER_MODEL_URL = "/models/attendance/scanner.glb";
-const BADGE_MODEL_URL = "/models/attendance/badge.glb";
+const IMAC_MODEL_URL =
+  sceneModels.attendance.imac.runtime;
+
+const SCANNER_MODEL_URL =
+  sceneModels.attendance.scanner.runtime;
+
+const BADGE_MODEL_URL =
+  sceneModels.attendance.badge.runtime;
 
 /* =========================================================
    STATIC COMPOSITION — pointer offsets and floating poses stay below
