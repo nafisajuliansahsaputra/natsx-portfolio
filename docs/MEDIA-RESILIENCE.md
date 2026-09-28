@@ -297,3 +297,22 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Private mirror integrity manifest
+
+The static media files under `public/media/` are public by design, but their
+integrity bookkeeping is not.
+
+Mirror publishing writes SHA-256 metadata to:
+
+```text
+config/portfolio-media-mirror-manifest.json
+```
+
+instead of `public/media/manifest.json`.
+
+This prevents a deployed portfolio from exposing local backup paths, original
+backup bookkeeping, or checksum metadata through a public URL. The build-time
+media audit still uses the private config manifest to verify every mirrored
+file byte-for-byte.
