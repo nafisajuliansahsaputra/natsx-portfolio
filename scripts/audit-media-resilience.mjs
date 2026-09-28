@@ -277,6 +277,73 @@ if (
   }
 }
 
+const projectRendererPath =
+  join(
+    root,
+    "src",
+    "app",
+    "work",
+    "[slug]",
+    "ProjectSectionRenderer.tsx",
+  );
+
+if (
+  existsSync(
+    projectRendererPath,
+  )
+) {
+  const projectRenderer =
+    await readFile(
+      projectRendererPath,
+      "utf8",
+    );
+
+  if (
+    !projectRenderer.includes(
+      "ViewportVideo",
+    )
+  ) {
+    warnings.push(
+      "Project finale video no longer appears to use viewport-gated loading.",
+    );
+  }
+}
+
+const projectMetadataPath =
+  join(
+    root,
+    "src",
+    "app",
+    "work",
+    "[slug]",
+    "page.tsx",
+  );
+
+if (
+  existsSync(
+    projectMetadataPath,
+  )
+) {
+  const projectMetadata =
+    await readFile(
+      projectMetadataPath,
+      "utf8",
+    );
+
+  if (
+    !projectMetadata.includes(
+      "/_next/image?",
+    ) ||
+    !projectMetadata.includes(
+      "socialPreviewImage",
+    )
+  ) {
+    warnings.push(
+      "Project social preview images no longer appear to use the same-origin Next Image cache.",
+    );
+  }
+}
+
 const preloaderPath =
   join(
     root,

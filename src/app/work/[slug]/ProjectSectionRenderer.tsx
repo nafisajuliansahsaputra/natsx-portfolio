@@ -5,6 +5,8 @@ import type {
 import Image from "next/image";
 import Link from "next/link";
 
+import ViewportVideo from "@/components/media/ViewportVideo";
+
 import {
   localizePath,
   type Locale,
@@ -1307,7 +1309,7 @@ function FinaleSection({
             >
               {media.kind ===
               "video" ? (
-                <video
+                <ViewportVideo
                   src={
                     mediaUrl
                   }
@@ -1316,7 +1318,6 @@ function FinaleSection({
                   loop
                   playsInline
                   controls
-                  preload="metadata"
                 />
               ) : (
                 <Image

@@ -272,3 +272,28 @@ same.
 The continuously floating Attendance scene now stops its animation loop and
 releases its drawing buffer while the browser tab is hidden, then restores the
 same scene when the tab becomes visible again.
+
+
+## Social previews and video delivery
+
+Project Open Graph/Twitter preview images are routed through the same-origin
+Next Image endpoint at 1200 px instead of pointing social crawlers directly at
+the Storage object.
+
+That means repeated crawler requests can reuse the image optimizer/cache rather
+than repeatedly pulling a large PNG from the media origin. When the static
+portfolio mirror is populated, the exact same metadata path automatically uses
+the mirrored source.
+
+Finale video media is also bandwidth-gated:
+
+- the browser does not receive the video `src` until the media is near the
+  viewport;
+- autoplay/loop behavior remains unchanged once it is close enough to be used;
+- raw uploaded finale video is capped at 12 MB in both the admin client and
+  server action;
+- larger video should use a dedicated streaming/CDN provider rather than raw
+  portfolio Storage.
+
+There are currently no video objects in the portfolio-media bucket, so these
+guards are preventative and do not alter an existing project presentation.

@@ -19,6 +19,7 @@ import type {
 import {
   IMAGE_MEDIA_MIME_TYPES,
   MAX_PORTFOLIO_MEDIA_FILE_SIZE,
+  MAX_PORTFOLIO_VIDEO_FILE_SIZE,
   PORTFOLIO_MEDIA_BUCKET,
   VIDEO_MEDIA_MIME_TYPES,
   getFinaleMediaKind,
@@ -549,16 +550,27 @@ export default function FinaleSectionEditor({
       return;
     }
 
+    const maximumFileSize =
+      file.type.startsWith(
+        "video/",
+      )
+        ? MAX_PORTFOLIO_VIDEO_FILE_SIZE
+        : MAX_PORTFOLIO_MEDIA_FILE_SIZE;
+
     if (
       file.size >
-      MAX_PORTFOLIO_MEDIA_FILE_SIZE
+      maximumFileSize
     ) {
       setSharedStatus({
         status:
           "error",
 
         message:
-          "Ukuran media maksimal 50 MB.",
+          file.type.startsWith(
+            "video/",
+          )
+            ? "Ukuran video maksimal 12 MB. Gunakan streaming/CDN untuk video yang lebih besar."
+            : "Ukuran media maksimal 50 MB.",
       });
 
       event.target.value =
@@ -724,16 +736,27 @@ export default function FinaleSectionEditor({
         return;
       }
 
+      const pendingFileLimit =
+        mimeType.startsWith(
+          "video/",
+        )
+          ? MAX_PORTFOLIO_VIDEO_FILE_SIZE
+          : MAX_PORTFOLIO_MEDIA_FILE_SIZE;
+
       if (
         pendingFile.size >
-        MAX_PORTFOLIO_MEDIA_FILE_SIZE
+        pendingFileLimit
       ) {
         setSharedStatus({
           status:
             "error",
 
           message:
-            "Ukuran media maksimal 50 MB.",
+            mimeType.startsWith(
+              "video/",
+            )
+              ? "Ukuran video maksimal 12 MB. Gunakan streaming/CDN untuk video yang lebih besar."
+              : "Ukuran media maksimal 50 MB.",
         });
 
         setIsSharedPending(
