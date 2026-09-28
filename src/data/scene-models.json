@@ -1,0 +1,32 @@
+{
+  "attendance": {
+    "imac": {
+      "source": "/models/attendance/imac.glb",
+      "runtime": "/models/runtime/attendance/imac.cf471f3eb777.glb"
+    },
+    "scanner": {
+      "source": "/models/attendance/scanner.glb",
+      "runtime": "/models/runtime/attendance/scanner.1ad88409823e.glb"
+    },
+    "badge": {
+      "source": "/models/attendance/badge.glb",
+      "runtime": "/models/runtime/attendance/badge.a4fa40cf2ff2.glb"
+    }
+  },
+  "bast": {
+    "macbook": {
+      "source": "/models/bast/macbook-pro.glb",
+      "runtime": "/models/runtime/bast/macbook-pro.b917b27b4bd4.glb"
+    },
+    "printer": {
+      "source": "/models/bast/printer.glb",
+      "runtime": "/models/runtime/bast/printer.e9a64c521753.glb"
+    }
+  },
+  "spall": {
+    "phone": {
+      "source": "/models/iphone-17-pro-max.glb",
+      "runtime": "/models/runtime/iphone-17-pro-max.770daeb1ab1c.glb"
+    }
+  }
+}
