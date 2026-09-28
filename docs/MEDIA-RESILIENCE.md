@@ -297,3 +297,20 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Public origin timeout
+
+Public Supabase reads have a four-second origin timeout.
+
+This applies only to the read-only public Supabase client used by cached public
+portfolio loaders. CMS/admin clients are not changed.
+
+The public client also marks the raw Supabase fetch as `no-store` because the
+portfolio already has one explicit caching layer through `unstable_cache`.
+Keeping only one cache owner avoids nested freshness behavior and makes CMS tag
+invalidation predictable.
+
+If Supabase becomes slow instead of returning an immediate 4xx/5xx, the public
+loader fails fast and the existing checked-in snapshot fallback can render
+instead of leaving the visitor waiting on a long origin timeout.
