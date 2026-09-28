@@ -297,3 +297,26 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Route prefetch budget
+
+Project-detail links on the homepage Selected Work section, the Work archive,
+and the next-project handoff disable automatic Next Link prefetching.
+
+Why:
+
+- a Work archive can expose several project links at once;
+- automatic viewport prefetch can fan out multiple RSC requests even when the
+  visitor never opens those projects;
+- after the temporary snapshot circuit breaker expires, a cache miss can
+  eventually translate into avoidable public-data reads;
+- navigation on click remains unchanged.
+
+Public project detail routes use a 24-hour ISR safety window, matching the
+existing 24-hour tagged portfolio data cache. CMS writes already invalidate
+the public portfolio cache tag, so content edits do not need hourly background
+route refreshes.
+
+E2E coverage now watches for idle `?_rsc=` requests from Home and Work and
+fails verification if project-detail auto-prefetch fan-out returns.
