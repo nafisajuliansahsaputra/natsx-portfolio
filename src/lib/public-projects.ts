@@ -1870,6 +1870,8 @@ export const getPublishedProjectPage =
           locale,
         );
       } catch {
+        markPublicPortfolioUnavailable();
+
         return getFallbackPublishedProjectPage(
           slug,
           locale,
