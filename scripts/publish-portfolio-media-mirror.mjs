@@ -188,11 +188,20 @@ for (
       index
     ];
 
+  const relativeSegments =
+    item.relativePath
+      .split(
+        /[\\/]+/,
+      )
+      .filter(
+        Boolean,
+      );
+
   const source =
     join(
       backupRoot,
       "media",
-      item.relativePath,
+      ...relativeSegments,
     );
 
   if (
