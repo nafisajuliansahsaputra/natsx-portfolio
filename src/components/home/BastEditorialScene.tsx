@@ -15,6 +15,8 @@ import {
   RoomEnvironment,
 } from "three/addons/environments/RoomEnvironment.js";
 
+import sceneModels from "@/data/scene-models.json";
+
 type Props = {
   screenUrl:
     string | null;
@@ -41,10 +43,10 @@ type ScreenCandidate = {
 };
 
 const MACBOOK_MODEL_URL =
-  "/models/bast/macbook-pro.glb";
+  sceneModels.bast.macbook.runtime;
 
 const PRINTER_MODEL_URL =
-  "/models/bast/printer.glb";
+  sceneModels.bast.printer.runtime;
 
 /* =========================================================
    CAMERA
