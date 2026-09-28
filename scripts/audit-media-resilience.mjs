@@ -301,8 +301,8 @@ if (
     !preloader.includes(
       "window.location.origin",
     ) ||
-    !preloader.includes(
-      'item.group !==\n                        "project-cover"',
+    !/item\\.group\\s*!==\\s*"project-cover"/m.test(
+      preloader,
     )
   ) {
     failures.push(
