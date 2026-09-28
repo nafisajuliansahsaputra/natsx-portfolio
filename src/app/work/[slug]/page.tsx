@@ -59,6 +59,39 @@ type ProjectPageContentProps = {
   locale: Locale;
 };
 
+function getSocialPreviewImageUrl(
+  source:
+    string | null,
+) {
+  if (
+    !source
+  ) {
+    return null;
+  }
+
+  const params =
+    new URLSearchParams({
+      url:
+        source,
+
+      w:
+        "1200",
+
+      q:
+        "75",
+    });
+
+  /*
+   * Social crawlers should hit the same-origin Next Image cache instead of
+   * downloading a multi-megabyte Supabase object directly. Once the static
+   * media mirror is populated, this automatically optimizes the mirrored
+   * source instead.
+   */
+  return getAbsoluteUrl(
+    `/_next/image?${params.toString()}`,
+  );
+}
+
 export const revalidate =
   3600;
 
@@ -140,6 +173,12 @@ export async function generateProjectMetadata(
     getProjectPreviewImage(
       sections,
       project,
+    );
+
+
+  const socialPreviewImage =
+    getSocialPreviewImageUrl(
+      previewImage,
     );
 
   return {
@@ -224,11 +263,11 @@ export async function generateProjectMetadata(
         project.updatedAt,
 
       images:
-        previewImage
+        socialPreviewImage
           ? [
               {
                 url:
-                  previewImage,
+                  socialPreviewImage,
 
                 alt:
                   `${project.title} — NATSX`,
@@ -247,9 +286,9 @@ export async function generateProjectMetadata(
       description,
 
       images:
-        previewImage
+        socialPreviewImage
           ? [
-              previewImage,
+              socialPreviewImage,
             ]
           : undefined,
     },
