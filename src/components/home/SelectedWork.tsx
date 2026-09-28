@@ -427,6 +427,9 @@ export default async function SelectedWork({
 
                       <Link
                         href={localizePath(`/work/${project.slug}`, locale)}
+                        prefetch={
+                          false
+                        }
                         className={
                           styles.projectLink
                         }
