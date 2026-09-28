@@ -13,7 +13,8 @@
     "verify": "npm run typecheck && npm run lint && npm run build && npm run test:e2e",
     "optimize:3d": "node scripts/optimize-3d.mjs",
     "prebuild": "node scripts/optimize-3d.mjs --vercel",
-    "backup:portfolio": "node scripts/backup-portfolio-media.mjs"
+    "backup:portfolio": "node scripts/backup-portfolio-media.mjs",
+    "mirror:portfolio": "node scripts/publish-portfolio-media-mirror.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
