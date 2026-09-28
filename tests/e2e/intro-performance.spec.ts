@@ -22,6 +22,9 @@ test(
 
         if (
           url.includes(
+            "/runtime-models/",
+          ) ||
+          url.includes(
             "/models/",
           ) ||
           url.includes(
