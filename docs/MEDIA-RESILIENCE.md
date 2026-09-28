@@ -297,3 +297,57 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Orphan retention and cleanup
+
+Replaced/detached media is intentionally retained instead of being deleted
+immediately. This gives the portfolio a recovery window, but retained objects
+must eventually be audited so Storage does not grow forever.
+
+Dry-run orphan audit:
+
+```bash
+npm run audit:orphans
+```
+
+Requirements:
+
+- local `NEXT_PUBLIC_SUPABASE_URL`;
+- local-only `SUPABASE_SERVICE_ROLE_KEY`;
+- live Supabase API/Storage access.
+
+The audit reads all project/section/translation references, walks the complete
+`portfolio-media` bucket, and writes a JSON report under `reports/`.
+Nothing is deleted in the default mode.
+
+Before any cleanup, create a full bucket backup:
+
+```bash
+npm run backup:portfolio:full
+```
+
+Unlike the normal referenced-media backup, the full backup uses
+`--include-orphans` and downloads every object currently present in the
+bucket. It refuses to run as a full backup if database reads have fallen back
+to the checked-in emergency snapshot.
+
+Permanent cleanup is deliberately cumbersome:
+
+```bash
+npm run cleanup:orphans -- \
+  --older-than=30 \
+  --backup=backups/portfolio/<timestamp> \
+  --confirm-delete=DELETE_ORPHANS
+```
+
+Deletion only proceeds when all of these are true:
+
+1. the object is not referenced by any current project/section/translation;
+2. it is older than the requested retention period (30 days by default);
+3. the supplied backup was explicitly created as a full Storage backup;
+4. `failed-media.json` is empty;
+5. every deletion candidate exists in the backup manifest with a SHA-256.
+
+This cleanup command is never part of build/deploy and must never run
+automatically.
