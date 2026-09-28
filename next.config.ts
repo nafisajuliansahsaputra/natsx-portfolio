@@ -312,6 +312,15 @@ const nextConfig: NextConfig = {
       "image/avif",
       "image/webp",
     ],
+
+
+    /*
+     * Keep the optimizer cache key space to one quality tier. All public
+     * portfolio images and WebGL texture proxies already use q=75.
+     */
+    qualities: [
+      75,
+    ],
   },
 
   async headers() {
