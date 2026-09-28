@@ -305,6 +305,104 @@ if (
   }
 }
 
+const publicFallbackModePath =
+  join(
+    root,
+    "src",
+    "lib",
+    "public-portfolio-fallback-mode.ts",
+  );
+
+const publicProjectsPath =
+  join(
+    root,
+    "src",
+    "lib",
+    "public-projects.ts",
+  );
+
+const publicTaxonomyPath =
+  join(
+    root,
+    "src",
+    "lib",
+    "public-work-categories.ts",
+  );
+
+if (
+  existsSync(
+    publicFallbackModePath,
+  ) &&
+  existsSync(
+    publicProjectsPath,
+  ) &&
+  existsSync(
+    publicTaxonomyPath,
+  )
+) {
+  const [
+    fallbackMode,
+    publicProjects,
+    publicTaxonomy,
+  ] =
+    await Promise.all([
+      readFile(
+        publicFallbackModePath,
+        "utf8",
+      ),
+
+      readFile(
+        publicProjectsPath,
+        "utf8",
+      ),
+
+      readFile(
+        publicTaxonomyPath,
+        "utf8",
+      ),
+    ]);
+
+  if (
+    !fallbackMode.includes(
+      "RUNTIME_FAILURE_WINDOW_MS",
+    ) ||
+    !fallbackMode.includes(
+      "runtimeSnapshotUntil",
+    )
+  ) {
+    failures.push(
+      "Public portfolio runtime data circuit breaker is missing.",
+    );
+  }
+
+  const projectFailureMarks =
+    (
+      publicProjects.match(
+        /markPublicPortfolioUnavailable\(\)/g,
+      ) ??
+      []
+    ).length;
+
+  if (
+    projectFailureMarks <
+      4
+  ) {
+    failures.push(
+      "Not every public project fallback path opens the runtime data circuit.",
+    );
+  }
+
+  if (
+    !publicTaxonomy.includes(
+      "markPublicPortfolioUnavailable()",
+    )
+  ) {
+    failures.push(
+      "Public work taxonomy fallback no longer opens the runtime data circuit.",
+    );
+  }
+}
+
 const projectRendererPath =
   join(
     root,
