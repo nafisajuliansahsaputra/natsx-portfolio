@@ -307,10 +307,37 @@ await writeFile(
   "utf8",
 );
 
+const internalManifest =
+  manifest.map(
+    (
+      item,
+    ) => ({
+      bucket:
+        item.bucket,
+
+      path:
+        item.path,
+
+      relativePath:
+        item.relativePath,
+
+      bytes:
+        item.bytes,
+
+      sha256:
+        item.sha256,
+
+      contentType:
+        item.contentType ??
+        null,
+    }),
+  );
+
 await writeFile(
   join(
-    publicRoot,
-    "manifest.json",
+    process.cwd(),
+    "config",
+    "portfolio-media-mirror-manifest.json",
   ),
   JSON.stringify(
     {
@@ -318,11 +345,8 @@ await writeFile(
         new Date()
           .toISOString(),
 
-      sourceBackup:
-        backupRoot,
-
       assets:
-        manifest,
+        internalManifest,
     },
     null,
     2,
