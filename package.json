@@ -16,7 +16,8 @@
     "backup:portfolio": "node scripts/backup-portfolio-media.mjs",
     "mirror:portfolio": "node scripts/publish-portfolio-media-mirror.mjs",
     "audit:media": "node scripts/audit-media-resilience.mjs",
-    "predev": "node scripts/optimize-3d.mjs --prepare-only"
+    "predev": "node scripts/optimize-3d.mjs --prepare-only",
+    "snapshot:portfolio": "node scripts/generate-portfolio-fallback.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
