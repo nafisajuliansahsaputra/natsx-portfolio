@@ -208,7 +208,7 @@ for (
   const destination =
     join(
       publicRoot,
-      item.relativePath,
+      ...relativeSegments,
     );
 
   await mkdir(
