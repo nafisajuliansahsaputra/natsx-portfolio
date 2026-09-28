@@ -18,7 +18,6 @@ import {
 } from "@/lib/portfolio-cache";
 
 import {
-  MAX_PORTFOLIO_MEDIA_FILE_SIZE,
   MAX_PORTFOLIO_VIDEO_FILE_SIZE,
   PORTFOLIO_MEDIA_BUCKET,
   getContentRecord,
