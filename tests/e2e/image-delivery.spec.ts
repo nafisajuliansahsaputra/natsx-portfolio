@@ -519,3 +519,82 @@ for (
     },
   );
 }
+
+
+test(
+  "project social preview metadata uses the same-origin image cache",
+  async ({
+    page,
+  }) => {
+    const response =
+      await page.goto(
+        "/work/bast-management-system",
+      );
+
+    expect(
+      response,
+    ).not.toBeNull();
+
+    expect(
+      response?.status(),
+    ).toBeLessThan(
+      400,
+    );
+
+    const openGraphImage =
+      page.locator(
+        'meta[property="og:image"]',
+      );
+
+    await expect(
+      openGraphImage,
+    ).toHaveCount(
+      1,
+    );
+
+    const openGraphUrl =
+      await openGraphImage.getAttribute(
+        "content",
+      );
+
+    expect(
+      openGraphUrl,
+    ).toContain(
+      "/_next/image?",
+    );
+
+    expect(
+      openGraphUrl,
+    ).not.toContain(
+      ".supabase.co/storage/v1/object/public/portfolio-media/",
+    );
+
+    const twitterImage =
+      page.locator(
+        'meta[name="twitter:image"]',
+      );
+
+    await expect(
+      twitterImage,
+    ).toHaveCount(
+      1,
+    );
+
+    const twitterUrl =
+      await twitterImage.getAttribute(
+        "content",
+      );
+
+    expect(
+      twitterUrl,
+    ).toContain(
+      "/_next/image?",
+    );
+
+    expect(
+      twitterUrl,
+    ).not.toContain(
+      ".supabase.co/storage/v1/object/public/portfolio-media/",
+    );
+  },
+);
