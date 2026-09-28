@@ -653,17 +653,22 @@ async function downloadWorker() {
         entry.path,
       );
 
+    /*
+     * Persist manifest paths with forward slashes so a backup created on
+     * Windows can be verified/published on Linux (Vercel) and vice versa.
+     */
     const relativePath =
-      join(
+      [
         entry.bucket,
         ...entry.path
           .split("/"),
-      );
+      ].join("/");
 
     const destination =
       join(
         mediaRoot,
-        relativePath,
+        ...relativePath
+          .split("/"),
       );
 
     process.stdout.write(
