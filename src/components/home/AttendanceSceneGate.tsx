@@ -42,6 +42,9 @@ const ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS =
 const ATTENDANCE_PREPARE_VIEWPORTS =
   0.65;
 
+const ATTENDANCE_KEEP_ALIVE_VIEWPORTS =
+  2.25;
+
 type AttendanceSceneGateProps = {
   className:
     string;
@@ -207,24 +210,89 @@ export default function AttendanceSceneGate({
         ),
       );
 
-    const prepareObserver =
-      createOneShotObserver(
-        () => {
-          setShouldLoadScene(
-            true,
-          );
+    /*
+     * Hysteresis lifecycle:
+     * mount shortly before the scene is visible, but keep it alive until it
+     * is much farther away. This preserves the current visual/motion while
+     * releasing WebGL geometry, textures, and renderer memory after the user
+     * has moved well past the project.
+     */
+    const mountObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            entry
+              ?.isIntersecting
+          ) {
+            setShouldLoadScene(
+              true,
+            );
+          }
         },
-        getSceneMargin(
-          ATTENDANCE_PREPARE_VIEWPORTS,
-        ),
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              ATTENDANCE_PREPARE_VIEWPORTS,
+            ),
+
+          threshold:
+            0,
+        },
       );
+
+    const unloadObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            entry &&
+            !entry
+              .isIntersecting
+          ) {
+            setShouldLoadScene(
+              false,
+            );
+          }
+        },
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              ATTENDANCE_KEEP_ALIVE_VIEWPORTS,
+            ),
+
+          threshold:
+            0,
+        },
+      );
+
+    mountObserver.observe(
+      scene,
+    );
+
+    unloadObserver.observe(
+      scene,
+    );
 
     return () => {
       resourceController.abort();
 
       codeObserver.disconnect();
       resourceObserver.disconnect();
-      prepareObserver.disconnect();
+      mountObserver.disconnect();
+      unloadObserver.disconnect();
     };
   }, [
     badgeImageUrl,
