@@ -1,32 +1,26 @@
 {
   "attendance": {
     "imac": {
-      "source": "/models/attendance/imac.glb",
-      "runtime": "/models/runtime/attendance/imac.cf471f3eb777.glb"
+      "runtime": "/runtime-models/attendance/imac.pending.glb"
     },
     "scanner": {
-      "source": "/models/attendance/scanner.glb",
-      "runtime": "/models/runtime/attendance/scanner.1ad88409823e.glb"
+      "runtime": "/runtime-models/attendance/scanner.pending.glb"
     },
     "badge": {
-      "source": "/models/attendance/badge.glb",
-      "runtime": "/models/runtime/attendance/badge.a4fa40cf2ff2.glb"
+      "runtime": "/runtime-models/attendance/badge.pending.glb"
     }
   },
   "bast": {
     "macbook": {
-      "source": "/models/bast/macbook-pro.glb",
-      "runtime": "/models/runtime/bast/macbook-pro.b917b27b4bd4.glb"
+      "runtime": "/runtime-models/bast/macbook-pro.pending.glb"
     },
     "printer": {
-      "source": "/models/bast/printer.glb",
-      "runtime": "/models/runtime/bast/printer.e9a64c521753.glb"
+      "runtime": "/runtime-models/bast/printer.pending.glb"
     }
   },
   "spall": {
     "phone": {
-      "source": "/models/iphone-17-pro-max.glb",
-      "runtime": "/models/runtime/iphone-17-pro-max.770daeb1ab1c.glb"
+      "runtime": "/runtime-models/spall/iphone-17-pro-max.pending.glb"
     }
   }
 }
