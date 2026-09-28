@@ -277,6 +277,38 @@ if (
   }
 }
 
+const projectRendererPath =
+  join(
+    root,
+    "src",
+    "app",
+    "work",
+    "[slug]",
+    "ProjectSectionRenderer.tsx",
+  );
+
+if (
+  existsSync(
+    projectRendererPath,
+  )
+) {
+  const projectRenderer =
+    await readFile(
+      projectRendererPath,
+      "utf8",
+    );
+
+  if (
+    !projectRenderer.includes(
+      "ViewportVideo",
+    )
+  ) {
+    failures.push(
+      "Project finale video is no longer routed through viewport-gated loading.",
+    );
+  }
+}
+
 const projectMetadataPath =
   join(
     root,
