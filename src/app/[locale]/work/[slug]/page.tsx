@@ -23,7 +23,7 @@ type LocalizedProjectPageProps = {
 };
 
 export const revalidate =
-  3600;
+  24 * 60 * 60;
 
 export async function generateMetadata({
   params,

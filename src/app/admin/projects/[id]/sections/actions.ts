@@ -416,6 +416,9 @@ function validateImageMedia(
   projectId: string,
   sectionId: string,
   media: ImageSectionMedia,
+  grandfatheredPaths:
+    ReadonlySet<string> =
+      new Set<string>(),
 ) {
   if (
     media.asset.bucket !==
@@ -449,14 +452,22 @@ function validateImageMedia(
       media.asset.mimeType,
     );
 
+  const isGrandfatheredPath =
+    grandfatheredPaths.has(
+      media.asset.path,
+    );
+
   if (
     !Number.isFinite(
       media.asset.size,
     ) ||
     media.asset.size <=
       0 ||
-    media.asset.size >
-      serverImageLimit
+    (
+      !isGrandfatheredPath &&
+      media.asset.size >
+        serverImageLimit
+    )
   ) {
     return (
       "Ukuran gambar tidak valid atau melewati batas aman " +
@@ -495,6 +506,9 @@ function validateGalleryMedia(
   projectId: string,
   sectionId: string,
   gallery: GallerySectionMedia,
+  grandfatheredPaths:
+    ReadonlySet<string> =
+      new Set<string>(),
 ) {
   const itemIds =
     new Set<string>();
@@ -540,6 +554,7 @@ function validateGalleryMedia(
           caption:
             item.caption,
         },
+        grandfatheredPaths,
       );
 
     if (
@@ -745,6 +760,9 @@ function validateFinaleMedia(
   projectId: string,
   sectionId: string,
   media: FinaleSectionMedia,
+  grandfatheredPaths:
+    ReadonlySet<string> =
+      new Set<string>(),
 ) {
   if (
     media.asset.bucket !==
@@ -795,14 +813,22 @@ function validateFinaleMedia(
         )
       : MAX_PORTFOLIO_VIDEO_FILE_SIZE;
 
+  const isGrandfatheredPath =
+    grandfatheredPaths.has(
+      media.asset.path,
+    );
+
   if (
     !Number.isFinite(
       media.asset.size,
     ) ||
     media.asset.size <=
       0 ||
-    media.asset.size >
-      finaleSizeLimit
+    (
+      !isGrandfatheredPath &&
+      media.asset.size >
+        finaleSizeLimit
+    )
   ) {
     return (
       expectedKind ===
@@ -835,6 +861,9 @@ function validateFinaleContent(
   projectId: string,
   sectionId: string,
   finale: FinaleSectionContent,
+  grandfatheredPaths:
+    ReadonlySet<string> =
+      new Set<string>(),
 ) {
   const title =
     finale.title.trim();
@@ -909,6 +938,7 @@ function validateFinaleContent(
       projectId,
       sectionId,
       finale.media,
+      grandfatheredPaths,
     );
   }
 
@@ -1886,25 +1916,6 @@ export async function saveImageSectionMedia(
 ): Promise<
   SectionActionState
 > {
-  const validationError =
-    validateImageMedia(
-      projectId,
-      sectionId,
-      media,
-    );
-
-  if (
-    validationError
-  ) {
-    return {
-      status:
-        "error",
-
-      message:
-        validationError,
-    };
-  }
-
   const supabase =
     await getAdminClient();
 
@@ -1973,6 +1984,36 @@ export async function saveImageSectionMedia(
     getImageSectionMedia(
       section.content,
     );
+
+  const grandfatheredPaths =
+    new Set<string>(
+      previousMedia
+        ? [
+            previousMedia
+              .asset.path,
+          ]
+        : [],
+    );
+
+  const validationError =
+    validateImageMedia(
+      projectId,
+      sectionId,
+      media,
+      grandfatheredPaths,
+    );
+
+  if (
+    validationError
+  ) {
+    return {
+      status:
+        "error",
+
+      message:
+        validationError,
+    };
+  }
 
   const normalizedMedia:
     ImageSectionMedia =
@@ -2216,25 +2257,6 @@ export async function saveGallerySectionMedia(
 ): Promise<
   SectionActionState
 > {
-  const validationError =
-    validateGalleryMedia(
-      projectId,
-      sectionId,
-      gallery,
-    );
-
-  if (
-    validationError
-  ) {
-    return {
-      status:
-        "error",
-
-      message:
-        validationError,
-    };
-  }
-
   const supabase =
     await getAdminClient();
 
@@ -2303,6 +2325,38 @@ export async function saveGallerySectionMedia(
     getGallerySectionMedia(
       section.content,
     );
+
+  const grandfatheredPaths =
+    new Set<string>(
+      previousGallery
+        ?.items.map(
+          (
+            item,
+          ) =>
+            item.asset.path,
+        ) ??
+        [],
+    );
+
+  const validationError =
+    validateGalleryMedia(
+      projectId,
+      sectionId,
+      gallery,
+      grandfatheredPaths,
+    );
+
+  if (
+    validationError
+  ) {
+    return {
+      status:
+        "error",
+
+      message:
+        validationError,
+    };
+  }
 
   const normalizedGallery:
     GallerySectionMedia =
@@ -2804,25 +2858,6 @@ export async function saveFinaleSectionContent(
 ): Promise<
   SectionActionState
 > {
-  const validationError =
-    validateFinaleContent(
-      projectId,
-      sectionId,
-      finale,
-    );
-
-  if (
-    validationError
-  ) {
-    return {
-      status:
-        "error",
-
-      message:
-        validationError,
-    };
-  }
-
   const supabase =
     await getAdminClient();
 
@@ -2891,6 +2926,36 @@ export async function saveFinaleSectionContent(
     getFinaleSectionMedia(
       section.content,
     );
+
+  const grandfatheredPaths =
+    new Set<string>(
+      previousMedia
+        ? [
+            previousMedia
+              .asset.path,
+          ]
+        : [],
+    );
+
+  const validationError =
+    validateFinaleContent(
+      projectId,
+      sectionId,
+      finale,
+      grandfatheredPaths,
+    );
+
+  if (
+    validationError
+  ) {
+    return {
+      status:
+        "error",
+
+      message:
+        validationError,
+    };
+  }
 
   const normalizedMedia =
     finale.media

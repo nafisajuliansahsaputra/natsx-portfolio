@@ -303,10 +303,11 @@ const nextConfig: NextConfig = {
 
     /*
      * Portfolio media paths are immutable UUID/versioned keys. Keep optimized
-     * variants warm for 30 days so one origin fetch serves many visits.
+     * variants warm for one year so a successful origin fetch does not need
+     * to be repeated every month for the same media identity.
      */
     minimumCacheTTL:
-      30 * 24 * 60 * 60,
+      365 * 24 * 60 * 60,
 
     formats: [
       "image/avif",
