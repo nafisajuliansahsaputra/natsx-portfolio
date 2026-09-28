@@ -1546,6 +1546,8 @@ useEffect(() => {
     let animationFrameId = 0;
     let cleanupPointerMotion: (() => void) | undefined;
     let visible = true;
+    let pageVisible =
+      !document.hidden;
 
     const geometries = new Set<THREE.BufferGeometry>();
     const materials = new Set<THREE.Material>();
@@ -2224,7 +2226,11 @@ const checkInCardData = createFloatingCard(
         };
 
         function renderFrame(time: number) {
-          if (disposed || !visible) {
+          if (
+            disposed ||
+            !visible ||
+            !pageVisible
+          ) {
             animationFrameId = 0;
             previousMotionFrameTime = 0;
             return;
@@ -2277,7 +2283,12 @@ const checkInCardData = createFloatingCard(
           const width = hostElement.clientWidth;
           const height = hostElement.clientHeight;
 
-          if (!width || !height || !visible) {
+          if (
+            !width ||
+            !height ||
+            !visible ||
+            !pageVisible
+          ) {
             return;
           }
 
@@ -2324,6 +2335,57 @@ const checkInCardData = createFloatingCard(
 
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(hostElement);
+
+        function syncPageVisibility() {
+          pageVisible =
+            !document.hidden;
+
+          if (
+            !pageVisible
+          ) {
+            if (
+              animationFrameId
+            ) {
+              window.cancelAnimationFrame(
+                animationFrameId,
+              );
+
+              animationFrameId =
+                0;
+            }
+
+            previousMotionFrameTime =
+              0;
+
+            webgl.setSize(
+              1,
+              1,
+              false,
+            );
+
+            return;
+          }
+
+          if (
+            visible
+          ) {
+            resize();
+
+            if (
+              !animationFrameId
+            ) {
+              animationFrameId =
+                window.requestAnimationFrame(
+                  renderFrame,
+                );
+            }
+          }
+        }
+
+        document.addEventListener(
+          "visibilitychange",
+          syncPageVisibility,
+        );
 
         if (typeof IntersectionObserver !== "undefined") {
           visibilityObserver = new IntersectionObserver(
@@ -2379,6 +2441,11 @@ const checkInCardData = createFloatingCard(
       cleanupPointerMotion?.();
       resizeObserver?.disconnect();
       visibilityObserver?.disconnect();
+
+      document.removeEventListener(
+        "visibilitychange",
+        syncPageVisibility,
+      );
 
       if (renderer) {
         renderer.dispose();
