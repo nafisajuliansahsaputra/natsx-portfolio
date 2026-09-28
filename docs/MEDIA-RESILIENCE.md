@@ -297,3 +297,36 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Live media health report
+
+When Supabase access is available, run:
+
+```bash
+npm run health:media
+```
+
+The command is read-only and requires a local
+`SUPABASE_SERVICE_ROLE_KEY`.
+
+It compares the live CMS references against the full
+`portfolio-media` Storage inventory and reports:
+
+- referenced media paths;
+- missing Storage objects referenced by project content;
+- orphaned Storage objects and total orphan bytes;
+- legacy images/videos that exceed the current upload budgets;
+- Storage objects with weak cache-control metadata;
+- the 25 largest media objects;
+- total referenced media size per project.
+
+A timestamped JSON report is written under `reports/`.
+
+Missing referenced objects fail the command with a non-zero exit code because
+that condition means a project can render broken media. Oversized legacy media,
+orphans, and old cache-control values are reported for migration/cleanup but do
+not mutate anything automatically.
+
+This command is intended for recovery verification, periodic audits, and
+post-CMS-change checks. It does not download the object bytes.
