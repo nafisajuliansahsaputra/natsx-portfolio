@@ -412,32 +412,28 @@ test(
         );
 
       /*
-       * Large gallery PNGs are intentionally served as their original
-       * Supabase objects when Next's optimizer is bypassed. In that mode
-       * next/image does not emit responsive `sizes` / `srcset`, so the
-       * old assertion produced a false failure even though the media is
-       * rendered correctly and remains uncropped.
+       * Static gallery images must always stay behind Next Image. The old
+       * multi-megabyte PNG escape hatch caused direct Storage egress and is
+       * now treated as a regression.
        */
-      if (
-        responsiveSizes ===
-        null
-      ) {
-        await expect(
-          image,
-        ).toHaveAttribute(
-          "src",
-          /\/storage\/v1\/object\/public\/portfolio-media\//,
-        );
+      expect(
+        responsiveSizes,
+        `gallery item ${index + 1} must keep responsive image delivery`,
+      ).not.toBeNull();
 
-        await expect(
-          image,
-        ).not.toHaveAttribute(
-          "srcset",
-          /.+/,
-        );
+      await expect(
+        image,
+      ).toHaveAttribute(
+        "src",
+        /\/_next\/image/,
+      );
 
-        continue;
-      }
+      await expect(
+        image,
+      ).toHaveAttribute(
+        "srcset",
+        /\/_next\/image/,
+      );
 
       if (
         size ===
