@@ -16,7 +16,9 @@
     "backup:portfolio": "node scripts/backup-portfolio-media.mjs",
     "mirror:portfolio": "node scripts/publish-portfolio-media-mirror.mjs",
     "audit:media": "node scripts/audit-media-resilience.mjs",
-    "predev": "node scripts/optimize-3d.mjs --prepare-only"
+    "predev": "node scripts/optimize-3d.mjs --prepare-only",
+    "audit:orphans": "node scripts/audit-portfolio-orphans.mjs",
+    "cleanup:orphans": "node scripts/audit-portfolio-orphans.mjs --delete"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
