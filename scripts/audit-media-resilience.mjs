@@ -268,6 +268,17 @@ if (
       "Next Image quality cache is no longer pinned to the single q=75 tier.",
     );
   }
+
+
+  if (
+    !nextConfig.includes(
+      "365 * 24 * 60 * 60",
+    )
+  ) {
+    warnings.push(
+      "Next Image minimum cache retention is no longer pinned to one year for immutable portfolio media.",
+    );
+  }
 }
 
 const rendererPath =
