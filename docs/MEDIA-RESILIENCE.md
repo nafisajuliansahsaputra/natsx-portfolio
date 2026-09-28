@@ -297,3 +297,48 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Refreshing the checked-in emergency snapshot
+
+The emergency database snapshot must stay aligned with the CMS. Otherwise a
+future Supabase outage could successfully fall back to data that is months out
+of date.
+
+The safe refresh sequence is:
+
+```bash
+npm run backup:portfolio
+npm run mirror:portfolio
+npm run snapshot:portfolio
+npm run audit:media
+npm run verify
+```
+
+`snapshot:portfolio` uses the newest local backup by default, or a specific
+backup can be selected:
+
+```bash
+npm run snapshot:portfolio -- --from=backups/portfolio/<timestamp>
+```
+
+The generator refuses to rewrite the checked-in snapshot unless:
+
+1. every exported database table came from the live Supabase API rather than
+   the emergency fallback;
+2. `failed-media.json` is empty;
+3. every media path referenced by the published project data exists in the
+   verified SHA-256 backup manifest;
+4. every referenced media object has already been copied into
+   `public/media/portfolio-media/...`.
+
+This ordering matters: the static media mirror is refreshed first, then the
+database snapshot is allowed to point at those media identities.
+
+The generated fallback contains only published projects, visible project
+sections, their translations, visible work categories, and the matching
+category relations. It is deterministic and should be committed together with
+the refreshed static mirror.
+
+After any meaningful CMS content/media change, refresh the snapshot before the
+next resilience-critical release.
