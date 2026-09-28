@@ -947,6 +947,9 @@ export default function WorkArchiveFilter({
               >
                 <Link
                   href={localizePath(`/work/${project.slug}`, locale)}
+                  prefetch={
+                    false
+                  }
                   className={
                     styles.project
                   }
