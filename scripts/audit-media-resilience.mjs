@@ -430,7 +430,13 @@ if (
       join(
         publicRoot,
         "media",
-        asset.relativePath,
+        ...asset.relativePath
+          .split(
+            /[\\/]+/,
+          )
+          .filter(
+            Boolean,
+          ),
       );
 
     if (
