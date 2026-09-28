@@ -360,3 +360,28 @@ live database/storage metadata, but public `portfolio-media` object downloads
 never receive that key (or any Supabase auth header). The bucket is public, so
 sending privileged credentials with media GETs is unnecessary and would only
 increase secret-exposure risk in logs or intermediaries.
+
+
+### Resume an interrupted backup
+
+If a media backup stops halfway through, do not restart from zero and re-read
+already recovered Storage bytes.
+
+Resume the same folder:
+
+```bash
+npm run backup:portfolio -- --resume=backups/portfolio/<timestamp>
+```
+
+For a full-bucket backup, repeat the same mode:
+
+```bash
+npm run backup:portfolio:full -- --resume=backups/portfolio/<timestamp>
+```
+
+Resume mode SHA-256 verifies every existing local object before reuse. Verified
+files are skipped without a Storage request; only missing or corrupt objects
+are downloaded again.
+
+The command also refuses to mix a normal referenced-media backup with a
+`--include-orphans` full backup in the same directory.
