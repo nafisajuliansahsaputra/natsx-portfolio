@@ -31,6 +31,11 @@ import {
 } from "@/lib/supabase/client";
 
 import {
+  getOptimizationSavings,
+  optimizePortfolioImage,
+} from "@/lib/client-image-optimizer";
+
+import {
   removeImageSectionMedia,
   saveImageSectionMedia,
   type SectionActionState,
@@ -376,7 +381,7 @@ export default function ImageSectionEditor({
     }
   }
 
-  function handleFileChange(
+  async function handleFileChange(
     event: ChangeEvent<HTMLInputElement>,
   ) {
     const file =
@@ -429,11 +434,25 @@ export default function ImageSectionEditor({
       return;
     }
 
+    setMediaStatus({
+      status:
+        "success",
+
+      message:
+        "Optimizing image before upload...",
+    });
+
+    const optimizedFile =
+      await optimizePortfolioImage(
+        file,
+        "section",
+      );
+
     clearPendingPreview();
 
     const preview =
       URL.createObjectURL(
-        file,
+        optimizedFile,
       );
 
     previewUrlRef.current =
@@ -444,12 +463,24 @@ export default function ImageSectionEditor({
     );
 
     setPendingFile(
-      file,
+      optimizedFile,
     );
 
-    setMediaStatus(
-      initialMediaState,
-    );
+    const savings =
+      getOptimizationSavings(
+        file,
+        optimizedFile,
+      );
+
+    setMediaStatus({
+      status:
+        "success",
+
+      message:
+        savings
+          ? `Optimized automatically: ${formatFileSize(file.size)} → ${formatFileSize(optimizedFile.size)} (-${savings}%).`
+          : "Image is already efficient or animated; original quality is preserved.",
+    });
   }
 
   async function handleSaveSharedMedia() {
