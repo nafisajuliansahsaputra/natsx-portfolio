@@ -42,6 +42,9 @@ const BAST_RESOURCE_PRELOAD_VIEWPORTS =
 const BAST_PREPARE_VIEWPORTS =
   0.85;
 
+const BAST_KEEP_ALIVE_VIEWPORTS =
+  2;
+
 type BastSceneGateProps = {
   className:
     string;
@@ -196,24 +199,89 @@ export default function BastSceneGate({
         ),
       );
 
-    const prepareObserver =
-      createOneShotObserver(
-        () => {
-          setShouldLoadScene(
-            true,
-          );
+    /*
+     * Hysteresis lifecycle:
+     * mount shortly before the scene is visible, but keep it alive until it
+     * is much farther away. This preserves the current visual/motion while
+     * releasing WebGL geometry, textures, and renderer memory after the user
+     * has moved well past the project.
+     */
+    const mountObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            entry
+              ?.isIntersecting
+          ) {
+            setShouldLoadScene(
+              true,
+            );
+          }
         },
-        getSceneMargin(
-          BAST_PREPARE_VIEWPORTS,
-        ),
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              BAST_PREPARE_VIEWPORTS,
+            ),
+
+          threshold:
+            0,
+        },
       );
+
+    const unloadObserver =
+      new IntersectionObserver(
+        (
+          [
+            entry,
+          ],
+        ) => {
+          if (
+            entry &&
+            !entry
+              .isIntersecting
+          ) {
+            setShouldLoadScene(
+              false,
+            );
+          }
+        },
+        {
+          root:
+            null,
+
+          rootMargin:
+            getSceneMargin(
+              BAST_KEEP_ALIVE_VIEWPORTS,
+            ),
+
+          threshold:
+            0,
+        },
+      );
+
+    mountObserver.observe(
+      scene,
+    );
+
+    unloadObserver.observe(
+      scene,
+    );
 
     return () => {
       resourceController.abort();
 
       codeObserver.disconnect();
       resourceObserver.disconnect();
-      prepareObserver.disconnect();
+      mountObserver.disconnect();
+      unloadObserver.disconnect();
     };
   }, [
     introDone,
