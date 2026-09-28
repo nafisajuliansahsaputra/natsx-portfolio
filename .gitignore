@@ -50,3 +50,8 @@ next-env.d.ts
 
 # local portfolio recovery exports
 /backups/
+
+
+# generated Three.js runtime models
+/public/runtime-models/
+/.scene-model-build/
