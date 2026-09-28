@@ -823,6 +823,12 @@ const backupRoot =
     backupArgument,
   );
 
+const dataPath =
+  join(
+    backupRoot,
+    "data.json",
+  );
+
 const failedPath =
   join(
     backupRoot,
@@ -837,6 +843,9 @@ const manifestPath =
 
 if (
   !existsSync(
+    dataPath,
+  ) ||
+  !existsSync(
     failedPath,
   ) ||
   !existsSync(
@@ -844,7 +853,25 @@ if (
   )
 ) {
   throw new Error(
-    "Backup folder must contain failed-media.json and media-manifest.json.",
+    "Backup folder must contain data.json, failed-media.json, and media-manifest.json.",
+  );
+}
+
+const backupData =
+  JSON.parse(
+    await readFile(
+      dataPath,
+      "utf8",
+    ),
+  );
+
+if (
+  backupData
+    ?.includeOrphans !==
+    true
+) {
+  throw new Error(
+    "Deletion requires a full Storage backup created with npm run backup:portfolio:full.",
   );
 }
 
