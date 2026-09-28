@@ -155,13 +155,21 @@ const supabaseUrl =
     .NEXT_PUBLIC_SUPABASE_URL
     ?.trim();
 
-const supabaseKey =
+const serviceRoleKey =
   process.env
     .SUPABASE_SERVICE_ROLE_KEY
-    ?.trim() ||
+    ?.trim();
+
+const supabaseKey =
+  serviceRoleKey ||
   process.env
     .NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
     ?.trim();
+
+const includeOrphans =
+  process.argv.includes(
+    "--include-orphans",
+  );
 
 if (
   !supabaseUrl ||
@@ -171,6 +179,15 @@ if (
     "Missing NEXT_PUBLIC_SUPABASE_URL and a Supabase key. " +
       "Use SUPABASE_SERVICE_ROLE_KEY locally for a complete backup, " +
       "or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY for public-readable data.",
+  );
+}
+
+if (
+  includeOrphans &&
+  !serviceRoleKey
+) {
+  throw new Error(
+    "--include-orphans requires local-only SUPABASE_SERVICE_ROLE_KEY so the full Storage inventory can be exported safely.",
   );
 }
 
@@ -441,6 +458,8 @@ await writeFile(
 
       dataSources,
 
+      includeOrphans,
+
       tables:
         database,
     },
@@ -562,6 +581,101 @@ for (
   );
 }
 
+const referencedCount =
+  referencedMedia.size;
+
+if (
+  includeOrphans
+) {
+  if (
+    Object.values(
+      dataSources,
+    ).some(
+      (
+        source,
+      ) =>
+        source !==
+        "live",
+    )
+  ) {
+    throw new Error(
+      "--include-orphans requires a fully live database export. Refusing a full Storage backup while table reads are using the checked-in fallback.",
+    );
+  }
+
+  console.log(
+    "[media] Reading full Storage inventory...",
+  );
+
+  for (
+    let from =
+      0;
+    ;
+    from +=
+      PAGE_SIZE
+  ) {
+    const {
+      data,
+      error,
+    } =
+      await supabase
+        .schema(
+          "storage",
+        )
+        .from(
+          "objects",
+        )
+        .select(
+          "name,bucket_id",
+        )
+        .eq(
+          "bucket_id",
+          MEDIA_BUCKET,
+        )
+        .range(
+          from,
+          from +
+            PAGE_SIZE -
+            1,
+        );
+
+    if (
+      error
+    ) {
+      throw new Error(
+        `Failed to read full Storage inventory: ${error.message}`,
+      );
+    }
+
+    const page =
+      data ??
+      [];
+
+    for (
+      const object of
+      page
+    ) {
+      if (
+        typeof object.name ===
+          "string" &&
+        object.name
+      ) {
+        addMedia(
+          MEDIA_BUCKET,
+          object.name,
+        );
+      }
+    }
+
+    if (
+      page.length <
+      PAGE_SIZE
+    ) {
+      break;
+    }
+  }
+}
+
 const entries =
   Array.from(
     referencedMedia
@@ -569,7 +683,9 @@ const entries =
   );
 
 console.log(
-  `[media] ${entries.length} referenced object(s)`,
+  includeOrphans
+    ? `[media] ${entries.length} total object(s) (${referencedCount} referenced)`
+    : `[media] ${entries.length} referenced object(s)`,
 );
 
 function encodePath(
