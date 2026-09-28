@@ -242,6 +242,34 @@ for (
   }
 }
 
+const nextConfigPath =
+  join(
+    root,
+    "next.config.ts",
+  );
+
+if (
+  existsSync(
+    nextConfigPath,
+  )
+) {
+  const nextConfig =
+    await readFile(
+      nextConfigPath,
+      "utf8",
+    );
+
+  if (
+    !/qualities\s*:\s*\[\s*75\s*,?\s*\]/m.test(
+      nextConfig,
+    )
+  ) {
+    warnings.push(
+      "Next Image quality cache is no longer pinned to the single q=75 tier.",
+    );
+  }
+}
+
 const rendererPath =
   join(
     root,
