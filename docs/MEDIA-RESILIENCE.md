@@ -297,3 +297,17 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Long-lived optimized image cache
+
+Portfolio media object paths are UUID/versioned identities rather than mutable
+filenames. Next Image therefore keeps successful optimized variants for a
+one-year minimum TTL.
+
+This avoids re-fetching the same immutable Supabase/static-mirror source every
+30 days while preserving normal cache busting: replacing an image creates a
+new media path, which creates a new optimizer cache key.
+
+The image quality tier remains unchanged at q=75. This is a cache-retention
+change only; it does not lower resolution or alter artwork.
