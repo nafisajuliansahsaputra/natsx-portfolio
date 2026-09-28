@@ -27,6 +27,7 @@ import {
 } from "@/lib/public-portfolio-fallback-data";
 
 import {
+  markPublicPortfolioUnavailable,
   shouldUsePublicPortfolioSnapshot,
 } from "@/lib/public-portfolio-fallback-mode";
 
@@ -1356,6 +1357,8 @@ export async function getPublishedProjects(
       locale,
     );
   } catch {
+    markPublicPortfolioUnavailable();
+
     return getFallbackPublishedProjects(
       locale,
     );
@@ -1444,6 +1447,8 @@ export async function getPublishedProjectSitemapEntries():
   try {
     return await getCachedPublishedProjectSitemapEntries();
   } catch {
+    markPublicPortfolioUnavailable();
+
     return getFallbackPublishedProjectSitemapEntries();
   }
 }
@@ -1570,6 +1575,8 @@ export async function getFeaturedProjects(
       locale,
     );
   } catch {
+    markPublicPortfolioUnavailable();
+
     return getFallbackPublishedProjects(
       locale,
     )
