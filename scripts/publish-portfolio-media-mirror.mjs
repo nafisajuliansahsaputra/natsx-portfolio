@@ -3,6 +3,7 @@ import {
   mkdir,
   readFile,
   readdir,
+  rm,
   writeFile,
 } from "node:fs/promises";
 
@@ -164,6 +165,22 @@ const publicRoot =
     "media",
   );
 
+/*
+ * The mirror is generated state, not an append-only archive. Start from a
+ * clean directory so detached/replaced media cannot linger in deployments
+ * after it disappears from the verified backup manifest.
+ */
+await rm(
+  publicRoot,
+  {
+    recursive:
+      true,
+
+    force:
+      true,
+  },
+);
+
 await mkdir(
   publicRoot,
   {
@@ -307,10 +324,37 @@ await writeFile(
   "utf8",
 );
 
+const internalManifest =
+  manifest.map(
+    (
+      item,
+    ) => ({
+      bucket:
+        item.bucket,
+
+      path:
+        item.path,
+
+      relativePath:
+        item.relativePath,
+
+      bytes:
+        item.bytes,
+
+      sha256:
+        item.sha256,
+
+      contentType:
+        item.contentType ??
+        null,
+    }),
+  );
+
 await writeFile(
   join(
-    publicRoot,
-    "manifest.json",
+    process.cwd(),
+    "config",
+    "portfolio-media-mirror-manifest.json",
   ),
   JSON.stringify(
     {
@@ -318,11 +362,8 @@ await writeFile(
         new Date()
           .toISOString(),
 
-      sourceBackup:
-        backupRoot,
-
       assets:
-        manifest,
+        internalManifest,
     },
     null,
     2,

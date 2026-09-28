@@ -268,6 +268,17 @@ if (
       "Next Image quality cache is no longer pinned to the single q=75 tier.",
     );
   }
+
+
+  if (
+    !nextConfig.includes(
+      "365 * 24 * 60 * 60",
+    )
+  ) {
+    warnings.push(
+      "Next Image minimum cache retention is no longer pinned to one year for immutable portfolio media.",
+    );
+  }
 }
 
 const rendererPath =
@@ -301,6 +312,172 @@ if (
   ) {
     failures.push(
       "ProjectSectionRenderer contains a file-size based unoptimized escape hatch. Large still images must not bypass Next Image.",
+    );
+  }
+}
+
+const publicFallbackModePath =
+  join(
+    root,
+    "src",
+    "lib",
+    "public-portfolio-fallback-mode.ts",
+  );
+
+const publicProjectsPath =
+  join(
+    root,
+    "src",
+    "lib",
+    "public-projects.ts",
+  );
+
+const publicTaxonomyPath =
+  join(
+    root,
+    "src",
+    "lib",
+    "public-work-categories.ts",
+  );
+
+if (
+  existsSync(
+    publicFallbackModePath,
+  ) &&
+  existsSync(
+    publicProjectsPath,
+  ) &&
+  existsSync(
+    publicTaxonomyPath,
+  )
+) {
+  const [
+    fallbackMode,
+    publicProjects,
+    publicTaxonomy,
+  ] =
+    await Promise.all([
+      readFile(
+        publicFallbackModePath,
+        "utf8",
+      ),
+
+      readFile(
+        publicProjectsPath,
+        "utf8",
+      ),
+
+      readFile(
+        publicTaxonomyPath,
+        "utf8",
+      ),
+    ]);
+
+  if (
+    !fallbackMode.includes(
+      "RUNTIME_FAILURE_WINDOW_MS",
+    ) ||
+    !fallbackMode.includes(
+      "runtimeSnapshotUntil",
+    )
+  ) {
+    failures.push(
+      "Public portfolio runtime data circuit breaker is missing.",
+    );
+  }
+
+  const projectFailureMarks =
+    (
+      publicProjects.match(
+        /markPublicPortfolioUnavailable\(\)/g,
+      ) ??
+      []
+    ).length;
+
+  if (
+    projectFailureMarks <
+      4
+  ) {
+    failures.push(
+      "Not every public project fallback path opens the runtime data circuit.",
+    );
+  }
+
+  if (
+    !publicTaxonomy.includes(
+      "markPublicPortfolioUnavailable()",
+    )
+  ) {
+    failures.push(
+      "Public work taxonomy fallback no longer opens the runtime data circuit.",
+    );
+  }
+}
+
+const publicSupabaseClientPath =
+  join(
+    root,
+    "src",
+    "lib",
+    "supabase",
+    "public.ts",
+  );
+
+if (
+  existsSync(
+    publicSupabaseClientPath,
+  )
+) {
+  const publicSupabaseClient =
+    await readFile(
+      publicSupabaseClientPath,
+      "utf8",
+    );
+
+  if (
+    !publicSupabaseClient.includes(
+      "PUBLIC_SUPABASE_TIMEOUT_MS",
+    ) ||
+    !publicSupabaseClient.includes(
+      'cache:\n          "no-store"',
+    )
+  ) {
+    warnings.push(
+      "Public Supabase reads no longer appear to have an explicit timeout + no-store origin fetch policy.",
+    );
+  }
+}
+
+const sectionActionsPath =
+  join(
+    root,
+    "src",
+    "app",
+    "admin",
+    "projects",
+    "[id]",
+    "sections",
+    "actions.ts",
+  );
+
+if (
+  existsSync(
+    sectionActionsPath,
+  )
+) {
+  const sectionActions =
+    await readFile(
+      sectionActionsPath,
+      "utf8",
+    );
+
+  if (
+    !sectionActions.includes(
+      "grandfatheredPaths",
+    )
+  ) {
+    warnings.push(
+      "Legacy oversized project media may no longer remain editable without bypassing new-upload budgets.",
     );
   }
 }
@@ -479,9 +656,9 @@ if (
 
 const mirrorManifestPath =
   join(
-    publicRoot,
-    "media",
-    "manifest.json",
+    root,
+    "config",
+    "portfolio-media-mirror-manifest.json",
   );
 
 if (

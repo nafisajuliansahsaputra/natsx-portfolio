@@ -35,6 +35,30 @@ const PAGE_SIZE =
 const DOWNLOAD_CONCURRENCY =
   3;
 
+
+function getArgument(
+  name,
+) {
+  const prefix =
+    `--${name}=`;
+
+  const match =
+    process.argv.find(
+      (
+        argument,
+      ) =>
+        argument.startsWith(
+          prefix,
+        ),
+    );
+
+  return match
+    ? match.slice(
+        prefix.length,
+      )
+    : null;
+}
+
 function loadSimpleEnvFile(
   path,
 ) {
@@ -155,13 +179,27 @@ const supabaseUrl =
     .NEXT_PUBLIC_SUPABASE_URL
     ?.trim();
 
-const supabaseKey =
+const serviceRoleKey =
   process.env
     .SUPABASE_SERVICE_ROLE_KEY
-    ?.trim() ||
+    ?.trim();
+
+const supabaseKey =
+  serviceRoleKey ||
   process.env
     .NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
     ?.trim();
+
+const includeOrphans =
+  process.argv.includes(
+    "--include-orphans",
+  );
+
+
+const resumeArgument =
+  getArgument(
+    "resume",
+  );
 
 if (
   !supabaseUrl ||
@@ -171,6 +209,15 @@ if (
     "Missing NEXT_PUBLIC_SUPABASE_URL and a Supabase key. " +
       "Use SUPABASE_SERVICE_ROLE_KEY locally for a complete backup, " +
       "or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY for public-readable data.",
+  );
+}
+
+if (
+  includeOrphans &&
+  !serviceRoleKey
+) {
+  throw new Error(
+    "--include-orphans requires local-only SUPABASE_SERVICE_ROLE_KEY so the full Storage inventory can be exported safely.",
   );
 }
 
@@ -187,12 +234,69 @@ const stamp =
     );
 
 const outputRoot =
-  join(
-    process.cwd(),
-    "backups",
-    "portfolio",
-    stamp,
+  resumeArgument
+    ? resolve(
+        resumeArgument,
+      )
+    : join(
+        process.cwd(),
+        "backups",
+        "portfolio",
+        stamp,
+      );
+
+if (
+  resumeArgument &&
+  !existsSync(
+    outputRoot,
+  )
+) {
+  throw new Error(
+    `Resume backup folder does not exist: ${outputRoot}`,
   );
+}
+
+if (
+  resumeArgument
+) {
+  const existingDataPath =
+    join(
+      outputRoot,
+      "data.json",
+    );
+
+  if (
+    !existsSync(
+      existingDataPath,
+    )
+  ) {
+    throw new Error(
+      "Resume folder is not a portfolio backup: data.json is missing.",
+    );
+  }
+
+  const existingData =
+    JSON.parse(
+      await readFile(
+        existingDataPath,
+        "utf8",
+      ),
+    );
+
+  if (
+    Boolean(
+      existingData
+        ?.includeOrphans,
+    ) !==
+      includeOrphans
+  ) {
+    throw new Error(
+      includeOrphans
+        ? "This backup was not created as a full --include-orphans backup."
+        : "This backup was created with --include-orphans; resume it with the same flag.",
+    );
+  }
+}
 
 const mediaRoot =
   join(
@@ -441,6 +545,8 @@ await writeFile(
 
       dataSources,
 
+      includeOrphans,
+
       tables:
         database,
     },
@@ -562,6 +668,139 @@ for (
   );
 }
 
+const referencedCount =
+  referencedMedia.size;
+
+async function listAllStoragePaths(
+  prefix =
+    "",
+) {
+  const paths =
+    [];
+
+  for (
+    let offset =
+      0;
+    ;
+    offset +=
+      PAGE_SIZE
+  ) {
+    const {
+      data,
+      error,
+    } =
+      await supabase.storage
+        .from(
+          MEDIA_BUCKET,
+        )
+        .list(
+          prefix,
+          {
+            limit:
+              PAGE_SIZE,
+
+            offset,
+
+            sortBy: {
+              column:
+                "name",
+
+              order:
+                "asc",
+            },
+          },
+        );
+
+    if (
+      error
+    ) {
+      throw new Error(
+        `Failed to list Storage prefix "${prefix}": ${error.message}`,
+      );
+    }
+
+    const page =
+      data ??
+      [];
+
+    for (
+      const item of
+      page
+    ) {
+      const fullPath =
+        prefix
+          ? `${prefix}/${item.name}`
+          : item.name;
+
+      const isFolder =
+        !item.id &&
+        !item.metadata;
+
+      if (
+        isFolder
+      ) {
+        paths.push(
+          ...await listAllStoragePaths(
+            fullPath,
+          ),
+        );
+
+        continue;
+      }
+
+      paths.push(
+        fullPath,
+      );
+    }
+
+    if (
+      page.length <
+      PAGE_SIZE
+    ) {
+      break;
+    }
+  }
+
+  return paths;
+}
+
+if (
+  includeOrphans
+) {
+  if (
+    Object.values(
+      dataSources,
+    ).some(
+      (
+        source,
+      ) =>
+        source !==
+        "live",
+    )
+  ) {
+    throw new Error(
+      "--include-orphans requires a fully live database export. Refusing a full Storage backup while table reads are using the checked-in fallback.",
+    );
+  }
+
+  console.log(
+    "[media] Reading full Storage inventory...",
+  );
+
+  const storagePaths =
+    await listAllStoragePaths();
+
+  for (
+    const path of
+    storagePaths
+  ) {
+    addMedia(
+      MEDIA_BUCKET,
+      path,
+    );
+  }
+}
+
 const entries =
   Array.from(
     referencedMedia
@@ -569,7 +808,9 @@ const entries =
   );
 
 console.log(
-  `[media] ${entries.length} referenced object(s)`,
+  includeOrphans
+    ? `[media] ${entries.length} total object(s) (${referencedCount} referenced)`
+    : `[media] ${entries.length} referenced object(s)`,
 );
 
 function encodePath(
@@ -609,6 +850,62 @@ const manifest =
 const failures =
   [];
 
+const resumableMedia =
+  new Map();
+
+if (
+  resumeArgument
+) {
+  const previousManifestPath =
+    join(
+      outputRoot,
+      "media-manifest.json",
+    );
+
+  if (
+    existsSync(
+      previousManifestPath,
+    )
+  ) {
+    const previousManifest =
+      JSON.parse(
+        await readFile(
+          previousManifestPath,
+          "utf8",
+        ),
+      );
+
+    if (
+      Array.isArray(
+        previousManifest,
+      )
+    ) {
+      for (
+        const item of
+        previousManifest
+      ) {
+        if (
+          item?.bucket &&
+          item?.path &&
+          typeof item?.sha256 ===
+            "string" &&
+          item.sha256.length ===
+            64
+        ) {
+          resumableMedia.set(
+            `${item.bucket}/${item.path}`,
+            item,
+          );
+        }
+      }
+    }
+  }
+
+  console.log(
+    `[resume] ${resumableMedia.size} previously verified manifest item(s) available for local checksum reuse.`,
+  );
+}
+
 let cursor =
   0;
 
@@ -629,6 +926,79 @@ function isStorageRestriction(
       message,
     )
   );
+}
+
+
+async function reuseVerifiedLocalMedia(
+  entry,
+  relativePath,
+  destination,
+) {
+  if (
+    !resumeArgument
+  ) {
+    return false;
+  }
+
+  const previous =
+    resumableMedia.get(
+      `${entry.bucket}/${entry.path}`,
+    );
+
+  if (
+    !previous ||
+    previous.relativePath !==
+      relativePath ||
+    !existsSync(
+      destination,
+    )
+  ) {
+    return false;
+  }
+
+  try {
+    const bytes =
+      await readFile(
+        destination,
+      );
+
+    const sha256 =
+      createHash(
+        "sha256",
+      )
+        .update(
+          bytes,
+        )
+        .digest(
+          "hex",
+        );
+
+    if (
+      sha256 !==
+      previous.sha256
+    ) {
+      return false;
+    }
+
+    manifest.push({
+      ...previous,
+
+      bucket:
+        entry.bucket,
+
+      path:
+        entry.path,
+
+      bytes:
+        bytes.length,
+
+      relativePath,
+    });
+
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function downloadWorker() {
@@ -675,6 +1045,20 @@ async function downloadWorker() {
       `[media ${index + 1}/${entries.length}] ${entry.path} ... `,
     );
 
+    if (
+      await reuseVerifiedLocalMedia(
+        entry,
+        relativePath,
+        destination,
+      )
+    ) {
+      console.log(
+        "REUSED (local SHA-256 verified)",
+      );
+
+      continue;
+    }
+
     try {
       if (
         storageRestricted
@@ -685,17 +1069,18 @@ async function downloadWorker() {
         );
       }
 
+      /*
+       * portfolio-media is a public bucket. Never attach the publishable or
+       * service-role key to the public object URL: the bytes do not require
+       * authorization, and keeping credentials out of media requests avoids
+       * leaking privileged headers into intermediary/debug logs.
+       */
       const response =
         await fetch(
           url,
           {
-            headers: {
-              apikey:
-                supabaseKey,
-
-              Authorization:
-                `Bearer ${supabaseKey}`,
-            },
+            cache:
+              "no-store",
           },
         );
 
@@ -887,6 +1272,15 @@ console.log(
 console.log(
   `Backup written to: ${outputRoot}`,
 );
+
+
+if (
+  resumeArgument
+) {
+  console.log(
+    "Resume mode only downloaded missing/corrupt objects; verified local copies were reused without Storage egress.",
+  );
+}
 
 console.log(
   `Media recovered: ${manifest.length}/${entries.length}`,

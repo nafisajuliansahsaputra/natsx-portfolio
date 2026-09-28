@@ -93,7 +93,7 @@ function getSocialPreviewImageUrl(
 }
 
 export const revalidate =
-  3600;
+  24 * 60 * 60;
 
 export async function generateProjectMetadata(
   slug: string,
@@ -833,6 +833,9 @@ export async function ProjectPageContent({
 
                 <Link
                   href={localizePath(`/work/${nextProject.slug}`, locale)}
+                  prefetch={
+                    false
+                  }
                   className={
                     styles.nextLink
                   }

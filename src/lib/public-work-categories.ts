@@ -21,6 +21,7 @@ import {
 } from "@/lib/public-portfolio-fallback-data";
 
 import {
+  markPublicPortfolioUnavailable,
   shouldUsePublicPortfolioSnapshot,
 } from "@/lib/public-portfolio-fallback-mode";
 
@@ -390,6 +391,8 @@ export const getPublicWorkTaxonomy =
       try {
         return await getCachedPublicWorkTaxonomy();
       } catch {
+        markPublicPortfolioUnavailable();
+
         return getFallbackPublicWorkTaxonomy();
       }
     },
