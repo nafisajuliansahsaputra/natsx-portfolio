@@ -584,6 +584,99 @@ for (
 const referencedCount =
   referencedMedia.size;
 
+async function listAllStoragePaths(
+  prefix =
+    "",
+) {
+  const paths =
+    [];
+
+  for (
+    let offset =
+      0;
+    ;
+    offset +=
+      PAGE_SIZE
+  ) {
+    const {
+      data,
+      error,
+    } =
+      await supabase.storage
+        .from(
+          MEDIA_BUCKET,
+        )
+        .list(
+          prefix,
+          {
+            limit:
+              PAGE_SIZE,
+
+            offset,
+
+            sortBy: {
+              column:
+                "name",
+
+              order:
+                "asc",
+            },
+          },
+        );
+
+    if (
+      error
+    ) {
+      throw new Error(
+        `Failed to list Storage prefix "${prefix}": ${error.message}`,
+      );
+    }
+
+    const page =
+      data ??
+      [];
+
+    for (
+      const item of
+      page
+    ) {
+      const fullPath =
+        prefix
+          ? `${prefix}/${item.name}`
+          : item.name;
+
+      const isFolder =
+        !item.id &&
+        !item.metadata;
+
+      if (
+        isFolder
+      ) {
+        paths.push(
+          ...await listAllStoragePaths(
+            fullPath,
+          ),
+        );
+
+        continue;
+      }
+
+      paths.push(
+        fullPath,
+      );
+    }
+
+    if (
+      page.length <
+      PAGE_SIZE
+    ) {
+      break;
+    }
+  }
+
+  return paths;
+}
+
 if (
   includeOrphans
 ) {
@@ -607,72 +700,17 @@ if (
     "[media] Reading full Storage inventory...",
   );
 
+  const storagePaths =
+    await listAllStoragePaths();
+
   for (
-    let from =
-      0;
-    ;
-    from +=
-      PAGE_SIZE
+    const path of
+    storagePaths
   ) {
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .schema(
-          "storage",
-        )
-        .from(
-          "objects",
-        )
-        .select(
-          "name,bucket_id",
-        )
-        .eq(
-          "bucket_id",
-          MEDIA_BUCKET,
-        )
-        .range(
-          from,
-          from +
-            PAGE_SIZE -
-            1,
-        );
-
-    if (
-      error
-    ) {
-      throw new Error(
-        `Failed to read full Storage inventory: ${error.message}`,
-      );
-    }
-
-    const page =
-      data ??
-      [];
-
-    for (
-      const object of
-      page
-    ) {
-      if (
-        typeof object.name ===
-          "string" &&
-        object.name
-      ) {
-        addMedia(
-          MEDIA_BUCKET,
-          object.name,
-        );
-      }
-    }
-
-    if (
-      page.length <
-      PAGE_SIZE
-    ) {
-      break;
-    }
+    addMedia(
+      MEDIA_BUCKET,
+      path,
+    );
   }
 }
 
