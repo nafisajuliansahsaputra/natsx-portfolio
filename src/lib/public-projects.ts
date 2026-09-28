@@ -26,6 +26,10 @@ import {
   FALLBACK_SECTION_TRANSLATION_ROWS,
 } from "@/lib/public-portfolio-fallback-data";
 
+import {
+  shouldUsePublicPortfolioSnapshot,
+} from "@/lib/public-portfolio-fallback-mode";
+
 const PUBLIC_PROJECT_FIELDS =
   "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,hero_image_path,card_image_path,updated_at,published_at";
 
@@ -1339,6 +1343,14 @@ export async function getPublishedProjects(
 ): Promise<
   PublicProject[]
 > {
+  if (
+    shouldUsePublicPortfolioSnapshot()
+  ) {
+    return getFallbackPublishedProjects(
+      locale,
+    );
+  }
+
   try {
     return await getCachedPublishedProjects(
       locale,
@@ -1423,6 +1435,12 @@ export async function getPublishedProjectSitemapEntries():
   Promise<
     PublicProjectSitemapEntry[]
   > {
+  if (
+    shouldUsePublicPortfolioSnapshot()
+  ) {
+    return getFallbackPublishedProjectSitemapEntries();
+  }
+
   try {
     return await getCachedPublishedProjectSitemapEntries();
   } catch {
@@ -1527,6 +1545,24 @@ export async function getFeaturedProjects(
         limit,
       ),
     );
+
+  if (
+    shouldUsePublicPortfolioSnapshot()
+  ) {
+    return getFallbackPublishedProjects(
+      locale,
+    )
+      .filter(
+        (
+          project,
+        ) =>
+          project.featured,
+      )
+      .slice(
+        0,
+        safeLimit,
+      );
+  }
 
   try {
     return await getCachedFeaturedProjects(
@@ -1812,6 +1848,15 @@ export const getPublishedProjectPage =
       locale: Locale =
         "en",
     ) => {
+      if (
+        shouldUsePublicPortfolioSnapshot()
+      ) {
+        return getFallbackPublishedProjectPage(
+          slug,
+          locale,
+        );
+      }
+
       try {
         return await getCachedPublishedProjectPage(
           slug,
