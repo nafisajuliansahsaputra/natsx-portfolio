@@ -10,8 +10,11 @@ import {
 
 import useIntroCompletion from "@/components/intro/useIntroCompletion";
 
+import sceneModels from "@/data/scene-models.json";
+
 import {
   getSceneMargin,
+  getSceneWarmMargin,
   warmSceneResources,
 } from "./scene-resource-preload";
 
@@ -93,6 +96,9 @@ export default function AttendanceSceneGate({
       return;
     }
 
+    const resourceController =
+      new AbortController();
+
     const loadCode =
       () => {
         void loadAttendanceEditorialScene()
@@ -105,14 +111,15 @@ export default function AttendanceSceneGate({
       () => {
         void warmSceneResources(
           [
-            "/models/attendance/imac.glb",
-            "/models/attendance/scanner.glb",
-            "/models/attendance/badge.glb",
+            sceneModels.attendance.imac.runtime,
+            sceneModels.attendance.scanner.runtime,
+            sceneModels.attendance.badge.runtime,
             dashboardImageUrl,
             scannerImageUrl,
             badgeImageUrl,
           ],
           1,
+          resourceController.signal,
         );
       };
 
@@ -133,6 +140,8 @@ export default function AttendanceSceneGate({
         );
 
       return () => {
+        resourceController.abort();
+
         window.cancelAnimationFrame(
           frame,
         );
@@ -143,8 +152,8 @@ export default function AttendanceSceneGate({
       (
         callback:
           () => void,
-        viewportMargin:
-          number,
+        rootMargin:
+          string,
       ) => {
         const observer =
           new IntersectionObserver(
@@ -168,10 +177,7 @@ export default function AttendanceSceneGate({
               root:
                 null,
 
-              rootMargin:
-                getSceneMargin(
-                  viewportMargin,
-                ),
+              rootMargin,
 
               threshold:
                 0,
@@ -188,13 +194,17 @@ export default function AttendanceSceneGate({
     const codeObserver =
       createOneShotObserver(
         loadCode,
-        ATTENDANCE_CODE_PRELOAD_VIEWPORTS,
+        getSceneMargin(
+          ATTENDANCE_CODE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const resourceObserver =
       createOneShotObserver(
         warmResources,
-        ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
+        getSceneWarmMargin(
+          ATTENDANCE_RESOURCE_PRELOAD_VIEWPORTS,
+        ),
       );
 
     const prepareObserver =
@@ -204,10 +214,14 @@ export default function AttendanceSceneGate({
             true,
           );
         },
-        ATTENDANCE_PREPARE_VIEWPORTS,
+        getSceneMargin(
+          ATTENDANCE_PREPARE_VIEWPORTS,
+        ),
       );
 
     return () => {
+      resourceController.abort();
+
       codeObserver.disconnect();
       resourceObserver.disconnect();
       prepareObserver.disconnect();
