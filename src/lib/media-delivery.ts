@@ -1,3 +1,7 @@
+import {
+  portfolioMediaMirror,
+} from "@/data/portfolio-media-mirror";
+
 /*
  * Portfolio media delivery is intentionally provider-agnostic.
  *
@@ -41,6 +45,20 @@ export function getPortfolioMediaMirrorUrl(
   bucket: string,
   path: string,
 ) {
+  const stableKey =
+    `${bucket}/${path}`;
+
+  const staticMirror =
+    portfolioMediaMirror[
+      stableKey
+    ];
+
+  if (
+    staticMirror
+  ) {
+    return staticMirror;
+  }
+
   if (
     !configuredPrefix
   ) {
@@ -72,7 +90,13 @@ export function getPortfolioMediaMirrorUrl(
 }
 
 export function hasPortfolioMediaMirror() {
-  return Boolean(
-    configuredPrefix,
+  return (
+    Object.keys(
+      portfolioMediaMirror,
+    ).length >
+      0 ||
+    Boolean(
+      configuredPrefix,
+    )
   );
 }
