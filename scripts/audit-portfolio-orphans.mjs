@@ -324,47 +324,51 @@ async function readAllRows(
   return rows;
 }
 
-async function readAllStorageObjects() {
+async function readAllStorageObjects(
+  prefix =
+    "",
+) {
   const rows =
     [];
 
   for (
-    let from =
+    let offset =
       0;
     ;
-    from +=
+    offset +=
       PAGE_SIZE
   ) {
     const {
       data,
       error,
     } =
-      await supabase
-        .schema(
-          "storage",
-        )
+      await supabase.storage
         .from(
-          "objects",
-        )
-        .select(
-          "name,bucket_id,metadata,created_at,updated_at",
-        )
-        .eq(
-          "bucket_id",
           MEDIA_BUCKET,
         )
-        .range(
-          from,
-          from +
-            PAGE_SIZE -
-            1,
+        .list(
+          prefix,
+          {
+            limit:
+              PAGE_SIZE,
+
+            offset,
+
+            sortBy: {
+              column:
+                "name",
+
+              order:
+                "asc",
+            },
+          },
         );
 
     if (
       error
     ) {
       throw new Error(
-        `Failed to read storage.objects: ${error.message}`,
+        `Failed to list Storage prefix "${prefix}": ${error.message}`,
       );
     }
 
@@ -372,9 +376,48 @@ async function readAllStorageObjects() {
       data ??
       [];
 
-    rows.push(
-      ...page,
-    );
+    for (
+      const item of
+      page
+    ) {
+      const fullPath =
+        prefix
+          ? `${prefix}/${item.name}`
+          : item.name;
+
+      const isFolder =
+        !item.id &&
+        !item.metadata;
+
+      if (
+        isFolder
+      ) {
+        rows.push(
+          ...await readAllStorageObjects(
+            fullPath,
+          ),
+        );
+
+        continue;
+      }
+
+      rows.push({
+        name:
+          fullPath,
+
+        metadata:
+          item.metadata ??
+          {},
+
+        created_at:
+          item.created_at ??
+          null,
+
+        updated_at:
+          item.updated_at ??
+          null,
+      });
+    }
 
     if (
       page.length <
