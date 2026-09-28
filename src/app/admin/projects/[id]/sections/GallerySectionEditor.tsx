@@ -34,6 +34,11 @@ import {
   createClient,
 } from "@/lib/supabase/client";
 
+import {
+  getOptimizationSavings,
+  optimizePortfolioImage,
+} from "@/lib/client-image-optimizer";
+
 import type {
   SectionActionState,
 } from "./actions";
@@ -634,7 +639,7 @@ export default function GallerySectionEditor({
     );
   }
 
-  function handleAddFiles(
+  async function handleAddFiles(
     event:
       ChangeEvent<HTMLInputElement>,
   ) {
@@ -678,8 +683,32 @@ export default function GallerySectionEditor({
       }
     }
 
+    setMediaStatus({
+      status:
+        "success",
+
+      message:
+        "Optimizing gallery images before upload...",
+    });
+
+    const optimizedFiles:
+      File[] =
+      [];
+
+    for (
+      const file of
+      selectedFiles
+    ) {
+      optimizedFiles.push(
+        await optimizePortfolioImage(
+          file,
+          "gallery",
+        ),
+      );
+    }
+
     const nextItems =
-      selectedFiles.map(
+      optimizedFiles.map(
         (
           file,
         ): GalleryDraftItem => ({
@@ -724,16 +753,60 @@ export default function GallerySectionEditor({
       ],
     );
 
-    setMediaStatus(
-      initialMediaState,
-    );
+    const originalBytes =
+      selectedFiles.reduce(
+        (
+          total,
+          file,
+        ) =>
+          total +
+          file.size,
+        0,
+      );
+
+    const optimizedBytes =
+      optimizedFiles.reduce(
+        (
+          total,
+          file,
+        ) =>
+          total +
+          file.size,
+        0,
+      );
+
+    const savings =
+      originalBytes >
+        0 &&
+      optimizedBytes <
+        originalBytes
+        ? Math.round(
+            (
+              1 -
+              optimizedBytes /
+                originalBytes
+            ) *
+              100,
+          )
+        : 0;
+
+    setMediaStatus({
+      status:
+        "success",
+
+      message:
+        savings >
+        0
+          ? `Gallery optimized automatically: ${formatFileSize(originalBytes)} → ${formatFileSize(optimizedBytes)} (-${savings}%).`
+          : "Gallery images are already efficient or animated; original quality is preserved.",
+    });
 
     setCopyStatus(
       initialTranslationState,
     );
   }
 
-  function handleReplaceFile(
+  async function handleReplaceFile(
     itemId: string,
 
     event:
@@ -772,6 +845,20 @@ export default function GallerySectionEditor({
       return;
     }
 
+    setMediaStatus({
+      status:
+        "success",
+
+      message:
+        "Optimizing replacement image...",
+    });
+
+    const optimizedFile =
+      await optimizePortfolioImage(
+        file,
+        "gallery",
+      );
+
     setItems(
       (
         current,
@@ -795,20 +882,32 @@ export default function GallerySectionEditor({
               ...item,
 
               pendingFile:
-                file,
+                optimizedFile,
 
               pendingPreviewUrl:
                 createPreviewUrl(
-                  file,
+                  optimizedFile,
                 ),
             };
           },
         ),
     );
 
-    setMediaStatus(
-      initialMediaState,
-    );
+    const savings =
+      getOptimizationSavings(
+        file,
+        optimizedFile,
+      );
+
+    setMediaStatus({
+      status:
+        "success",
+
+      message:
+        savings
+          ? `Replacement optimized automatically: ${formatFileSize(file.size)} → ${formatFileSize(optimizedFile.size)} (-${savings}%).`
+          : "Replacement is already efficient or animated; original quality is preserved.",
+    });
   }
 
   function updateLocalizedItem(

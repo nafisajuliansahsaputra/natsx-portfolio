@@ -15,6 +15,11 @@ import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
+import {
+  FALLBACK_PROJECT_CATEGORY_ROWS,
+  FALLBACK_WORK_CATEGORY_ROWS,
+} from "@/lib/public-portfolio-fallback-data";
+
 
 type WorkCategoryRow = {
   id:
@@ -69,6 +74,106 @@ export type PublicWorkTaxonomy = {
     >;
 };
 
+
+function getFallbackPublicWorkTaxonomy():
+  PublicWorkTaxonomy {
+  const categoryRows =
+    FALLBACK_WORK_CATEGORY_ROWS
+      .filter(
+        (
+          category,
+        ) =>
+          category.is_visible,
+      ) as unknown as
+        WorkCategoryRow[];
+
+  const relationRows =
+    FALLBACK_PROJECT_CATEGORY_ROWS as unknown as
+      ProjectCategoryRow[];
+
+  const categories:
+    PublicWorkCategory[] =
+    categoryRows.map(
+      (
+        category,
+      ) => ({
+        id:
+          category.id,
+
+        name:
+          category.name,
+
+        slug:
+          category.slug,
+
+        sortOrder:
+          category.sort_order,
+      }),
+    );
+
+  const categorySlugById =
+    new Map<
+      string,
+      string
+    >(
+      categories.map(
+        (
+          category,
+        ) => [
+          category.id,
+          category.slug,
+        ],
+      ),
+    );
+
+  const categorySlugsByProjectId:
+    Record<
+      string,
+      string[]
+    > = {};
+
+  for (
+    const relation of
+    relationRows
+  ) {
+    const categorySlug =
+      categorySlugById.get(
+        relation.category_id,
+      );
+
+    if (
+      !categorySlug
+    ) {
+      continue;
+    }
+
+    const current =
+      categorySlugsByProjectId[
+        relation.project_id
+      ] ??
+      [];
+
+    if (
+      !current.includes(
+        categorySlug,
+      )
+    ) {
+      current.push(
+        categorySlug,
+      );
+    }
+
+    categorySlugsByProjectId[
+      relation.project_id
+    ] =
+      current;
+  }
+
+  return {
+    categories,
+    categorySlugsByProjectId,
+  };
+}
 
 async function loadPublicWorkTaxonomy():
   Promise<PublicWorkTaxonomy> {
@@ -271,6 +376,11 @@ const getCachedPublicWorkTaxonomy =
  */
 export const getPublicWorkTaxonomy =
   cache(
-    async () =>
-      getCachedPublicWorkTaxonomy(),
+    async () => {
+      try {
+        return await getCachedPublicWorkTaxonomy();
+      } catch {
+        return getFallbackPublicWorkTaxonomy();
+      }
+    },
   );

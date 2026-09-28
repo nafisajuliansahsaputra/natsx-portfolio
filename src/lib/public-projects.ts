@@ -19,6 +19,13 @@ import {
   createPublicClient,
 } from "@/lib/supabase/public";
 
+import {
+  FALLBACK_PROJECT_ROWS,
+  FALLBACK_PROJECT_TRANSLATION_ROWS,
+  FALLBACK_SECTION_ROWS,
+  FALLBACK_SECTION_TRANSLATION_ROWS,
+} from "@/lib/public-portfolio-fallback-data";
+
 const PUBLIC_PROJECT_FIELDS =
   "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,hero_image_path,card_image_path,updated_at,published_at";
 
@@ -1021,6 +1028,236 @@ function normalizeProjects(
   );
 }
 
+function getFallbackPublishedProjects(
+  locale: Locale,
+): PublicProject[] {
+  const localeCandidates =
+    new Set(
+      getLocaleCandidates(
+        locale,
+      ),
+    );
+
+  const translations =
+    FALLBACK_PROJECT_TRANSLATION_ROWS
+      .filter(
+        (
+          row,
+        ) =>
+          localeCandidates.has(
+            row.locale,
+          ),
+      ) as unknown as
+        ProjectTranslationRow[];
+
+  return normalizeProjects(
+    FALLBACK_PROJECT_ROWS as unknown as
+      PublicProjectRow[],
+    translations,
+    locale,
+  );
+}
+
+function getFallbackPublishedProjectSitemapEntries():
+  PublicProjectSitemapEntry[] {
+  return (
+    FALLBACK_PROJECT_ROWS as unknown as
+      PublicProjectRow[]
+  ).map(
+    (
+      project,
+    ) => ({
+      slug:
+        project.slug,
+
+      updatedAt:
+        project.updated_at,
+    }),
+  );
+}
+
+function getFallbackPublishedProjectPage(
+  slug: string,
+  locale: Locale,
+): PublicProjectPageData | null {
+  const rawProject =
+    (
+      FALLBACK_PROJECT_ROWS as unknown as
+        PublicProjectRow[]
+    ).find(
+      (
+        project,
+      ) =>
+        project.slug ===
+        slug,
+    );
+
+  if (
+    !rawProject
+  ) {
+    return null;
+  }
+
+  const rawSections =
+    (
+      FALLBACK_SECTION_ROWS as unknown as
+        PublicProjectSectionRow[]
+    )
+      .filter(
+        (
+          section,
+        ) =>
+          section.project_id ===
+          rawProject.id &&
+          section.is_visible,
+      )
+      .sort(
+        (
+          left,
+          right,
+        ) =>
+          left.sort_order -
+          right.sort_order,
+      );
+
+  const rawProjects =
+    (
+      FALLBACK_PROJECT_ROWS as unknown as
+        PublicProjectNavigationRow[]
+    )
+      .slice()
+      .sort(
+        (
+          left,
+          right,
+        ) =>
+          left.sort_order -
+          right.sort_order,
+      );
+
+  const localeCandidates =
+    new Set(
+      getLocaleCandidates(
+        locale,
+      ),
+    );
+
+  const projectTranslations =
+    FALLBACK_PROJECT_TRANSLATION_ROWS
+      .filter(
+        (
+          row,
+        ) =>
+          localeCandidates.has(
+            row.locale,
+          ),
+      ) as unknown as
+        ProjectTranslationRow[];
+
+  const sectionIdSet =
+    new Set(
+      rawSections.map(
+        (
+          section,
+        ) =>
+          section.id,
+      ),
+    );
+
+  const sectionTranslations =
+    FALLBACK_SECTION_TRANSLATION_ROWS
+      .filter(
+        (
+          row,
+        ) =>
+          sectionIdSet.has(
+            row.section_id,
+          ) &&
+          localeCandidates.has(
+            row.locale,
+          ),
+      ) as unknown as
+        SectionTranslationRow[];
+
+  const projectLookup =
+    buildProjectTranslationLookup(
+      projectTranslations,
+      locale,
+    );
+
+  const sectionLookup =
+    buildSectionTranslationLookup(
+      sectionTranslations,
+      locale,
+    );
+
+  const project =
+    normalizeProject(
+      rawProject,
+      projectLookup.get(
+        rawProject.id,
+      ),
+    );
+
+  const sections =
+    rawSections.map(
+      (
+        section,
+      ) =>
+        normalizeSection(
+          section,
+          sectionLookup.get(
+            section.id,
+          ),
+        ),
+    );
+
+  const projects =
+    rawProjects.map(
+      (
+        item,
+      ) =>
+        normalizeProjectNavigation(
+          item,
+          projectLookup.get(
+            item.id,
+          ),
+        ),
+    );
+
+  const currentIndex =
+    projects.findIndex(
+      (
+        item,
+      ) =>
+        item.id ===
+        project.id,
+    );
+
+  const nextProject =
+    projects.length >
+      1 &&
+    currentIndex !==
+      -1
+      ? projects[
+          (
+            currentIndex +
+            1
+          ) %
+            projects.length
+        ]
+      : null;
+
+  return {
+    project,
+    sections,
+    nextProject,
+
+    totalProjects:
+      projects.length,
+  };
+}
+
 async function loadPublishedProjects(
   locale: Locale,
 ): Promise<
@@ -1102,9 +1339,15 @@ export async function getPublishedProjects(
 ): Promise<
   PublicProject[]
 > {
-  return getCachedPublishedProjects(
-    locale,
-  );
+  try {
+    return await getCachedPublishedProjects(
+      locale,
+    );
+  } catch {
+    return getFallbackPublishedProjects(
+      locale,
+    );
+  }
 }
 
 async function loadPublishedProjectSitemapEntries():
@@ -1180,7 +1423,11 @@ export async function getPublishedProjectSitemapEntries():
   Promise<
     PublicProjectSitemapEntry[]
   > {
-  return getCachedPublishedProjectSitemapEntries();
+  try {
+    return await getCachedPublishedProjectSitemapEntries();
+  } catch {
+    return getFallbackPublishedProjectSitemapEntries();
+  }
 }
 
 async function loadFeaturedProjects(
@@ -1281,10 +1528,26 @@ export async function getFeaturedProjects(
       ),
     );
 
-  return getCachedFeaturedProjects(
-    safeLimit,
-    locale,
-  );
+  try {
+    return await getCachedFeaturedProjects(
+      safeLimit,
+      locale,
+    );
+  } catch {
+    return getFallbackPublishedProjects(
+      locale,
+    )
+      .filter(
+        (
+          project,
+        ) =>
+          project.featured,
+      )
+      .slice(
+        0,
+        safeLimit,
+      );
+  }
 }
 
 async function loadPublishedProjectPage(
@@ -1548,11 +1811,19 @@ export const getPublishedProjectPage =
       slug: string,
       locale: Locale =
         "en",
-    ) =>
-      getCachedPublishedProjectPage(
-        slug,
-        locale,
-      ),
+    ) => {
+      try {
+        return await getCachedPublishedProjectPage(
+          slug,
+          locale,
+        );
+      } catch {
+        return getFallbackPublishedProjectPage(
+          slug,
+          locale,
+        );
+      }
+    },
   );
 
 export function getPublicProjectYearRange(

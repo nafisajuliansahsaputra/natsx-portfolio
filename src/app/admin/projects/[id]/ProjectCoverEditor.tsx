@@ -24,6 +24,11 @@ import {
 } from "@/lib/supabase/client";
 
 import {
+  getOptimizationSavings,
+  optimizePortfolioImage,
+} from "@/lib/client-image-optimizer";
+
+import {
   removeProjectCover,
   saveProjectCover,
   type ProjectCoverActionState,
@@ -278,7 +283,7 @@ function ShowcaseSlot({
     }
   }
 
-  function handleFileChange(
+  async function handleFileChange(
     event:
       ChangeEvent<HTMLInputElement>,
   ) {
@@ -328,11 +333,25 @@ function ShowcaseSlot({
       return;
     }
 
+    setState({
+      status:
+        "success",
+
+      message:
+        "Optimizing visual before upload...",
+    });
+
+    const optimizedFile =
+      await optimizePortfolioImage(
+        file,
+        "cover",
+      );
+
     clearObjectUrl();
 
     const objectUrl =
       URL.createObjectURL(
-        file,
+        optimizedFile,
       );
 
     objectUrlRef.current =
@@ -343,16 +362,28 @@ function ShowcaseSlot({
     );
 
     setPendingFile(
-      file,
+      optimizedFile,
     );
 
     setConfirmRemove(
       false,
     );
 
-    setState(
-      initialState,
-    );
+    const savings =
+      getOptimizationSavings(
+        file,
+        optimizedFile,
+      );
+
+    setState({
+      status:
+        "success",
+
+      message:
+        savings
+          ? `Optimized automatically: ${formatFileSize(file.size)} → ${formatFileSize(optimizedFile.size)} (-${savings}%).`
+          : "Visual is already efficient; original quality is preserved.",
+    });
   }
 
   async function handleSave() {
