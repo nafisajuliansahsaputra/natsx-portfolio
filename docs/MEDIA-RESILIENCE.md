@@ -175,7 +175,7 @@ project content.
 
 ## Cache strategy
 
-- Next Image optimized variants: minimum 30-day cache.
+- Next Image optimized variants: minimum one-year cache.
 - Static `/media/*` mirror: one year + immutable.
 - Existing Three.js screen textures continue to use `/_next/image` and keep
   their current visual resolution.
@@ -297,3 +297,186 @@ Finale video media is also bandwidth-gated:
 
 There are currently no video objects in the portfolio-media bucket, so these
 guards are preventative and do not alter an existing project presentation.
+
+
+## Route prefetch budget
+
+Project-detail links on the homepage Selected Work section, the Work archive,
+and the next-project handoff disable automatic Next Link prefetching.
+
+Why:
+
+- a Work archive can expose several project links at once;
+- automatic viewport prefetch can fan out multiple RSC requests even when the
+  visitor never opens those projects;
+- after the temporary snapshot circuit breaker expires, a cache miss can
+  eventually translate into avoidable public-data reads;
+- navigation on click remains unchanged.
+
+Public project detail routes use a 24-hour ISR safety window, matching the
+existing 24-hour tagged portfolio data cache. CMS writes already invalidate
+the public portfolio cache tag, so content edits do not need hourly background
+route refreshes.
+
+E2E coverage watches for idle `?_rsc=` requests from Home and Work and fails
+verification if project-detail auto-prefetch fan-out returns.
+
+
+## Public data runtime circuit breaker
+
+The checked-in portfolio snapshot is not only a one-off incident fallback.
+
+After the current Supabase restriction window ends, public loaders return to
+Supabase as the primary source. If a public project/taxonomy refresh then
+fails, the server process opens a short five-minute runtime circuit and serves
+the checked-in snapshot instead of making every following visitor repeat the
+same failing origin request.
+
+The circuit:
+
+- does not alter CMS writes;
+- does not permanently hide fresh content;
+- self-expires after five minutes;
+- works in addition to the 24-hour tagged data cache;
+- keeps the existing static snapshot as the fail-safe response.
+
+Because Vercel is serverless, the runtime circuit is process-local by design.
+The persistent protection remains the tagged cache + snapshot fallback, while
+the process-local circuit absorbs repeated failures within a warm instance.
+
+
+## Orphan retention and cleanup
+
+Replaced/detached media is intentionally retained instead of being deleted
+immediately. This gives the portfolio a recovery window, but retained objects
+must eventually be audited so Storage does not grow forever.
+
+Dry-run orphan audit:
+
+```bash
+npm run audit:orphans
+```
+
+Before any cleanup, create a full bucket backup:
+
+```bash
+npm run backup:portfolio:full
+```
+
+Permanent cleanup requires an explicit retention window, a verified full
+backup, empty `failed-media.json`, SHA-256 coverage for every deletion
+candidate, and `--confirm-delete=DELETE_ORPHANS`. Cleanup never runs as part
+of build/deploy.
+
+### Backup credential hygiene
+
+The backup command may use `SUPABASE_SERVICE_ROLE_KEY` locally to enumerate
+live database/storage metadata, but public `portfolio-media` downloads never
+receive that key or any Supabase auth header.
+
+### Resume an interrupted backup
+
+Resume the same backup folder instead of redownloading verified media:
+
+```bash
+npm run backup:portfolio -- --resume=backups/portfolio/<timestamp>
+npm run backup:portfolio:full -- --resume=backups/portfolio/<timestamp>
+```
+
+Existing files are reused only after local SHA-256 verification.
+
+
+## Refreshing the checked-in emergency snapshot
+
+Keep the emergency database snapshot aligned with the CMS using:
+
+```bash
+npm run backup:portfolio
+npm run mirror:portfolio
+npm run snapshot:portfolio
+npm run audit:media
+npm run verify
+```
+
+The snapshot generator refuses to update when database reads are not fully
+live, the media backup is incomplete, referenced media is absent from the
+SHA-256 manifest, or the static mirror does not contain every referenced
+object.
+
+
+## Independent CI guardrails
+
+GitHub Actions provides a verification path independent from Vercel preview
+capacity. It runs dependency install, runtime GLB preparation, TypeScript,
+ESLint, and the media resilience audit on pull requests and `main`.
+
+Superseded runs are cancelled to reduce runner waste. Vercel remains the final
+deployment/build verification path.
+
+
+## Vercel preview build budget
+
+Production `main` deployments remain enabled. Iterative branches matching
+`codex-work-*` do not automatically deploy to Vercel, so intermediate
+commits do not burn the Hobby preview allowance. A normal review branch can
+still be created for one final Vercel preview.
+
+
+## Long-lived optimized image cache
+
+Portfolio media paths are immutable/versioned identities. Next Image keeps
+successful optimized variants for a one-year minimum TTL.
+
+Replacing an image creates a new media path and therefore a new cache key.
+The quality tier remains q=75; this changes retention only, not appearance.
+
+
+## Private mirror integrity manifest
+
+Static media under `public/media/` is public by design, but integrity
+bookkeeping lives in:
+
+```text
+config/portfolio-media-mirror-manifest.json
+```
+
+instead of a public manifest. This avoids exposing backup paths and internal
+checksum metadata while preserving byte-for-byte build-time verification.
+
+### Mirror garbage collection
+
+The generated `public/media/` directory is rebuilt from scratch on every
+successful mirror publish. Recovery copies remain in backup/Storage retention;
+the deployed mirror contains only the current verified set.
+
+
+## Public origin timeout
+
+The read-only public Supabase client uses a four-second origin timeout and
+marks raw origin fetches `no-store`, leaving `unstable_cache` as the single
+freshness/invalidation owner. Slow origin failures can therefore fall into the
+snapshot instead of holding visitors on a long request. CMS/admin clients are
+unchanged.
+
+
+## Legacy media compatibility
+
+Existing oversized media paths are grandfathered only when that exact path is
+already referenced by the section being edited. Metadata/caption changes stay
+possible during migration, while any new/replacement path must satisfy current
+server-side media budgets. Ownership, MIME, path, and text validation still
+apply.
+
+
+## Live media health report
+
+When Supabase access is available, run:
+
+```bash
+npm run health:media
+```
+
+The read-only report compares live CMS references against the complete
+`portfolio-media` inventory and reports missing objects, orphan bytes,
+legacy oversized objects, weak cache-control metadata, largest assets, and
+per-project media totals. Missing referenced objects cause a non-zero exit.
