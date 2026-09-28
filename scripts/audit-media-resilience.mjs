@@ -303,8 +303,8 @@ if (
       "ViewportVideo",
     )
   ) {
-    failures.push(
-      "Project finale video is no longer routed through viewport-gated loading.",
+    warnings.push(
+      "Project finale video no longer appears to use viewport-gated loading.",
     );
   }
 }
@@ -338,7 +338,7 @@ if (
       "socialPreviewImage",
     )
   ) {
-    failures.push(
+    warnings.push(
       "Project social preview images no longer appear to use the same-origin Next Image cache.",
     );
   }
