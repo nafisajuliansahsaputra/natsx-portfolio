@@ -332,7 +332,7 @@ if (
 
   if (
     !projectMetadata.includes(
-      '"/_next/image?"',
+      "/_next/image?",
     ) ||
     !projectMetadata.includes(
       "socialPreviewImage",
