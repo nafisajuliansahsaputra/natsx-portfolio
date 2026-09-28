@@ -351,3 +351,12 @@ Deletion only proceeds when all of these are true:
 
 This cleanup command is never part of build/deploy and must never run
 automatically.
+
+
+### Backup credential hygiene
+
+The backup command may use `SUPABASE_SERVICE_ROLE_KEY` locally to enumerate
+live database/storage metadata, but public `portfolio-media` object downloads
+never receive that key (or any Supabase auth header). The bucket is public, so
+sending privileged credentials with media GETs is unnecessary and would only
+increase secret-exposure risk in logs or intermediaries.
