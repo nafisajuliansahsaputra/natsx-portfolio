@@ -274,16 +274,12 @@ export default function GlobalImagePreloader() {
               ManifestResponse;
 
           /*
-           * Only warm lightweight navigation-critical
-           * project covers globally.
+           * Global warming is intentionally limited to same-origin
+           * assets. Remote Supabase covers are loaded by the visible
+           * Next/Image / SceneGate that actually needs them.
            *
-           * Full project media used to be fetched in
-           * the background as well, which could compete
-           * with scrolling, Three.js parsing and visible
-           * Next/Image requests for no immediate benefit.
-           *
-           * Scene-specific screen textures are already
-           * warmed by their own SceneGate.
+           * This keeps idle-time preloading from consuming Storage
+           * egress for projects the visitor may never scroll to.
            */
           const urls =
             Array.from(
@@ -292,9 +288,26 @@ export default function GlobalImagePreloader() {
                   .filter(
                     (
                       item,
-                    ) =>
-                      item.group ===
-                      "project-cover",
+                    ) => {
+                      if (
+                        item.group !==
+                        "project-cover"
+                      ) {
+                        return false;
+                      }
+
+                      try {
+                        return (
+                          new URL(
+                            item.url,
+                            window.location.origin,
+                          ).origin ===
+                          window.location.origin
+                        );
+                      } catch {
+                        return false;
+                      }
+                    },
                   )
                   .map(
                     (
