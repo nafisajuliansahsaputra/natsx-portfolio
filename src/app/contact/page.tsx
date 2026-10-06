@@ -30,7 +30,7 @@ import ContactMagneticSurface from "./ContactMagneticSurface";
 import styles from "./Contact.module.css";
 
 const description =
-  `Get in touch with ${site.person} / ${site.name} for selected freelance work, collaborations, and creative projects.`;
+  `Get in touch with ${site.person} / ${site.name} for full-stack development, product engineering, web applications, APIs, integrations, and selected digital product work.`;
 
 export const metadata =
   createPageMetadata({

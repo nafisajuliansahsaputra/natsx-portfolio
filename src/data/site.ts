@@ -91,16 +91,16 @@ export const site = {
     ],
 
     description:
-      "For projects with a clear idea, interesting problem, or enough room to create something thoughtful.",
+      "For web applications, product systems, APIs, integrations, and engineering work with a clear problem to solve.",
   },
 
   collaborationTypes: [
-    "Digital Products",
-    "Web Experiences",
-    "UI / UX Design",
-    "Brand Identity",
-    "Creative Direction",
-    "Motion & Visuals",
+    "Web Applications",
+    "Full-Stack Development",
+    "APIs & Integrations",
+    "Product Engineering",
+    "UI / UX & Product Design",
+    "Interactive Digital Experiences",
   ],
 
   socials,
