@@ -93,7 +93,7 @@ const plusJakartaSans =
   });
 
 const description =
-  "Portfolio of NATSX, a multidisciplinary digital creator working across design, development, motion, and visual experiences.";
+  "Portfolio of NATSX / Nafisa Juliansah Saputra, a full-stack developer building reliable web products and systems across frontend, backend, databases, APIs, testing, deployment, and product design.";
 
 /*
  * =========================================================
@@ -252,7 +252,7 @@ export const metadata: Metadata = {
 
   title: {
     default:
-      "NATSX — Digital Creator",
+      "NATSX — Full-Stack Developer",
 
     template:
       "%s — NATSX",
@@ -276,11 +276,15 @@ export const metadata: Metadata = {
 
   keywords: [
     "NATSX",
-    "Digital Creator",
-    "UI UX Designer",
+    "Full-Stack Developer",
+    "Software Developer",
     "Web Developer",
-    "Creative Direction",
-    "Motion Design",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "PHP",
+    "Laravel",
+    "PostgreSQL",
     "Portfolio",
   ],
 

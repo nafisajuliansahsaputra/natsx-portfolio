@@ -19,7 +19,7 @@ const copy =
 export const metadata =
   createPageMetadata({
     title:
-      "NATSX — Digital Creator",
+      "NATSX — Full-Stack Developer",
 
     description:
       copy.hero.description,
