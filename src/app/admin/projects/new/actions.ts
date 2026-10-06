@@ -19,6 +19,7 @@ type ProjectField =
   | "project_number"
   | "year"
   | "summary"
+  | "project_status"
   | "live_url"
   | "repository_url"
   | "accent_color"
@@ -224,6 +225,13 @@ export async function createProject(
         "tech_stack",
       ),
     );
+
+  const projectStatus =
+    getText(
+      formData,
+      "project_status",
+    ) ||
+    "In Development";
 
   const liveUrl =
     getText(
@@ -661,6 +669,9 @@ export async function createProject(
 
         tech_stack:
           techStack,
+
+        project_status:
+          projectStatus,
 
         status:
           "draft",
