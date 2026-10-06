@@ -31,7 +31,7 @@ import {
 } from "@/lib/public-portfolio-fallback-mode";
 
 const PUBLIC_PROJECT_FIELDS =
-  "id,slug,title,project_number,year,period,summary,categories,roles,featured,sort_order,live_url,accent_color,secondary_color,hero_image_path,card_image_path,updated_at,published_at";
+  "id,slug,title,project_number,year,period,summary,categories,roles,tech_stack,featured,sort_order,live_url,accent_color,secondary_color,hero_image_path,card_image_path,updated_at,published_at";
 
 const PUBLIC_PROJECT_NAVIGATION_FIELDS =
   "id,slug,title,project_number,categories,sort_order,accent_color";
@@ -68,6 +68,10 @@ type PublicProjectRow = {
     | null;
 
   roles:
+    | unknown[]
+    | null;
+
+  tech_stack:
     | unknown[]
     | null;
 
@@ -221,6 +225,7 @@ export type PublicProject = {
   summary: string;
   disciplines: string[];
   roles: string[];
+  techStack: string[];
   featured: boolean;
   sortOrder: number;
 
@@ -721,6 +726,11 @@ function normalizeProject(
           ?.roles,
 
         project.roles,
+      ),
+
+    techStack:
+      normalizeStringList(
+        project.tech_stack,
       ),
 
     featured:
