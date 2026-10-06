@@ -16,7 +16,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "project_number": "01",
     "year": 2026,
     "period": "2026 / Ongoing",
-    "summary": "Spall Spill is a creator- and owner-centric identity and structured discovery platform, currently moving from a locked product specification into a clean production rebuild.",
+    "summary": "Spall Spill is a creator- and owner-centric identity and structured discovery platform in active production implementation, with authentication, onboarding, Working-state persistence, Product/Resource draft foundations, publication foundations, URL safety, media sanitization, and security/testing infrastructure already integrated.",
     "categories": [
       "Product Design",
       "Web Development",
@@ -27,21 +27,21 @@ export const FALLBACK_PROJECT_ROWS = [
       "Product Designer"
     ],
     "tech_stack": [
-          "Next.js",
-          "React",
-          "TypeScript",
-          "PostgreSQL",
-          "Supabase",
-          "Cloudflare R2",
-          "Vitest",
-          "Playwright"
+      "Next.js",
+      "React",
+      "TypeScript",
+      "PostgreSQL",
+      "Supabase",
+      "Cloudflare R2",
+      "Vitest",
+      "Playwright"
     ],
     "engineering_highlights": [
-          "Tested PostgreSQL RLS and authenticated server-side mutation boundaries",
-          "Draft-to-preview-to-publish workflow with staged first-publication transactions",
-          "Stale-write protection for concurrent editing",
-          "Destination-safety scanning and dedicated media sanitization services",
-          "CI gates with Vitest, Playwright, pgTAP, type checks, and security scanning"
+      "Tested PostgreSQL RLS and authenticated server-side mutation boundaries",
+      "Draft-to-preview-to-publish workflow with staged first-publication transactions",
+      "Stale-write protection for concurrent editing",
+      "Destination-safety scanning and dedicated media sanitization services",
+      "CI gates with Vitest, Playwright, pgTAP, type checks, and security scanning"
     ],
     "project_status": "In Development",
     "featured": true,
@@ -52,7 +52,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "secondary_color": "#F4EFE6",
     "hero_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/hero/5eba666b-bee7-4366-bad4-7f5af838c65a.png",
     "card_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/card/0375037a-ab15-49c9-9dbc-9748a89b0524.png",
-    "updated_at": "2026-10-06 08:29:20.72084+00",
+    "updated_at": "2026-10-06 17:28:39.312185+00",
     "published_at": "2026-08-19 16:25:16.177384+00"
   },
   {
@@ -305,8 +305,8 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
     "project_id": "4d3fc40f-2366-49e8-9578-d9a7df99f34c",
     "locale": "de",
     "title": "Spall Spill",
-    "period": "Produktdefinition abgeschlossen · Production-Rebuild als Nächstes",
-    "summary": "Spall Spill ist eine owner- und creator-zentrierte Plattform für Identity und strukturierte Discovery und befindet sich derzeit im Übergang von einer abgeschlossenen Produktspezifikation zu einem sauberen Production-Rebuild.",
+    "period": "2026 / Aktive Entwicklung",
+    "summary": "Spall Spill ist eine owner- und creator-zentrierte Identity- und Discovery-Plattform in aktiver Production-Implementierung. Authentication, Onboarding, Working-State-Persistenz, Product/Resource-Draft-Grundlagen, Publication-Grundlagen, URL-Safety, Media-Sanitization sowie Security- und Testing-Infrastruktur sind bereits integriert.",
     "categories": [
       "Product Design",
       "Product Strategy",
@@ -315,14 +315,15 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
     "roles": [
       "Full-Stack Developer",
       "Product Designer"
-    ]
+    ],
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "project_id": "4d3fc40f-2366-49e8-9578-d9a7df99f34c",
     "locale": "en",
     "title": "Spall Spill",
-    "period": "Product definition locked · production rebuild next",
-    "summary": "Spall Spill is a creator- and owner-centric identity and structured discovery platform, currently moving from a locked product specification into a clean production rebuild.",
+    "period": "2026 / Active Development",
+    "summary": "Spall Spill is a creator- and owner-centric identity and structured discovery platform in active production implementation, with authentication, onboarding, Working-state persistence, Product/Resource draft foundations, publication foundations, URL safety, media sanitization, and security/testing infrastructure already integrated.",
     "categories": [
       "Product Design",
       "Product Strategy",
@@ -331,14 +332,15 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
     "roles": [
       "Full-Stack Developer",
       "Product Designer"
-    ]
+    ],
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "project_id": "4d3fc40f-2366-49e8-9578-d9a7df99f34c",
     "locale": "id",
     "title": "Spall Spill",
-    "period": "Definisi produk terkunci · production rebuild berikutnya",
-    "summary": "Spall Spill adalah platform identity dan structured discovery yang berpusat pada creator dan owner, saat ini bergerak dari product specification yang sudah dikunci menuju clean production rebuild.",
+    "period": "2026 / Pengembangan Aktif",
+    "summary": "Spall Spill adalah platform identity dan structured discovery untuk creator dan owner yang sedang dalam pengembangan produksi aktif, dengan authentication, onboarding, Working-state persistence, fondasi draft Product/Resource, fondasi publication, URL safety, media sanitization, serta infrastructure security/testing yang sudah terintegrasi.",
     "categories": [
       "Product Design",
       "Product Strategy",
@@ -347,7 +349,8 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
     "roles": [
       "Full-Stack Developer",
       "Product Designer"
-    ]
+    ],
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "project_id": "5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0",
@@ -844,14 +847,15 @@ export const FALLBACK_SECTION_ROWS = [
     "id": "caebe8ec-2add-46b9-806c-69bd0adf2550",
     "project_id": "4d3fc40f-2366-49e8-9578-d9a7df99f34c",
     "section_type": "overview",
-    "eyebrow": "Project Status",
-    "heading": "A product defined before it is built.",
-    "body": "Spall Spill is currently at the boundary between product definition and production implementation. The production rebuild itself has not started yet, but the product foundation, user journeys, functional requirements, information architecture, screen-level UX, shared interaction rules, and production architecture have already been locked.\n\nInstead of treating planning as a loose prelude to coding, the project uses a source-of-truth system that defines how the product should behave before the clean implementation begins.",
+    "eyebrow": "CURRENT IMPLEMENTATION",
+    "heading": "Active production implementation is underway.",
+    "body": "Spall Spill has moved beyond product definition into active implementation. The current codebase already includes authentication and session foundations, Handle claiming, Basic Identity Working persistence, profile media foundations, Identity connections, Product and Resource draft foundations, stable Spill references, private preview, staged publication foundations, public-reader foundations, a dedicated URL safety scanner, a media sanitizer service, and automated CI/security gates.\n\nThe product remains In Development because the final first-publication wiring, remaining public/click/media transport, Product publication preparation, universal workspace handoff, browser/journey verification, live-provider verification, and release hardening are still being completed.",
     "content": {},
     "theme": "light",
     "sort_order": 0,
     "is_visible": true,
-    "created_at": "2026-08-19 16:25:16.177384+00"
+    "created_at": "2026-08-19 16:25:16.177384+00",
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "id": "9ac44139-0190-491a-88d6-cde0c2505d19",
@@ -896,29 +900,29 @@ export const FALLBACK_SECTION_ROWS = [
     "id": "a46b887e-905d-4db1-839c-ef463dadee38",
     "project_id": "4d3fc40f-2366-49e8-9578-d9a7df99f34c",
     "section_type": "metrics",
-    "eyebrow": "Defined Before Build",
-    "heading": "The production rebuild starts from a product system that is already mapped.",
-    "body": "The numbers below describe definition scope, not shipped implementation.",
+    "eyebrow": "IMPLEMENTATION PROGRESS",
+    "heading": "Core product foundations are already built into the active codebase.",
+    "body": "The project is now measured by implemented system boundaries and verified engineering foundations, not only by product-definition scope.",
     "content": {
       "metrics": {
         "items": [
           {
-            "id": "journeys",
-            "label": "Locked user journeys",
-            "value": "09",
-            "detail": "J1–J9 cover first publish, affiliate commerce, business resources, creator identity, returning owners, exact retrieval, browse discovery, resource discovery, and capability expansion."
+            "id": "owner-foundation",
+            "label": "Owner & Identity foundation",
+            "value": "BUILT",
+            "detail": "Authentication/session handling, Handle claim, Basic Identity Working persistence, starter composition, profile media foundation, and Identity connections are implemented."
           },
           {
-            "id": "screens",
-            "label": "Logical MVP screens",
-            "value": "25",
-            "detail": "The locked information architecture defines public, authentication, onboarding, owner workspace, and operator surfaces."
+            "id": "spill-foundation",
+            "label": "Spill data foundation",
+            "value": "BUILT",
+            "detail": "Product and Resource draft foundations, stable non-reused Spill references, private preview, and staged publication foundations are present in the active repository."
           },
           {
-            "id": "activation",
-            "label": "Activation stages",
-            "value": "03",
-            "detail": "Platform Activation, Spill Activation, and Commerce Activation are evaluated independently from the actual published state."
+            "id": "safety",
+            "label": "Safety & verification",
+            "value": "GATED",
+            "detail": "URL safety scanning, media sanitization, PostgreSQL security tests, CI, SAST, secret scanning, and dependency scanning are integrated while final public transport and live-provider verification remain open."
           }
         ],
         "columns": 3
@@ -927,7 +931,8 @@ export const FALLBACK_SECTION_ROWS = [
     "theme": "light",
     "sort_order": 4,
     "is_visible": true,
-    "created_at": "2026-08-19 16:25:16.177384+00"
+    "created_at": "2026-08-19 16:25:16.177384+00",
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "id": "a711695d-4c28-49f5-9f1d-5d1dfde8d596",
@@ -946,21 +951,22 @@ export const FALLBACK_SECTION_ROWS = [
     "id": "b16aba10-d3ae-4439-a053-1c49a3570f5c",
     "project_id": "4d3fc40f-2366-49e8-9578-d9a7df99f34c",
     "section_type": "finale",
-    "eyebrow": "What Comes Next",
+    "eyebrow": "CURRENT FRONTIER",
     "heading": null,
     "body": null,
     "content": {
       "finale": {
-        "body": "The product definition is far enough along that implementation can begin without reopening the fundamentals. The new production repository is intentionally clean: no legacy runtime code is carried forward. The next sequence is environment verification, application scaffold, database and policy foundation, CI and security gates, then Auth → Onboarding → Identity → Spill vertical slices.",
-        "title": "The next milestone is the clean production rebuild.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "title": "From product definition into active production implementation.",
+        "body": "The clean production codebase is already carrying the core owner, identity, draft, preview, safety, and publication foundations. The next work is focused on final first-publication wiring, public/click/media transport, Product publication preparation, universal workspace handoff, remaining browser/journey verification, live-provider verification where available, and release hardening.",
+        "ctaUrl": "https://github.com/nafisajuliansahsaputra/spall-spill",
+        "ctaLabel": "View source code"
       }
     },
     "theme": "light",
     "sort_order": 6,
     "is_visible": true,
-    "created_at": "2026-08-19 16:25:16.177384+00"
+    "created_at": "2026-08-19 16:25:16.177384+00",
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "id": "28d53292-d1a3-4378-8b51-bb925feea767",
@@ -2049,66 +2055,89 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
   {
     "section_id": "a46b887e-905d-4db1-839c-ef463dadee38",
     "locale": "de",
-    "eyebrow": "Vor Dem Build Definiert",
-    "heading": "Der Production-Rebuild startet aus einem bereits kartierten Produktsystem.",
-    "body": "Die Zahlen beschreiben den Umfang der Definition, nicht bereits ausgelieferte Implementierung.",
+    "eyebrow": "Implementierungsfortschritt",
+    "heading": "Die zentralen Produktgrundlagen sind bereits in der aktiven Codebasis umgesetzt.",
+    "body": "Der Fortschritt wird jetzt an implementierten Systemgrenzen und verifizierten Engineering-Grundlagen gemessen, nicht nur am Umfang der Produktdefinition.",
     "content": {
       "metrics": {
         "copyById": {
-          "screens": {
-            "label": "Logische MVP-Screens",
-            "value": "25",
-            "detail": "Die gesperrte Information Architecture definiert Public-, Authentication-, Onboarding-, Owner-Workspace- und Operator-Flächen."
+          "owner-foundation": {
+            "label": "Owner- & Identity-Grundlage",
+            "value": "BUILT",
+            "detail": "Authentication/Session Handling, Handle Claim, Basic Identity Working Persistence, Starter Composition, Profile-Media-Grundlage und Identity Connections sind implementiert."
           },
-          "journeys": {
-            "label": "Gesperrte User Journeys",
-            "value": "09",
-            "detail": "J1–J9 decken First Publish, Affiliate Commerce, Business Resources, Creator Identity, Returning Owners, Exact Retrieval, Browse Discovery, Resource Discovery und Capability Expansion ab."
+          "spill-foundation": {
+            "label": "Spill-Datengrundlage",
+            "value": "BUILT",
+            "detail": "Product- und Resource-Draft-Grundlagen, stabile nicht wiederverwendete Spill-Referenzen, Private Preview und Staged-Publication-Grundlagen sind in der aktiven Repository vorhanden."
           },
-          "activation": {
-            "label": "Activation Stages",
-            "value": "03",
-            "detail": "Platform Activation, Spill Activation und Commerce Activation werden unabhängig anhand des tatsächlichen Published State bewertet."
+          "safety": {
+            "label": "Safety & Verification",
+            "value": "GATED",
+            "detail": "URL-Safety-Scanning, Media-Sanitization, PostgreSQL-Security-Tests, CI, SAST, Secret-Scanning und Dependency-Scanning sind integriert; finaler Public Transport und Live-Provider-Verifikation bleiben offen."
           }
         }
       }
-    }
+    },
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "a46b887e-905d-4db1-839c-ef463dadee38",
     "locale": "en",
-    "eyebrow": "Defined Before Build",
-    "heading": "The production rebuild starts from a product system that is already mapped.",
-    "body": "The numbers below describe definition scope, not shipped implementation.",
-    "content": {}
+    "eyebrow": "Implementation Progress",
+    "heading": "Core product foundations are already built into the active codebase.",
+    "body": "The project is now measured by implemented system boundaries and verified engineering foundations, not only by product-definition scope.",
+    "content": {
+      "metrics": {
+        "copyById": {
+          "owner-foundation": {
+            "label": "Owner & Identity foundation",
+            "value": "BUILT",
+            "detail": "Authentication/session handling, Handle claim, Basic Identity Working persistence, starter composition, profile media foundation, and Identity connections are implemented."
+          },
+          "spill-foundation": {
+            "label": "Spill data foundation",
+            "value": "BUILT",
+            "detail": "Product and Resource draft foundations, stable non-reused Spill references, private preview, and staged publication foundations are present in the active repository."
+          },
+          "safety": {
+            "label": "Safety & verification",
+            "value": "GATED",
+            "detail": "URL safety scanning, media sanitization, PostgreSQL security tests, CI, SAST, secret scanning, and dependency scanning are integrated while final public transport and live-provider verification remain open."
+          }
+        }
+      }
+    },
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "a46b887e-905d-4db1-839c-ef463dadee38",
     "locale": "id",
-    "eyebrow": "Didefinisikan Sebelum Dibangun",
-    "heading": "Production rebuild dimulai dari product system yang sudah dipetakan.",
-    "body": "Angka di bawah menggambarkan scope definisi, bukan fitur yang sudah selesai diimplementasikan.",
+    "eyebrow": "Progress Implementasi",
+    "heading": "Fondasi inti produk sudah dibangun di codebase aktif.",
+    "body": "Progres proyek sekarang dinilai dari system boundary yang sudah diimplementasikan dan fondasi engineering yang sudah diverifikasi, bukan hanya dari scope product definition.",
     "content": {
       "metrics": {
         "copyById": {
-          "screens": {
-            "label": "Logical MVP screens",
-            "value": "25",
-            "detail": "Information architecture yang sudah dikunci mencakup public, authentication, onboarding, owner workspace, dan operator surfaces."
+          "owner-foundation": {
+            "label": "Fondasi Owner & Identity",
+            "value": "BUILT",
+            "detail": "Authentication/session handling, Handle claim, Basic Identity Working persistence, starter composition, fondasi profile media, dan Identity connections sudah diimplementasikan."
           },
-          "journeys": {
-            "label": "User journey terkunci",
-            "value": "09",
-            "detail": "J1–J9 mencakup first publish, affiliate commerce, business resource, creator identity, returning owner, exact retrieval, browse discovery, resource discovery, dan capability expansion."
+          "spill-foundation": {
+            "label": "Fondasi data Spill",
+            "value": "BUILT",
+            "detail": "Fondasi draft Product dan Resource, Spill reference yang stabil dan tidak didaur ulang, private preview, serta staged publication foundation sudah ada di repository aktif."
           },
-          "activation": {
-            "label": "Activation stages",
-            "value": "03",
-            "detail": "Platform Activation, Spill Activation, dan Commerce Activation dievaluasi secara terpisah berdasarkan published state yang sebenarnya."
+          "safety": {
+            "label": "Safety & verification",
+            "value": "GATED",
+            "detail": "URL safety scanning, media sanitization, PostgreSQL security tests, CI, SAST, secret scanning, dan dependency scanning sudah terintegrasi sementara final public transport dan live-provider verification masih terbuka."
           }
         }
       }
-    }
+    },
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "a711695d-4c28-49f5-9f1d-5d1dfde8d596",
@@ -2137,40 +2166,50 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
   {
     "section_id": "b16aba10-d3ae-4439-a053-1c49a3570f5c",
     "locale": "de",
-    "eyebrow": "Was Als Nächstes Kommt",
+    "eyebrow": "Aktueller Frontier",
     "heading": null,
     "body": null,
     "content": {
       "finale": {
-        "body": "Die Produktdefinition ist weit genug abgeschlossen, dass die Implementierung beginnen kann, ohne die Grundlagen erneut zu öffnen. Das neue Production-Repository ist bewusst sauber und übernimmt keinen Legacy-Runtime-Code. Als Nächstes folgen Environment Verification, Application Scaffold, Database- und Policy-Foundation, CI- und Security-Gates sowie anschließend die Vertical Slices Auth → Onboarding → Identity → Spill.",
-        "title": "Der nächste Meilenstein ist der saubere Production-Rebuild.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "title": "Von der Produktdefinition zur aktiven Production-Implementierung.",
+        "body": "Die saubere Production-Codebasis trägt bereits die zentralen Grundlagen für Owner, Identity, Draft, Preview, Safety und Publication. Die nächsten Arbeiten konzentrieren sich auf das finale First-Publication-Wiring, Public/Click/Media-Transport, Product-Publication-Vorbereitung, Universal-Workspace-Handoff, verbleibende Browser/Journey-Verifikation, Live-Provider-Verifikation soweit verfügbar und Release-Hardening.",
+        "ctaUrl": "https://github.com/nafisajuliansahsaputra/spall-spill",
+        "ctaLabel": "Source Code ansehen"
       }
-    }
+    },
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "b16aba10-d3ae-4439-a053-1c49a3570f5c",
     "locale": "en",
-    "eyebrow": "What Comes Next",
-    "heading": null,
-    "body": null,
-    "content": {}
-  },
-  {
-    "section_id": "b16aba10-d3ae-4439-a053-1c49a3570f5c",
-    "locale": "id",
-    "eyebrow": "Langkah Berikutnya",
+    "eyebrow": "Current Frontier",
     "heading": null,
     "body": null,
     "content": {
       "finale": {
-        "body": "Product definition sudah cukup matang sehingga implementation dapat dimulai tanpa membuka ulang fondasi utama. Repository production baru sengaja dibuat bersih: tidak ada legacy runtime code yang dibawa ke depan. Urutan berikutnya adalah environment verification, application scaffold, database dan policy foundation, CI dan security gates, lalu vertical slice Auth → Onboarding → Identity → Spill.",
-        "title": "Milestone berikutnya adalah clean production rebuild.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "title": "From product definition into active production implementation.",
+        "body": "The clean production codebase is already carrying the core owner, identity, draft, preview, safety, and publication foundations. The next work is focused on final first-publication wiring, public/click/media transport, Product publication preparation, universal workspace handoff, remaining browser/journey verification, live-provider verification where available, and release hardening.",
+        "ctaUrl": "https://github.com/nafisajuliansahsaputra/spall-spill",
+        "ctaLabel": "View source code"
       }
-    }
+    },
+    "updated_at": "2026-10-06 17:28:39.312185+00"
+  },
+  {
+    "section_id": "b16aba10-d3ae-4439-a053-1c49a3570f5c",
+    "locale": "id",
+    "eyebrow": "Frontier Saat Ini",
+    "heading": null,
+    "body": null,
+    "content": {
+      "finale": {
+        "title": "Dari product definition menuju implementasi produksi aktif.",
+        "body": "Clean production codebase sekarang sudah membawa fondasi utama owner, identity, draft, preview, safety, dan publication. Pekerjaan berikutnya berfokus pada final first-publication wiring, public/click/media transport, Product publication preparation, universal workspace handoff, sisa browser/journey verification, live-provider verification jika tersedia, dan release hardening.",
+        "ctaUrl": "https://github.com/nafisajuliansahsaputra/spall-spill",
+        "ctaLabel": "Lihat source code"
+      }
+    },
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "b5987f45-3b33-44c5-aa44-3a170f78637b",
@@ -2271,26 +2310,29 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
   {
     "section_id": "caebe8ec-2add-46b9-806c-69bd0adf2550",
     "locale": "de",
-    "eyebrow": "Projektstatus",
-    "heading": "Ein Produkt, das definiert wird, bevor es gebaut wird.",
-    "body": "Spall Spill befindet sich derzeit an der Grenze zwischen Produktdefinition und Production-Implementierung. Der Production-Rebuild selbst hat noch nicht begonnen, aber Product Foundation, User Journeys, Functional Requirements, Information Architecture, Screen-Level UX, gemeinsame Interaktionsregeln und Production Architecture sind bereits festgelegt.\n\nStatt Planung nur als lose Vorstufe zum Coding zu behandeln, nutzt das Projekt ein Source-of-Truth-System, das das Verhalten des Produkts vor Beginn der sauberen Implementierung definiert.",
-    "content": {}
+    "eyebrow": "Aktuelle Implementierung",
+    "heading": "Die aktive Production-Implementierung läuft bereits.",
+    "body": "Spall Spill ist über die reine Produktdefinition hinaus und befindet sich in aktiver Implementierung. Die aktuelle Codebasis enthält bereits Authentication- und Session-Grundlagen, Handle Claiming, Basic Identity Working Persistence, Profile-Media-Grundlagen, Identity Connections, Product- und Resource-Draft-Grundlagen, stabile Spill-Referenzen, Private Preview, Staged-Publication-Grundlagen, Public-Reader-Grundlagen, einen dedizierten URL-Safety-Scanner, einen Media-Sanitizer-Service sowie automatisierte CI- und Security-Gates.\n\nDas Projekt bleibt In Development, weil das finale First-Publication-Wiring, verbleibender Public/Click/Media-Transport, Product-Publication-Vorbereitung, Universal-Workspace-Handoff, Browser/Journey-Verifikation, Live-Provider-Verifikation und Release-Hardening noch abgeschlossen werden.",
+    "content": {},
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "caebe8ec-2add-46b9-806c-69bd0adf2550",
     "locale": "en",
-    "eyebrow": "Project Status",
-    "heading": "A product defined before it is built.",
-    "body": "Spall Spill is currently at the boundary between product definition and production implementation. The production rebuild itself has not started yet, but the product foundation, user journeys, functional requirements, information architecture, screen-level UX, shared interaction rules, and production architecture have already been locked.\n\nInstead of treating planning as a loose prelude to coding, the project uses a source-of-truth system that defines how the product should behave before the clean implementation begins.",
-    "content": {}
+    "eyebrow": "CURRENT IMPLEMENTATION",
+    "heading": "Active production implementation is underway.",
+    "body": "Spall Spill has moved beyond product definition into active implementation. The current codebase already includes authentication and session foundations, Handle claiming, Basic Identity Working persistence, profile media foundations, Identity connections, Product and Resource draft foundations, stable Spill references, private preview, staged publication foundations, public-reader foundations, a dedicated URL safety scanner, a media sanitizer service, and automated CI/security gates.\n\nThe product remains In Development because the final first-publication wiring, remaining public/click/media transport, Product publication preparation, universal workspace handoff, browser/journey verification, live-provider verification, and release hardening are still being completed.",
+    "content": {},
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "caebe8ec-2add-46b9-806c-69bd0adf2550",
     "locale": "id",
-    "eyebrow": "Status Proyek",
-    "heading": "Produk yang didefinisikan sebelum dibangun.",
-    "body": "Spall Spill saat ini berada di batas antara product definition dan production implementation. Production rebuild-nya sendiri belum dimulai, tetapi product foundation, user journey, functional requirements, information architecture, screen-level UX, shared interaction rules, dan production architecture sudah dikunci.\n\nAlih-alih menganggap planning sebagai tahap longgar sebelum coding, proyek ini memakai source-of-truth yang mendefinisikan bagaimana produk harus berperilaku sebelum clean implementation dimulai.",
-    "content": {}
+    "eyebrow": "Implementasi Saat Ini",
+    "heading": "Implementasi produksi aktif sudah berjalan.",
+    "body": "Spall Spill sudah bergerak melewati tahap product definition dan masuk ke implementasi aktif. Codebase saat ini sudah mencakup fondasi authentication dan session, Handle claim, Basic Identity Working persistence, fondasi profile media, Identity connections, fondasi draft Product dan Resource, Spill reference yang stabil, private preview, fondasi staged publication, fondasi public reader, URL safety scanner khusus, media sanitizer service, serta automated CI/security gates.\n\nStatus proyek tetap In Development karena final first-publication wiring, sisa public/click/media transport, Product publication preparation, universal workspace handoff, browser/journey verification, live-provider verification, dan release hardening masih dikerjakan.",
+    "content": {},
+    "updated_at": "2026-10-06 17:28:39.312185+00"
   },
   {
     "section_id": "d8a39959-33f3-4e90-8426-bbe849ae647c",
