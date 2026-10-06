@@ -335,34 +335,147 @@
     );
 }
 
-.liveLink {
-  position: relative;
+.projectActions {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+
+  gap: 10px !important;
+
+  padding-top: 4px;
+}
+
+.projectCta {
+  min-width: 210px;
+  min-height: 48px;
 
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  justify-content: space-between;
 
-  padding-bottom: 4px;
+  gap: 28px;
 
-  font-size: 12px;
+  padding:
+    13px
+    15px;
+
+  border:
+    1px solid
+    transparent;
+
+  font-size: 10px;
   font-weight: 700;
+
+  letter-spacing:
+    0.035em;
+
+  text-transform:
+    uppercase;
+
+  transition:
+    background-color
+      180ms
+      ease,
+    border-color
+      180ms
+      ease,
+    color
+      180ms
+      ease,
+    transform
+      180ms
+      ease;
 }
 
-.liveLink::after {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  height: 1px;
+.projectCtaPrimary {
+  border-color:
+    var(
+      --project-accent
+    );
 
   background:
     var(
       --project-accent
     );
+
+  color:
+    var(
+      --project-on-accent
+    );
+}
+
+.projectCtaSecondary {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--foreground)
+        24%,
+      transparent
+    );
+
+  background:
+    transparent;
+
+  color:
+    var(--foreground);
+}
+
+.projectCta:hover {
+  transform:
+    translateY(
+      -2px
+    );
+}
+
+.projectCtaSecondary:hover {
+  border-color:
+    var(
+      --project-accent
+    );
+
+  color:
+    var(
+      --project-accent
+    );
+}
+
+.projectCta:focus-visible {
+  outline:
+    2px solid
+    var(
+      --project-accent
+    );
+
+  outline-offset:
+    3px;
+}
+
+.projectCtaLabel {
+  min-width: 0;
+}
+
+.projectCta
+  > span:last-child {
+  display: inline-block;
+
+  flex:
+    0
+    0
+    auto;
+
+  font-size: 15px;
+
+  transition:
+    translate
+      180ms
+      ease;
+}
+
+.projectCta:hover
+  > span:last-child {
+  translate:
+    3px
+    -3px;
 }
 
 /* =========================
@@ -1608,6 +1721,24 @@
     font-size: 11px;
   }
 
+  .projectActions {
+    flex-direction:
+      column !important;
+
+    gap: 8px !important;
+  }
+
+  .projectCta {
+    width: 100%;
+    min-width: 0;
+
+    min-height: 46px;
+
+    padding:
+      12px
+      14px;
+  }
+
   .storySection {
     padding:
       84px 0;
@@ -1835,7 +1966,7 @@
 /* Hero / link arrows */
 
 .backLink > span,
-.liveLink > span,
+.projectCta > span:last-child,
 .finaleCta > span,
 .nextArrow {
   display: inline-block;
@@ -1906,8 +2037,8 @@
   [data-motion-scroll="project-details"][
     data-motion-visible="true"
   ]
-    .liveLink
-    > span {
+    .projectCta
+    > span:last-child {
     animation:
       project-detail-live-arrow
       3.4s
@@ -1916,8 +2047,8 @@
       infinite;
   }
 
-  .liveLink:hover
-    > span {
+  .projectCta:hover
+    > span:last-child {
     animation: none;
 
     translate:
@@ -2303,7 +2434,7 @@
   .heroTitle h1 > span,
   .overviewContent h2 > span,
   .backLink > span,
-  .liveLink > span,
+  .projectCta > span:last-child,
   .metric > strong,
   .quoteMark,
   .finaleCta > span,
