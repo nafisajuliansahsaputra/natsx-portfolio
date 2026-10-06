@@ -47,7 +47,7 @@ export async function generateMetadata({
 
   return createLocalizedPageMetadata({
     title:
-      "NATSX — Digital Creator",
+      "NATSX — Full-Stack Developer",
 
     description:
       copy.hero.description,
