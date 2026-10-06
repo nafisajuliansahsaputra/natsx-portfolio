@@ -683,6 +683,54 @@ test(
   },
 );
 
+test.describe(
+  "legacy Spall catalog URLs",
+  () => {
+    for (
+      const path
+      of [
+        "/media-sosial",
+        "/aksesoris",
+      ]
+    ) {
+      test(
+        `${path} returns explicit 410 Gone`,
+        async ({
+          request,
+        }) => {
+          const response =
+            await request.get(
+              path,
+            );
+
+          expect(
+            response.status(),
+          ).toBe(
+            410,
+          );
+
+          expect(
+            response.headers()[
+              "x-robots-tag"
+            ],
+          ).toBe(
+            "noindex, nofollow",
+          );
+
+          const body =
+            await response.text();
+
+          expect(
+            body,
+          ).toContain(
+            "410 Gone",
+          );
+        },
+      );
+    }
+  },
+);
+
 test(
   "robots and multilingual sitemap are available",
   async ({
@@ -768,6 +816,18 @@ test(
       sitemapBody,
     ).toContain(
       'hreflang="x-default"',
+    );
+
+    expect(
+      sitemapBody,
+    ).not.toContain(
+      "/media-sosial",
+    );
+
+    expect(
+      sitemapBody,
+    ).not.toContain(
+      "/aksesoris",
     );
   },
 );
