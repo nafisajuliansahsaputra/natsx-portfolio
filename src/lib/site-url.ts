@@ -1,3 +1,6 @@
+const CANONICAL_SITE_URL =
+  "https://natsx.my.id";
+
 function normalizeUrl(
   value: string,
 ) {
@@ -30,17 +33,11 @@ export function getSiteUrl() {
     );
   }
 
-  const vercelProductionUrl =
-    process.env
-      .VERCEL_PROJECT_PRODUCTION_URL
-      ?.trim();
-
   if (
-    vercelProductionUrl
+    process.env.VERCEL ===
+    "1"
   ) {
-    return normalizeUrl(
-      vercelProductionUrl,
-    );
+    return CANONICAL_SITE_URL;
   }
 
   return "http://localhost:3000";

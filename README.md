@@ -2,7 +2,7 @@
 
 Personal portfolio of **NATSX — Nafisa Juliansah Saputra**, a multidisciplinary digital creator working across design, development, motion, and visual experiences.
 
-**Live:** https://portfolio.natsx.my.id
+**Live:** https://natsx.my.id
 
 ---
 
@@ -225,7 +225,7 @@ NATSX_TRANSLATION_MODEL=openrouter/free
 Production site URL:
 
 ```env
-NEXT_PUBLIC_SITE_URL=https://portfolio.natsx.my.id
+NEXT_PUBLIC_SITE_URL=https://natsx.my.id
 ```
 
 Never commit `.env.local`, private credentials, deploy hooks, or secret keys.
@@ -478,7 +478,7 @@ The portfolio includes:
 Production URLs are based on:
 
 ```env
-NEXT_PUBLIC_SITE_URL=https://portfolio.natsx.my.id
+NEXT_PUBLIC_SITE_URL=https://natsx.my.id
 ```
 
 ---
@@ -551,7 +551,7 @@ Production is hosted on Vercel.
 Domain:
 
 ```text
-https://portfolio.natsx.my.id
+https://natsx.my.id
 ```
 
 Direct Vercel Git deployment from `main` is disabled in `vercel.json`.
