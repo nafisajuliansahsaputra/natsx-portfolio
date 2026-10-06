@@ -200,19 +200,19 @@ const homeMessages = {
         "Open to selected opportunities",
 
       eyebrow:
-        "Have an idea?",
+        "Have a product to build?",
 
       headingLine1:
-        "Let's make",
+        "Let's build",
 
       headingLine2:
-        "something worth",
+        "something useful",
 
       headingLine3:
-        "experiencing",
+        "and reliable",
 
       intro:
-        "For collaborations, freelance work, creative projects, or just a good conversation.",
+        "For full-stack development, product engineering, APIs, integrations, and selected digital product work.",
 
       designedBy:
         "Designed & built by",
@@ -419,19 +419,19 @@ const homeMessages = {
         "Terbuka untuk peluang terpilih",
 
       eyebrow:
-        "Punya ide?",
+        "Punya produk untuk dibangun?",
 
       headingLine1:
-        "Mari buat",
+        "Mari bangun",
 
       headingLine2:
-        "sesuatu yang",
+        "sesuatu yang berguna",
 
       headingLine3:
-        "layak dirasakan",
+        "dan andal",
 
       intro:
-        "Untuk kolaborasi, freelance, proyek kreatif, atau sekadar percakapan yang menarik.",
+        "Untuk full-stack development, product engineering, API, integrasi, dan proyek digital terpilih.",
 
       designedBy:
         "Dirancang & dibuat oleh",
@@ -638,19 +638,19 @@ const homeMessages = {
         "Offen für ausgewählte Möglichkeiten",
 
       eyebrow:
-        "Eine Idee?",
+        "Ein Produkt zu bauen?",
 
       headingLine1:
         "Lass uns",
 
       headingLine2:
-        "etwas schaffen,",
+        "etwas Nützliches",
 
       headingLine3:
-        "das bleibt",
+        "und Verlässliches bauen",
 
       intro:
-        "Für Zusammenarbeit, Freelance-Projekte, kreative Ideen oder einfach ein gutes Gespräch.",
+        "Für Full-Stack Development, Product Engineering, APIs, Integrationen und ausgewählte digitale Produktprojekte.",
 
       designedBy:
         "Gestaltet & entwickelt von",
