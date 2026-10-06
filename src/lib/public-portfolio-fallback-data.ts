@@ -187,10 +187,69 @@ export const FALLBACK_PROJECT_ROWS = [
     "card_image_path": "projects/5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0/covers/card/dc2cb815-4b01-47d7-a549-cb61bfb27db2.png",
     "updated_at": "2026-10-06 07:59:18.991803+00",
     "published_at": "2026-09-16 13:12:46.69+00"
+  },
+  {
+    "id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "slug": "natsx-controller",
+    "title": "NATSX Controller",
+    "project_number": "05",
+    "year": 2026,
+    "period": "2026",
+    "summary": "An Android-to-Windows controller system that turns a phone into an Xbox 360-compatible gamepad through a shared cross-platform protocol, multi-touch input, transport health logic, and automatic connection recovery.",
+    "categories": ["Systems Engineering", "Mobile Development", "Windows Development", "Networking"],
+    "roles": ["Software Developer", "Systems Engineer", "Product Designer"],
+    "tech_stack": ["Kotlin", "C#", ".NET", "WPF", "Android", "UDP", "Bluetooth RFCOMM", "USB AOA", "HIDMaestro", "GitHub Actions"],
+    "engineering_highlights": [
+      "Cross-language Kotlin and C# protocol with shared framing, sequencing, integrity, and authenticated session semantics",
+      "Smart Connection Manager designed around USB Direct, Wi-Fi, and Bluetooth with health scoring, hysteresis, cooldowns, and failover",
+      "Independent Android multi-touch input engine with analog processing and full-state gamepad snapshots",
+      "Windows controller-session safety with authoritative transport ownership, stale-state rejection, and neutral watchdog behavior",
+      "Trusted local pairing and reconnect foundations without cloud accounts or internet dependency",
+      "Automated Android and Windows build/test pipelines plus deterministic protocol and connection-policy coverage"
+    ],
+    "project_status": "Complete",
+    "featured": false,
+    "sort_order": 5,
+    "live_url": null,
+    "repository_url": "https://github.com/nafisajuliansahsaputra/natsx-controller",
+    "accent_color": "#6D5BD0",
+    "secondary_color": "#EDF6E8",
+    "hero_image_path": null,
+    "card_image_path": null,
+    "updated_at": "2026-10-06 15:59:00+00",
+    "published_at": "2026-10-06 15:59:00+00"
   }
+
 ];
 
 export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
+  {
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "locale": "de",
+    "title": "NATSX Controller",
+    "period": "2026",
+    "summary": "Ein Android-zu-Windows-Controller-System, das ein Smartphone über ein gemeinsames plattformübergreifendes Protokoll, Multi-Touch-Eingabe, Verbindungsbewertung und automatische Wiederherstellung in ein Xbox-360-kompatibles Gamepad verwandelt.",
+    "categories": ["Systems Engineering", "Mobile Development", "Windows Development", "Networking"],
+    "roles": ["Software Developer", "Systems Engineer", "Product Designer"]
+  },
+  {
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "locale": "en",
+    "title": "NATSX Controller",
+    "period": "2026",
+    "summary": "An Android-to-Windows controller system that turns a phone into an Xbox 360-compatible gamepad through a shared cross-platform protocol, multi-touch input, transport health logic, and automatic connection recovery.",
+    "categories": ["Systems Engineering", "Mobile Development", "Windows Development", "Networking"],
+    "roles": ["Software Developer", "Systems Engineer", "Product Designer"]
+  },
+  {
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "locale": "id",
+    "title": "NATSX Controller",
+    "period": "2026",
+    "summary": "Sistem controller Android-ke-Windows yang mengubah ponsel menjadi gamepad kompatibel Xbox 360 melalui protokol lintas platform, input multi-touch, logika kesehatan koneksi, dan pemulihan koneksi otomatis.",
+    "categories": ["Systems Engineering", "Mobile Development", "Windows Development", "Networking"],
+    "roles": ["Software Developer", "Systems Engineer", "Product Designer"]
+  },
   {
     "project_id": "1ac99e20-1aba-4d72-a593-7c8ab3ebe355",
     "locale": "de",
@@ -374,6 +433,71 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
 ];
 
 export const FALLBACK_SECTION_ROWS = [
+  {
+    "id": "fd2f2859-8779-4d31-948e-35f29dbced10",
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "section_type": "overview",
+    "eyebrow": "01 / PROJECT OVERVIEW",
+    "heading": "Turning a phone into a real controller pipeline.",
+    "body": "I built NATSX Controller as a local Android-to-Windows gamepad system rather than a simple remote-control interface. The Android app owns touch input and gamepad state, while the Windows receiver owns session safety, connection authority, and virtual-controller output.\n\nThe project combines mobile development, Windows desktop engineering, networking, protocol design, connection recovery, and low-level controller integration in one product.",
+    "content": {},
+    "theme": "light",
+    "sort_order": 0,
+    "is_visible": true,
+    "created_at": "2026-10-06 15:59:00+00"
+  },
+  {
+    "id": "4149a4c5-c896-402e-ae72-ec3ccf3e67e1",
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "section_type": "narrative",
+    "eyebrow": "02 / THE CHALLENGE",
+    "heading": "Keeping input stable while the connection changes underneath it.",
+    "body": "A controller cannot afford stuck buttons, duplicated state, or a complete device reset whenever Wi-Fi drops or another transport becomes healthier. The system therefore separates virtual-controller lifetime from transport lifetime and treats every connection as a candidate that must prove it is healthy before taking authority.\n\nThat requirement shaped the protocol, watchdog behavior, reconnect logic, transport scoring, and handover rules.",
+    "content": {},
+    "theme": "light",
+    "sort_order": 1,
+    "is_visible": true,
+    "created_at": "2026-10-06 15:59:00+00"
+  },
+  {
+    "id": "26589653-1543-4b44-92ed-62073e9eaf02",
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "section_type": "statement",
+    "eyebrow": "03 / CORE PRINCIPLE",
+    "heading": "One controller state. Multiple transports. No stuck input.",
+    "body": null,
+    "content": {},
+    "theme": "accent",
+    "sort_order": 2,
+    "is_visible": true,
+    "created_at": "2026-10-06 15:59:00+00"
+  },
+  {
+    "id": "f421eb09-eb7b-4bb1-979b-0feec2c42c70",
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "section_type": "narrative",
+    "eyebrow": "04 / ENGINEERING",
+    "heading": "A transport-independent protocol shared by Kotlin and C#.",
+    "body": "The Android and Windows sides encode the same complete GamepadState contract with shared sequence, timestamp, integrity, handshake, and session semantics. Full-state snapshots make recovery safer than relying only on button-edge events.\n\nSmart Connection Manager evaluates USB Direct, Wi-Fi, and Bluetooth using latency, jitter, loss, silence, hysteresis, cooldown, and failure history so switching is based on link health rather than a brittle static priority.",
+    "content": {},
+    "theme": "light",
+    "sort_order": 3,
+    "is_visible": true,
+    "created_at": "2026-10-06 15:59:00+00"
+  },
+  {
+    "id": "136a8c2e-68ef-44d0-8183-2899e537b250",
+    "project_id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
+    "section_type": "metrics",
+    "eyebrow": "05 / ENGINEERING SCOPE",
+    "heading": "Built across mobile, desktop, protocol, transport, and safety boundaries.",
+    "body": "The project demonstrates native Android input engineering, C#/.NET Windows development, cross-language protocol design, authenticated local connectivity, automatic failover logic, USB/Bluetooth/Wi-Fi transport work, virtual gamepad integration, and automated testing.",
+    "content": {},
+    "theme": "dark",
+    "sort_order": 4,
+    "is_visible": true,
+    "created_at": "2026-10-06 15:59:00+00"
+  },
   {
     "id": "b5987f45-3b33-44c5-aa44-3a170f78637b",
     "project_id": "1ac99e20-1aba-4d72-a593-7c8ab3ebe355",
