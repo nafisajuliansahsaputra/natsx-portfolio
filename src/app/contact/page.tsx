@@ -3,6 +3,7 @@ import "@/app/contact-email-fit.css";
 
 import Link from "next/link";
 
+import TrackedAnchor from "@/components/analytics/TrackedAnchor";
 import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -406,7 +407,7 @@ export function ContactPageContent({
                   }
                 </Link>
               ) : (
-                <a
+                <TrackedAnchor
                   href={
                     primaryContact.href
                   }
@@ -423,11 +424,19 @@ export function ContactPageContent({
                       ? "noreferrer"
                       : undefined
                   }
+                  eventName="contact_click"
+                  eventData={{
+                    method:
+                      site.email
+                        ? "email"
+                        : fallbackSocial?.label ??
+                          "portfolio",
+                  }}
                 >
                   {
                     primaryContent
                   }
-                </a>
+                </TrackedAnchor>
               )}
             </ContactMagneticSurface>
           </div>
@@ -703,7 +712,7 @@ export function ContactPageContent({
                   social,
                   index,
                 ) => (
-                  <a
+                  <TrackedAnchor
                     href={
                       social.href
                     }
@@ -715,6 +724,11 @@ export function ContactPageContent({
                     }
                     target="_blank"
                     rel="noreferrer"
+                    eventName="contact_click"
+                    eventData={{
+                      method:
+                        social.label,
+                    }}
                     data-motion-scroll="contact-social-item"
                     data-contact-interactive-row="social"
                     data-contact-row-active="false"
@@ -765,7 +779,7 @@ export function ContactPageContent({
                     >
                       ↗
                     </span>
-                  </a>
+                  </TrackedAnchor>
                 ),
               )}
             </div>
