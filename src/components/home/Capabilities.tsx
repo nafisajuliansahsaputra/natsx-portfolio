@@ -14,13 +14,13 @@ const capabilities = [
       "01",
 
     key:
-      "design",
+      "development",
 
     skills: [
-      "UI/UX Design",
-      "Web Design",
-      "Graphic Design",
-      "Visual Identity",
+      "Full-Stack Development",
+      "Next.js / React",
+      "Laravel / PHP",
+      "APIs & Services",
     ],
   },
 
@@ -29,13 +29,13 @@ const capabilities = [
       "02",
 
     key:
-      "development",
+      "systems",
 
     skills: [
-      "Frontend Development",
-      "Next.js",
-      "React",
-      "Creative Development",
+      "PostgreSQL / Supabase",
+      "Auth & RBAC",
+      "Protocols & Networking",
+      "Testing & CI",
     ],
   },
 
@@ -44,13 +44,13 @@ const capabilities = [
       "03",
 
     key:
-      "motion",
+      "design",
 
     skills: [
-      "Motion Design",
-      "UI Motion",
-      "Video Editing",
-      "Interaction",
+      "Product Design",
+      "UI/UX Design",
+      "Design Systems",
+      "Interaction Design",
     ],
   },
 
@@ -62,9 +62,9 @@ const capabilities = [
       "creative",
 
     skills: [
-      "Creative Direction",
+      "Visual Identity",
+      "Motion",
       "Art Direction",
-      "AI Creative",
       "Visual Exploration",
     ],
   },
@@ -122,7 +122,7 @@ export default function Capabilities({
             }
             data-motion-piece="index"
           >
-            04 / DISCIPLINES
+            03 / ENGINEERING & CRAFT
           </span>
         </div>
 
