@@ -638,7 +638,7 @@ const homeMessages = {
         "Offen für ausgewählte Möglichkeiten",
 
       eyebrow:
-        "Ein Produkt zu bauen?",
+        "Ein Produkt im Kopf?",
 
       headingLine1:
         "Lass uns",
