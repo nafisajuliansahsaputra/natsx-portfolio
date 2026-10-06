@@ -276,6 +276,15 @@
   grid-column: 2 / span 11;
 }
 
+.projectDetails {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
 .categories {
   display: flex;
   flex-wrap: wrap;
@@ -292,6 +301,48 @@
   font-weight: 500;
 
   letter-spacing: -0.015em;
+}
+
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  max-width: 560px;
+}
+
+.techStack span {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 24px;
+
+  padding:
+    4px
+    9px;
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--foreground)
+        12%,
+      transparent
+    );
+
+  border-radius: 999px;
+
+  color: var(--foreground);
+
+  font-size: 9px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  letter-spacing:
+    0.015em;
 }
 
 .projectLink {
@@ -512,6 +563,24 @@
 
   .yearRange {
     font-size: 10px;
+  }
+
+  .projectDetails {
+    gap: 11px;
+  }
+
+  .techStack {
+    gap: 5px;
+  }
+
+  .techStack span {
+    min-height: 22px;
+
+    padding:
+      4px
+      7px;
+
+    font-size: 8px;
   }
 
   .headerDescription

@@ -43,6 +43,7 @@ export type WorkArchiveProject = {
       | "title"
       | "year"
       | "disciplines"
+      | "techStack"
       | "accentColor"
     >;
 
@@ -1021,6 +1022,37 @@ export default function WorkArchiveFilter({
                         ),
                       )}
                     </div>
+
+                    {project.techStack.length >
+                    0 ? (
+                      <div
+                        className={
+                          styles.techStack
+                        }
+                        aria-label="Technology stack"
+                      >
+                        {project.techStack
+                          .slice(
+                            0,
+                            4,
+                          )
+                          .map(
+                            (
+                              technology,
+                            ) => (
+                              <span
+                                key={
+                                  technology
+                                }
+                              >
+                                {
+                                  technology
+                                }
+                              </span>
+                            ),
+                          )}
+                      </div>
+                    ) : null}
                   </div>
 
 {hasPreview &&

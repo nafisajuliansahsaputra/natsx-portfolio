@@ -457,44 +457,81 @@ export default async function SelectedWork({
                     >
                       <div
                         className={
-                          styles.categories
+                          styles.projectDetails
                         }
                       >
-                        {
-                          isLegacyAttendance
-                            ? (
-                              <>
-                                <span>
-                                  Full-Stack Engineering
-                                </span>
+                        <div
+                          className={
+                            styles.categories
+                          }
+                        >
+                          {
+                            isLegacyAttendance
+                              ? (
+                                <>
+                                  <span>
+                                    Full-Stack Engineering
+                                  </span>
 
-                                <span>
-                                  RFID + Face Verification
-                                </span>
+                                  <span>
+                                    RFID + Face Verification
+                                  </span>
 
-                                <span>
-                                  Device API + Authorization
-                                </span>
-                              </>
-                            )
-                            : (
-                              project.disciplines.map(
+                                  <span>
+                                    Device API + Authorization
+                                  </span>
+                                </>
+                              )
+                              : (
+                                project.disciplines.map(
+                                  (
+                                    discipline,
+                                  ) => (
+                                    <span
+                                      key={
+                                        discipline
+                                      }
+                                    >
+                                      {
+                                        discipline
+                                      }
+                                    </span>
+                                  ),
+                                )
+                              )
+                          }
+                        </div>
+
+                        {project.techStack.length >
+                        0 ? (
+                          <div
+                            className={
+                              styles.techStack
+                            }
+                            aria-label="Technology stack"
+                          >
+                            {project.techStack
+                              .slice(
+                                0,
+                                4,
+                              )
+                              .map(
                                 (
-                                  discipline,
+                                  technology,
                                 ) => (
                                   <span
                                     key={
-                                      discipline
+                                      technology
                                     }
                                   >
                                     {
-                                      discipline
+                                      technology
                                     }
                                   </span>
                                 ),
-                              )
-                            )
-                        }
+                              )}
+                          </div>
+                        ) : null}
                       </div>
 
                       <Link

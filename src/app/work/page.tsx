@@ -216,6 +216,9 @@ export async function WorkPageContent({
             disciplines:
               project.disciplines,
 
+            techStack:
+              project.techStack,
+
             accentColor:
               project.accentColor,
           },
