@@ -52,7 +52,7 @@ export const messages = {
 
     identity: {
       digitalCreator:
-        "Digital Creator",
+        "Full-Stack Web Developer",
     },
 
     language: {
@@ -130,7 +130,7 @@ export const messages = {
 
     identity: {
       digitalCreator:
-        "Kreator Digital",
+        "Full-Stack Web Developer",
     },
 
     language: {
@@ -208,7 +208,7 @@ export const messages = {
 
     identity: {
       digitalCreator:
-        "Digital Creator",
+        "Full-Stack Web Developer",
     },
 
     language: {
