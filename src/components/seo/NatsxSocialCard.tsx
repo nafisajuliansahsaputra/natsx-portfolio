@@ -268,7 +268,7 @@ export default function NatsxSocialCard() {
                   "1.5px",
               }}
             >
-              MULTIDISCIPLINARY DIGITAL CREATOR
+              FULL-STACK DEVELOPER
             </span>
 
             <span
@@ -280,7 +280,7 @@ export default function NatsxSocialCard() {
                   700,
               }}
             >
-              DESIGN / DEVELOPMENT / MOTION / CREATIVE
+              DEVELOPMENT / SYSTEMS / PRODUCT / DESIGN
             </span>
           </div>
 
