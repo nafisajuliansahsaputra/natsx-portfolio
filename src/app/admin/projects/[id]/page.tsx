@@ -167,6 +167,7 @@ export default async function ProjectEditorPage({
             categories,
             roles,
             tech_stack,
+            engineering_highlights,
             project_status,
             status,
             featured,
