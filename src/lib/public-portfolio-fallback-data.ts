@@ -27,7 +27,16 @@ export const FALLBACK_PROJECT_ROWS = [
       "Frontend Developer",
       "Creative Director"
     ],
-    "tech_stack": [],
+    "tech_stack": [
+          "Next.js",
+          "React",
+          "TypeScript",
+          "PostgreSQL",
+          "Supabase",
+          "Cloudflare R2",
+          "Vitest",
+          "Playwright"
+    ],
     "featured": true,
     "sort_order": 0,
     "live_url": null,
@@ -56,7 +65,11 @@ export const FALLBACK_PROJECT_ROWS = [
       "Art Director",
       "UI Designer"
     ],
-    "tech_stack": [],
+    "tech_stack": [
+          "Figma",
+          "Adobe Illustrator",
+          "Adobe Photoshop"
+    ],
     "featured": true,
     "sort_order": 2,
     "live_url": "https://fiveamvision.vercel.app/",
@@ -83,7 +96,16 @@ export const FALLBACK_PROJECT_ROWS = [
       "Full-Stack Developer",
       "UI/UX Designer"
     ],
-    "tech_stack": [],
+    "tech_stack": [
+          "Laravel",
+          "PHP",
+          "React",
+          "TypeScript",
+          "Inertia.js",
+          "Tailwind CSS",
+          "Vite",
+          "Pest"
+    ],
     "featured": true,
     "sort_order": 3,
     "live_url": "https://bast.site.je/",
@@ -113,7 +135,18 @@ export const FALLBACK_PROJECT_ROWS = [
       "Product Designer",
       "System Architect"
     ],
-    "tech_stack": [],
+    "tech_stack": [
+          "Next.js",
+          "React",
+          "TypeScript",
+          "PostgreSQL",
+          "Supabase",
+          "Python",
+          "FastAPI",
+          "OpenCV",
+          "Vitest",
+          "pytest"
+    ],
     "featured": true,
     "sort_order": 4,
     "live_url": "https://attendance-system-85872qh2v-nafisajuliansahsaputras-projects.vercel.app",
