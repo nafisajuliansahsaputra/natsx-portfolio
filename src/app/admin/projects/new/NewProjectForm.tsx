@@ -650,6 +650,36 @@ export default function NewProjectForm({
         </label>
 
         {/* =========================
+            TECH STACK
+        ========================= */}
+
+        <label
+          className={`${styles.field} ${styles.fullWidth}`}
+        >
+          <span>
+            Tech stack
+          </span>
+
+          <input
+            className={
+              styles.input
+            }
+            name="tech_stack"
+            type="text"
+            placeholder="Next.js, TypeScript, PostgreSQL, FastAPI"
+          />
+
+          <small
+            className={
+              styles.helper
+            }
+          >
+            Teknologi utama project.
+            Pisahkan dengan koma.
+          </small>
+        </label>
+
+        {/* =========================
             LIVE URL
         ========================= */}
 

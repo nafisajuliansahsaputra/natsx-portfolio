@@ -27,6 +27,7 @@ export const FALLBACK_PROJECT_ROWS = [
       "Frontend Developer",
       "Creative Director"
     ],
+    "tech_stack": [],
     "featured": true,
     "sort_order": 0,
     "live_url": null,
@@ -55,6 +56,7 @@ export const FALLBACK_PROJECT_ROWS = [
       "Art Director",
       "UI Designer"
     ],
+    "tech_stack": [],
     "featured": true,
     "sort_order": 2,
     "live_url": "https://fiveamvision.vercel.app/",
@@ -81,6 +83,7 @@ export const FALLBACK_PROJECT_ROWS = [
       "Full-Stack Developer",
       "UI/UX Designer"
     ],
+    "tech_stack": [],
     "featured": true,
     "sort_order": 3,
     "live_url": "https://bast.site.je/",
@@ -110,6 +113,7 @@ export const FALLBACK_PROJECT_ROWS = [
       "Product Designer",
       "System Architect"
     ],
+    "tech_stack": [],
     "featured": true,
     "sort_order": 4,
     "live_url": "https://attendance-system-85872qh2v-nafisajuliansahsaputras-projects.vercel.app",

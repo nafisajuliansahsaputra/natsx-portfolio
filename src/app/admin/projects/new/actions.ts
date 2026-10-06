@@ -216,6 +216,14 @@ export async function createProject(
       ),
     );
 
+  const techStack =
+    parseList(
+      getText(
+        formData,
+        "tech_stack",
+      ),
+    );
+
   const liveUrl =
     getText(
       formData,
@@ -633,6 +641,9 @@ export async function createProject(
           disciplines,
 
         roles,
+
+        tech_stack:
+          techStack,
 
         status:
           "draft",

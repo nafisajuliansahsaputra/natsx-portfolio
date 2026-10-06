@@ -78,6 +78,8 @@ export type EditableProject = {
 
   roles: string[];
 
+  tech_stack: string[];
+
   status: string;
 
   featured: boolean;
@@ -844,6 +846,39 @@ export default function ProjectEditorForm({
                   ?.year
               }
             />
+          </label>
+
+          <label
+            className={`${styles.field} ${styles.fullWidth}`}
+          >
+            <span>
+              Tech stack
+            </span>
+
+            <input
+              className={
+                styles.input
+              }
+              name="tech_stack"
+              type="text"
+              defaultValue={
+                project.tech_stack.join(
+                  ", ",
+                )
+              }
+              placeholder="Next.js, TypeScript, PostgreSQL, FastAPI"
+            />
+
+            <small
+              className={
+                styles.helper
+              }
+            >
+              Teknologi utama project.
+              Pisahkan dengan koma.
+              Field ini sama di semua
+              bahasa.
+            </small>
           </label>
 
           <label
