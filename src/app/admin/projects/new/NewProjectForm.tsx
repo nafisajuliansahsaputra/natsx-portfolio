@@ -680,6 +680,46 @@ export default function NewProjectForm({
         </label>
 
         {/* =========================
+            PROJECT STATUS
+        ========================= */}
+
+        <label
+          className={`${styles.field} ${styles.fullWidth}`}
+        >
+          <span>
+            Project status
+          </span>
+
+          <input
+            className={
+              styles.input
+            }
+            name="project_status"
+            type="text"
+            defaultValue="In Development"
+            placeholder="In Development"
+          />
+
+          <small
+            className={
+              styles.helper
+            }
+          >
+            Status yang nantinya
+            ditampilkan ke recruiter,
+            terpisah dari draft/published
+            CMS.
+          </small>
+
+          <FieldError
+            message={
+              state.errors
+                ?.project_status
+            }
+          />
+        </label>
+
+        {/* =========================
             LIVE URL
         ========================= */}
 
