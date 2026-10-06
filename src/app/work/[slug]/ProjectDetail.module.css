@@ -160,7 +160,7 @@
     -0.025em;
 }
 
-.projectDetails {
+.technicalOverviewHeader {
   margin-top:
     clamp(
       76px,
@@ -168,10 +168,19 @@
       130px
     );
 
+  padding-bottom: 14px;
+
+  border-bottom:
+    1px solid
+    var(--foreground);
+}
+
+.projectDetails {
+  margin-top: 0;
+
   padding-top: 24px;
 
-  border-top:
-    1px solid var(--border);
+  border-top: 0;
 
   display: grid;
 
@@ -181,7 +190,9 @@
       minmax(0, 1fr)
     );
 
-  gap: 32px;
+  gap:
+    36px
+    32px;
 }
 
 .projectDetails > div {
@@ -211,6 +222,117 @@
 .roleList {
   display: grid;
   gap: 5px;
+}
+
+.detailWide {
+  grid-column:
+    span 2;
+}
+
+.detailFull {
+  grid-column:
+    1 / -1;
+}
+
+.techList {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+.techList span {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 25px;
+
+  padding:
+    4px
+    9px;
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--foreground)
+        12%,
+      transparent
+    );
+
+  border-radius:
+    999px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  line-height: 1;
+}
+
+.compactList {
+  display: grid;
+
+  gap: 5px;
+}
+
+.compactList span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.engineeringHighlights {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    12px
+    28px;
+
+  list-style: none;
+}
+
+.engineeringHighlights li {
+  position: relative;
+
+  padding-left: 14px;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.55;
+}
+
+.engineeringHighlights li::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0.65em;
+  left: 0;
+
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background:
+    var(
+      --project-accent
+    );
 }
 
 .liveLink {
@@ -1338,6 +1460,20 @@
     row-gap: 36px;
   }
 
+  .technicalOverviewHeader {
+    margin-top: 76px;
+  }
+
+  .detailWide {
+    grid-column:
+      1 / -1;
+  }
+
+  .engineeringHighlights {
+    grid-template-columns:
+      1fr;
+  }
+
   .sectionIntroduction,
   .overviewLayout {
     grid-template-columns:
@@ -1431,13 +1567,45 @@
     margin-top: 42px;
   }
 
-  .projectDetails {
+  .technicalOverviewHeader {
     margin-top: 70px;
+  }
+
+  .projectDetails {
+    margin-top: 0;
 
     grid-template-columns:
       1fr 1fr;
 
     gap: 30px 18px;
+  }
+
+  .detailWide,
+  .detailFull {
+    grid-column:
+      1 / -1;
+  }
+
+  .techList {
+    gap: 5px;
+  }
+
+  .techList span {
+    min-height: 22px;
+
+    padding:
+      4px
+      7px;
+
+    font-size: 8px;
+  }
+
+  .engineeringHighlights {
+    gap: 10px;
+  }
+
+  .engineeringHighlights li {
+    font-size: 11px;
   }
 
   .storySection {
