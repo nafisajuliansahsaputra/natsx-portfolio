@@ -19,6 +19,7 @@ type ProjectField =
   | "project_number"
   | "year"
   | "summary"
+  | "engineering_highlights"
   | "project_status"
   | "live_url"
   | "repository_url"
@@ -109,6 +110,30 @@ function parseList(
     ),
   );
 }
+
+function parseLineList(
+  value:
+    string,
+) {
+  return Array.from(
+    new Set(
+      value
+        .split(
+          /\n/,
+        )
+        .map(
+          (
+            item,
+          ) =>
+            item.trim(),
+        )
+        .filter(
+          Boolean,
+        ),
+    ),
+  );
+}
+
 
 
 function isValidColor(
@@ -223,6 +248,14 @@ export async function createProject(
       getText(
         formData,
         "tech_stack",
+      ),
+    );
+
+  const engineeringHighlights =
+    parseLineList(
+      getText(
+        formData,
+        "engineering_highlights",
       ),
     );
 
@@ -669,6 +702,9 @@ export async function createProject(
 
         tech_stack:
           techStack,
+
+        engineering_highlights:
+          engineeringHighlights,
 
         project_status:
           projectStatus,

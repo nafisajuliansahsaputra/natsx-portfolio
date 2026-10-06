@@ -35,6 +35,7 @@ type SettingsField =
   | "project_number"
   | "year"
   | "tech_stack"
+  | "engineering_highlights"
   | "project_status"
   | "live_url"
   | "repository_url"
@@ -125,6 +126,28 @@ function parseList(
       value
         .split(
           /[,\n]/,
+        )
+        .map(
+          (
+            item,
+          ) =>
+            item.trim(),
+        )
+        .filter(
+          Boolean,
+        ),
+    ),
+  );
+}
+
+function parseLineList(
+  value: string,
+) {
+  return Array.from(
+    new Set(
+      value
+        .split(
+          /\n/,
         )
         .map(
           (
@@ -692,6 +715,14 @@ export async function updateProjectSettings(
       ),
     );
 
+  const engineeringHighlights =
+    parseLineList(
+      getText(
+        formData,
+        "engineering_highlights",
+      ),
+    );
+
   const projectStatus =
     getText(
       formData,
@@ -1029,6 +1060,9 @@ export async function updateProjectSettings(
 
         tech_stack:
           techStack,
+
+        engineering_highlights:
+          engineeringHighlights,
 
         project_status:
           projectStatus,

@@ -680,6 +680,46 @@ export default function NewProjectForm({
         </label>
 
         {/* =========================
+            ENGINEERING HIGHLIGHTS
+        ========================= */}
+
+        <label
+          className={`${styles.field} ${styles.fullWidth}`}
+        >
+          <span>
+            Engineering highlights
+          </span>
+
+          <textarea
+            className={
+              styles.textarea
+            }
+            name="engineering_highlights"
+            rows={
+              7
+            }
+            placeholder={"Atomic and idempotent persistence\nServer-side RBAC\nAutomated test coverage"}
+          />
+
+          <small
+            className={
+              styles.helper
+            }
+          >
+            Satu engineering highlight
+            per baris. Boleh dikosongkan
+            untuk project non-engineering.
+          </small>
+
+          <FieldError
+            message={
+              state.errors
+                ?.engineering_highlights
+            }
+          />
+        </label>
+
+        {/* =========================
             PROJECT STATUS
         ========================= */}
 
