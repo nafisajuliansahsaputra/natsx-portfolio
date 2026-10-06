@@ -80,6 +80,8 @@ export type EditableProject = {
 
   tech_stack: string[];
 
+  project_status: string;
+
   status: string;
 
   featured: boolean;
@@ -883,6 +885,45 @@ export default function ProjectEditorForm({
               Field ini sama di semua
               bahasa.
             </small>
+          </label>
+
+          <label
+            className={`${styles.field} ${styles.fullWidth}`}
+          >
+            <span>
+              Project status
+            </span>
+
+            <input
+              className={
+                styles.input
+              }
+              name="project_status"
+              type="text"
+              defaultValue={
+                project.project_status
+              }
+              placeholder="In Development"
+            />
+
+            <small
+              className={
+                styles.helper
+              }
+            >
+              Status publik project,
+              misalnya In Development,
+              V1 Complete, Complete, atau
+              Reconstruction.
+            </small>
+
+            <FieldError
+              message={
+                settingsState
+                  .errors
+                  ?.project_status
+              }
+            />
           </label>
 
           <label
