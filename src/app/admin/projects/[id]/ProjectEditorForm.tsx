@@ -911,10 +911,11 @@ export default function ProjectEditorForm({
                 styles.helper
               }
             >
-              Status publik project,
-              misalnya In Development,
-              V1 Complete, Complete, atau
-              Reconstruction.
+              Status publik project.
+              Gunakan In Development
+              untuk project aktif dan
+              Complete untuk project
+              yang sudah selesai.
             </small>
 
             <FieldError
