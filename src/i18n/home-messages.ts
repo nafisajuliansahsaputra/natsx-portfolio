@@ -19,7 +19,7 @@ const homeMessages = {
         "Experience",
 
       description:
-        "Multidisciplinary digital creator working across design, development, motion, and visual experiences.",
+        "Full-stack web developer building reliable digital products across frontend, backend, databases, APIs, testing, and deployment.",
 
       selectedWork:
         "Selected Work",
@@ -148,7 +148,7 @@ const homeMessages = {
         "behind",
 
       lead:
-        "A multidisciplinary digital creator working across design, development, motion, and visual storytelling.",
+        "Full-stack web developer with a strong product and interface design foundation, working from system logic and implementation through testing and deployment.",
 
       body:
         "I enjoy taking ideas from something abstract into something people can actually see, use, and experience—combining different disciplines instead of treating them as separate parts.",
@@ -238,7 +238,7 @@ const homeMessages = {
         "Pengalaman",
 
       description:
-        "Kreator digital multidisiplin yang bekerja di bidang desain, development, motion, dan pengalaman visual.",
+        "Full-stack web developer yang membangun produk digital andal di frontend, backend, database, API, testing, dan deployment.",
 
       selectedWork:
         "Karya Pilihan",
@@ -367,7 +367,7 @@ const homeMessages = {
         "balik",
 
       lead:
-        "Kreator digital multidisiplin yang bergerak di bidang desain, development, motion, dan visual storytelling.",
+        "Full-stack web developer dengan dasar product dan interface design yang kuat, dari logika sistem dan implementasi hingga testing dan deployment.",
 
       body:
         "Saya menikmati proses mengubah ide yang masih abstrak menjadi sesuatu yang benar-benar dapat dilihat, digunakan, dan dirasakan—dengan menghubungkan berbagai disiplin, bukan memisahkannya.",
@@ -457,7 +457,7 @@ const homeMessages = {
         "schaffen",
 
       description:
-        "Multidisziplinärer Digital Creator an der Schnittstelle von Design, Development, Motion und visuellen Erlebnissen.",
+        "Full-Stack Web Developer für zuverlässige digitale Produkte von Frontend und Backend bis Datenbanken, APIs, Testing und Deployment.",
 
       selectedWork:
         "Projekte",
@@ -586,7 +586,7 @@ const homeMessages = {
         "hinter",
 
       lead:
-        "Multidisziplinärer Digital Creator an der Schnittstelle von Design, Development, Motion und visuellem Storytelling.",
+        "Full-Stack Web Developer mit starkem Fundament in Produkt- und Interface-Design, von Systemlogik und Implementierung bis Testing und Deployment.",
 
       body:
         "Mich reizt der Prozess, abstrakte Ideen in etwas zu verwandeln, das Menschen sehen, nutzen und erleben können—indem verschiedene Disziplinen miteinander verbunden statt getrennt betrachtet werden.",
