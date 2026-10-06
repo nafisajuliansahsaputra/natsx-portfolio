@@ -12,19 +12,19 @@ const contactMessages = {
         "Available Worldwide",
 
       headingLine1:
-        "Have an idea",
+        "Have a product",
 
       headingLine2:
-        "worth exploring",
+        "worth building",
 
       description:
-        "I'm open to selected freelance work, creative collaborations, and digital projects where different disciplines can come together.",
+        "I'm open to selected full-stack development, product engineering, and digital product work where technical depth, reliability, and thoughtful interfaces matter.",
 
       disciplinesLine1:
-        "Design / Development",
+        "Full-Stack Development / Product Engineering",
 
       disciplinesLine2:
-        "Motion / Creative Direction",
+        "APIs & Integrations / UI & Product Design",
     },
 
     primary: {
@@ -60,7 +60,7 @@ const contactMessages = {
       ],
 
       description:
-        "For projects with a clear idea, interesting problem, or enough room to create something thoughtful.",
+        "For web applications, product systems, APIs, integrations, and engineering work with a clear problem to solve and room to build it properly.",
 
       professionalProfile:
         "Professional profile",
@@ -71,15 +71,15 @@ const contactMessages = {
 
     collaboration: {
       label:
-        "What we could make",
+        "What I can help build",
 
       items: [
-        "Digital Products",
-        "Web Experiences",
-        "UI / UX Design",
-        "Brand Identity",
-        "Creative Direction",
-        "Motion & Visuals",
+        "Web Applications",
+        "Full-Stack Development",
+        "APIs & Integrations",
+        "Product Engineering",
+        "UI / UX & Product Design",
+        "Interactive Digital Experiences",
       ],
     },
 
@@ -118,19 +118,19 @@ const contactMessages = {
         "Tersedia untuk kolaborasi global",
 
       headingLine1:
-        "Punya ide",
+        "Punya produk",
 
       headingLine2:
-        "yang layak digali",
+        "yang ingin dibangun",
 
       description:
-        "Saya terbuka untuk freelance terpilih, kolaborasi kreatif, dan proyek digital yang memberi ruang bagi berbagai disiplin untuk bekerja bersama.",
+        "Saya terbuka untuk pekerjaan full-stack development, product engineering, dan proyek digital terpilih yang membutuhkan kedalaman teknis, reliability, serta interface yang matang.",
 
       disciplinesLine1:
-        "Design / Development",
+        "Full-Stack Development / Product Engineering",
 
       disciplinesLine2:
-        "Motion / Creative Direction",
+        "API & Integrasi / UI & Product Design",
     },
 
     primary: {
@@ -166,7 +166,7 @@ const contactMessages = {
       ],
 
       description:
-        "Untuk proyek dengan ide yang jelas, masalah yang menarik, atau ruang yang cukup untuk menciptakan sesuatu secara matang.",
+        "Untuk web application, product system, API, integration, dan pekerjaan engineering dengan masalah yang jelas serta ruang untuk membangunnya dengan benar.",
 
       professionalProfile:
         "Profil profesional",
@@ -177,15 +177,15 @@ const contactMessages = {
 
     collaboration: {
       label:
-        "Yang bisa kita buat",
+        "Yang bisa saya bantu bangun",
 
       items: [
-        "Produk Digital",
-        "Web Experience",
-        "UI / UX Design",
-        "Brand Identity",
-        "Creative Direction",
-        "Motion & Visual",
+        "Web Application",
+        "Full-Stack Development",
+        "API & Integrasi",
+        "Product Engineering",
+        "UI / UX & Product Design",
+        "Interactive Digital Experience",
       ],
     },
 
@@ -224,19 +224,19 @@ const contactMessages = {
         "Weltweit verfügbar",
 
       headingLine1:
-        "Eine Idee,",
+        "Ein Produkt,",
 
       headingLine2:
-        "die es wert ist",
+        "das wir bauen sollten",
 
       description:
-        "Ich bin offen für ausgewählte Freelance-Projekte, kreative Zusammenarbeit und digitale Projekte, in denen verschiedene Disziplinen zusammenkommen.",
+        "Ich bin offen für ausgewählte Full-Stack-Development-, Product-Engineering- und digitale Produktprojekte, bei denen technische Tiefe, Zuverlässigkeit und durchdachte Interfaces zählen.",
 
       disciplinesLine1:
-        "Design / Development",
+        "Full-Stack Development / Product Engineering",
 
       disciplinesLine2:
-        "Motion / Creative Direction",
+        "APIs & Integrationen / UI & Product Design",
     },
 
     primary: {
@@ -272,7 +272,7 @@ const contactMessages = {
       ],
 
       description:
-        "Für Projekte mit einer klaren Idee, einer interessanten Herausforderung oder genug Raum, um etwas Durchdachtes zu gestalten.",
+        "Für Webanwendungen, Produktsysteme, APIs, Integrationen und Engineering-Aufgaben mit einem klaren Problem und genug Raum, es sauber zu lösen.",
 
       professionalProfile:
         "Berufliches Profil",
@@ -283,15 +283,15 @@ const contactMessages = {
 
     collaboration: {
       label:
-        "Was wir gestalten könnten",
+        "Was ich mitentwickeln kann",
 
       items: [
-        "Digitale Produkte",
-        "Web Experiences",
-        "UI / UX Design",
-        "Brand Identity",
-        "Creative Direction",
-        "Motion & Visuals",
+        "Webanwendungen",
+        "Full-Stack Development",
+        "APIs & Integrationen",
+        "Product Engineering",
+        "UI / UX & Product Design",
+        "Interaktive digitale Erlebnisse",
       ],
     },
 
