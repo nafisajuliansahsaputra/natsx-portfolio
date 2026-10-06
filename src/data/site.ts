@@ -70,7 +70,7 @@ export const site = {
     "Julian",
 
   role:
-    "Digital Creator",
+    "Full-Stack Web Developer",
 
   email:
     contactEmail,
