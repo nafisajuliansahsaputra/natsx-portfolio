@@ -709,9 +709,9 @@ export default function PortfolioIntro() {
               styles.disciplines
             }
           >
-            DESIGN /
             DEVELOPMENT /
-            MOTION
+            SYSTEMS /
+            PRODUCT
           </span>
 
           <div
