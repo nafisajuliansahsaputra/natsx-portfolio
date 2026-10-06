@@ -9,16 +9,16 @@ const aboutMessages = {
         "About / NATSX",
 
       headingLine1:
-        "Different",
+        "Developer first.",
 
       headingLine2:
-        "disciplines",
+        "Across disciplines",
 
       statement:
-        "One point of view.",
+        "Reliable systems. Considered experiences.",
 
       roles:
-        "Digital Creator / Designer / Developer",
+        "Full-Stack Developer / Systems / Product Design",
     },
 
     profile: {
@@ -50,11 +50,11 @@ const aboutMessages = {
         "experience.",
 
       paragraphs: [
-        "I'm Julian, a multidisciplinary digital creator working under the creative identity NATSX.",
+        "I'm Julian, a full-stack developer working under NATSX, focused on building reliable digital products from system logic through implementation and delivery.",
 
-        "My work moves between design, development, motion, branding, and visual storytelling. Rather than treating those as isolated skills, I like connecting them to create work that feels complete from idea to execution.",
+        "My core work spans frontend, backend, databases, APIs, authentication, testing, and deployment. Product and interface design are supporting strengths that help me turn technical requirements into products that are clear and usable.",
 
-        "I'm especially interested in digital experiences where visual identity, interaction, technology, and storytelling can work together instead of competing for attention.",
+        "I'm especially interested in projects where engineering decisions, product thinking, and interface quality reinforce one another instead of being treated as separate concerns.",
       ],
 
       professionalProfile:
@@ -69,10 +69,10 @@ const aboutMessages = {
         "How I Work",
 
       headingLine1:
-        "Ideas first.",
+        "Systems first.",
 
       headingLine2:
-        "Disciplines second",
+        "Details still matter",
 
       principles: [
         {
@@ -80,10 +80,10 @@ const aboutMessages = {
             "01",
 
           title:
-            "Think beyond the deliverable.",
+            "Understand the system before the screen.",
 
           description:
-            "I try to understand the larger idea first—what something needs to communicate, how it should feel, and where every piece fits.",
+            "I start with requirements, data flow, permissions, failure states, and the product rules that need to stay true before deciding how the interface should behave.",
         },
 
         {
@@ -91,10 +91,10 @@ const aboutMessages = {
             "02",
 
           title:
-            "Move across disciplines.",
+            "Build across the stack.",
 
           description:
-            "Design, code, motion, and visual storytelling are different tools for the same goal. I use whichever combination makes the idea stronger.",
+            "I work across frontend, backend, databases, APIs, and deployment so the boundaries between layers are deliberate rather than accidental.",
         },
 
         {
@@ -102,55 +102,55 @@ const aboutMessages = {
             "03",
 
           title:
-            "Make every detail intentional.",
+            "Make quality verifiable.",
 
           description:
-            "From typography and spacing to interaction and movement, small decisions shape how the final experience is perceived.",
+            "Testing, security, documentation, and failure handling are part of the build. A polished interface matters more when the system underneath it is dependable.",
         },
       ],
     },
 
     disciplines: {
       label:
-        "Across disciplines",
+        "Engineering & craft",
 
       introLine1:
-        "Different tools,",
+        "Development at the core,",
 
       introLine2:
-        "connected by one direction.",
+        "supported by product and visual thinking.",
 
       items: {
-        design: {
-          title:
-            "Design",
-
-          description:
-            "Visual systems, interfaces, identities, and digital experiences shaped with clarity and intention.",
-        },
-
         development: {
           title:
-            "Development",
+            "Full-Stack Development",
 
           description:
-            "Turning ideas and visual concepts into responsive, functional, and considered digital products.",
+            "Building product features end to end across frontend, backend, APIs, application logic, and delivery.",
         },
 
-        motion: {
+        systems: {
           title:
-            "Motion",
+            "Systems & Reliability",
 
           description:
-            "Using movement, interaction, and editing to bring rhythm, character, and storytelling into digital work.",
+            "Designing data, authorization, integration, networking, testing, and failure-handling boundaries that keep products dependable.",
+        },
+
+        design: {
+          title:
+            "Product & Interface Design",
+
+          description:
+            "Using product thinking and interface design to make technical systems easier to understand, navigate, and use.",
         },
 
         creative: {
           title:
-            "Creative Direction",
+            "Visual Craft",
 
           description:
-            "Connecting different disciplines into one coherent direction instead of treating each output as a separate piece.",
+            "Applying identity, motion, art direction, and visual exploration where they strengthen the product instead of distracting from it.",
         },
       },
     },
@@ -160,10 +160,10 @@ const aboutMessages = {
         "Next",
 
       line1:
-        "The work says more",
+        "See the systems",
 
       line2:
-        "than a bio ever could",
+        "behind the work",
 
       action:
         "Explore the work",
@@ -176,16 +176,16 @@ const aboutMessages = {
         "Tentang / NATSX",
 
       headingLine1:
-        "Beragam",
+        "Developer sebagai inti.",
 
       headingLine2:
-        "disiplin",
+        "Lintas disiplin",
 
       statement:
-        "Satu sudut pandang.",
+        "Sistem andal. Pengalaman yang matang.",
 
       roles:
-        "Digital Creator / Designer / Developer",
+        "Full-Stack Developer / Systems / Product Design",
     },
 
     profile: {
@@ -217,11 +217,11 @@ const aboutMessages = {
         "dirasakan.",
 
       paragraphs: [
-        "Saya Julian, kreator digital multidisiplin yang berkarya dengan identitas kreatif NATSX.",
+        "Saya Julian, full-stack developer yang berkarya dengan identitas NATSX, dengan fokus membangun produk digital yang andal dari logika sistem hingga implementasi dan delivery.",
 
-        "Karya saya bergerak di antara desain, development, motion, branding, dan visual storytelling. Alih-alih memperlakukannya sebagai keahlian yang terpisah, saya lebih suka menghubungkannya agar sebuah karya terasa utuh dari ide hingga eksekusi.",
+        "Pekerjaan utama saya mencakup frontend, backend, database, API, authentication, testing, dan deployment. Product dan interface design menjadi kekuatan pendukung untuk menerjemahkan kebutuhan teknis menjadi produk yang jelas dan mudah digunakan.",
 
-        "Saya terutama tertarik pada pengalaman digital ketika identitas visual, interaction, teknologi, dan storytelling dapat bekerja bersama tanpa saling berebut perhatian.",
+        "Saya terutama tertarik pada proyek ketika engineering, product thinking, dan kualitas interface saling memperkuat, bukan berjalan sebagai bagian yang terpisah.",
       ],
 
       professionalProfile:
@@ -236,10 +236,10 @@ const aboutMessages = {
         "Cara Saya Bekerja",
 
       headingLine1:
-        "Ide lebih dulu.",
+        "Sistem lebih dulu.",
 
       headingLine2:
-        "Disiplin kemudian",
+        "Detail tetap penting",
 
       principles: [
         {
@@ -247,10 +247,10 @@ const aboutMessages = {
             "01",
 
           title:
-            "Pikirkan lebih dari sekadar hasil akhir.",
+            "Pahami sistem sebelum layar.",
 
           description:
-            "Saya mencoba memahami gagasan besarnya terlebih dahulu—apa yang perlu disampaikan, bagaimana rasanya, dan bagaimana setiap bagian saling terhubung.",
+            "Saya mulai dari requirement, alur data, permission, failure state, dan aturan produk yang harus tetap benar sebelum menentukan bagaimana interface berperilaku.",
         },
 
         {
@@ -258,10 +258,10 @@ const aboutMessages = {
             "02",
 
           title:
-            "Bergerak lintas disiplin.",
+            "Bangun lintas stack.",
 
           description:
-            "Desain, code, motion, dan visual storytelling adalah alat yang berbeda untuk tujuan yang sama. Saya menggunakan kombinasi yang paling memperkuat ide.",
+            "Saya bekerja di frontend, backend, database, API, dan deployment agar batas antar-layer dirancang dengan sengaja, bukan terbentuk secara kebetulan.",
         },
 
         {
@@ -269,55 +269,55 @@ const aboutMessages = {
             "03",
 
           title:
-            "Buat setiap detail punya alasan.",
+            "Buat kualitas dapat diverifikasi.",
 
           description:
-            "Dari tipografi dan spacing hingga interaction dan motion, keputusan kecil ikut membentuk bagaimana pengalaman akhirnya dirasakan.",
+            "Testing, security, dokumentasi, dan failure handling adalah bagian dari proses build. Interface yang matang lebih bernilai ketika sistem di bawahnya dapat diandalkan.",
         },
       ],
     },
 
     disciplines: {
       label:
-        "Lintas disiplin",
+        "Engineering & craft",
 
       introLine1:
-        "Beragam alat,",
+        "Development sebagai inti,",
 
       introLine2:
-        "terhubung dalam satu arah.",
+        "didukung product dan visual thinking.",
 
       items: {
-        design: {
-          title:
-            "Desain",
-
-          description:
-            "Sistem visual, interface, identitas, dan pengalaman digital yang dibentuk dengan jelas dan penuh pertimbangan.",
-        },
-
         development: {
           title:
-            "Development",
+            "Full-Stack Development",
 
           description:
-            "Mengubah ide dan konsep visual menjadi produk digital yang responsif, fungsional, dan matang.",
+            "Membangun fitur produk secara end to end melalui frontend, backend, API, application logic, dan delivery.",
         },
 
-        motion: {
+        systems: {
           title:
-            "Motion",
+            "Systems & Reliability",
 
           description:
-            "Menggunakan gerak, interaction, dan editing untuk menghadirkan ritme, karakter, dan storytelling dalam karya digital.",
+            "Merancang data, authorization, integration, networking, testing, dan failure handling agar produk tetap dapat diandalkan.",
+        },
+
+        design: {
+          title:
+            "Product & Interface Design",
+
+          description:
+            "Menggunakan product thinking dan interface design agar sistem teknis lebih mudah dipahami, dinavigasi, dan digunakan.",
         },
 
         creative: {
           title:
-            "Creative Direction",
+            "Visual Craft",
 
           description:
-            "Menghubungkan berbagai disiplin ke dalam satu arah yang konsisten, bukan memperlakukan setiap output sebagai bagian yang terpisah.",
+            "Menggunakan identity, motion, art direction, dan eksplorasi visual ketika hal tersebut benar-benar memperkuat produk.",
         },
       },
     },
@@ -327,10 +327,10 @@ const aboutMessages = {
         "Selanjutnya",
 
       line1:
-        "Karya bisa bercerita",
+        "Lihat sistem",
 
       line2:
-        "lebih jauh dari sebuah bio",
+        "di balik setiap proyek",
 
       action:
         "Jelajahi karya",
@@ -343,16 +343,16 @@ const aboutMessages = {
         "Über mich / NATSX",
 
       headingLine1:
-        "Verschiedene",
+        "Developer im Kern.",
 
       headingLine2:
-        "Disziplinen",
+        "Über Disziplinen hinweg",
 
       statement:
-        "Eine Perspektive.",
+        "Zuverlässige Systeme. Durchdachte Erlebnisse.",
 
       roles:
-        "Digital Creator / Designer / Developer",
+        "Full-Stack Developer / Systems / Product Design",
     },
 
     profile: {
@@ -384,11 +384,11 @@ const aboutMessages = {
         "erleben.",
 
       paragraphs: [
-        "Ich bin Julian, ein multidisziplinärer Digital Creator und arbeite unter der kreativen Identität NATSX.",
+        "Ich bin Julian, Full-Stack Developer hinter NATSX, mit Fokus auf zuverlässige digitale Produkte von der Systemlogik bis zur Implementierung und Auslieferung.",
 
-        "Meine Arbeit bewegt sich zwischen Design, Development, Motion, Branding und visuellem Storytelling. Statt diese Bereiche als getrennte Fähigkeiten zu betrachten, verbinde ich sie zu Arbeiten, die sich von der Idee bis zur Umsetzung ganzheitlich anfühlen.",
+        "Meine Kernarbeit umfasst Frontend, Backend, Datenbanken, APIs, Authentifizierung, Testing und Deployment. Produkt- und Interface-Design ergänzen diese Arbeit und helfen mir, technische Anforderungen in klare und nutzbare Produkte zu übersetzen.",
 
-        "Besonders interessieren mich digitale Erlebnisse, in denen visuelle Identität, Interaction, Technologie und Storytelling miteinander arbeiten, anstatt um Aufmerksamkeit zu konkurrieren.",
+        "Besonders interessieren mich Projekte, bei denen Engineering, Product Thinking und Interface-Qualität sich gegenseitig stärken, statt als getrennte Bereiche zu funktionieren.",
       ],
 
       professionalProfile:
@@ -403,10 +403,10 @@ const aboutMessages = {
         "Wie ich arbeite",
 
       headingLine1:
-        "Die Idee zuerst.",
+        "Das System zuerst.",
 
       headingLine2:
-        "Die Disziplin danach",
+        "Details bleiben wichtig",
 
       principles: [
         {
@@ -414,10 +414,10 @@ const aboutMessages = {
             "01",
 
           title:
-            "Über das Ergebnis hinausdenken.",
+            "Das System vor dem Screen verstehen.",
 
           description:
-            "Zuerst versuche ich die größere Idee zu verstehen—was kommuniziert werden soll, wie es sich anfühlen soll und wie jedes Element hineinpasst.",
+            "Ich beginne mit Anforderungen, Datenflüssen, Berechtigungen, Fehlerzuständen und Produktregeln, bevor ich entscheide, wie sich das Interface verhalten soll.",
         },
 
         {
@@ -425,10 +425,10 @@ const aboutMessages = {
             "02",
 
           title:
-            "Zwischen Disziplinen bewegen.",
+            "Über den Stack hinweg bauen.",
 
           description:
-            "Design, Code, Motion und visuelles Storytelling sind unterschiedliche Werkzeuge für dasselbe Ziel. Ich kombiniere sie so, wie es die Idee am stärksten macht.",
+            "Ich arbeite in Frontend, Backend, Datenbanken, APIs und Deployment, damit die Grenzen zwischen den Ebenen bewusst gestaltet sind.",
         },
 
         {
@@ -436,55 +436,55 @@ const aboutMessages = {
             "03",
 
           title:
-            "Jedes Detail bewusst gestalten.",
+            "Qualität überprüfbar machen.",
 
           description:
-            "Von Typografie und Spacing bis zu Interaction und Bewegung prägen kleine Entscheidungen, wie das fertige Erlebnis wahrgenommen wird.",
+            "Testing, Security, Dokumentation und Fehlerbehandlung gehören zum Build. Ein gutes Interface gewinnt an Wert, wenn das System darunter verlässlich ist.",
         },
       ],
     },
 
     disciplines: {
       label:
-        "Über Disziplinen hinweg",
+        "Engineering & Craft",
 
       introLine1:
-        "Verschiedene Werkzeuge,",
+        "Development im Kern,",
 
       introLine2:
-        "verbunden durch eine Richtung.",
+        "ergänzt durch Product und Visual Thinking.",
 
       items: {
-        design: {
-          title:
-            "Design",
-
-          description:
-            "Visuelle Systeme, Interfaces, Identitäten und digitale Erlebnisse, klar und bewusst gestaltet.",
-        },
-
         development: {
           title:
-            "Development",
+            "Full-Stack Development",
 
           description:
-            "Ideen und visuelle Konzepte in responsive, funktionale und durchdachte digitale Produkte übersetzen.",
+            "Produktfunktionen end to end über Frontend, Backend, APIs, Application Logic und Delivery entwickeln.",
         },
 
-        motion: {
+        systems: {
           title:
-            "Motion",
+            "Systems & Reliability",
 
           description:
-            "Bewegung, Interaction und Editing nutzen, um Rhythmus, Charakter und Storytelling in digitale Arbeiten zu bringen.",
+            "Daten, Autorisierung, Integrationen, Networking, Testing und Fehlerbehandlung so gestalten, dass Produkte verlässlich bleiben.",
+        },
+
+        design: {
+          title:
+            "Product & Interface Design",
+
+          description:
+            "Product Thinking und Interface Design nutzen, damit technische Systeme klarer, verständlicher und leichter nutzbar werden.",
         },
 
         creative: {
           title:
-            "Creative Direction",
+            "Visual Craft",
 
           description:
-            "Verschiedene Disziplinen zu einer klaren Richtung verbinden, statt jedes Ergebnis als isoliertes Element zu behandeln.",
+            "Identity, Motion, Art Direction und visuelle Exploration dort einsetzen, wo sie das Produkt tatsächlich stärken.",
         },
       },
     },
@@ -494,10 +494,10 @@ const aboutMessages = {
         "Weiter",
 
       line1:
-        "Die Arbeit erzählt mehr",
+        "Die Systeme sehen,",
 
       line2:
-        "als eine Bio es könnte",
+        "die hinter der Arbeit stehen",
 
       action:
         "Projekte entdecken",
