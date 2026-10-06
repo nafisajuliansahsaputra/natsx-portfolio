@@ -465,15 +465,15 @@ export default async function SelectedWork({
                             ? (
                               <>
                                 <span>
-                                  Full-Stack Development
+                                  Full-Stack Engineering
                                 </span>
 
                                 <span>
-                                  Computer Vision
+                                  RFID + Face Verification
                                 </span>
 
                                 <span>
-                                  System Design
+                                  Device API + Authorization
                                 </span>
                               </>
                             )
