@@ -34,6 +34,7 @@ type SettingsField =
   | "slug"
   | "project_number"
   | "year"
+  | "tech_stack"
   | "live_url"
   | "accent_color"
   | "secondary_color"
@@ -681,6 +682,14 @@ export async function updateProjectSettings(
       ),
     );
 
+  const techStack =
+    parseList(
+      getText(
+        formData,
+        "tech_stack",
+      ),
+    );
+
   const liveUrl =
     getText(
       formData,
@@ -986,6 +995,9 @@ export async function updateProjectSettings(
 
         sort_order:
           sortOrder,
+
+        tech_stack:
+          techStack,
 
         live_url:
           liveUrl ||
