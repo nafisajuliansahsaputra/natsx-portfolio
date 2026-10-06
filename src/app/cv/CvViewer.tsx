@@ -7,6 +7,10 @@ import {
 import Link from "next/link";
 
 import {
+  track,
+} from "@vercel/analytics";
+
+import {
   cvVersions,
   type CvVersion,
 } from "@/data/cv";
@@ -303,6 +307,16 @@ export default function CvViewer({
                 className={
                   styles.primaryAction
                 }
+                data-analytics-event="cv_download"
+                onClick={() => {
+                  track(
+                    "cv_download",
+                    {
+                      language:
+                        activeVersion.id,
+                    },
+                  );
+                }}
               >
                 {
                   copy.viewer
