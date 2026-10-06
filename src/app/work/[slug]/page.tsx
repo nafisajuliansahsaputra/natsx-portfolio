@@ -861,70 +861,66 @@ export async function ProjectPageContent({
                 </div>
               ) : null}
 
-              {project.website ? (
-                <div>
-                  <span
-                    className={
-                      styles.detailLabel
-                    }
-                  >
-                    {
-                      copy.details
-                        .liveDemo
-                    }
-                  </span>
+              {project.website ||
+              project.repositoryUrl ? (
+                <div
+                  className={`${styles.detailFull} ${styles.projectActions}`}
+                >
+                  {project.website ? (
+                    <a
+                      href={
+                        project.website
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.projectCta} ${styles.projectCtaPrimary}`}
+                    >
+                      <span
+                        className={
+                          styles.projectCtaLabel
+                        }
+                      >
+                        {
+                          copy.details
+                            .liveDemo
+                        }
+                      </span>
 
-                  <a
-                    href={
-                      project.website
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                    className={
-                      styles.liveLink
-                    }
-                  >
-                    {
-                      copy.details
-                        .visitLive
-                    }
+                      <span
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  ) : null}
 
-                    <span>
-                      ↗
-                    </span>
-                  </a>
-                </div>
-              ) : null}
+                  {project.repositoryUrl ? (
+                    <a
+                      href={
+                        project.repositoryUrl
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.projectCta} ${styles.projectCtaSecondary}`}
+                    >
+                      <span
+                        className={
+                          styles.projectCtaLabel
+                        }
+                      >
+                        {
+                          copy.details
+                            .sourceCode
+                        }
+                      </span>
 
-              {project.repositoryUrl ? (
-                <div>
-                  <span
-                    className={
-                      styles.detailLabel
-                    }
-                  >
-                    {
-                      copy.details
-                        .sourceCode
-                    }
-                  </span>
-
-                  <a
-                    href={
-                      project.repositoryUrl
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                    className={
-                      styles.liveLink
-                    }
-                  >
-                    GitHub
-
-                    <span>
-                      ↗
-                    </span>
-                  </a>
+                      <span
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  ) : null}
                 </div>
               ) : null}
 
