@@ -308,6 +308,37 @@ export async function generateMetadata({
   );
 }
 
+const DATABASE_TECHNOLOGIES =
+  new Set([
+    "PostgreSQL",
+    "Supabase",
+    "MySQL",
+    "Firebase",
+  ]);
+
+const TESTING_TECHNOLOGIES =
+  new Set([
+    "Vitest",
+    "Playwright",
+    "pytest",
+    "Pest",
+    "pgTAP",
+  ]);
+
+function pickTechnicalSubset(
+  stack: string[],
+  candidates: Set<string>,
+) {
+  return stack.filter(
+    (
+      technology,
+    ) =>
+      candidates.has(
+        technology,
+      ),
+  );
+}
+
 function getAccessibleContrastColor(
   hex: string,
 ) {
@@ -434,6 +465,18 @@ export async function ProjectPageContent({
     nextProject,
     totalProjects,
   } = data;
+
+  const databaseStack =
+    pickTechnicalSubset(
+      project.techStack,
+      DATABASE_TECHNOLOGIES,
+    );
+
+  const testingStack =
+    pickTechnicalSubset(
+      project.techStack,
+      TESTING_TECHNOLOGIES,
+    );
 
   const projectStyle = {
     "--project-accent":
@@ -589,6 +632,24 @@ export async function ProjectPageContent({
 
             <div
               className={
+                styles.technicalOverviewHeader
+              }
+              data-motion-scroll="project-technical-overview-header"
+            >
+              <span
+                className={
+                  styles.detailLabel
+                }
+              >
+                {
+                  copy.details
+                    .technicalOverview
+                }
+              </span>
+            </div>
+
+            <div
+              className={
                 styles.projectDetails
               }
               data-motion-scroll="project-details"
@@ -674,11 +735,145 @@ export async function ProjectPageContent({
                 >
                   {
                     copy.details
-                      .project
+                      .status
                   }
                 </span>
 
-                {project.website ? (
+                <strong>
+                  {
+                    project.projectStatus
+                  }
+                </strong>
+              </div>
+
+              <div
+                className={
+                  styles.detailWide
+                }
+              >
+                <span
+                  className={
+                    styles.detailLabel
+                  }
+                >
+                  {
+                    copy.details
+                      .stack
+                  }
+                </span>
+
+                <div
+                  className={
+                    styles.techList
+                  }
+                >
+                  {project.techStack.map(
+                    (
+                      technology,
+                    ) => (
+                      <span
+                        key={
+                          technology
+                        }
+                      >
+                        {
+                          technology
+                        }
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              {databaseStack.length >
+              0 ? (
+                <div>
+                  <span
+                    className={
+                      styles.detailLabel
+                    }
+                  >
+                    {
+                      copy.details
+                        .database
+                    }
+                  </span>
+
+                  <div
+                    className={
+                      styles.compactList
+                    }
+                  >
+                    {databaseStack.map(
+                      (
+                        technology,
+                      ) => (
+                        <span
+                          key={
+                            technology
+                          }
+                        >
+                          {
+                            technology
+                          }
+                        </span>
+                      ),
+                    )}
+                  </div>
+                </div>
+              ) : null}
+
+              {testingStack.length >
+              0 ? (
+                <div>
+                  <span
+                    className={
+                      styles.detailLabel
+                    }
+                  >
+                    {
+                      copy.details
+                        .testing
+                    }
+                  </span>
+
+                  <div
+                    className={
+                      styles.compactList
+                    }
+                  >
+                    {testingStack.map(
+                      (
+                        technology,
+                      ) => (
+                        <span
+                          key={
+                            technology
+                          }
+                        >
+                          {
+                            technology
+                          }
+                        </span>
+                      ),
+                    )}
+                  </div>
+                </div>
+              ) : null}
+
+              {project.website ? (
+                <div>
+                  <span
+                    className={
+                      styles.detailLabel
+                    }
+                  >
+                    {
+                      copy.details
+                        .liveDemo
+                    }
+                  </span>
+
                   <a
                     href={
                       project.website
@@ -698,15 +893,82 @@ export async function ProjectPageContent({
                       ↗
                     </span>
                   </a>
-                ) : (
-                  <strong>
+                </div>
+              ) : null}
+
+              {project.repositoryUrl ? (
+                <div>
+                  <span
+                    className={
+                      styles.detailLabel
+                    }
+                  >
                     {
                       copy.details
-                        .caseStudy
+                        .sourceCode
                     }
-                  </strong>
-                )}
-              </div>
+                  </span>
+
+                  <a
+                    href={
+                      project.repositoryUrl
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                    className={
+                      styles.liveLink
+                    }
+                  >
+                    GitHub
+
+                    <span>
+                      ↗
+                    </span>
+                  </a>
+                </div>
+              ) : null}
+
+              {project.engineeringHighlights.length >
+              0 ? (
+                <div
+                  className={
+                    styles.detailFull
+                  }
+                >
+                  <span
+                    className={
+                      styles.detailLabel
+                    }
+                  >
+                    {
+                      copy.details
+                        .engineeringHighlights
+                    }
+                  </span>
+
+                  <ul
+                    className={
+                      styles.engineeringHighlights
+                    }
+                  >
+                    {project.engineeringHighlights.map(
+                      (
+                        highlight,
+                      ) => (
+                        <li
+                          key={
+                            highlight
+                          }
+                        >
+                          {
+                            highlight
+                          }
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           </div>
         </section>
