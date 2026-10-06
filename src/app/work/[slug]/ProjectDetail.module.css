@@ -335,12 +335,13 @@
     );
 }
 
-.projectActions {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: stretch !important;
+.projectDetails
+  > .projectActions {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 
-  gap: 10px !important;
+  gap: 10px;
 
   padding-top: 4px;
 }
@@ -1721,11 +1722,12 @@
     font-size: 11px;
   }
 
-  .projectActions {
+  .projectDetails
+    > .projectActions {
     flex-direction:
-      column !important;
+      column;
 
-    gap: 8px !important;
+    gap: 8px;
   }
 
   .projectCta {
