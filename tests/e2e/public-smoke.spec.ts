@@ -817,5 +817,17 @@ test(
     ).toContain(
       'hreflang="x-default"',
     );
+
+    expect(
+      sitemapBody,
+    ).not.toContain(
+      "/media-sosial",
+    );
+
+    expect(
+      sitemapBody,
+    ).not.toContain(
+      "/aksesoris",
+    );
   },
 );
