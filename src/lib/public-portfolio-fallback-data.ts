@@ -23,9 +23,8 @@ export const FALLBACK_PROJECT_ROWS = [
       "Creative Direction"
     ],
     "roles": [
-      "Product Designer",
-      "Frontend Developer",
-      "Creative Director"
+      "Full-Stack Developer",
+      "Product Designer"
     ],
     "tech_stack": [
           "Next.js",
@@ -53,7 +52,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "secondary_color": "#F4EFE6",
     "hero_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/hero/5eba666b-bee7-4366-bad4-7f5af838c65a.png",
     "card_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/card/0375037a-ab15-49c9-9dbc-9748a89b0524.png",
-    "updated_at": "2026-10-06 07:59:18.991803+00",
+    "updated_at": "2026-10-06 08:29:20.72084+00",
     "published_at": "2026-08-19 16:25:16.177384+00"
   },
   {
@@ -255,9 +254,8 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
       "Web Development"
     ],
     "roles": [
-      "Product Designer",
-      "Product Strategist",
-      "Frontend Developer"
+      "Full-Stack Developer",
+      "Product Designer"
     ]
   },
   {
@@ -272,9 +270,8 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
       "Web Development"
     ],
     "roles": [
-      "Product Designer",
-      "Product Strategist",
-      "Frontend Developer"
+      "Full-Stack Developer",
+      "Product Designer"
     ]
   },
   {
@@ -289,9 +286,8 @@ export const FALLBACK_PROJECT_TRANSLATION_ROWS = [
       "Web Development"
     ],
     "roles": [
-      "Product Designer",
-      "Product Strategist",
-      "Frontend Developer"
+      "Full-Stack Developer",
+      "Product Designer"
     ]
   },
   {
