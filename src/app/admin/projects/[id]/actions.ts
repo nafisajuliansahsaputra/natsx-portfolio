@@ -35,6 +35,7 @@ type SettingsField =
   | "project_number"
   | "year"
   | "tech_stack"
+  | "project_status"
   | "live_url"
   | "repository_url"
   | "accent_color"
@@ -691,6 +692,12 @@ export async function updateProjectSettings(
       ),
     );
 
+  const projectStatus =
+    getText(
+      formData,
+      "project_status",
+    );
+
   const liveUrl =
     getText(
       formData,
@@ -778,6 +785,13 @@ export async function updateProjectSettings(
   ) {
     errors.year =
       "Tahun project harus antara 2000 dan 2100.";
+  }
+
+  if (
+    !projectStatus
+  ) {
+    errors.project_status =
+      "Project status wajib diisi.";
   }
 
   if (
@@ -1015,6 +1029,9 @@ export async function updateProjectSettings(
 
         tech_stack:
           techStack,
+
+        project_status:
+          projectStatus,
 
         live_url:
           liveUrl ||

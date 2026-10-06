@@ -37,6 +37,7 @@ export const FALLBACK_PROJECT_ROWS = [
           "Vitest",
           "Playwright"
     ],
+    "project_status": "In Development",
     "featured": true,
     "sort_order": 0,
     "live_url": null,
@@ -45,7 +46,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "secondary_color": "#F4EFE6",
     "hero_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/hero/5eba666b-bee7-4366-bad4-7f5af838c65a.png",
     "card_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/card/0375037a-ab15-49c9-9dbc-9748a89b0524.png",
-    "updated_at": "2026-10-06 07:39:52.285924+00",
+    "updated_at": "2026-10-06 07:46:27.238726+00",
     "published_at": "2026-08-19 16:25:16.177384+00"
   },
   {
@@ -71,6 +72,7 @@ export const FALLBACK_PROJECT_ROWS = [
           "Adobe Illustrator",
           "Adobe Photoshop"
     ],
+    "project_status": "Complete",
     "featured": true,
     "sort_order": 2,
     "live_url": "https://fiveamvision.vercel.app/",
@@ -79,7 +81,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "secondary_color": "#FFFFFF",
     "hero_image_path": null,
     "card_image_path": "projects/1ac99e20-1aba-4d72-a593-7c8ab3ebe355/covers/card/fa681995-15a5-4810-b311-f7089c75afe9.png",
-    "updated_at": "2026-10-06 07:39:52.285924+00",
+    "updated_at": "2026-10-06 07:46:27.238726+00",
     "published_at": "2026-08-19 16:25:16.177384+00"
   },
   {
@@ -108,6 +110,7 @@ export const FALLBACK_PROJECT_ROWS = [
           "Vite",
           "Pest"
     ],
+    "project_status": "Reconstruction",
     "featured": true,
     "sort_order": 3,
     "live_url": "https://bast.site.je/",
@@ -116,7 +119,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "secondary_color": "#F8FAFB",
     "hero_image_path": "projects/b578d54c-21cd-46b7-83df-584133ccb5f9/covers/hero/7752464e-b7ac-47fd-b538-d5da729dd14e.png",
     "card_image_path": "projects/b578d54c-21cd-46b7-83df-584133ccb5f9/covers/card/5df15b4c-efa8-43c4-899d-6a81cbb09059.png",
-    "updated_at": "2026-10-06 07:39:52.285924+00",
+    "updated_at": "2026-10-06 07:46:27.238726+00",
     "published_at": "2026-08-22 15:55:34.225+00"
   },
   {
@@ -150,6 +153,7 @@ export const FALLBACK_PROJECT_ROWS = [
           "Vitest",
           "pytest"
     ],
+    "project_status": "V1 Complete",
     "featured": true,
     "sort_order": 4,
     "live_url": "https://attendance-system-85872qh2v-nafisajuliansahsaputras-projects.vercel.app",
@@ -158,7 +162,7 @@ export const FALLBACK_PROJECT_ROWS = [
     "secondary_color": "#EDF5F0",
     "hero_image_path": "projects/5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0/covers/hero/68c7184e-bd74-4ee8-9986-9271ae2829e9.png",
     "card_image_path": "projects/5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0/covers/card/dc2cb815-4b01-47d7-a549-cb61bfb27db2.png",
-    "updated_at": "2026-10-06 07:39:52.285924+00",
+    "updated_at": "2026-10-06 07:46:27.238726+00",
     "published_at": "2026-09-16 13:12:46.69+00"
   }
 ];
