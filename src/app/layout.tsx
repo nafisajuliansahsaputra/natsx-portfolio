@@ -293,7 +293,7 @@ export const metadata: Metadata = {
       "website",
 
     title:
-      "NATSX — Digital Creator",
+      "NATSX — Full-Stack Developer",
 
     description,
 
@@ -312,7 +312,7 @@ export const metadata: Metadata = {
       "summary_large_image",
 
     title:
-      "NATSX — Digital Creator",
+      "NATSX — Full-Stack Developer",
 
     description,
   },
