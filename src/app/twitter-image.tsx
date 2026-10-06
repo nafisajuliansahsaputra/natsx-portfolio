@@ -5,7 +5,7 @@ import {
 import NatsxSocialCard from "@/components/seo/NatsxSocialCard";
 
 export const alt =
-  "NATSX — Digital Creator";
+  "NATSX — Full-Stack Developer";
 
 export const size = {
   width:
