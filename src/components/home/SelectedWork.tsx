@@ -27,6 +27,7 @@ import {
 import AttendanceSystemArtwork from "./AttendanceSystemArtwork";
 import BastManagementArtwork from "./BastManagementArtwork";
 import FiveAmVisionArtwork from "./FiveAmVisionArtwork";
+import NatsxControllerArtwork from "./NatsxControllerArtwork";
 import SpallSpillArtwork from "./SpallSpillArtwork";
 
 import styles from "./SelectedWork.module.css";
@@ -41,7 +42,8 @@ type HomeVisual =
   | "spall"
   | "vision"
   | "bast"
-  | "attendance";
+  | "attendance"
+  | "controller";
 
 type SelectedWorkProps = {
   locale:
@@ -75,23 +77,26 @@ const RECRUITER_PRIORITY:
     string,
     number
   > = {
-    "spall-spill":
+    "smart-attendance-system":
+      0,
+
+    "attendance-system":
       0,
 
     "nusantara-stay":
-      1,
+      0,
 
-    "attendance-system":
-      1,
-
-    "smart-attendance-system":
+    "natsx-controller":
       1,
 
     "bast-management-system":
       2,
 
-    "5am-vision":
+    "spall-spill":
       3,
+
+    "5am-vision":
+      4,
   };
 
 function sortFeaturedProjectsForRecruiters(
@@ -170,6 +175,15 @@ function getProjectPresentation(
 
         visual:
           "bast" as const,
+      };
+
+    case "natsx-controller":
+      return {
+        layout:
+          "right" as const,
+
+        visual:
+          "controller" as const,
       };
 
     /*
@@ -574,6 +588,15 @@ function ProjectArtwork({
   copy:
     SelectedWorkCopy;
 }) {
+  if (
+    variant ===
+    "controller"
+  ) {
+    return (
+      <NatsxControllerArtwork />
+    );
+  }
+
   if (
     variant ===
     "vision"
