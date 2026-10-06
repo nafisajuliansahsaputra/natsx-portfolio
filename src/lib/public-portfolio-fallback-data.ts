@@ -26,6 +26,17 @@ export const FALLBACK_PROJECT_ROWS = [
       "Full-Stack Developer",
       "Product Designer"
     ],
+    "status": "published",
+    "featured": true,
+    "sort_order": 0,
+    "live_url": null,
+    "accent_color": "#234233",
+    "secondary_color": "#F4EFE6",
+    "hero_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/hero/5eba666b-bee7-4366-bad4-7f5af838c65a.png",
+    "card_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/card/0375037a-ab15-49c9-9dbc-9748a89b0524.png",
+    "published_at": "2026-08-19 16:25:16.177384+00",
+    "created_at": "2026-08-19 16:25:16.177384+00",
+    "updated_at": "2026-10-06 18:50:36.607346+00",
     "tech_stack": [
       "Next.js",
       "React",
@@ -36,24 +47,15 @@ export const FALLBACK_PROJECT_ROWS = [
       "Vitest",
       "Playwright"
     ],
+    "repository_url": "https://github.com/nafisajuliansahsaputra/spall-spill",
+    "project_status": "In Development",
     "engineering_highlights": [
       "Tested PostgreSQL RLS and authenticated server-side mutation boundaries",
       "Draft-to-preview-to-publish workflow with staged first-publication transactions",
       "Stale-write protection for concurrent editing",
       "Destination-safety scanning and dedicated media sanitization services",
       "CI gates with Vitest, Playwright, pgTAP, type checks, and security scanning"
-    ],
-    "project_status": "In Development",
-    "featured": true,
-    "sort_order": 0,
-    "live_url": null,
-    "repository_url": "https://github.com/nafisajuliansahsaputra/spall-spill",
-    "accent_color": "#234233",
-    "secondary_color": "#F4EFE6",
-    "hero_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/hero/5eba666b-bee7-4366-bad4-7f5af838c65a.png",
-    "card_image_path": "projects/4d3fc40f-2366-49e8-9578-d9a7df99f34c/covers/card/0375037a-ab15-49c9-9dbc-9748a89b0524.png",
-    "updated_at": "2026-10-06 17:28:39.312185+00",
-    "published_at": "2026-08-19 16:25:16.177384+00"
+    ]
   },
   {
     "id": "1ac99e20-1aba-4d72-a593-7c8ab3ebe355",
@@ -73,23 +75,25 @@ export const FALLBACK_PROJECT_ROWS = [
       "Art Director",
       "UI Designer"
     ],
-    "tech_stack": [
-          "Figma",
-          "Adobe Illustrator",
-          "Adobe Photoshop"
-    ],
-    "engineering_highlights": [],
-    "project_status": "Complete",
-    "featured": true,
+    "status": "published",
+    "featured": false,
     "sort_order": 2,
     "live_url": "https://fiveamvision.vercel.app/",
-    "repository_url": null,
     "accent_color": "#0d1f3a",
     "secondary_color": "#FFFFFF",
     "hero_image_path": null,
     "card_image_path": "projects/1ac99e20-1aba-4d72-a593-7c8ab3ebe355/covers/card/fa681995-15a5-4810-b311-f7089c75afe9.png",
-    "updated_at": "2026-10-06 07:59:18.991803+00",
-    "published_at": "2026-08-19 16:25:16.177384+00"
+    "published_at": "2026-08-19 16:25:16.177384+00",
+    "created_at": "2026-08-19 16:25:16.177384+00",
+    "updated_at": "2026-10-06 18:50:36.607346+00",
+    "tech_stack": [
+      "Figma",
+      "Adobe Illustrator",
+      "Adobe Photoshop"
+    ],
+    "repository_url": null,
+    "project_status": "Complete",
+    "engineering_highlights": []
   },
   {
     "id": "b578d54c-21cd-46b7-83df-584133ccb5f9",
@@ -107,35 +111,37 @@ export const FALLBACK_PROJECT_ROWS = [
       "Full-Stack Developer",
       "UI/UX Designer"
     ],
-    "tech_stack": [
-          "Laravel",
-          "PHP",
-          "React",
-          "TypeScript",
-          "Inertia.js",
-          "Tailwind CSS",
-          "Vite",
-          "Pest"
-    ],
-    "engineering_highlights": [
-          "Server-side RBAC across Super Admin, Admin, and Staff workflows",
-          "Backend-validated document lifecycle with revision, cancellation, archive, and restore transitions",
-          "Server-side PDF generation with automatic document numbering",
-          "UUID route identifiers to avoid exposing incremental database IDs",
-          "Activity logging and two-factor authentication",
-          "Automated quality gates with Pest, Larastan/PHPStan, linting, and TypeScript checks"
-    ],
-    "project_status": "Complete",
+    "status": "published",
     "featured": true,
     "sort_order": 3,
     "live_url": "https://bast.site.je/",
-    "repository_url": "https://github.com/nafisajuliansahsaputra/bast",
     "accent_color": "#1d5d8f",
     "secondary_color": "#F8FAFB",
     "hero_image_path": "projects/b578d54c-21cd-46b7-83df-584133ccb5f9/covers/hero/7752464e-b7ac-47fd-b538-d5da729dd14e.png",
     "card_image_path": "projects/b578d54c-21cd-46b7-83df-584133ccb5f9/covers/card/5df15b4c-efa8-43c4-899d-6a81cbb09059.png",
-    "updated_at": "2026-10-06 08:48:10.789483+00",
-    "published_at": "2026-08-22 15:55:34.225+00"
+    "published_at": "2026-08-22 15:55:34.225+00",
+    "created_at": "2026-08-22 15:27:31.460469+00",
+    "updated_at": "2026-10-06 18:50:36.607346+00",
+    "tech_stack": [
+      "Laravel",
+      "PHP",
+      "React",
+      "TypeScript",
+      "Inertia.js",
+      "Tailwind CSS",
+      "Vite",
+      "Pest"
+    ],
+    "repository_url": "https://github.com/nafisajuliansahsaputra/bast",
+    "project_status": "Complete",
+    "engineering_highlights": [
+      "Server-side RBAC across Super Admin, Admin, and Staff workflows",
+      "Backend-validated document lifecycle with revision, cancellation, archive, and restore transitions",
+      "Server-side PDF generation with automatic document numbering",
+      "UUID route identifiers to avoid exposing incremental database IDs",
+      "Activity logging and two-factor authentication",
+      "Automated quality gates with Pest, Larastan/PHPStan, linting, and TypeScript checks"
+    ]
   },
   {
     "id": "5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0",
@@ -156,37 +162,39 @@ export const FALLBACK_PROJECT_ROWS = [
       "Product Designer",
       "System Architect"
     ],
-    "tech_stack": [
-          "Next.js",
-          "React",
-          "TypeScript",
-          "PostgreSQL",
-          "Supabase",
-          "Python",
-          "FastAPI",
-          "OpenCV",
-          "Vitest",
-          "pytest"
-    ],
-    "engineering_highlights": [
-          "Atomic and idempotent attendance persistence",
-          "Authenticated Device API designed for real RFID and camera hardware",
-          "Server-side RBAC for system admin, homeroom teacher, and operator roles",
-          "RFID identity with 1:1 face verification rather than broad face search",
-          "Private FastAPI biometric service using YuNet and SFace",
-          "Automated web and Python quality gates with Vitest and pytest"
-    ],
-    "project_status": "Complete",
+    "status": "published",
     "featured": true,
     "sort_order": 4,
     "live_url": "https://attendance-system-85872qh2v-nafisajuliansahsaputras-projects.vercel.app",
-    "repository_url": "https://github.com/nafisajuliansahsaputra/attendance-system",
     "accent_color": "#2c7a57",
     "secondary_color": "#EDF5F0",
     "hero_image_path": "projects/5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0/covers/hero/68c7184e-bd74-4ee8-9986-9271ae2829e9.png",
     "card_image_path": "projects/5d0d7ad9-0f95-4bb2-9a55-e2861d62dfe0/covers/card/dc2cb815-4b01-47d7-a549-cb61bfb27db2.png",
-    "updated_at": "2026-10-06 07:59:18.991803+00",
-    "published_at": "2026-09-16 13:12:46.69+00"
+    "published_at": "2026-09-16 13:12:46.69+00",
+    "created_at": "2026-09-16 12:53:28.393588+00",
+    "updated_at": "2026-10-06 18:50:36.607346+00",
+    "tech_stack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "PostgreSQL",
+      "Supabase",
+      "Python",
+      "FastAPI",
+      "OpenCV",
+      "Vitest",
+      "pytest"
+    ],
+    "repository_url": "https://github.com/nafisajuliansahsaputra/attendance-system",
+    "project_status": "Complete",
+    "engineering_highlights": [
+      "Atomic and idempotent attendance persistence",
+      "Authenticated Device API designed for real RFID and camera hardware",
+      "Server-side RBAC for system admin, homeroom teacher, and operator roles",
+      "RFID identity with 1:1 face verification rather than broad face search",
+      "Private FastAPI biometric service using YuNet and SFace",
+      "Automated web and Python quality gates with Vitest and pytest"
+    ]
   },
   {
     "id": "c0a7d3f6-6b2a-4e7a-9b4e-9c1f5e3d8a21",
@@ -196,9 +204,42 @@ export const FALLBACK_PROJECT_ROWS = [
     "year": 2026,
     "period": "2026",
     "summary": "An Android-to-Windows controller system that turns a phone into an Xbox 360-compatible gamepad through a shared cross-platform protocol, multi-touch input, transport health logic, and automatic connection recovery.",
-    "categories": ["Systems Engineering", "Mobile Development", "Windows Development", "Networking"],
-    "roles": ["Software Developer", "Systems Engineer", "Product Designer"],
-    "tech_stack": ["Kotlin", "C#", ".NET", "WPF", "Android", "UDP", "Bluetooth RFCOMM", "USB AOA", "HIDMaestro", "GitHub Actions"],
+    "categories": [
+      "Systems Engineering",
+      "Mobile Development",
+      "Windows Development",
+      "Networking"
+    ],
+    "roles": [
+      "Software Developer",
+      "Systems Engineer",
+      "Product Designer"
+    ],
+    "status": "published",
+    "featured": true,
+    "sort_order": 5,
+    "live_url": null,
+    "accent_color": "#6D5BD0",
+    "secondary_color": "#EDF6E8",
+    "hero_image_path": null,
+    "card_image_path": null,
+    "published_at": "2026-10-06 16:06:32.433473+00",
+    "created_at": "2026-10-06 16:06:32.433473+00",
+    "updated_at": "2026-10-06 18:50:36.607346+00",
+    "tech_stack": [
+      "Kotlin",
+      "C#",
+      ".NET",
+      "WPF",
+      "Android",
+      "UDP",
+      "Bluetooth RFCOMM",
+      "USB AOA",
+      "HIDMaestro",
+      "GitHub Actions"
+    ],
+    "repository_url": "https://github.com/nafisajuliansahsaputra/natsx-controller",
+    "project_status": "Complete",
     "engineering_highlights": [
       "Cross-language Kotlin and C# protocol with shared framing, sequencing, integrity, and authenticated session semantics",
       "Smart Connection Manager designed around USB Direct, Wi-Fi, and Bluetooth with health scoring, hysteresis, cooldowns, and failover",
@@ -206,18 +247,7 @@ export const FALLBACK_PROJECT_ROWS = [
       "Windows controller-session safety with authoritative transport ownership, stale-state rejection, and neutral watchdog behavior",
       "Trusted local pairing and reconnect foundations without cloud accounts or internet dependency",
       "Automated Android and Windows build/test pipelines plus deterministic protocol and connection-policy coverage"
-    ],
-    "project_status": "Complete",
-    "featured": false,
-    "sort_order": 5,
-    "live_url": null,
-    "repository_url": "https://github.com/nafisajuliansahsaputra/natsx-controller",
-    "accent_color": "#6D5BD0",
-    "secondary_color": "#EDF6E8",
-    "hero_image_path": null,
-    "card_image_path": null,
-    "updated_at": "2026-10-06 15:59:00+00",
-    "published_at": "2026-10-06 15:59:00+00"
+    ]
   }
 
 ];
