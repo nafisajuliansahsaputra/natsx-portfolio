@@ -7,19 +7,19 @@ const homeMessages = {
   en: {
     hero: {
       titlePrimary:
-        "Designing",
+        "Building",
 
       titleSecondary:
-        "Ideas",
+        "Reliable",
 
       titleTertiary:
-        "Into",
+        "Digital",
 
       titleQuaternary:
-        "Experience",
+        "Products",
 
       description:
-        "Full-stack developer building reliable digital products across frontend, backend, databases, APIs, testing, and deployment.",
+        "Full-stack developer turning product requirements into reliable systems across frontend, backend, databases, APIs, testing, and deployment.",
 
       selectedWork:
         "Selected Work",
@@ -226,19 +226,19 @@ const homeMessages = {
   id: {
     hero: {
       titlePrimary:
-        "Merancang",
+        "Membangun",
 
       titleSecondary:
-        "Ide",
+        "Produk",
 
       titleTertiary:
-        "Menjadi",
+        "Digital",
 
       titleQuaternary:
-        "Pengalaman",
+        "Andal",
 
       description:
-        "Full-stack developer yang membangun produk digital andal di frontend, backend, database, API, testing, dan deployment.",
+        "Full-stack developer yang mengubah kebutuhan produk menjadi sistem andal, dari frontend, backend, database, dan API hingga testing dan deployment.",
 
       selectedWork:
         "Karya Pilihan",
@@ -445,19 +445,19 @@ const homeMessages = {
   de: {
     hero: {
       titlePrimary:
-        "Ideen",
+        "Digitale",
 
       titleSecondary:
-        "gestalten",
+        "Produkte",
 
       titleTertiary:
-        "Erlebnisse",
+        "solide",
 
       titleQuaternary:
-        "schaffen",
+        "gebaut",
 
       description:
-        "Full-Stack Developer für zuverlässige digitale Produkte von Frontend und Backend bis Datenbanken, APIs, Testing und Deployment.",
+        "Full-Stack Developer, der Produktanforderungen in zuverlässige Systeme umsetzt, von Frontend, Backend, Datenbanken und APIs bis Testing und Deployment.",
 
       selectedWork:
         "Projekte",
