@@ -1,90 +1,122 @@
 # NATSX Portfolio
 
-Personal portfolio of **NATSX — Nafisa Juliansah Saputra**, a multidisciplinary digital creator working across design, development, motion, and visual experiences.
+Developer portfolio of **Nafisa Juliansah Saputra (NATSX)**, a **Full-Stack Developer** focused on reliable web products, application architecture, APIs, data, testing, deployment, and product-facing interfaces.
 
 **Live:** https://natsx.my.id
 
----
+## Recruiter Snapshot
 
-## Overview
+| Area | Implementation |
+| --- | --- |
+| Primary role | Full-Stack Developer |
+| Frontend | Next.js 16, React 19, TypeScript, CSS Modules, Tailwind CSS |
+| Backend / data | Supabase, PostgreSQL, server-side data access, authenticated admin workflows |
+| Product architecture | Dynamic project CMS, multilingual routing, reusable case-study sections, public/admin boundaries |
+| Reliability | Emergency public data snapshot, media resilience tooling, cache invalidation, production-safe fallbacks |
+| Testing | TypeScript, ESLint, production build verification, Playwright E2E |
+| Security | Supabase Auth, admin authorization, RLS, security headers, CSP, full-history secret scanning |
+| Deployment | Vercel production deployment from `main` |
+| Languages | English, Indonesian, German |
 
-NATSX Portfolio is a custom-built portfolio experience for selected work, creative capabilities, experiments, and dynamic project case studies.
+## What This Repository Demonstrates
 
-The application has two main surfaces:
+This repository is more than a static portfolio frontend. It is a production web application with a public presentation layer and a private content-management surface.
 
-- a public multilingual portfolio
-- a private Supabase-backed admin workspace
+Engineering work includes:
 
-The public experience is built around responsive editorial layouts, custom motion, project-driven content, accessibility, and localized routes. The admin workspace manages published and draft portfolio data, project sections, translations, and media.
+- server-rendered and localized portfolio routes with Next.js
+- Supabase-backed project, translation, category, section, and media data
+- protected admin workflows for draft and published content
+- reusable project-detail rendering instead of hard-coded case-study pages
+- public caching plus invalidation after admin updates
+- an emergency data snapshot so public routes can continue rendering when the primary data path is unavailable
+- responsive motion with reduced-motion handling
+- route-level SEO, canonical URLs, alternate-language metadata, sitemap, and robots rules
+- Playwright coverage for public routes, localization, media, CV, contact, responsive behavior, accessibility, and admin boundaries
+- repository secret scanning with Gitleaks
 
----
+## Application Surfaces
+
+### Public portfolio
+
+The public application includes:
+
+- homepage and selected work
+- filterable project archive
+- dynamic project case studies
+- About, Playground, Contact, and CV routes
+- English, Indonesian, and German localization
+- responsive desktop, tablet, and mobile layouts
+- route-aware transitions and scroll choreography
+- reduced-motion support
+- dynamic Open Graph and Twitter metadata
+- canonical and alternate-language metadata
+- multilingual sitemap and robots configuration
+- Vercel Analytics on Vercel deployments
+
+### Private admin workspace
+
+The admin area supports:
+
+- Supabase Authentication
+- server-side session handling
+- `admin_users` authorization checks
+- project creation and editing
+- draft / published state
+- featured ordering
+- project translations
+- reusable case-study sections
+- image and gallery management
+- category management
+- public-cache invalidation after content updates
+
+Admin routes are kept out of public indexing and are not publicly cached.
+
+## Architecture
+
+```text
+Browser
+  |
+  +-- Public routes
+  |     |
+  |     +-- localized Next.js pages
+  |     +-- cached portfolio readers
+  |     +-- published project data
+  |     +-- emergency public snapshot fallback
+  |
+  +-- Admin routes
+        |
+        +-- Supabase Auth session
+        +-- admin_users authorization
+        +-- project / section / translation writes
+        +-- cache invalidation
+
+Primary data store
+  |
+  +-- Supabase / PostgreSQL
+  +-- Row Level Security
+  +-- portfolio content + translations + section data
+```
+
+The live Supabase-backed data path remains the source of truth for content. The repository also contains a generated, data-only emergency snapshot used by public readers when the primary portfolio API path is temporarily unavailable.
 
 ## Current Stack
 
 - **Next.js 16.3.3**
-- **React 19**
-- **TypeScript**
+- **React 19.2**
+- **TypeScript 5**
 - **Tailwind CSS 4**
 - **CSS Modules**
 - **Three.js**
 - **Supabase**
 - **Supabase SSR**
+- **PostgreSQL**
+- **Zod**
 - **Playwright**
 - **Vercel**
 - **Vercel Analytics**
 
 Typography uses **Plus Jakarta Sans** through `next/font`.
-
----
-
-## Public Experience
-
-The public portfolio includes:
-
-- responsive desktop, tablet, and mobile layouts
-- first-entry branded NATSX intro
-- multilingual routing for English, Indonesian, and German
-- selected work showcase
-- filterable project archive
-- dynamic project case studies
-- custom project artwork
-- lazy-loaded Three.js editorial scene
-- route-aware page transitions
-- scroll-triggered motion
-- reduced-motion support
-- About, Playground, Contact, and CV pages
-- dynamic Open Graph and Twitter metadata
-- canonical and alternate-language metadata
-- dynamic sitemap
-- robots configuration
-- runtime locale synchronization
-- Vercel Analytics in Vercel deployments
-
----
-
-## Supported Locales
-
-The portfolio supports:
-
-```text
-en  English     default route
-id  Indonesia   /id/...
-de  Deutsch     /de/...
-```
-
-English uses the unprefixed route.
-
-Examples:
-
-```text
-/work
-/id/work
-/de/work
-```
-
-The same routing model is used for public project detail pages.
-
----
 
 ## Public Routes
 
@@ -98,139 +130,147 @@ The same routing model is used for public project detail pages.
 └── /cv
 ```
 
-Localized equivalents are available under:
+Localized variants are available under:
 
 ```text
 /id/...
 /de/...
 ```
 
-Only projects with:
+English uses the unprefixed route.
 
-```text
-status = published
+Only published projects are exposed through public portfolio readers.
+
+## Project Case-Study System
+
+Project pages are generated from structured portfolio data rather than being authored as isolated hard-coded pages.
+
+Supported editorial section types include:
+
+- overview
+- narrative
+- statement
+- image
+- gallery
+- metrics
+- quote
+- finale
+
+Project records can expose role, categories, technology stack, engineering highlights, live URLs, repository URLs, localized content, and publication state.
+
+## Data & Resilience
+
+The primary portfolio content path uses Supabase.
+
+Public resilience is handled through:
+
+- cached public readers
+- cache invalidation after admin updates
+- a generated emergency project/content snapshot
+- media backup and mirror tooling
+- media resilience audits during build preparation
+
+Relevant scripts include:
+
+```bash
+npm run backup:portfolio
+npm run mirror:portfolio
+npm run audit:media
 ```
 
-are exposed through the public portfolio.
+The emergency snapshot is intentionally read-only. CMS writes continue to target the primary Supabase-backed data model.
 
----
+## Motion & 3D
 
-## Admin Experience
+The public experience includes a custom motion layer for:
 
-The private admin workspace includes:
+- first-entry portfolio intro
+- route-aware page transitions
+- homepage section choreography
+- project-to-project handoff
+- scroll-triggered reveals
+- responsive behavior
+- reduced-motion fallbacks
+
+Heavier 3D work is isolated from the critical rendering path and loaded only where needed.
+
+## Accessibility
+
+Accessibility work includes:
+
+- semantic main landmarks
+- skip-to-content navigation
+- visible keyboard focus
+- keyboard-accessible navigation
+- mobile menu focus management
+- Escape-key handling
+- reduced-motion support
+- accessible locale switching
+- responsive text-containment verification
+
+## SEO
+
+The application includes:
+
+- route-level titles and descriptions
+- canonical URLs
+- alternate-language metadata
+- Open Graph metadata
+- Twitter metadata
+- project-specific social previews
+- multilingual `sitemap.xml`
+- `robots.txt`
+- project `lastModified` values
+- admin `noindex` behavior
+
+Canonical production domain:
+
+```text
+https://natsx.my.id
+```
+
+## Security
+
+Security controls include:
 
 - Supabase Authentication
-- server-side session refresh
-- `admin_users` authorization checks
-- project creation and editing
-- draft / published project status
-- featured project controls
-- project ordering
-- project translations
-- reusable project case-study sections
-- image and gallery management
-- metrics sections
-- quote sections
-- finale sections
-- portfolio media management
-- public-cache invalidation after content updates
+- explicit `admin_users` authorization
+- Row Level Security
+- restricted admin and storage operations
+- security headers
+- Content Security Policy
+- HSTS
+- `X-Content-Type-Options`
+- `X-Frame-Options`
+- Referrer Policy
+- Permissions Policy
+- full-history Gitleaks secret scanning on push, pull request, schedule, and manual dispatch
 
-Admin routes:
+A valid Supabase session alone is not sufficient for admin access.
+
+## Testing & Verification
+
+Local verification:
+
+```bash
+npm run verify
+```
+
+This runs:
 
 ```text
-/admin
-├── /admin/login
-├── /admin/projects/new
-├── /admin/projects/[id]
-├── /admin/projects/[id]/sections
-└── /admin/categories
+TypeScript
+  ↓
+ESLint
+  ↓
+Production build
+  ↓
+Playwright E2E
 ```
 
-Admin responses are configured to avoid public caching and indexing.
+The E2E suite covers public route availability, localized routes, project details, responsive behavior, motion/reduced-motion behavior, browser errors, media integrity, CV integrity, contact flow, accessibility-sensitive interactions, security headers, admin route boundaries, robots, and sitemap behavior.
 
----
-
-## Project Structure
-
-```text
-.
-├── .github/
-│   └── workflows/
-│       └── verify.yml
-│
-├── public/
-│   ├── cv/
-│   └── images/
-│
-├── src/
-│   ├── app/
-│   │   ├── [locale]/
-│   │   ├── about/
-│   │   ├── admin/
-│   │   ├── api/
-│   │   ├── contact/
-│   │   ├── cv/
-│   │   ├── playground/
-│   │   ├── work/
-│   │   ├── layout.tsx
-│   │   ├── globals.css
-│   │   └── sitemap.ts
-│   │
-│   ├── components/
-│   │   ├── admin/
-│   │   ├── home/
-│   │   ├── i18n/
-│   │   ├── intro/
-│   │   ├── layout/
-│   │   ├── motion/
-│   │   └── system/
-│   │
-│   ├── data/
-│   ├── i18n/
-│   ├── lib/
-│   │   └── supabase/
-│   └── proxy.ts
-│
-├── supabase/
-├── tests/
-│   └── e2e/
-│
-├── .env.example
-├── next.config.ts
-├── package.json
-├── playwright.config.ts
-├── tsconfig.json
-└── vercel.json
-```
-
----
-
-## Environment Variables
-
-Create `.env.local` from `.env.example`.
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-
-NEXT_PUBLIC_SITE_URL=
-NEXT_PUBLIC_CONTACT_EMAIL=
-NEXT_PUBLIC_LINKEDIN_URL=
-NEXT_PUBLIC_INSTAGRAM_URL=
-
-OPENROUTER_API_KEY=
-NATSX_TRANSLATION_MODEL=openrouter/free
-```
-
-Production site URL:
-
-```env
-NEXT_PUBLIC_SITE_URL=https://natsx.my.id
-```
-
-Never commit `.env.local`, private credentials, deploy hooks, or secret keys.
-
----
+Repository CI currently includes a dedicated **Security** workflow that performs full-history secret scanning with Gitleaks.
 
 ## Local Development
 
@@ -246,356 +286,103 @@ Create the local environment file:
 cp .env.example .env.local
 ```
 
-Windows PowerShell:
+PowerShell:
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
-Fill in the required environment variables, then start development:
+Configure the required Supabase and public-site variables, then run:
 
 ```bash
 npm run dev
 ```
 
-Open:
+Local URL:
 
 ```text
 http://localhost:3000
 ```
 
-To force the branded intro during development:
+To force the branded intro:
 
 ```text
 http://localhost:3000/?intro=1
 ```
 
----
+## Core Scripts
 
-## Available Scripts
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run typecheck` | TypeScript validation |
+| `npm run lint` | ESLint |
+| `npm run test:e2e` | Playwright E2E |
+| `npm run verify` | Typecheck + lint + build + E2E |
+| `npm run optimize:3d` | Optimize 3D assets |
+| `npm run backup:portfolio` | Backup portfolio content/media |
+| `npm run mirror:portfolio` | Publish portfolio media mirror |
+| `npm run audit:media` | Audit public media resilience |
 
-Development server:
-
-```bash
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
-
-Serve the production build:
-
-```bash
-npm run start
-```
-
-TypeScript validation:
-
-```bash
-npm run typecheck
-```
-
-ESLint:
-
-```bash
-npm run lint
-```
-
-Playwright E2E suite:
-
-```bash
-npm run test:e2e
-```
-
-Playwright UI:
-
-```bash
-npm run test:e2e:ui
-```
-
-Complete verification pipeline:
-
-```bash
-npm run verify
-```
-
-`npm run verify` runs:
+## Repository Structure
 
 ```text
-TypeScript
-   ↓
-ESLint
-   ↓
-Production Build
-   ↓
-Playwright E2E
+.
+├── .github/workflows/
+│   └── security.yml
+├── public/
+│   ├── cv/
+│   └── images/
+├── scripts/
+├── src/
+│   ├── app/
+│   │   ├── [locale]/
+│   │   ├── about/
+│   │   ├── admin/
+│   │   ├── api/
+│   │   ├── contact/
+│   │   ├── cv/
+│   │   ├── playground/
+│   │   └── work/
+│   ├── components/
+│   ├── data/
+│   ├── i18n/
+│   └── lib/
+├── supabase/
+├── tests/
+├── package.json
+├── playwright.config.ts
+├── tsconfig.json
+└── vercel.json
 ```
-
----
-
-## Automated Quality Checks
-
-The Playwright suite covers more than basic route availability.
-
-Current coverage includes:
-
-- public smoke tests
-- English / Indonesian / German routes
-- project detail pages
-- route-transition behavior
-- reduced-motion behavior
-- runtime browser errors
-- responsive layouts
-- localized visual fit
-- text containment
-- language-switcher accessibility
-- CV integrity
-- project media integrity
-- image delivery
-- contact-page integrity
-- admin route security
-- production security headers
-- robots and multilingual sitemap behavior
-
-The production build is completed before Playwright starts the local production server.
-
----
-
-## Public Data Architecture
-
-Portfolio content is stored in Supabase.
-
-Public readers only query published projects. Admin routes can work with draft and published content.
-
-Public project data uses server-side caching with a shared portfolio cache tag and timed revalidation. Admin content changes invalidate the relevant public cache so published updates do not need to wait for the fallback revalidation window.
-
-The public query layer also avoids unnecessary payload where practical:
-
-- project-detail navigation uses a reduced field set for the next-project sequence
-- sitemap generation uses a dedicated `slug` + `updated_at` query instead of loading full project records and translations
-
----
-
-## Project Case Studies
-
-Project pages are generated from Supabase-backed project data and reusable editorial sections.
-
-Supported content includes:
-
-- overview
-- narrative
-- statement
-- image
-- gallery
-- metrics
-- quote
-- finale
-
-Project images and videos are served through the portfolio media layer backed by Supabase Storage.
-
-The next-project sequence preserves localized title/category data while using a lean navigation query.
-
----
-
-## Motion Architecture
-
-The portfolio uses a custom motion system shared across public routes.
-
-It includes:
-
-- page-specific entrance motion
-- homepage section choreography
-- scroll-triggered reveals
-- route-aware transitions
-- project-to-project handoff motion
-- responsive desktop and mobile behavior
-- reduced-motion fallbacks
-- one-time public entry intro
-
-Route-transition metadata is exposed through semantic data attributes instead of depending on visual DOM nesting.
-
-The heavier Spall Three.js scene is dynamically imported and mounted only when its artwork approaches the viewport.
-
----
-
-## Brand Intro
-
-The NATSX intro is a first-entry experience for supported public routes.
-
-It:
-
-- plays once per browser tab/session
-- supports first-entry deep links
-- does not replay during normal internal navigation
-- excludes admin routes
-- can be forced with `?intro=1`
-- respects reduced-motion preferences
-- transitions into the requested destination
-
-Example:
-
-```text
-http://localhost:3000/?intro=1
-```
-
----
-
-## Accessibility
-
-Accessibility work includes:
-
-- semantic main landmarks
-- skip-to-main-content navigation
-- visible keyboard focus states
-- keyboard-accessible navigation
-- mobile navigation focus management
-- Escape-key handling
-- reduced-motion support
-- accessible language switching
-- responsive text-containment checks
-
----
-
-## SEO
-
-The portfolio includes:
-
-- route-level title and description metadata
-- canonical URLs
-- alternate-language metadata
-- Open Graph metadata
-- Twitter metadata
-- project-specific social preview images
-- root social preview image
-- `robots.txt`
-- dynamic multilingual `sitemap.xml`
-- project `lastModified` values in the sitemap
-- admin `noindex` behavior
-
-Production URLs are based on:
-
-```env
-NEXT_PUBLIC_SITE_URL=https://natsx.my.id
-```
-
----
-
-## Security
-
-The admin area uses Supabase Authentication and server-side authorization.
-
-A valid Supabase session alone is not enough; authorized users must also exist in:
-
-```text
-admin_users
-```
-
-Unauthorized visitors are redirected to:
-
-```text
-/admin/login
-```
-
-Security measures include:
-
-- protected admin routes
-- no-store / noindex admin responses
-- Supabase Row Level Security
-- restricted Storage write access
-- current-password verification for password changes
-- restricted public database operations
-- HTTP security headers
-- Content Security Policy
-- HSTS
-- `X-Content-Type-Options`
-- `X-Frame-Options`
-- Referrer Policy
-- Permissions Policy
-- restricted cross-domain policy
-
-The CSP uses a compatibility baseline suitable for the current Next.js application architecture. Development-only eval allowances are not included in the production policy.
-
-Inline script/style execution is still allowed where required by the current bootstrap and framework behavior; a nonce-based strict CSP is intentionally deferred because it would require a request-time rendering architecture for nonce generation.
-
-Public account registration remains disabled because authentication exists only for portfolio administration.
-
----
-
-## CV
-
-The CV route is available at:
-
-```text
-/cv
-```
-
-Localized UI routes are also available under `/id/cv` and `/de/cv`.
-
-The viewer supports multiple PDF language variants while keeping the website locale independent from the selected document language.
-
-CV files are served from:
-
-```text
-public/cv/
-```
-
----
 
 ## Deployment
 
-Production is hosted on Vercel.
+Production is hosted on **Vercel**.
 
-Domain:
+`vercel.json` keeps Git deployment enabled for `main`, so production follows the repository's main branch deployment flow.
 
-```text
-https://natsx.my.id
-```
+Production domain:
 
-Direct Vercel Git deployment from `main` is disabled in `vercel.json`.
+**https://natsx.my.id**
 
-Production deployment follows this gate:
+## Selected Engineering Work
 
-```text
-push / pull request to main
-          ↓
-GitHub Actions — Verify
-          ↓
-typecheck
-          ↓
-lint
-          ↓
-production build
-          ↓
-Playwright E2E
-          ↓
-verified push to main only
-          ↓
-Vercel production deploy hook
-```
+This portfolio links to the repositories and case studies for:
 
-The deployment job only runs after the verification job succeeds on a push to `main`.
-
-GitHub Actions uses Node.js 24 and installs Playwright Chromium before running the verification command.
-
----
-
-## Analytics
-
-Vercel Analytics is integrated globally and is rendered only when the application is running as a Vercel deployment.
-
----
+- **Smart Attendance System**: full-stack attendance platform with RFID, face verification, RBAC, device APIs, PostgreSQL/Supabase, and FastAPI
+- **NATSX Controller**: Android-to-Windows gamepad system with Kotlin, C#/.NET, networking, shared protocol, and connection recovery
+- **BAST**: Laravel/React document workflow system with RBAC, document lifecycle rules, PDF generation, activity logging, and automated checks
+- **Spall Spill**: creator identity and structured discovery platform in active development with authenticated mutations, RLS, publication workflow foundations, URL safety, media sanitization, and CI/security gates
 
 ## Author
 
-**Nafisa Juliansah Saputra — NATSX**
-
-Digital Creator  
+**Nafisa Juliansah Saputra (NATSX)**  
+**Full-Stack Developer**  
 Indonesia
 
-GitHub: `@nafisajuliansahsaputra`
+GitHub: [@nafisajuliansahsaputra](https://github.com/nafisajuliansahsaputra)
 
 ---
 
