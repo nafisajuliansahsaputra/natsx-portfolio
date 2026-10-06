@@ -708,6 +708,44 @@ export default function NewProjectForm({
         </label>
 
         {/* =========================
+            SOURCE REPOSITORY
+        ========================= */}
+
+        <label
+          className={`${styles.field} ${styles.fullWidth}`}
+        >
+          <span>
+            Source repository URL
+          </span>
+
+          <input
+            className={
+              styles.input
+            }
+            name="repository_url"
+            type="url"
+            placeholder="https://github.com/owner/repository"
+          />
+
+          <small
+            className={
+              styles.helper
+            }
+          >
+            Opsional. Isi jika source
+            repository project dapat
+            dibagikan.
+          </small>
+
+          <FieldError
+            message={
+              state.errors
+                ?.repository_url
+            }
+          />
+        </label>
+
+        {/* =========================
             PALETTE
         ========================= */}
 

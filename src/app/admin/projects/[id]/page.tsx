@@ -171,6 +171,7 @@ export default async function ProjectEditorPage({
             featured,
             sort_order,
             live_url,
+            repository_url,
             accent_color,
             secondary_color,
             hero_image_path,

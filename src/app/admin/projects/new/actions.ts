@@ -20,6 +20,7 @@ type ProjectField =
   | "year"
   | "summary"
   | "live_url"
+  | "repository_url"
   | "accent_color"
   | "secondary_color";
 
@@ -230,6 +231,12 @@ export async function createProject(
       "live_url",
     );
 
+  const repositoryUrl =
+    getText(
+      formData,
+      "repository_url",
+    );
+
   const accentColor =
     getText(
       formData,
@@ -346,6 +353,16 @@ export async function createProject(
   ) {
     errors.live_url =
       "Masukkan URL lengkap, misalnya https://example.com.";
+  }
+
+  if (
+    repositoryUrl &&
+    !isValidUrl(
+      repositoryUrl,
+    )
+  ) {
+    errors.repository_url =
+      "Masukkan URL repository lengkap, misalnya https://github.com/owner/repo.";
   }
 
   if (
@@ -656,6 +673,10 @@ export async function createProject(
 
         live_url:
           liveUrl ||
+          null,
+
+        repository_url:
+          repositoryUrl ||
           null,
 
         accent_color:

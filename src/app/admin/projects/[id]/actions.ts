@@ -36,6 +36,7 @@ type SettingsField =
   | "year"
   | "tech_stack"
   | "live_url"
+  | "repository_url"
   | "accent_color"
   | "secondary_color"
   | "sort_order"
@@ -696,6 +697,12 @@ export async function updateProjectSettings(
       "live_url",
     );
 
+  const repositoryUrl =
+    getText(
+      formData,
+      "repository_url",
+    );
+
   const accentColor =
     getText(
       formData,
@@ -781,6 +788,16 @@ export async function updateProjectSettings(
   ) {
     errors.live_url =
       "Masukkan URL lengkap, misalnya https://example.com.";
+  }
+
+  if (
+    repositoryUrl &&
+    !isValidUrl(
+      repositoryUrl,
+    )
+  ) {
+    errors.repository_url =
+      "Masukkan URL repository lengkap, misalnya https://github.com/owner/repo.";
   }
 
   if (
@@ -1001,6 +1018,10 @@ export async function updateProjectSettings(
 
         live_url:
           liveUrl ||
+          null,
+
+        repository_url:
+          repositoryUrl ||
           null,
 
         accent_color:

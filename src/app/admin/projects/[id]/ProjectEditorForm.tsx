@@ -90,6 +90,10 @@ export type EditableProject = {
     | string
     | null;
 
+  repository_url:
+    | string
+    | null;
+
   accent_color: string;
 
   secondary_color:
@@ -906,6 +910,46 @@ export default function ProjectEditorForm({
                 settingsState
                   .errors
                   ?.live_url
+              }
+            />
+          </label>
+
+          <label
+            className={`${styles.field} ${styles.fullWidth}`}
+          >
+            <span>
+              Source repository URL
+            </span>
+
+            <input
+              className={
+                styles.input
+              }
+              name="repository_url"
+              type="url"
+              defaultValue={
+                project.repository_url ??
+                ""
+              }
+              placeholder="https://github.com/owner/repository"
+            />
+
+            <small
+              className={
+                styles.helper
+              }
+            >
+              Repository source untuk
+              project ini. Kosongkan
+              jika project tidak punya
+              source repository publik.
+            </small>
+
+            <FieldError
+              message={
+                settingsState
+                  .errors
+                  ?.repository_url
               }
             />
           </label>
