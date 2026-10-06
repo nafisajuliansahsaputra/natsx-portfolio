@@ -7,16 +7,16 @@ const homeMessages = {
   en: {
     hero: {
       titlePrimary:
-        "Building",
+        "Designing",
 
       titleSecondary:
-        "Reliable",
+        "Ideas",
 
       titleTertiary:
-        "Digital",
+        "Into",
 
       titleQuaternary:
-        "Products",
+        "Experience",
 
       description:
         "Full-stack developer turning product requirements into reliable systems across frontend, backend, databases, APIs, testing, and deployment.",
@@ -226,16 +226,16 @@ const homeMessages = {
   id: {
     hero: {
       titlePrimary:
-        "Membangun",
+        "Merancang",
 
       titleSecondary:
-        "Produk",
+        "Ide",
 
       titleTertiary:
-        "Digital",
+        "Menjadi",
 
       titleQuaternary:
-        "Andal",
+        "Pengalaman",
 
       description:
         "Full-stack developer yang mengubah kebutuhan produk menjadi sistem andal, dari frontend, backend, database, dan API hingga testing dan deployment.",
@@ -445,16 +445,16 @@ const homeMessages = {
   de: {
     hero: {
       titlePrimary:
-        "Digitale",
+        "Ideen",
 
       titleSecondary:
-        "Produkte",
+        "gestalten",
 
       titleTertiary:
-        "solide",
+        "Erlebnisse",
 
       titleQuaternary:
-        "gebaut",
+        "schaffen",
 
       description:
         "Full-Stack Developer, der Produktanforderungen in zuverlässige Systeme umsetzt, von Frontend, Backend, Datenbanken und APIs bis Testing und Deployment.",
