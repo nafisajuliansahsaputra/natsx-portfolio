@@ -15,6 +15,9 @@ import "@/app/project-media-motion.css";
 import "@/app/project-fit.css";
 
 import Link from "next/link";
+
+import ProjectOpenAnalytics from "@/components/analytics/ProjectOpenAnalytics";
+import TrackedAnchor from "@/components/analytics/TrackedAnchor";
 import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -509,6 +512,12 @@ export async function ProjectPageContent({
     <>
       <SiteHeader />
 
+      <ProjectOpenAnalytics
+        slug={
+          project.slug
+        }
+      />
+
       <main
         id="main-content"
         tabIndex={-1}
@@ -867,13 +876,18 @@ export async function ProjectPageContent({
                   className={`${styles.detailFull} ${styles.projectActions}`}
                 >
                   {project.website ? (
-                    <a
+                    <TrackedAnchor
                       href={
                         project.website
                       }
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`${styles.projectCta} ${styles.projectCtaPrimary}`}
+                      eventName="live_demo_click"
+                      eventData={{
+                        project:
+                          project.slug,
+                      }}
                     >
                       <span
                         className={
@@ -891,17 +905,22 @@ export async function ProjectPageContent({
                       >
                         ↗
                       </span>
-                    </a>
+                    </TrackedAnchor>
                   ) : null}
 
                   {project.repositoryUrl ? (
-                    <a
+                    <TrackedAnchor
                       href={
                         project.repositoryUrl
                       }
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`${styles.projectCta} ${styles.projectCtaSecondary}`}
+                      eventName="github_click"
+                      eventData={{
+                        project:
+                          project.slug,
+                      }}
                     >
                       <span
                         className={
@@ -919,7 +938,7 @@ export async function ProjectPageContent({
                       >
                         ↗
                       </span>
-                    </a>
+                    </TrackedAnchor>
                   ) : null}
                 </div>
               ) : null}
