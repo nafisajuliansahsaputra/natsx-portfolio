@@ -128,13 +128,13 @@ export const FALLBACK_PROJECT_ROWS = [
     "project_status": "Complete",
     "featured": true,
     "sort_order": 3,
-    "live_url": null,
+    "live_url": "https://bast.site.je/",
     "repository_url": "https://github.com/nafisajuliansahsaputra/bast",
     "accent_color": "#1d5d8f",
     "secondary_color": "#F8FAFB",
     "hero_image_path": "projects/b578d54c-21cd-46b7-83df-584133ccb5f9/covers/hero/7752464e-b7ac-47fd-b538-d5da729dd14e.png",
     "card_image_path": "projects/b578d54c-21cd-46b7-83df-584133ccb5f9/covers/card/5df15b4c-efa8-43c4-899d-6a81cbb09059.png",
-    "updated_at": "2026-10-06 08:42:06.157548+00",
+    "updated_at": "2026-10-06 08:48:10.789483+00",
     "published_at": "2026-08-22 15:55:34.225+00"
   },
   {
@@ -1275,7 +1275,7 @@ export const FALLBACK_SECTION_ROWS = [
     "section_type": "metrics",
     "eyebrow": "05 / SYSTEM AT A GLANCE",
     "heading": "A focused system for a real administrative process.",
-    "body": "The application combines role-based access, state-driven document handling, responsive interfaces, and a structured full-stack workflow.",
+    "body": "The application combines role-based access, state-driven document handling, responsive interfaces, and a live full-stack workflow.",
     "content": {
       "metrics": {
         "items": [
@@ -1299,9 +1299,9 @@ export const FALLBACK_SECTION_ROWS = [
           },
           {
             "id": "deployment",
-            "label": "Source available",
-            "value": "CODE",
-            "detail": "The project source is available on GitHub for direct technical review."
+            "label": "Deployed project",
+            "value": "LIVE",
+            "detail": "The application is available as a live web project for direct exploration."
           }
         ],
         "columns": 4
@@ -1347,8 +1347,8 @@ export const FALLBACK_SECTION_ROWS = [
           }
         },
         "title": "A clearer way to manage handover administration.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "ctaUrl": "https://bast.site.je/",
+        "ctaLabel": "View live project"
       }
     },
     "theme": "accent",
@@ -1735,8 +1735,8 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
           "alt": "BAST Management System auf Laptop- und Smartphone-Mockups dargestellt."
         },
         "title": "Ein klarerer Weg zur Verwaltung von Übergaben.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "ctaUrl": "https://bast.site.je/",
+        "ctaLabel": "Live-Projekt ansehen"
       }
     }
   },
@@ -1753,8 +1753,8 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
           "alt": "BAST management system displayed on laptop and mobile device mockups."
         },
         "title": "A clearer way to manage handover administration.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "ctaUrl": "https://bast.site.je/",
+        "ctaLabel": "View live project"
       }
     }
   },
@@ -1771,8 +1771,8 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
           "alt": "Sistem manajemen BAST ditampilkan pada mockup laptop dan perangkat mobile."
         },
         "title": "Cara yang lebih jelas untuk mengelola administrasi serah terima.",
-        "ctaUrl": "",
-        "ctaLabel": ""
+        "ctaUrl": "https://bast.site.je/",
+        "ctaLabel": "Lihat proyek live"
       }
     }
   },
@@ -1805,7 +1805,7 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
     "locale": "de",
     "eyebrow": "05 / DAS SYSTEM AUF EINEN BLICK",
     "heading": "Ein fokussiertes System für einen realen Verwaltungsprozess.",
-    "body": "Die Anwendung verbindet rollenbasierten Zugriff, statusgesteuerte Dokumentverwaltung, responsive Oberflächen und einen strukturierten Full-Stack-Workflow.",
+    "body": "Die Anwendung verbindet rollenbasierten Zugriff, statusgesteuerte Dokumentverwaltung, responsive Oberflächen und einen live bereitgestellten Full-Stack-Workflow.",
     "content": {
       "metrics": {
         "copyById": {
@@ -1825,9 +1825,9 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
             "detail": "Verfügbare Aktionen folgen dem aktuellen Dokumentstatus, anstatt jeden Datensatz gleich zu behandeln."
           },
           "deployment": {
-            "label": "Quellcode verfügbar",
-            "value": "CODE",
-            "detail": "Der Projektquellcode ist auf GitHub für eine direkte technische Prüfung verfügbar."
+            "label": "Live-Projekt",
+            "value": "LIVE",
+            "detail": "Die Anwendung ist als live bereitgestelltes Webprojekt direkt verfügbar."
           }
         }
       }
@@ -1838,7 +1838,7 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
     "locale": "en",
     "eyebrow": "05 / SYSTEM AT A GLANCE",
     "heading": "A focused system for a real administrative process.",
-    "body": "The application combines role-based access, state-driven document handling, responsive interfaces, and a structured full-stack workflow.",
+    "body": "The application combines role-based access, state-driven document handling, responsive interfaces, and a live full-stack workflow.",
     "content": {}
   },
   {
@@ -1866,9 +1866,9 @@ export const FALLBACK_SECTION_TRANSLATION_ROWS = [
             "detail": "Tindakan yang tersedia mengikuti status dokumen saat ini, bukan memperlakukan semua data dengan cara yang sama."
           },
           "deployment": {
-            "label": "Source tersedia",
-            "value": "CODE",
-            "detail": "Source code project tersedia di GitHub untuk ditinjau secara teknis."
+            "label": "Proyek live",
+            "value": "LIVE",
+            "detail": "Aplikasi tersedia sebagai proyek web live yang dapat dieksplorasi secara langsung."
           }
         }
       }
