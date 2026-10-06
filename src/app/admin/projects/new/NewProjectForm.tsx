@@ -705,10 +705,10 @@ export default function NewProjectForm({
               styles.helper
             }
           >
-            Status yang nantinya
-            ditampilkan ke recruiter,
-            terpisah dari draft/published
-            CMS.
+            Status publik project.
+            Gunakan In Development
+            atau Complete, terpisah
+            dari draft/published CMS.
           </small>
 
           <FieldError
