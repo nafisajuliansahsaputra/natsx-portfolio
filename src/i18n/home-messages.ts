@@ -39,7 +39,7 @@ const homeMessages = {
         "Work",
 
       description:
-        "A selection of projects across design, development, identity, and digital experiences.",
+        "A selection of engineering and product work spanning full-stack development, systems, interfaces, and visual craft.",
 
       current:
         "CURRENT",
@@ -88,48 +88,48 @@ const homeMessages = {
         "03 / Capabilities",
 
       headingLine1:
-        "Ideas across",
+        "Development at",
 
       headingLine2:
-        "disciplines",
+        "the core",
 
       intro:
-        "I work across design, development, motion, and creative direction—connecting different disciplines to build complete digital experiences.",
+        "I build across frontend, backend, data, APIs, testing, and deployment, with product and visual design supporting how the system is understood and used.",
 
       skillsLabel:
         "skills",
 
       items: {
-        design: {
-          title:
-            "Design",
-
-          description:
-            "Creating clear and considered visual experiences across digital products, interfaces, and brand systems.",
-        },
-
         development: {
           title:
-            "Development",
+            "Full-Stack Development",
 
           description:
-            "Turning visual concepts into responsive and functional digital experiences with modern web technologies.",
+            "Building product features end to end across frontend, backend, APIs, application logic, and delivery.",
         },
 
-        motion: {
+        systems: {
           title:
-            "Motion",
+            "Systems & Reliability",
 
           description:
-            "Adding movement with purpose through motion graphics, interaction, editing, and visual storytelling.",
+            "Designing data, authorization, integrations, networking, testing, and failure boundaries that keep products dependable.",
+        },
+
+        design: {
+          title:
+            "Product & Interface Design",
+
+          description:
+            "Using product thinking and interface design to make technical systems clearer, easier to navigate, and more usable.",
         },
 
         creative: {
           title:
-            "Creative",
+            "Visual Craft",
 
           description:
-            "Shaping ideas beyond individual deliverables through direction, experimentation, and visual exploration.",
+            "Applying identity, motion, art direction, and visual exploration where they strengthen the product experience.",
         },
       },
     },
@@ -151,7 +151,7 @@ const homeMessages = {
         "Full-stack developer with a strong product and interface design foundation, working from system logic and implementation through testing and deployment.",
 
       body:
-        "I enjoy taking ideas from something abstract into something people can actually see, use, and experience—combining different disciplines instead of treating them as separate parts.",
+        "I enjoy turning product requirements into products people can rely on, connecting engineering, product thinking, and interface craft from implementation through delivery.",
 
       moreAbout:
         "More About Me",
@@ -258,7 +258,7 @@ const homeMessages = {
         "Pilihan",
 
       description:
-        "Pilihan proyek yang mencakup desain, development, identitas visual, dan pengalaman digital.",
+        "Pilihan karya engineering dan produk yang mencakup full-stack development, systems, interface, dan visual craft.",
 
       current:
         "TERKINI",
@@ -307,48 +307,48 @@ const homeMessages = {
         "03 / Keahlian",
 
       headingLine1:
-        "Ide lintas",
+        "Development sebagai",
 
       headingLine2:
-        "disiplin",
+        "inti",
 
       intro:
-        "Saya bekerja di antara desain, development, motion, dan creative direction—menghubungkan berbagai disiplin untuk membangun pengalaman digital yang utuh.",
+        "Saya membangun dari frontend, backend, data, API, testing, hingga deployment, dengan product dan visual design sebagai pendukung agar sistem mudah dipahami dan digunakan.",
 
       skillsLabel:
         "keahlian",
 
       items: {
-        design: {
-          title:
-            "Desain",
-
-          description:
-            "Menciptakan pengalaman visual yang jelas dan terarah untuk produk digital, interface, dan sistem brand.",
-        },
-
         development: {
           title:
-            "Development",
+            "Full-Stack Development",
 
           description:
-            "Mengubah konsep visual menjadi pengalaman digital yang responsif dan fungsional dengan teknologi web modern.",
+            "Membangun fitur produk secara end to end melalui frontend, backend, API, application logic, dan delivery.",
         },
 
-        motion: {
+        systems: {
           title:
-            "Motion",
+            "Systems & Reliability",
 
           description:
-            "Menghadirkan gerak dengan tujuan melalui motion graphics, interaction, editing, dan visual storytelling.",
+            "Merancang data, authorization, integration, networking, testing, dan failure boundary agar produk tetap dapat diandalkan.",
+        },
+
+        design: {
+          title:
+            "Product & Interface Design",
+
+          description:
+            "Menggunakan product thinking dan interface design agar sistem teknis lebih jelas, mudah dinavigasi, dan mudah digunakan.",
         },
 
         creative: {
           title:
-            "Creative Direction",
+            "Visual Craft",
 
           description:
-            "Mengembangkan ide melampaui satu output melalui direction, eksperimen, dan eksplorasi visual.",
+            "Menggunakan identity, motion, art direction, dan eksplorasi visual ketika hal tersebut benar-benar memperkuat pengalaman produk.",
         },
       },
     },
@@ -370,7 +370,7 @@ const homeMessages = {
         "Full-stack developer dengan dasar product dan interface design yang kuat, dari logika sistem dan implementasi hingga testing dan deployment.",
 
       body:
-        "Saya menikmati proses mengubah ide yang masih abstrak menjadi sesuatu yang benar-benar dapat dilihat, digunakan, dan dirasakan—dengan menghubungkan berbagai disiplin, bukan memisahkannya.",
+        "Saya menikmati proses mengubah kebutuhan produk menjadi sistem yang dapat diandalkan, dengan menghubungkan engineering, product thinking, dan interface craft dari implementasi hingga delivery.",
 
       moreAbout:
         "Lebih Tentang Saya",
@@ -477,7 +477,7 @@ const homeMessages = {
         "Projekte",
 
       description:
-        "Eine Auswahl an Projekten aus Design, Development, visueller Identität und digitalen Erlebnissen.",
+        "Eine Auswahl an Engineering- und Produktprojekten aus Full-Stack Development, Systems, Interfaces und Visual Craft.",
 
       current:
         "AKTUELL",
@@ -526,48 +526,48 @@ const homeMessages = {
         "03 / Kompetenzen",
 
       headingLine1:
-        "Disziplinen",
+        "Development",
 
       headingLine2:
-        "verbinden",
+        "im Kern",
 
       intro:
-        "Ich arbeite an der Schnittstelle von Design, Development, Motion und Creative Direction und verbinde diese Disziplinen zu ganzheitlichen digitalen Erlebnissen.",
+        "Ich arbeite über Frontend, Backend, Daten, APIs, Testing und Deployment hinweg. Product und Visual Design unterstützen dabei, Systeme verständlich und gut nutzbar zu machen.",
 
       skillsLabel:
         "Kompetenzen",
 
       items: {
-        design: {
-          title:
-            "Design",
-
-          description:
-            "Klare und durchdachte visuelle Erlebnisse für digitale Produkte, Interfaces und Markensysteme.",
-        },
-
         development: {
           title:
-            "Development",
+            "Full-Stack Development",
 
           description:
-            "Visuelle Konzepte mit modernen Webtechnologien in responsive und funktionale digitale Erlebnisse übersetzen.",
+            "Produktfunktionen end to end über Frontend, Backend, APIs, Application Logic und Delivery entwickeln.",
         },
 
-        motion: {
+        systems: {
           title:
-            "Motion",
+            "Systems & Reliability",
 
           description:
-            "Bewegung gezielt einsetzen – mit Motion Graphics, Interaction, Editing und visuellem Storytelling.",
+            "Daten, Autorisierung, Integrationen, Networking, Testing und Fehlergrenzen so gestalten, dass Produkte verlässlich bleiben.",
+        },
+
+        design: {
+          title:
+            "Product & Interface Design",
+
+          description:
+            "Product Thinking und Interface Design nutzen, damit technische Systeme klarer, verständlicher und leichter nutzbar werden.",
         },
 
         creative: {
           title:
-            "Creative Direction",
+            "Visual Craft",
 
           description:
-            "Ideen über einzelne Deliverables hinaus durch Direction, Experimente und visuelle Exploration weiterentwickeln.",
+            "Identity, Motion, Art Direction und visuelle Exploration dort einsetzen, wo sie das Produkterlebnis tatsächlich stärken.",
         },
       },
     },
@@ -589,7 +589,7 @@ const homeMessages = {
         "Full-Stack Developer mit starkem Fundament in Produkt- und Interface-Design, von Systemlogik und Implementierung bis Testing und Deployment.",
 
       body:
-        "Mich reizt der Prozess, abstrakte Ideen in etwas zu verwandeln, das Menschen sehen, nutzen und erleben können—indem verschiedene Disziplinen miteinander verbunden statt getrennt betrachtet werden.",
+        "Mich reizt der Prozess, Produktanforderungen in verlässliche Systeme zu übersetzen und Engineering, Product Thinking und Interface Craft von der Implementierung bis zur Auslieferung zu verbinden.",
 
       moreAbout:
         "Mehr über mich",
