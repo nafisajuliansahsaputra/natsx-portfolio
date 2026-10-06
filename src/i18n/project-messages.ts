@@ -31,6 +31,30 @@ const projectMessages = {
 
       caseStudy:
         "Case Study",
+
+      technicalOverview:
+        "Technical Overview",
+
+      status:
+        "Status",
+
+      stack:
+        "Stack",
+
+      database:
+        "Database",
+
+      testing:
+        "Testing",
+
+      liveDemo:
+        "Live Demo",
+
+      sourceCode:
+        "Source Code",
+
+      engineeringHighlights:
+        "Engineering Highlights",
     },
 
     sections: {
@@ -114,6 +138,30 @@ const projectMessages = {
 
       caseStudy:
         "Studi Kasus",
+
+      technicalOverview:
+        "Ringkasan Teknis",
+
+      status:
+        "Status",
+
+      stack:
+        "Stack",
+
+      database:
+        "Database",
+
+      testing:
+        "Testing",
+
+      liveDemo:
+        "Demo Langsung",
+
+      sourceCode:
+        "Kode Sumber",
+
+      engineeringHighlights:
+        "Sorotan Engineering",
     },
 
     sections: {
@@ -197,6 +245,30 @@ const projectMessages = {
 
       caseStudy:
         "Case Study",
+
+      technicalOverview:
+        "Technischer Überblick",
+
+      status:
+        "Status",
+
+      stack:
+        "Stack",
+
+      database:
+        "Datenbank",
+
+      testing:
+        "Testing",
+
+      liveDemo:
+        "Live-Demo",
+
+      sourceCode:
+        "Quellcode",
+
+      engineeringHighlights:
+        "Engineering-Highlights",
     },
 
     sections: {
