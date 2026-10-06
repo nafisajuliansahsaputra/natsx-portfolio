@@ -69,6 +69,72 @@ const FALLBACK_VISUALS:
     "attendance",
   ];
 
+
+const RECRUITER_PRIORITY:
+  Record<
+    string,
+    number
+  > = {
+    "spall-spill":
+      0,
+
+    "nusantara-stay":
+      1,
+
+    "attendance-system":
+      1,
+
+    "smart-attendance-system":
+      1,
+
+    "bast-management-system":
+      2,
+
+    "5am-vision":
+      3,
+  };
+
+function sortFeaturedProjectsForRecruiters(
+  projects:
+    PublicProject[],
+) {
+  return [
+    ...projects,
+  ].sort(
+    (
+      first,
+      second,
+    ) => {
+      const firstPriority =
+        RECRUITER_PRIORITY[
+          first.slug
+        ] ??
+        Number.MAX_SAFE_INTEGER;
+
+      const secondPriority =
+        RECRUITER_PRIORITY[
+          second.slug
+        ] ??
+        Number.MAX_SAFE_INTEGER;
+
+      if (
+        firstPriority !==
+        secondPriority
+      ) {
+        return (
+          firstPriority -
+          secondPriority
+        );
+      }
+
+      return (
+        first.sortOrder -
+        second.sortOrder
+      );
+    },
+  );
+}
+
 function getProjectPresentation(
   project:
     PublicProject,
@@ -153,9 +219,11 @@ export default async function SelectedWork({
     ).selectedWork;
 
   const featuredProjects =
-    await getFeaturedProjects(
-      4,
-      locale,
+    sortFeaturedProjectsForRecruiters(
+      await getFeaturedProjects(
+        4,
+        locale,
+      ),
     );
 
   const yearRange =
@@ -291,9 +359,13 @@ export default async function SelectedWork({
                   "attendance";
 
                 const displayNumber =
-                  isLegacyAttendance
-                    ? "04"
-                    : project.number;
+                  String(
+                    index +
+                      1,
+                  ).padStart(
+                    2,
+                    "0",
+                  );
 
                 const displayTitle =
                   isLegacyAttendance
