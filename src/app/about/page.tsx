@@ -28,7 +28,7 @@ import AboutInteractionPolish from "./AboutInteractionPolish";
 import styles from "./About.module.css";
 
 const description =
-  "About Nafisa Juliansah Saputra — a multidisciplinary digital creator working across design, development, motion, and visual experiences.";
+  "About Nafisa Juliansah Saputra — a full-stack developer building reliable digital products across frontend, backend, databases, APIs, systems, testing, deployment, and product design.";
 
 export const metadata =
   createPageMetadata({
@@ -47,13 +47,13 @@ const disciplines = [
       "01",
 
     key:
-      "design",
+      "development",
 
     items: [
-      "UI/UX Design",
-      "Web Design",
-      "Graphic Design",
-      "Visual Identity",
+      "Full-Stack Development",
+      "Next.js / React",
+      "Laravel / PHP",
+      "APIs & Services",
     ],
   },
 
@@ -62,13 +62,13 @@ const disciplines = [
       "02",
 
     key:
-      "development",
+      "systems",
 
     items: [
-      "Frontend",
-      "Next.js",
-      "React",
-      "Creative Development",
+      "PostgreSQL / Supabase",
+      "Auth & RBAC",
+      "Protocols & Networking",
+      "Testing & CI",
     ],
   },
 
@@ -77,13 +77,13 @@ const disciplines = [
       "03",
 
     key:
-      "motion",
+      "design",
 
     items: [
-      "Motion Design",
-      "UI Motion",
-      "Video Editing",
-      "Interaction",
+      "Product Design",
+      "UI/UX Design",
+      "Design Systems",
+      "Interaction Design",
     ],
   },
 
@@ -95,9 +95,9 @@ const disciplines = [
       "creative",
 
     items: [
-      "Creative Direction",
+      "Visual Identity",
+      "Motion",
       "Art Direction",
-      "AI-Assisted Creative",
       "Visual Exploration",
     ],
   },
