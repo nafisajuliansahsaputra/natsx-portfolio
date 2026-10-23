@@ -13,6 +13,8 @@ import {
   getMessages,
 } from "@/i18n/messages";
 
+import { isPlaygroundPublic } from "@/lib/public-visibility";
+
 import InnerFooterBackToTop from "./InnerFooterBackToTop";
 
 import styles from "./InnerFooter.module.css";
@@ -50,6 +52,10 @@ const navigation = [
       "/contact",
   },
 ] as const;
+
+const visibleNavigation = navigation.filter(
+  (item) => isPlaygroundPublic || item.key !== "playground",
+);
 
 type InnerFooterProps = {
   locale:
@@ -183,7 +189,7 @@ export default function InnerFooter({
                 .footerNavigation
             }
           >
-            {navigation.map(
+            {visibleNavigation.map(
               (
                 item,
               ) => (

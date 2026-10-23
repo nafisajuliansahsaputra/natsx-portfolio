@@ -18,6 +18,8 @@ import {
   createLocalizedPageMetadata,
 } from "@/lib/page-metadata";
 
+import { isPlaygroundPublic } from "@/lib/public-visibility";
+
 type LocalizedPlaygroundPageProps = {
   params: Promise<{
     locale: string;
@@ -32,6 +34,7 @@ export async function generateMetadata({
   } = await params;
 
   if (
+    !isPlaygroundPublic ||
     !isLocalizedLocale(
       locale,
     )
@@ -66,6 +69,7 @@ export default async function LocalizedPlaygroundPage({
   } = await params;
 
   if (
+    !isPlaygroundPublic ||
     !isLocalizedLocale(
       locale,
     )

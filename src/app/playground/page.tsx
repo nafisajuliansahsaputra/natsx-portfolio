@@ -2,6 +2,7 @@ import "@/app/playground-motion.css";
 import "@/app/playground-motion-fit.css";
 
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -18,6 +19,8 @@ import {
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+
+import { isPlaygroundPublic } from "@/lib/public-visibility";
 
 import PlaygroundExperiencePolish from "./PlaygroundExperiencePolish";
 import PlaygroundLab from "./PlaygroundLab";
@@ -362,6 +365,10 @@ export function PlaygroundPageContent({
 }
 
 export default function PlaygroundPage() {
+  if (!isPlaygroundPublic) {
+    notFound();
+  }
+
   return (
     <PlaygroundPageContent
       locale="en"
