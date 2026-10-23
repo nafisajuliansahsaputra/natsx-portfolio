@@ -352,6 +352,18 @@
 ========================= */
 
 /*
+ * Capabilities heading can paint beyond its grid-column text box.
+ * Keep its existing vertical reveal, but overscan the mask on the
+ * right so the final letters of "Development" stay visible.
+ * Other headings retain their original clip bounds.
+ */
+[data-motion-page="home"]
+  [data-motion-scroll="home-capabilities-intro"]
+  [data-motion-piece="title"] {
+  --home-reveal-right-overhang: -0.9em;
+}
+
+/*
  * Horizontal negative inset is
  * intentional: display glyphs can
  * visually overhang their line box
@@ -369,7 +381,7 @@
     clip-path:
       inset(
         -0.35em
-        -0.14em
+        var(--home-reveal-right-overhang, -0.14em)
         calc(
           100% +
           0.35em
@@ -389,7 +401,7 @@
     clip-path:
       inset(
         -0.35em
-        -0.14em
+        var(--home-reveal-right-overhang, -0.14em)
         -0.35em
         -0.14em
       );
