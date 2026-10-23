@@ -1,3 +1,5 @@
+import { isPlaygroundPublic } from "../../src/lib/public-visibility";
+
 import {
   expect,
   test,
@@ -100,7 +102,7 @@ const publicRoutes = [
   "/",
   "/work",
   "/about",
-  "/playground",
+  ...(isPlaygroundPublic ? ["/playground"] : []),
   "/contact",
   "/cv",
 ] as const;
@@ -115,8 +117,8 @@ const localizedRoutes = [
   "/id/about",
   "/de/about",
 
-  "/id/playground",
-  "/de/playground",
+  ...(isPlaygroundPublic ? ["/id/playground"] : []),
+  ...(isPlaygroundPublic ? ["/de/playground"] : []),
 
   "/id/contact",
   "/de/contact",

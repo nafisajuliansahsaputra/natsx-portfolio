@@ -1,3 +1,5 @@
+import { isPlaygroundPublic } from "../../src/lib/public-visibility";
+
 import {
   expect,
   test,
@@ -829,6 +831,10 @@ test(
           const target
           of pageTargets
         ) {
+          if (!isPlaygroundPublic && target.path === "/playground") {
+            continue;
+          }
+
           const route =
             `/${locale}${target.path}`;
 

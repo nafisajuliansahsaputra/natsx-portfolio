@@ -21,6 +21,7 @@ import SelectedWork from "@/components/home/SelectedWork";
 import SelectedWorkImmersiveGate from "@/components/home/SelectedWorkImmersiveGate";
 
 import SiteHeader from "@/components/layout/SiteHeader";
+import { isPlaygroundPublic } from "@/lib/public-visibility";
 
 import type {
   Locale,
@@ -68,11 +69,9 @@ export default function HomePage({
           }
         />
 
-        <PlaygroundPreview
-          locale={
-            locale
-          }
-        />
+        {isPlaygroundPublic ? (
+          <PlaygroundPreview locale={locale} />
+        ) : null}
 
         <ContactFooter
           locale={

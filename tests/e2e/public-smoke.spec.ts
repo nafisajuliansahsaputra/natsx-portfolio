@@ -1,3 +1,5 @@
+import { isPlaygroundPublic } from "../../src/lib/public-visibility";
+
 import {
   expect,
   test,
@@ -66,13 +68,13 @@ const englishRoutes = [
     heading:
       /Curriculum Vitae/i,
   },
-];
+].filter((route) => isPlaygroundPublic || route.path !== "/playground");
 
 const localizedRoutes = [
   "/",
   "/work",
   "/about",
-  "/playground",
+  ...(isPlaygroundPublic ? ["/playground"] : []),
   "/contact",
   "/cv",
 ] as const;
@@ -785,13 +787,19 @@ test(
 
     for (
       const path
-      of expectedStaticPaths
+      of expectedStaticPaths.filter(
+        (path) => isPlaygroundPublic || !path.endsWith("/playground"),
+      )
     ) {
       expect(
         sitemapBody,
       ).toContain(
         path,
       );
+    }
+
+    if (!isPlaygroundPublic) {
+      expect(sitemapBody).not.toContain("/playground");
     }
 
     expect(
@@ -831,3 +839,16 @@ test(
     );
   },
 );
+
+test("Playground is unavailable to public visitors", async ({ page }) => {
+  test.skip(isPlaygroundPublic, "Playground is publicly enabled.");
+
+  for (const path of ["/playground", "/id/playground", "/de/playground"]) {
+    const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(404);
+  }
+
+  await page.goto("/");
+  await expect(page.locator("#playground")).toHaveCount(0);
+  await expect(page.locator('a[href*="/playground"]')).toHaveCount(0);
+});

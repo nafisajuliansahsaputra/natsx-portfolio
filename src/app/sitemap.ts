@@ -16,6 +16,8 @@ import {
   getAbsoluteUrl,
 } from "@/lib/site-url";
 
+import { isPlaygroundPublic } from "@/lib/public-visibility";
+
 export const revalidate =
   300;
 
@@ -135,7 +137,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes:
     MetadataRoute.Sitemap =
-    staticPages.flatMap(
+    staticPages
+      .filter((page) => isPlaygroundPublic || page.path !== "/playground")
+      .flatMap(
       (
         page,
       ) => {

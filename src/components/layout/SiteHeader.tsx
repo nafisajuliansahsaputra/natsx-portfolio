@@ -20,6 +20,7 @@ import {
 } from "@/i18n/config";
 
 import { getMessages } from "@/i18n/messages";
+import { isPlaygroundPublic } from "@/lib/public-visibility";
 
 import floatStyles from "./SiteHeaderFloating.module.css";
 import menuStyles from "./SiteHeaderMenuReveal.module.css";
@@ -51,6 +52,10 @@ const navigation = [
     href: "/contact",
   },
 ] as const;
+
+const visibleNavigation = navigation.filter(
+  (item) => isPlaygroundPublic || item.key !== "playground",
+);
 
 export default function SiteHeader() {
   const pathname =
@@ -154,7 +159,7 @@ export default function SiteHeader() {
   }
 
   const activeNavigationItem =
-    navigation.find(
+    visibleNavigation.find(
       (item) =>
         isActive(
           item.href,
@@ -1070,7 +1075,7 @@ export default function SiteHeader() {
                   .mainNavigation
               }
             >
-              {navigation.map(
+              {visibleNavigation.map(
                 (item) => {
                   const active =
                     isActive(
@@ -1273,7 +1278,7 @@ export default function SiteHeader() {
                 .mobileNavigation
             }
           >
-            {navigation.map(
+            {visibleNavigation.map(
               (item) => {
                 const active =
                   isActive(
