@@ -1,3 +1,5 @@
+import { isPlaygroundPublic } from "../../src/lib/public-visibility";
+
 import {
   expect,
   test,
@@ -631,6 +633,7 @@ test.describe(
       async ({
         page,
       }) => {
+        test.skip(!isPlaygroundPublic, "Playground is temporarily private.");
         await page.setViewportSize({
           width:
             1440,

@@ -1,3 +1,5 @@
+import { isPlaygroundPublic } from "../../src/lib/public-visibility";
+
 import {
   expect,
   test,
@@ -104,7 +106,9 @@ test(
 
     for (
       const item
-      of cases
+      of cases.filter(
+        (item) => isPlaygroundPublic || !item.route.endsWith("/playground"),
+      )
     ) {
       const response =
         await page.goto(
