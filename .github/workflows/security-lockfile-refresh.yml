@@ -52,9 +52,6 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Lint
-        run: npm run lint
-
       - name: Commit generated lockfile on security branch
         run: |
           git add package-lock.json
@@ -69,3 +66,6 @@ jobs:
 
       - name: Production build regression check
         run: npm run build
+
+      - name: Lint
+        run: npm run lint
