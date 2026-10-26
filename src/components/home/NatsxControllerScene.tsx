@@ -217,26 +217,154 @@ function putMacbookScreen(model: THREE.Object3D, texture: THREE.Texture) {
   }
 }
 
-function addPodium(group: THREE.Group, x: number, y: number, radius: number, color: string) {
-  const platform = new THREE.Mesh(
-    new THREE.CylinderGeometry(radius, radius * 1.06, .17, 64),
+/*
+ * Physically dimensional gamepad built from small, lightweight meshes.
+ * No extra GLB download, lighting loop or third WebGL context.
+ */
+function createGamepad() {
+  const group = new THREE.Group();
+  const body = new THREE.Shape();
+  body.moveTo(-1.32, .22);
+  body.bezierCurveTo(-1.52, .17, -1.62, -.15, -1.55, -.43);
+  body.bezierCurveTo(-1.48, -.82, -1.22, -.99, -.97, -.79);
+  body.lineTo(-.55, -.47);
+  body.bezierCurveTo(-.25, -.53, .25, -.53, .55, -.47);
+  body.lineTo(.97, -.79);
+  body.bezierCurveTo(1.22, -.99, 1.48, -.82, 1.55, -.43);
+  body.bezierCurveTo(1.62, -.15, 1.52, .17, 1.32, .22);
+  body.bezierCurveTo(.9, .49, .55, .47, .24, .43);
+  body.lineTo(-.24, .43);
+  body.bezierCurveTo(-.55, .47, -.9, .49, -1.32, .22);
+
+  const shell = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(body, {
+      depth: .27, bevelEnabled: true, bevelThickness: .09,
+      bevelSize: .09, bevelSegments: 3, curveSegments: 10,
+    }),
     new THREE.MeshStandardMaterial({
-      color: "#181924",
-      metalness: .55,
-      roughness: .28,
-      emissive: new THREE.Color(color),
-      emissiveIntensity: .05,
+      color: "#20252d", metalness: .42, roughness: .32,
     }),
   );
-  platform.position.set(x, y, -.35);
-  group.add(platform);
-  const halo = new THREE.Mesh(
-    new THREE.TorusGeometry(radius * .96, .026, 8, 64),
-    new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .78 }),
+  shell.position.z = -.2;
+  group.add(shell);
+
+  const trim = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(body, {
+      depth: .025, bevelEnabled: true, bevelSize: .025,
+      bevelThickness: .025, bevelSegments: 2, curveSegments: 10,
+    }),
+    new THREE.MeshStandardMaterial({
+      color: "#393d4b", metalness: .7, roughness: .26,
+    }),
   );
-  halo.rotation.x = Math.PI / 2;
-  halo.position.set(x, y + .095, -.35);
-  group.add(halo);
+  trim.scale.set(.94, .90, 1);
+  trim.position.set(0, .015, .102);
+  group.add(trim);
+
+  const face = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(body, {
+      depth: .015, bevelEnabled: true, bevelSize: .025,
+      bevelThickness: .025, bevelSegments: 2, curveSegments: 10,
+    }),
+    new THREE.MeshStandardMaterial({
+      color: "#252831", metalness: .24, roughness: .47,
+    }),
+  );
+  face.scale.set(.915, .865, 1);
+  face.position.set(0, .015, .15);
+  group.add(face);
+
+  const dark = new THREE.MeshStandardMaterial({
+    color: "#11151d", metalness: .24, roughness: .31,
+  });
+  const rim = new THREE.MeshStandardMaterial({
+    color: "#545a6a", metalness: .73, roughness: .25,
+  });
+
+  function disc(x: number, y: number, radius: number, color: THREE.Material, z = .26) {
+    const mesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(radius, radius, .09, 32),
+      color,
+    );
+    mesh.rotation.x = Math.PI / 2;
+    mesh.position.set(x, y, z);
+    group.add(mesh);
+    return mesh;
+  }
+
+  function stick(x: number, y: number) {
+    disc(x, y, .215, rim);
+    disc(x, y, .175, dark, .32);
+    const cap = disc(x - .017, y + .015, .128, dark, .41);
+    cap.material = new THREE.MeshStandardMaterial({
+      color: "#242937", metalness: .32, roughness: .48,
+    });
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(.124, .013, 8, 40),
+      rim,
+    );
+    ring.position.set(x - .017, y + .015, .459);
+    group.add(ring);
+  }
+  stick(-.68, .105);
+  stick(.29, -.285);
+
+  const crossMaterial = new THREE.MeshStandardMaterial({
+    color: "#0e1119", metalness: .24, roughness: .52,
+  });
+  const horizontal = new THREE.Mesh(new THREE.BoxGeometry(.49, .145, .085), crossMaterial);
+  const vertical = new THREE.Mesh(new THREE.BoxGeometry(.145, .49, .085), crossMaterial);
+  horizontal.position.set(-.68, -.48, .29);
+  vertical.position.set(-.68, -.48, .29);
+  group.add(horizontal, vertical);
+
+  const colors = ["#e4c34d", "#df736c", "#6bd19b", "#619ce7"];
+  const locations: Array<[number, number]> = [
+    [.87, .255], [1.105, .035], [.87, -.185], [.635, .035],
+  ];
+  locations.forEach(([x, y], index) => {
+    disc(x, y, .107, dark, .285);
+    disc(
+      x, y, .075,
+      new THREE.MeshStandardMaterial({
+        color: colors[index],
+        emissive: colors[index],
+        emissiveIntensity: .1,
+        metalness: .28, roughness: .34,
+      }),
+      .356,
+    );
+  });
+
+  disc(0, .18, .18, rim, .27);
+  disc(0, .18, .125,
+    new THREE.MeshStandardMaterial({
+      color: "#141b2b", metalness: .6, roughness: .2,
+      emissive: "#6556b1", emissiveIntensity: .15,
+    }),
+    .34,
+  );
+
+  // Small shoulder buttons and USB indicator add hardware-level detail.
+  const shoulder = new THREE.MeshStandardMaterial({
+    color: "#454954", metalness: .65, roughness: .35,
+  });
+  [-.99, .99].forEach((x) => {
+    const button = new THREE.Mesh(new THREE.BoxGeometry(.54, .13, .17), shoulder);
+    button.position.set(x, .465, -.11);
+    group.add(button);
+  });
+  const indicator = new THREE.Mesh(
+    new THREE.SphereGeometry(.045, 12, 10),
+    new THREE.MeshBasicMaterial({ color: "#81d9ab" }),
+  );
+  indicator.position.set(0, .08, .44);
+  group.add(indicator);
+
+  group.rotation.set(-.13, -.16, -.08);
+  group.position.set(3.36, -2.45, 1.8);
+  group.scale.setScalar(.94);
+  return group;
 }
 
 function disposeObject(root: THREE.Object3D) {
@@ -279,6 +407,7 @@ export default function NatsxControllerScene({ onReady }: Props) {
     let inViewport = true;
     let phoneRig: THREE.Group | null = null;
     let laptopRig: THREE.Group | null = null;
+    let gamepadRig: THREE.Group | null = null;
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
@@ -287,7 +416,7 @@ export default function NatsxControllerScene({ onReady }: Props) {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const pointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const camera = new THREE.OrthographicCamera(-7, 7, 5, -5, .1, 100);
-    camera.position.set(0, 1.05, 18);
+    camera.position.set(0, .8, 18);
     camera.lookAt(0, 0, 0);
 
     const scene = new THREE.Scene();
@@ -299,7 +428,7 @@ export default function NatsxControllerScene({ onReady }: Props) {
       const width = Math.max(host.clientWidth, 1);
       const height = Math.max(host.clientHeight, 1);
       const aspect = width / height;
-      const halfWidth = Math.max(6.35, aspect * 4.1);
+      const halfWidth = Math.max(6.4, aspect * 4.05);
       camera.left = -halfWidth;
       camera.right = halfWidth;
       camera.top = halfWidth / aspect;
@@ -314,12 +443,16 @@ export default function NatsxControllerScene({ onReady }: Props) {
       currentX += (targetX - currentX) * .12;
       currentY += (targetY - currentY) * .12;
       if (phoneRig) {
-        phoneRig.rotation.y = -.37 + currentX * .07;
-        phoneRig.rotation.x = .045 - currentY * .035;
+        phoneRig.rotation.y = -.18 + currentX * .045;
+        phoneRig.rotation.x = .035 - currentY * .025;
       }
       if (laptopRig) {
-        laptopRig.rotation.y = -.44 + currentX * .055;
-        laptopRig.rotation.x = -.015 - currentY * .025;
+        laptopRig.rotation.y = -.28 + currentX * .035;
+        laptopRig.rotation.x = -.01 - currentY * .018;
+      }
+      if (gamepadRig) {
+        gamepadRig.rotation.y = -.16 - currentX * .06;
+        gamepadRig.rotation.x = -.13 - currentY * .03;
       }
       paint();
       if (Math.abs(currentX - targetX) > .001 || Math.abs(currentY - targetY) > .001) {
@@ -377,7 +510,7 @@ export default function NatsxControllerScene({ onReady }: Props) {
         renderer.setClearColor("#101116", 0);
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.3;
+        renderer.toneMappingExposure = 1.14;
         renderer.domElement.style.cssText = "display:block;width:100%;height:100%;pointer-events:none;";
         host.appendChild(renderer.domElement);
 
@@ -390,14 +523,14 @@ export default function NatsxControllerScene({ onReady }: Props) {
           pmrem.dispose();
           room.dispose();
         }
-        scene.add(new THREE.HemisphereLight("#a6c4ff", "#21142c", 2.1));
-        const key = new THREE.DirectionalLight("#d0dcff", 2.8);
+        scene.add(new THREE.HemisphereLight("#9a9bc9", "#171525", 1.6));
+        const key = new THREE.DirectionalLight("#d4dcff", 2.25);
         key.position.set(-3, 6, 8);
         scene.add(key);
-        const rim = new THREE.DirectionalLight("#8c79ff", 2.3);
+        const rim = new THREE.DirectionalLight("#8c79ff", 2.45);
         rim.position.set(-6, 1, -3);
         scene.add(rim);
-        const right = new THREE.DirectionalLight("#7ce2af", 1.8);
+        const right = new THREE.DirectionalLight("#7ce2af", 1.45);
         right.position.set(7, 2, 3);
         scene.add(right);
 
@@ -406,23 +539,23 @@ export default function NatsxControllerScene({ onReady }: Props) {
 
         // Reuse exactly the iPhone orientation verified in Spall's scene.
         phoneModel.rotation.y = Math.PI;
-        const normalizedPhone = normalize(phoneModel, 5.7);
+        const normalizedPhone = normalize(phoneModel, 5.05);
         phoneRig = new THREE.Group();
-        phoneRig.rotation.set(.045, -.37, -.095);
-        phoneRig.position.set(-3.8, -.05, .15);
+        phoneRig.rotation.set(.035, -.18, -.045);
+        phoneRig.position.set(-3.65, -.18, .3);
         phoneRig.add(normalizedPhone);
         composition.add(phoneRig);
 
         // Reuse the MacBook screen geometry and pose from the BAST scene.
-        const normalizedLaptop = normalize(laptopModel, 5.85);
+        const normalizedLaptop = normalize(laptopModel, 4.95);
         laptopRig = new THREE.Group();
-        laptopRig.rotation.set(-.015, -.44, -.07);
-        laptopRig.position.set(3.2, -.35, -.25);
+        laptopRig.rotation.set(-.01, -.28, -.035);
+        laptopRig.position.set(2.55, .3, -.35);
         laptopRig.add(normalizedLaptop);
         composition.add(laptopRig);
 
-        addPodium(composition, -3.8, -3.22, 1.3, "#8971ff");
-        addPodium(composition, 3.2, -2.8, 2.15, "#69caab");
+        gamepadRig = createGamepad();
+        composition.add(gamepadRig);
 
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(host);
