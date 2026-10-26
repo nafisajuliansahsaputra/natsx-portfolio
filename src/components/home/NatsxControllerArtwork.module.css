@@ -6,16 +6,16 @@
   container-type: inline-size;
   background:
     radial-gradient(
-      circle at 22% 24%,
-      rgb(109 91 208 / 24%),
-      transparent 27%
+      ellipse at 23% 43%,
+      rgb(93 63 173 / 34%),
+      transparent 47%
     ),
     radial-gradient(
-      circle at 82% 76%,
-      rgb(119 184 150 / 15%),
-      transparent 32%
+      ellipse at 83% 68%,
+      rgb(45 140 133 / 20%),
+      transparent 45%
     ),
-    #101116;
+    linear-gradient(125deg, #11101c, #0b1019 62%, #0b1518);
   color: #f5f4f0;
 }
 
@@ -699,12 +699,14 @@
 }
 
 .phone,
-.receiver {
+.receiver,
+.controllerBody {
   transition: opacity 240ms ease, visibility 240ms ease;
 }
 
 .artwork[data-controller-ready="true"] .phone,
-.artwork[data-controller-ready="true"] .receiver {
+.artwork[data-controller-ready="true"] .receiver,
+.artwork[data-controller-ready="true"] .controllerBody {
   opacity: 0;
   visibility: hidden;
 }
@@ -722,7 +724,54 @@
 
 @media (prefers-reduced-motion: reduce) {
   .phone,
-  .receiver {
+  .receiver,
+  .controllerBody {
     transition: none;
   }
+}
+
+
+/* Fine perspective floor and localized glow, below the 3D canvas. */
+.artwork::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 57% 0 -15%;
+  background:
+    radial-gradient(ellipse at 25% 53%, rgb(104 78 224 / 14%), transparent 41%),
+    radial-gradient(ellipse at 78% 55%, rgb(70 205 163 / 12%), transparent 43%),
+    linear-gradient(rgb(147 162 204 / 6%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(147 162 204 / 6%) 1px, transparent 1px);
+  background-size: auto, auto, 5cqw 5cqw, 5cqw 5cqw;
+  transform: perspective(70cqw) rotateX(58deg);
+  transform-origin: bottom;
+  opacity: .55;
+  pointer-events: none;
+}
+
+.transportLabel {
+  color: rgb(238 238 255 / 76%);
+  font-size: 1.05cqw;
+}
+
+.transportMeta {
+  color: rgb(220 222 240 / 55%);
+  font-size: .92cqw;
+}
+
+.transportModes span {
+  background: rgb(13 17 29 / 62%);
+  border-color: rgb(168 157 230 / 23%);
+  color: rgb(237 236 255 / 82%);
+  font-size: .9cqw;
+}
+
+.controllerLabel {
+  color: rgb(241 241 255 / 60%);
+  font-size: .96cqw;
+}
+
+.footer {
+  color: rgb(242 245 255 / 53%);
+  font-size: .87cqw;
 }
