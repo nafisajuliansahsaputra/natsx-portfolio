@@ -264,9 +264,10 @@ export default function NatsxControllerScene({ onReady }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
-    const artwork = host.closest("[data-controller-artwork]");
+    const hostNode = hostRef.current;
+    if (!hostNode) return;
+    const host: HTMLDivElement = hostNode;
+    const artwork = host.closest<HTMLElement>("[data-controller-artwork]");
     let disposed = false;
     let renderer: THREE.WebGLRenderer | null = null;
     let environment: THREE.WebGLRenderTarget | null = null;
