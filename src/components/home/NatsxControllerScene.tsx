@@ -275,6 +275,7 @@ export default function NatsxControllerScene({ onReady }: Props) {
     let visibilityObserver: IntersectionObserver | null = null;
     let frame = 0;
     let visible = true;
+    let inViewport = true;
     let phoneRig: THREE.Group | null = null;
     let laptopRig: THREE.Group | null = null;
     let targetX = 0;
@@ -337,7 +338,7 @@ export default function NatsxControllerScene({ onReady }: Props) {
     };
     const reset = () => { targetX = 0; targetY = 0; schedule(); };
     const onVisibility = () => {
-      visible = !document.hidden && (!visibilityObserver || visible);
+      visible = inViewport && !document.hidden;
       if (visible) resize();
     };
 
@@ -426,7 +427,8 @@ export default function NatsxControllerScene({ onReady }: Props) {
         resizeObserver.observe(host);
         if (typeof IntersectionObserver !== "undefined") {
           visibilityObserver = new IntersectionObserver(([entry]) => {
-            visible = Boolean(entry?.isIntersecting) && !document.hidden;
+            inViewport = Boolean(entry?.isIntersecting);
+            visible = inViewport && !document.hidden;
             if (visible) {
               resize();
               schedule();
