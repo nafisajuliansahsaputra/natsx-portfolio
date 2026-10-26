@@ -687,3 +687,42 @@
     font-size: 1.05cqw;
   }
 }
+
+
+/* Existing iPhone and MacBook GLBs share one lazily mounted WebGL canvas.
+   Keep the original CSS devices visible until the first 3D frame is ready. */
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.phone,
+.receiver {
+  transition: opacity 240ms ease, visibility 240ms ease;
+}
+
+.artwork[data-controller-ready="true"] .phone,
+.artwork[data-controller-ready="true"] .receiver {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Labels and connection diagnostics remain legible over the real devices. */
+.transport,
+.controller {
+  z-index: 9;
+}
+
+.topBar,
+.footer {
+  z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone,
+  .receiver {
+    transition: none;
+  }
+}
