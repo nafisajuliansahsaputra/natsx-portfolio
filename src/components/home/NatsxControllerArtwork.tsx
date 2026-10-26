@@ -1,12 +1,17 @@
+import NatsxControllerSceneGate from "./NatsxControllerSceneGate";
+
 import styles from "./NatsxControllerArtwork.module.css";
 
 export default function NatsxControllerArtwork() {
   return (
     <div
       className={styles.artwork}
+      data-controller-artwork="true"
       aria-hidden="true"
     >
       <div className={styles.grid} />
+
+      <NatsxControllerSceneGate className={styles.scene} />
 
       <div className={styles.topBar}>
         <span className={styles.brand}>
