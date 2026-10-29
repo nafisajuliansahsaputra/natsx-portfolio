@@ -1,3 +1,5 @@
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+
 export const PORTFOLIO_MEDIA_BUCKET =
   "portfolio-media" as const;
 
@@ -83,6 +85,7 @@ export type PortfolioMediaAsset = {
     typeof PORTFOLIO_MEDIA_BUCKET;
 
   path: string;
+  url?: string;
   mimeType: PortfolioImageMimeType;
   size: number;
   originalName: string;
@@ -93,6 +96,7 @@ export type PortfolioVideoAsset = {
     typeof PORTFOLIO_MEDIA_BUCKET;
 
   path: string;
+  url?: string;
   mimeType: PortfolioVideoMimeType;
   size: number;
   originalName: string;
@@ -284,6 +288,12 @@ function getPortfolioImageAsset(
     path:
       value.path,
 
+    url:
+      typeof value.url === "string" &&
+      isTrustedCloudinaryUrl(value.url, value.path)
+        ? value.url
+        : undefined,
+
     mimeType:
       value.mimeType,
 
@@ -334,6 +344,12 @@ function getPortfolioFinaleMediaAsset(
 
     path:
       value.path,
+
+    url:
+      typeof value.url === "string" &&
+      isTrustedCloudinaryUrl(value.url, value.path)
+        ? value.url
+        : undefined,
 
     mimeType:
       value.mimeType,

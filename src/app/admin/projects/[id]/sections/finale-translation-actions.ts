@@ -1,5 +1,9 @@
 "use server";
 
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+
+
+
 import {
   revalidatePath,
   updateTag,
@@ -184,6 +188,12 @@ function validateMedia(
     )
   ) {
     return "Path finale media tidak valid.";
+  }
+
+  if (media.asset.url &&
+      (media.kind !== "image" ||
+       !isTrustedCloudinaryUrl(media.asset.url, media.asset.path))) {
+    return "URL Cloudinary finale tidak valid.";
   }
 
   if (
@@ -641,16 +651,6 @@ export async function saveFinaleSectionSharedData(
         }
       : null;
 
-  const previousPath =
-    previousMedia
-      ?.asset.path ??
-    null;
-
-  const nextPath =
-    normalizedMedia
-      ?.asset.path ??
-    null;
-
   const nextContent = {
     ...baseContent,
 
@@ -689,60 +689,16 @@ export async function saveFinaleSectionSharedData(
         projectId,
       );
 
-  if (
-    updateError
-  ) {
-    if (
-      nextPath &&
-      nextPath !==
-        previousPath
-    ) {
-      await supabase.storage
-        .from(
-          PORTFOLIO_MEDIA_BUCKET,
-        )
-        .remove([
-          nextPath,
-        ]);
-    }
-
+  if (updateError) {
+    // Never delete media during a failed DB save; retain for recovery.
     return {
-      status:
-        "error",
-
-      message:
-        `Gagal menyimpan shared finale data: ${updateError.message}`,
+      status: "error",
+      message: `Gagal menyimpan shared finale data: ${updateError.message}`,
     };
   }
 
-  let cleanupWarning =
-    "";
-
-  if (
-    previousPath &&
-    previousPath !==
-      nextPath
-  ) {
-    const {
-      error:
-        cleanupError,
-    } =
-      await supabase.storage
-        .from(
-          PORTFOLIO_MEDIA_BUCKET,
-        )
-        .remove([
-          previousPath,
-        ]);
-
-    if (
-      cleanupError
-    ) {
-      cleanupWarning =
-        " Shared data tersimpan, tetapi file media lama gagal dibersihkan dari Storage.";
-    }
-  }
-
+  // Both previous Storage files and Cloudinary originals are retained.
+  // A verified manual cleanup is the only place where deletion is allowed.
   revalidateProject(
     projectId,
   );
@@ -752,7 +708,7 @@ export async function saveFinaleSectionSharedData(
       "success",
 
     message:
-      `Shared finale URL dan media berhasil disimpan.${cleanupWarning}`,
+      "Shared finale URL dan media berhasil disimpan. Media lama tetap disimpan untuk recovery.",
   };
 }
 

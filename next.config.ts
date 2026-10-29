@@ -10,6 +10,23 @@ const supabaseUrl =
 const remotePatterns: URL[] =
   [];
 
+const cloudinaryCloudName =
+  process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim();
+
+const cloudinaryOrigin =
+  cloudinaryCloudName &&
+  /^[a-zA-Z0-9_-]+$/.test(cloudinaryCloudName)
+    ? "https://res.cloudinary.com"
+    : null;
+
+if (cloudinaryOrigin) {
+  remotePatterns.push(
+    new URL(
+      `https://res.cloudinary.com/${cloudinaryCloudName}/image/upload/**`,
+    ),
+  );
+}
+
 const portfolioMediaCdnPrefix =
   process.env
     .NEXT_PUBLIC_PORTFOLIO_MEDIA_CDN_PREFIX
@@ -147,6 +164,12 @@ if (
   );
 }
 
+if (cloudinaryOrigin) {
+  // Admin's signed uploads go directly from browser to Cloudinary.
+  connectSources.push("https://api.cloudinary.com");
+  connectSources.push(cloudinaryOrigin);
+}
+
 if (
   portfolioMediaCdnOrigin &&
   !connectSources.includes(
@@ -172,6 +195,7 @@ const externalMediaSources =
       [
         supabaseOrigin,
         portfolioMediaCdnOrigin,
+        cloudinaryOrigin,
       ].filter(
         (
           value,
