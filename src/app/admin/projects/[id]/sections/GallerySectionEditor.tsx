@@ -1,5 +1,10 @@
 "use client";
 
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+import { uploadPortfolioImage } from "@/lib/upload-portfolio-image";
+
+
+
 import {
   useEffect,
   useMemo,
@@ -588,6 +593,10 @@ export default function GallerySectionEditor({
       !asset
     ) {
       return null;
+    }
+
+    if (asset.url && isTrustedCloudinaryUrl(asset.url, asset.path)) {
+      return asset.url;
     }
 
     return supabase.storage
@@ -1179,36 +1188,8 @@ export default function GallerySectionEditor({
       `/sections/${section.id}` +
       `/gallery/${storageId}.${extension}`;
 
-    const {
-      error:
-        uploadError,
-    } =
-      await supabase.storage
-        .from(
-          PORTFOLIO_MEDIA_BUCKET,
-        )
-        .upload(
-          path,
-          file,
-          {
-            cacheControl:
-              "31536000",
-
-            contentType:
-              mimeType,
-
-            upsert:
-              false,
-          },
-        );
-
-    if (
-      uploadError
-    ) {
-      throw new Error(
-        `Upload "${file.name}" gagal: ${uploadError.message}`,
-      );
-    }
+    const cloudinaryUrl =
+      await uploadPortfolioImage(file, path);
 
     return {
       id:
@@ -1222,6 +1203,8 @@ export default function GallerySectionEditor({
           PORTFOLIO_MEDIA_BUCKET,
 
         path,
+
+        url: cloudinaryUrl,
 
         mimeType,
 

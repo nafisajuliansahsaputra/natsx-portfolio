@@ -1,5 +1,10 @@
 "use client";
 
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+import { uploadPortfolioImage } from "@/lib/upload-portfolio-image";
+
+
+
 import {
   useEffect,
   useMemo,
@@ -328,15 +333,11 @@ export default function ImageSectionEditor({
 
   const currentPublicUrl =
     currentMedia
-      ? supabase.storage
-          .from(
-            currentMedia
-              .asset.bucket,
-          )
-          .getPublicUrl(
-            currentMedia
-              .asset.path,
-          ).data.publicUrl
+      ? currentMedia.asset.url &&
+        isTrustedCloudinaryUrl(currentMedia.asset.url, currentMedia.asset.path)
+        ? currentMedia.asset.url
+        : supabase.storage.from(currentMedia.asset.bucket)
+            .getPublicUrl(currentMedia.asset.path).data.publicUrl
       : null;
 
   const previewUrl =
@@ -586,44 +587,16 @@ export default function ImageSectionEditor({
       `/sections/${section.id}` +
       `/${fileId}.${extension}`;
 
-    const {
-      error:
-        uploadError,
-    } =
-      await supabase.storage
-        .from(
-          PORTFOLIO_MEDIA_BUCKET,
-        )
-        .upload(
-          path,
-          pendingFile,
-          {
-            cacheControl:
-              "31536000",
-
-            contentType:
-              mimeType,
-
-            upsert:
-              false,
-          },
-        );
-
-    if (
-      uploadError
-    ) {
+    let cloudinaryUrl: string;
+    try {
+      cloudinaryUrl =
+        await uploadPortfolioImage(pendingFile, path);
+    } catch (error) {
       setMediaStatus({
-        status:
-          "error",
-
-        message:
-          `Upload gagal: ${uploadError.message}`,
+        status: "error",
+        message: error instanceof Error ? error.message : "Upload Cloudinary gagal.",
       });
-
-      setIsMediaPending(
-        false,
-      );
-
+      setIsMediaPending(false);
       return;
     }
 
@@ -642,6 +615,8 @@ export default function ImageSectionEditor({
             PORTFOLIO_MEDIA_BUCKET,
 
           path,
+
+          url: cloudinaryUrl,
 
           mimeType,
 
@@ -675,13 +650,7 @@ export default function ImageSectionEditor({
         result.status ===
         "error"
       ) {
-        await supabase.storage
-          .from(
-            PORTFOLIO_MEDIA_BUCKET,
-          )
-          .remove([
-            path,
-          ]);
+        // Keep Cloudinary original as recovery copy if DB save fails.
 
         setMediaStatus(
           result,
