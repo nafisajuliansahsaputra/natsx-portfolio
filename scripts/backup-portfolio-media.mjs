@@ -562,6 +562,45 @@ for (
   );
 }
 
+/*
+ * A referenced-only backup is not a full Storage recovery copy: removed
+ * images can still exist in the bucket. Include detached objects when the
+ * local service-role key is available. Never attempt this with an anon key,
+ * because RLS could silently hide files and yield a partial inventory.
+ */
+if (process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
+  const visited = new Set();
+  async function listStorageFolder(prefix = "") {
+    if (visited.has(prefix)) return;
+    visited.add(prefix);
+    for (let offset = 0; ; offset += PAGE_SIZE) {
+      const { data: items, error } = await supabase.storage
+        .from(MEDIA_BUCKET)
+        .list(prefix, {
+          limit: PAGE_SIZE,
+          offset,
+          sortBy: { column: "name", order: "asc" },
+        });
+      if (error) {
+        throw new Error(`Cannot list complete Storage inventory at "${prefix}": ${error.message}`);
+      }
+      for (const item of items ?? []) {
+        const path = prefix ? `${prefix}/${item.name}` : item.name;
+        if (!item.id) {
+          await listStorageFolder(path);
+        } else {
+          addMedia(MEDIA_BUCKET, path);
+        }
+      }
+      if (!items || items.length < PAGE_SIZE) break;
+    }
+  }
+  await listStorageFolder();
+  console.log(`[media] Full bucket inventory included; ${referencedMedia.size} object(s) to back up.`);
+} else {
+  console.warn("[media] No local service-role key: backup is referenced-only and CANNOT be used to delete orphaned Storage objects.");
+}
+
 const entries =
   Array.from(
     referencedMedia
