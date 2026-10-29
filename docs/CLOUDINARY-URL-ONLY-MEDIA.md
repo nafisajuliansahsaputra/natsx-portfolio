@@ -89,9 +89,12 @@ Use the resumable CLI only after Supabase media is accessible again.
    `NEXT_PUBLIC_SUPABASE_URL`, the Supabase **service-role key** (local only),
    and the existing app's public key configured in `.env.local`.
 2. Inspect `data.json`, `media-manifest.json`, and `failed-media.json`.
-   All exported data sources must say `live`, every referenced file must be
-   present, and the failure array must be empty. **This backup covers
-   referenced media, not necessarily detached/orphaned Storage objects**.
+   All exported data sources must say `live`, every bucket object must be
+   present, and the failure array must be empty. With a local service-role key,
+   the backup script also enumerates detached/orphaned Storage objects.
+   Confirm `backup-scope.json` says `full-bucket` and its object count matches
+   the downloaded manifest; incomplete or referenced-only backups are rejected
+   by the migration utility.
 3. With `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, and
    `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` in your local environment, run:
 
