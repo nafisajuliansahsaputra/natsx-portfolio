@@ -79,3 +79,49 @@ critical content. Changing providers alone never guarantees 100% uptime.
 - No automated deletion of original Supabase image bytes.
 - Never trust arbitrary user-supplied external URLs as media.
 - No visual/motion/Three.js/layout changes.
+
+## Verified legacy image migration (opt-in, non-destructive)
+
+The new Cloudinary CMS upload flow does **not** migrate existing Storage media.
+Use the resumable CLI only after Supabase media is accessible again.
+
+1. Run `npm run backup:portfolio` from your local machine, with
+   `NEXT_PUBLIC_SUPABASE_URL`, the Supabase **service-role key** (local only),
+   and the existing app's public key configured in `.env.local`.
+2. Inspect `data.json`, `media-manifest.json`, and `failed-media.json`.
+   All exported data sources must say `live`, every referenced file must be
+   present, and the failure array must be empty. **This backup covers
+   referenced media, not necessarily detached/orphaned Storage objects**.
+3. With `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, and
+   `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` in your local environment, run:
+
+```bash
+npm run migrate:portfolio -- --from=backups/portfolio/<timestamp>
+npm run migrate:portfolio -- --from=backups/portfolio/<timestamp> --upload
+```
+
+The default command is a **read-only SHA-256 audit**. Upload validates local
+bytes, posts each existing image to its project-owned Cloudinary public ID,
+verifies Cloudinary delivery over HTTPS, and checkpoints each successful
+mapping into `legacy-cloudinary-map.json`. Failed runs can be retried safely.
+It does **not** change the Supabase database or delete old files.
+
+4. Review the Cloudinary URLs and portfolio pages in all supported locales.
+   Only when the new copies have been manually checked, apply the mapping:
+
+```bash
+npm run migrate:portfolio -- --from=backups/portfolio/<timestamp> --apply
+```
+
+Apply requires a local `SUPABASE_SERVICE_ROLE_KEY` and the **exact**
+Supabase project URL recorded in the backup. Before updating live rows it
+rechecks the Cloudinary URLs, and it uses `updated_at` conflict checks.
+It updates existing cover URL fields and section media `asset.url` values
+without changing text, layout, original paths, translations, or gallery order.
+The operation is idempotent, but interrupted updates can temporarily leave
+a mix of legacy and Cloudinary URLs. **No original Storage objects are deleted.**
+
+Only images migrate through this tool. Legacy videos, orphaned assets, and
+unreferenced Storage objects are deliberately untouched. Keep an independent
+offline copy of the backup before any future Storage cleanup. Do not commit
+`.env.local`, service-role credentials, the backup folder, or migration maps.
