@@ -1,0 +1,31 @@
+name: One-time offsite portfolio media backup
+on:
+  push:
+    branches:
+      - codex/offsite-media-backup-20261029
+    paths:
+      - .github/workflows/one-time-offsite-backup.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    if: github.ref == 'refs/heads/codex/offsite-media-backup-20261029'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Download and SHA-256 verify all 50 original files
+        run: node scripts/one-time-offsite-backup.mjs
+      - name: Store verified independent recovery bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: natsx-portfolio-media-backup-20261029
+          path: offsite-portfolio-backup/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
