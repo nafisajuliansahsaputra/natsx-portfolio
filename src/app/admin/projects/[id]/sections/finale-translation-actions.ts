@@ -1,6 +1,8 @@
+"use server";
+
 import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
 
-"use server";
+
 
 import {
   revalidatePath,
