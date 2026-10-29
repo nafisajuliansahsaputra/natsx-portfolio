@@ -1,3 +1,6 @@
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+import { uploadPortfolioImage } from "@/lib/upload-portfolio-image";
+
 "use client";
 
 import {
@@ -228,13 +231,10 @@ function ShowcaseSlot({
 
   const currentPublicUrl =
     currentPath
-      ? supabase.storage
-          .from(
-            PORTFOLIO_MEDIA_BUCKET,
-          )
-          .getPublicUrl(
-            currentPath,
-          ).data.publicUrl
+      ? isTrustedCloudinaryUrl(currentPath)
+        ? currentPath
+        : supabase.storage.from(PORTFOLIO_MEDIA_BUCKET)
+            .getPublicUrl(currentPath).data.publicUrl
       : null;
 
   const previewUrl =
@@ -468,62 +468,20 @@ function ShowcaseSlot({
       `/${fileId}.${extension}`;
 
     try {
-      const {
-        error:
-          uploadError,
-      } =
-        await supabase.storage
-          .from(
-            PORTFOLIO_MEDIA_BUCKET,
-          )
-          .upload(
-            path,
-            pendingFile,
-            {
-              cacheControl:
-                "31536000",
-
-              contentType:
-                pendingFile.type,
-
-              upsert:
-                false,
-            },
-          );
-
-      if (
-        uploadError
-      ) {
-        setState({
-          status:
-            "error",
-
-          message:
-            `Upload gagal: ${uploadError.message}`,
-        });
-
-        return;
-      }
+      const cloudinaryUrl =
+        await uploadPortfolioImage(pendingFile, path);
 
       const result =
         await saveProjectCover(
           projectId,
           slot,
-          path,
+          cloudinaryUrl,
         );
 
       if (
         result.status ===
         "error"
       ) {
-        await supabase.storage
-          .from(
-            PORTFOLIO_MEDIA_BUCKET,
-          )
-          .remove([
-            path,
-          ]);
-
         setState(
           result,
         );
@@ -532,7 +490,7 @@ function ShowcaseSlot({
       }
 
       setCurrentPath(
-        path,
+        cloudinaryUrl,
       );
 
       clearPendingFile();
