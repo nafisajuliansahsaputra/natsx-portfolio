@@ -471,7 +471,7 @@ function cloudinaryOriginal(value) {
     const prefix = `/${cloud}/image/upload/`;
     if (!url.pathname.startsWith(prefix)) return null;
     const tail = url.pathname.slice(prefix.length);
-    const match = /^v\\d+\\/natsx\\/portfolio\\/(projects\\/[a-f0-9-]+\\/(?:covers|sections)\\/[a-z0-9_./-]+\\.(?:png|jpe?g|webp|avif|gif))$/i.exec(tail);
+    const match = /^v\d+\/natsx\/portfolio\/(projects\/[a-f0-9-]+\/(?:covers|sections)\/[a-z0-9_./-]+\.(?:png|jpe?g|webp|avif|gif))$/i.exec(tail);
     if (!match || match[1].includes("..") || match[1].includes("%")) return null;
     return { path: match[1], url: value };
   } catch {
@@ -485,7 +485,7 @@ function addMedia(bucket, path, cloudinaryUrl) {
 
   let logicalPath = path;
   let sourceUrl = null;
-  if (/^https?:\\/\\//i.test(path)) {
+  if (/^https?:\/\//i.test(path)) {
     const original = cloudinaryOriginal(path);
     if (!original) {
       throw new Error("External cover URL cannot be backed up safely: " + path);
