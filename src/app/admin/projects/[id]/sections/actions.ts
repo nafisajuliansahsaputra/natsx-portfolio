@@ -2373,8 +2373,9 @@ export async function saveGallerySectionMedia(
       (
         path,
       ) =>
-        !previousPaths.has(
-          path,
+        !previousPaths.has(path) &&
+        !normalizedGallery.items.some(
+          (item) => item.asset.path === path && Boolean(item.asset.url),
         ),
     );
 
