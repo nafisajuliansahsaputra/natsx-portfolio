@@ -1,3 +1,5 @@
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+
 "use server";
 
 import {
@@ -436,6 +438,11 @@ function validateImageMedia(
     return "Path media tidak valid untuk section ini.";
   }
 
+  if (media.asset.url &&
+      !isTrustedCloudinaryUrl(media.asset.url, media.asset.path)) {
+    return "URL Cloudinary tidak valid untuk image ini.";
+  }
+
   if (
     !isAllowedImageMimeType(
       media.asset.mimeType,
@@ -764,6 +771,12 @@ function validateFinaleMedia(
     )
   ) {
     return "Path finale media tidak valid.";
+  }
+
+  if (media.asset.url &&
+      (media.kind !== "image" ||
+       !isTrustedCloudinaryUrl(media.asset.url, media.asset.path))) {
+    return "URL Cloudinary finale tidak valid.";
   }
 
   if (
@@ -2027,7 +2040,8 @@ export async function saveImageSectionMedia(
     if (
       previousMedia
         ?.asset.path !==
-      normalizedMedia.asset.path
+      normalizedMedia.asset.path &&
+      !normalizedMedia.asset.url
     ) {
       await removeStoragePath(
         supabase,
