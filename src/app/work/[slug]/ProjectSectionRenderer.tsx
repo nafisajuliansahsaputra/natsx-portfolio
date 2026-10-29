@@ -496,6 +496,9 @@ function ImageSection({
 
           media.asset
             .path,
+
+          media.asset
+            .url,
         )
       : null;
 
@@ -851,6 +854,9 @@ function GallerySection({
 
                     item.asset
                       .path,
+
+                    item.asset
+                      .url,
                   );
 
 
@@ -1202,6 +1208,9 @@ function FinaleSection({
 
           media.asset
             .path,
+
+          media.asset
+            .url,
         )
       : null;
 
