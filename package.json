@@ -12,7 +12,7 @@
     "test:e2e:ui": "playwright test --ui",
     "verify": "npm run typecheck && npm run lint && npm run build && npm run test:e2e",
     "optimize:3d": "node scripts/optimize-3d.mjs",
-    "prebuild": "node --check scripts/backup-portfolio-media.mjs && node --check scripts/migrate-legacy-portfolio-media.mjs && node scripts/optimize-3d.mjs --vercel && node scripts/audit-media-resilience.mjs --ci",
+    "prebuild": "node --check scripts/backup-portfolio-media.mjs && node --check scripts/migrate-legacy-portfolio-media.mjs && node scripts/optimize-3d.mjs --vercel && node scripts/audit-3d-runtime.mjs --vercel && node scripts/audit-media-resilience.mjs --ci",
     "backup:portfolio": "node scripts/backup-portfolio-media.mjs",
     "mirror:portfolio": "node scripts/publish-portfolio-media-mirror.mjs",
     "audit:media": "node scripts/audit-media-resilience.mjs",
