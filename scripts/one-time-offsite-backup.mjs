@@ -17,7 +17,7 @@ let current = 0;
 async function worker(){
  while(current < manifest.length){
   const item = manifest[current++];
-  if(!/^projects\/[a-f0-9/-]+\.(?:png|jpe?g|webp|avif|gif)$/i.test(item.path) || item.path.includes(".."))throw Error("Unsafe path");
+  if(!/^projects\/[A-Za-z0-9_/-]+\.(?:png|jpe?g|webp|avif|gif)$/i.test(item.path) || item.path.includes(".."))throw Error("Unsafe path");
   const supabase = "https://"+ref+".supabase.co/storage/v1/object/public/portfolio-media/"+item.path.split("/").map(encodeURIComponent).join("/");
   let origin = "supabase";
   let bytes;
