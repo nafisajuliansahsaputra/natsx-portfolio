@@ -36,7 +36,7 @@ let uploaded = {};
 try { uploaded = JSON.parse(await readFile(mapFile, 'utf8')); }
 catch (error) { if (error.code !== 'ENOENT') throw error; }
 if (!Array.isArray(failures) || failures.length || !Array.isArray(manifest) || !manifest.length ||
-    !data?.tables || Object.values(data.dataSources ?? {}).some(source => source !== 'live') ||
+    !data?.tables || !['projects', 'project_sections', 'project_section_translations', 'project_translations', 'work_categories', 'project_work_categories'].every(name => data.dataSources?.[name] === 'live') ||
     !['projects', 'project_sections', 'project_section_translations'].every(name => Array.isArray(data.tables[name]))) {
   throw Error('Incomplete backup: missing live database tables or failed/missing media. No migration is allowed.');
 }
