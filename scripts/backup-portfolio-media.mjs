@@ -919,6 +919,19 @@ await writeFile(
   "utf8",
 );
 
+await writeFile(
+  join(outputRoot, "backup-scope.json"),
+  JSON.stringify({
+    mediaCoverage: process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
+      ? "full-bucket" : "referenced-only",
+    bucket: MEDIA_BUCKET,
+    objectCount: entries.length,
+    recoveredCount: manifest.length,
+    failureCount: failures.length,
+  }, null, 2) + "\n",
+  "utf8",
+);
+
 console.log(
   "",
 );
