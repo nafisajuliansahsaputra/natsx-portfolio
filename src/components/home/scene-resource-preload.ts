@@ -103,6 +103,19 @@ function isConstrainedSceneWarmDevice() {
   );
 }
 
+/**
+ * Skip *speculative* GLB downloads on memory- or bandwidth-constrained
+ * devices. Visible scenes still load the same full-quality models through
+ * GLTFLoader; this only prevents scroll-ahead from downloading them early.
+ */
+function shouldDeferSpeculativeModel(url: string) {
+  return (
+    isConstrainedSceneWarmDevice() &&
+    url.startsWith("/runtime-models/") &&
+    /\.glb(?:[?#]|$)/i.test(url)
+  );
+}
+
 export function canWarmSceneResources() {
   const runtimeNavigator =
     getRuntimeNavigator();
@@ -156,7 +169,8 @@ export function warmSceneResource(
   if (
     !url ||
     signal
-      ?.aborted
+      ?.aborted ||
+    shouldDeferSpeculativeModel(url)
   ) {
     return Promise.resolve();
   }
@@ -247,6 +261,9 @@ export async function warmSceneResources(
           ): url is string =>
             Boolean(
               url,
+            ) &&
+            !shouldDeferSpeculativeModel(
+              url as string,
             ),
         ),
       ),
