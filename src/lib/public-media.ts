@@ -1,3 +1,4 @@
+import { portfolioLegacyCloudinaryUrls } from "@/data/portfolio-legacy-cloudinary-map";
 import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
 
 import {
@@ -67,6 +68,21 @@ export function getPortfolioMediaPublicUrl(
     mirrorUrl
   ) {
     return mirrorUrl;
+  }
+
+  // The checked-in emergency portfolio snapshot still uses old Storage paths.
+  // Resolve its known, verified image assets from Cloudinary before falling
+  // back to Storage so deleting retired objects cannot break public pages.
+  const legacyCloudinaryUrl =
+    bucket === PORTFOLIO_MEDIA_BUCKET
+      ? portfolioLegacyCloudinaryUrls[path]
+      : undefined;
+
+  if (
+    legacyCloudinaryUrl &&
+    isTrustedCloudinaryUrl(legacyCloudinaryUrl, path)
+  ) {
+    return legacyCloudinaryUrl;
   }
 
   return getPublicClient()
