@@ -1,0 +1,67 @@
+name: One-time NATSX 3D source archive
+on:
+  push:
+    branches:
+      - codex/3d-resilience-and-delivery-20261030
+    paths:
+      - .github/workflows/one-time-3d-backup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    if: github.ref == 'refs/heads/codex/3d-resilience-and-delivery-20261030'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Build verified GLB source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p 3d-originals-backup
+          python3 - <<'PY'
+          import hashlib,json,pathlib,shutil,datetime
+          source=json.loads(pathlib.Path('config/scene-model-sources.json').read_text())
+          required={
+            'assets/models/attendance/imac.glb',
+            'assets/models/attendance/scanner.glb',
+            'assets/models/attendance/badge.glb',
+            'assets/models/bast/macbook-pro.glb',
+            'assets/models/bast/printer.glb',
+            'assets/models/iphone-17-pro-max.glb',
+          }
+          assert len(source)==6 and {item['source'] for item in source}==required
+          manifest=[]
+          for item in source:
+              path=pathlib.Path(item['source'])
+              data=path.read_bytes()
+              assert len(data)>=20 and data[:4]==b'glTF' and int.from_bytes(data[8:12],'little')==len(data),path
+              dest=pathlib.Path('3d-originals-backup')/path
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              dest.write_bytes(data)
+              assert hashlib.sha256(dest.read_bytes()).digest()==hashlib.sha256(data).digest()
+              manifest.append({'group':item['group'],'name':item['name'],'path':str(path),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+          assert sum(item['bytes'] for item in manifest)==52701912
+          result={'schemaVersion':1,'sourceCommit':__import__('os').environ['GITHUB_SHA'],'createdAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':manifest}
+          (pathlib.Path('3d-originals-backup')/'manifest.json').write_text(json.dumps(result,indent=2)+'\n')
+          print('VERIFIED_3D_SOURCE_BACKUP files=6 bytes=52701912')
+          PY
+          (cd 3d-originals-backup && zip -q -0 -r ../NATSX-Portfolio-3D-Originals-2026-10-30.zip .)
+          unzip -tq NATSX-Portfolio-3D-Originals-2026-10-30.zip
+          sha256sum NATSX-Portfolio-3D-Originals-2026-10-30.zip > NATSX-Portfolio-3D-Originals-2026-10-30.zip.sha256
+      - name: Preserve as draft release (no expiration, do not publish)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: nafisajuliansahsaputra/natsx-portfolio
+        run: |
+          gh release create natsx-3d-source-backup-20261030 \
+            NATSX-Portfolio-3D-Originals-2026-10-30.zip \
+            NATSX-Portfolio-3D-Originals-2026-10-30.zip.sha256 \
+            --target main --draft \
+            --title 'NATSX portfolio original 3D model backup (2026-10-30)' \
+            --notes 'Recovery only: six original GLB files, SHA-256 manifest and independent ZIP checksum. Do not publish. Runtime GLBs are built separately; this bundle is the editable source backup.'
+          gh release view natsx-3d-source-backup-20261030 --json isDraft,assets --jq '{draft:.isDraft,assets:[.assets[].name]}'
