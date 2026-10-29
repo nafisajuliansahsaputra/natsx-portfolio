@@ -1,3 +1,5 @@
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+
 import {
   PORTFOLIO_MEDIA_BUCKET,
   getFinaleSectionMedia,
@@ -38,7 +40,17 @@ function getPublicClient() {
 export function getPortfolioMediaPublicUrl(
   bucket: string,
   path: string,
+  cloudinaryUrl?: string,
 ) {
+  if (cloudinaryUrl && isTrustedCloudinaryUrl(cloudinaryUrl, path)) {
+    return cloudinaryUrl;
+  }
+
+  // Cover URLs are stored directly in the existing text columns.
+  if (isTrustedCloudinaryUrl(path)) {
+    return path;
+  }
+
   /*
    * Prefer a mirrored delivery origin when configured.
    *
@@ -138,6 +150,7 @@ export function getProjectPreviewImage(
       return getPortfolioMediaPublicUrl(
         image.asset.bucket,
         image.asset.path,
+        image.asset.url,
       );
     }
 
@@ -158,6 +171,7 @@ export function getProjectPreviewImage(
 
         firstGalleryImage
           .asset.path,
+        firstGalleryImage.asset.url,
       );
     }
 
@@ -174,6 +188,7 @@ export function getProjectPreviewImage(
       return getPortfolioMediaPublicUrl(
         finale.asset.bucket,
         finale.asset.path,
+        finale.asset.url,
       );
     }
   }
