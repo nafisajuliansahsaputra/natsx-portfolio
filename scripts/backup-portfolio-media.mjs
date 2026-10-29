@@ -453,31 +453,64 @@ await writeFile(
 const referencedMedia =
   new Map();
 
-function addMedia(
-  bucket,
-  path,
-) {
-  if (
-    typeof bucket !==
-      "string" ||
-    typeof path !==
-      "string" ||
-    !bucket ||
-    !path
-  ) {
-    return;
+/**
+ * The public database now stores Cloudinary URLs for covers and asset.url
+ * for sections. Normalize those URLs back to the logical bucket/path identity
+ * so the backup can survive the old Supabase Storage objects being retired.
+ */
+function cloudinaryOriginal(value) {
+  if (typeof value !== "string") return null;
+  const cloud = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim();
+  if (!cloud || !/^[a-zA-Z0-9_-]+$/.test(cloud)) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || url.hostname !== "res.cloudinary.com" ||
+        url.port || url.username || url.password || url.search || url.hash) {
+      return null;
+    }
+    const prefix = `/${cloud}/image/upload/`;
+    if (!url.pathname.startsWith(prefix)) return null;
+    const tail = url.pathname.slice(prefix.length);
+    const match = /^v\d+\/natsx\/portfolio\/(projects\/[a-f0-9-]+\/(?:covers|sections)\/[a-z0-9_./-]+\.(?:png|jpe?g|webp|avif|gif))$/i.exec(tail);
+    if (!match || match[1].includes("..") || match[1].includes("%")) return null;
+    return { path: match[1], url: value };
+  } catch {
+    return null;
+  }
+}
+
+function addMedia(bucket, path, cloudinaryUrl) {
+  if (typeof bucket !== "string" || typeof path !== "string" ||
+      !bucket || !path) return;
+
+  let logicalPath = path;
+  let sourceUrl = null;
+  if (/^https?:\/\//i.test(path)) {
+    const original = cloudinaryOriginal(path);
+    if (!original) {
+      throw new Error("External cover URL cannot be backed up safely: " + path);
+    }
+    logicalPath = original.path;
+    sourceUrl = original.url;
   }
 
-  const key =
-    `${bucket}/${path}`;
+  if (typeof cloudinaryUrl === "string" && cloudinaryUrl) {
+    const original = cloudinaryOriginal(cloudinaryUrl);
+    if (!original || original.path !== logicalPath) {
+      throw new Error("Untrusted or mismatched Cloudinary media URL: " + logicalPath);
+    }
+    sourceUrl = original.url;
+  }
 
-  referencedMedia.set(
-    key,
-    {
-      bucket,
-      path,
-    },
-  );
+  const key = `${bucket}/${logicalPath}`;
+  const previous = referencedMedia.get(key);
+  referencedMedia.set(key, {
+    bucket,
+    path: logicalPath,
+    ...(sourceUrl || previous?.sourceUrl
+      ? { sourceUrl: sourceUrl || previous.sourceUrl }
+      : {}),
+  });
 }
 
 function visit(
@@ -512,6 +545,7 @@ function visit(
     addMedia(
       value.bucket,
       value.path,
+      value.url,
     );
   }
 
@@ -687,6 +721,7 @@ async function downloadWorker() {
       ];
 
     const url =
+      entry.sourceUrl ||
       publicStorageUrl(
         entry.bucket,
         entry.path,
@@ -716,7 +751,8 @@ async function downloadWorker() {
 
     try {
       if (
-        storageRestricted
+        storageRestricted &&
+        !entry.sourceUrl
       ) {
         throw new Error(
           storageRestrictionMessage ||
@@ -727,15 +763,14 @@ async function downloadWorker() {
       const response =
         await fetch(
           url,
-          {
-            headers: {
-              apikey:
-                supabaseKey,
-
-              Authorization:
-                `Bearer ${supabaseKey}`,
-            },
-          },
+          entry.sourceUrl
+            ? {}
+            : {
+                headers: {
+                  apikey: supabaseKey,
+                  Authorization: `Bearer ${supabaseKey}`,
+                },
+              },
         );
 
       if (
@@ -759,6 +794,7 @@ async function downloadWorker() {
             : `HTTP ${response.status}`;
 
         if (
+          !entry.sourceUrl &&
           isStorageRestriction(
             response.status,
             failureMessage,
