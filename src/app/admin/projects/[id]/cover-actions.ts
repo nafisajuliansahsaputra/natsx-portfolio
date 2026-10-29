@@ -1,3 +1,5 @@
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+
 "use server";
 
 import {
@@ -59,7 +61,19 @@ function isProjectCoverSlot(
 function isOwnedProjectCoverPath(
   projectId: string,
   path: string,
+  slot: ProjectCoverSlot,
 ) {
+  if (isTrustedCloudinaryUrl(path)) {
+    try {
+      const parsed = new URL(path);
+      return parsed.pathname.includes(
+        `/natsx/portfolio/projects/${projectId}/covers/${slot}/`,
+      );
+    } catch {
+      return false;
+    }
+  }
+
   const expectedPrefix =
     `projects/${projectId}/covers/`;
 
@@ -312,6 +326,7 @@ export async function saveProjectCover(
     !isOwnedProjectCoverPath(
       normalizedProjectId,
       normalizedPath,
+      slot,
     )
   ) {
     return {
