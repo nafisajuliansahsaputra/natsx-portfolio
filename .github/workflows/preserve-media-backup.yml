@@ -1,0 +1,54 @@
+name: Preserve media backup as restricted draft release
+on:
+  push:
+    branches:
+      - codex/offsite-media-backup-20261029
+    paths:
+      - .github/workflows/preserve-media-backup.yml
+permissions:
+  actions: read
+  contents: write
+jobs:
+  archive:
+    if: github.ref == 'refs/heads/codex/offsite-media-backup-20261029'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Retrieve verified recovery artifact without re-downloading Supabase images
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: nafisajuliansahsaputra/natsx-portfolio
+        run: gh run download 40916841270 -n natsx-portfolio-media-backup-20261029 -D restore
+      - name: Verify every image and produce independent ZIP
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, hashlib, pathlib, sys
+          folder=pathlib.Path('restore')
+          data=json.loads((folder/'media-manifest.json').read_text())
+          refs=json.loads((folder/'database-media-references.json').read_text())
+          assert len(data)==50 and len(refs)==44
+          total=0
+          for item in data:
+              target=folder/'portfolio-media'/item['path']
+              blob=target.read_bytes()
+              assert len(blob)==item['bytes'] and hashlib.sha256(blob).hexdigest()==item['sha256'], item['path']
+              total+=len(blob)
+          assert total==92782981, total
+          print('ALL_50_FILES_SHA256_VERIFIED total_bytes='+str(total))
+          PY
+          (cd restore && zip -q -0 -r ../NATSX-Portfolio-Media-Backup-2026-10-29.zip .)
+          sha256sum NATSX-Portfolio-Media-Backup-2026-10-29.zip > NATSX-Portfolio-Media-Backup-2026-10-29.zip.sha256
+          unzip -tq NATSX-Portfolio-Media-Backup-2026-10-29.zip
+      - name: Create draft release with durable archive and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: nafisajuliansahsaputra/natsx-portfolio
+        run: |
+          gh release create natsx-media-backup-20261029 \
+            NATSX-Portfolio-Media-Backup-2026-10-29.zip \
+            NATSX-Portfolio-Media-Backup-2026-10-29.zip.sha256 \
+            --target main --draft \
+            --title 'NATSX portfolio original media backup (2026-10-29)' \
+            --notes 'Independent recovery archive of all 50 original Supabase Storage images (92,782,981 bytes). Verified SHA-256 per original file. Contains 44 database media references and a recovery manifest. Keep private as a draft; do not publish. No Supabase originals were deleted.'
+          gh release view natsx-media-backup-20261029 --json id,isDraft,assets,tagName --jq '{tag:.tagName,draft:.isDraft,assets:[.assets[].name]}'
