@@ -508,13 +508,12 @@ function ShowcaseSlot({
       });
 
       router.refresh();
-    } catch {
+    } catch (error) {
       setState({
-        status:
-          "error",
-
-        message:
-          "Status penyimpanan belum dapat dipastikan. Refresh halaman sebelum mencoba lagi.",
+        status: "error",
+        message: error instanceof Error
+          ? error.message
+          : "Status penyimpanan belum pasti. Refresh sebelum mencoba lagi.",
       });
     } finally {
       setPending(
