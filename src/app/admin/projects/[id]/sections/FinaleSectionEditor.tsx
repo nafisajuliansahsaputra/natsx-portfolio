@@ -1,3 +1,6 @@
+import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
+import { uploadPortfolioImage } from "@/lib/upload-portfolio-image";
+
 "use client";
 
 import {
@@ -403,15 +406,11 @@ export default function FinaleSectionEditor({
 
   const currentPublicUrl =
     currentMedia
-      ? supabase.storage
-          .from(
-            currentMedia.asset
-              .bucket,
-          )
-          .getPublicUrl(
-            currentMedia.asset
-              .path,
-          ).data.publicUrl
+      ? currentMedia.asset.url &&
+        isTrustedCloudinaryUrl(currentMedia.asset.url, currentMedia.asset.path)
+        ? currentMedia.asset.url
+        : supabase.storage.from(currentMedia.asset.bucket)
+            .getPublicUrl(currentMedia.asset.path).data.publicUrl
       : null;
 
   const previewUrl =
@@ -710,6 +709,8 @@ export default function FinaleSectionEditor({
       | null =
       null;
 
+    let uploadedCloudinaryUrl: string | null = null;
+
     if (
       pendingFile
     ) {
@@ -803,6 +804,19 @@ export default function FinaleSectionEditor({
         `/sections/${section.id}` +
         `/finale/${fileId}.${extension}`;
 
+      if (kind === "image") {
+        try {
+          uploadedCloudinaryUrl =
+            await uploadPortfolioImage(pendingFile, path);
+        } catch (error) {
+          setSharedStatus({
+            status: "error",
+            message: error instanceof Error ? error.message : "Cloudinary gagal mengunggah image.",
+          });
+          setIsSharedPending(false);
+          return;
+        }
+      } else {
       const {
         error:
           uploadError,
@@ -847,6 +861,8 @@ export default function FinaleSectionEditor({
       uploadedPath =
         path;
 
+      }
+
       nextMedia = {
         kind,
 
@@ -855,6 +871,8 @@ export default function FinaleSectionEditor({
             PORTFOLIO_MEDIA_BUCKET,
 
           path,
+
+          url: uploadedCloudinaryUrl ?? undefined,
 
           mimeType,
 
@@ -897,7 +915,8 @@ export default function FinaleSectionEditor({
          * setelah upload client.
          */
         if (
-          uploadedPath
+          uploadedPath &&
+          !uploadedCloudinaryUrl
         ) {
           await supabase.storage
             .from(
