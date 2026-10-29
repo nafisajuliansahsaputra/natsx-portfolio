@@ -22,6 +22,7 @@ const load = async filename => JSON.parse(await readFile(join(root, filename), '
 const data = await load('data.json');
 const manifest = await load('media-manifest.json');
 const failures = await load('failed-media.json');
+const backupScope = await load('backup-scope.json');
 const uuid = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 const pattern = new RegExp(`^projects/${uuid}/(?:covers/(?:hero|card)/${uuid}|sections/${uuid}/(?:(?:gallery|finale)/)?${uuid})\\.(png|jpe?g|webp|avif|gif)$`, 'i');
 const validHash = /^[a-f0-9]{64}$/i;
@@ -35,7 +36,8 @@ const mapFile = join(root, 'legacy-cloudinary-map.json');
 let uploaded = {};
 try { uploaded = JSON.parse(await readFile(mapFile, 'utf8')); }
 catch (error) { if (error.code !== 'ENOENT') throw error; }
-if (!Array.isArray(failures) || failures.length || !Array.isArray(manifest) || !manifest.length ||
+if (backupScope?.mediaCoverage !== 'full-bucket' || backupScope?.objectCount !== manifest.length ||
+    !Array.isArray(failures) || failures.length || !Array.isArray(manifest) || !manifest.length ||
     !data?.tables || !['projects', 'project_sections', 'project_section_translations', 'project_translations', 'work_categories', 'project_work_categories'].every(name => data.dataSources?.[name] === 'live') ||
     !['projects', 'project_sections', 'project_section_translations'].every(name => Array.isArray(data.tables[name]))) {
   throw Error('Incomplete backup: missing live database tables or failed/missing media. No migration is allowed.');
