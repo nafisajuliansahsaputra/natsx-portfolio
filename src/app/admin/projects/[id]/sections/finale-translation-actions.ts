@@ -649,16 +649,6 @@ export async function saveFinaleSectionSharedData(
         }
       : null;
 
-  const previousPath =
-    previousMedia
-      ?.asset.path ??
-    null;
-
-  const nextPath =
-    normalizedMedia
-      ?.asset.path ??
-    null;
-
   const nextContent = {
     ...baseContent,
 
