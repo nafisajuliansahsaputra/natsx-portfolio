@@ -1,7 +1,9 @@
+"use client";
+
 import { isTrustedCloudinaryUrl } from "@/lib/cloudinary-media";
 import { uploadPortfolioImage } from "@/lib/upload-portfolio-image";
 
-"use client";
+
 
 import {
   useEffect,
