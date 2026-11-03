@@ -52,10 +52,12 @@ export async function generateMetadata({
 
   return createLocalizedPageMetadata({
     title:
-      "CV",
+      locale === "id"
+        ? "CV Nafisa Juliansah Saputra"
+        : "Lebenslauf Nafisa Juliansah Saputra",
 
     description:
-      copy.hero.description,
+      `Nafisa Juliansah Saputra (NATSX). ${copy.hero.description}`,
 
     path:
       "/cv",

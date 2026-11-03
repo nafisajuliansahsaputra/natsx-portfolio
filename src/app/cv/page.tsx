@@ -34,7 +34,7 @@ const description =
 export const metadata =
   createPageMetadata({
     title:
-      "CV",
+      "CV of Nafisa Juliansah Saputra",
 
     description,
 

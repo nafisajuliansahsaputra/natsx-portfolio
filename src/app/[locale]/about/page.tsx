@@ -46,15 +46,14 @@ export async function generateMetadata({
 
   const title =
     locale === "id"
-      ? "Tentang"
-      : "Über mich";
+      ? "Tentang Nafisa Juliansah Saputra"
+      : "Über Nafisa Juliansah Saputra";
 
   return createLocalizedPageMetadata({
     title,
 
     description:
-      copy.profile
-        .paragraphs[0],
+      `Nafisa Juliansah Saputra (NATSX). ${copy.profile.paragraphs[0]}`,
 
     path:
       "/about",

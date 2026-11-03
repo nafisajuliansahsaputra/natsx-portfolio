@@ -2,6 +2,7 @@ import "@/app/about-motion.css";
 import "@/app/about-motion-fit.css";
 
 import Link from "next/link";
+import StructuredData from "@/components/seo/StructuredData";
 import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 
@@ -21,6 +22,9 @@ import {
 import {
   createPageMetadata,
 } from "@/lib/page-metadata";
+import {
+  getAbsoluteUrl,
+} from "@/lib/site-url";
 
 import AboutIdentityPortrait from "./AboutIdentityPortrait";
 import AboutInteractionPolish from "./AboutInteractionPolish";
@@ -33,7 +37,7 @@ const description =
 export const metadata =
   createPageMetadata({
     title:
-      "About",
+      "About Nafisa Juliansah Saputra",
 
     description,
 
@@ -113,8 +117,33 @@ export function AboutPageContent({
       locale,
     );
 
+  const profileUrl =
+    getAbsoluteUrl(
+      localizePath(
+        "/about",
+        locale,
+      ),
+    );
+
+  const profileSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": profileUrl + "#profile",
+    url: profileUrl,
+    name: "About " + site.person + " (NATSX)",
+    inLanguage: locale,
+    mainEntity: {
+      "@id": getAbsoluteUrl("/#person"),
+    },
+    isPartOf: {
+      "@id": getAbsoluteUrl("/#website"),
+    },
+  };
+
   return (
     <>
+      <StructuredData data={profileSchema} />
+
       <SiteHeader />
 
       <main
