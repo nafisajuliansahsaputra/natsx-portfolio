@@ -37,6 +37,7 @@ import {
 import {
   getProjectPreviewImage,
 } from "@/lib/public-media";
+import { getProjectSeoTitle } from "@/lib/project-seo";
 
 import {
   getPublishedProjectPage,
@@ -138,6 +139,8 @@ export async function generateProjectMetadata(
     project.summary ||
     `${project.title} — ${copy.metadataFallback}`;
 
+  const seoTitle = getProjectSeoTitle(project.slug, project.title, locale);
+
   const path =
     localizePath(
       `/work/${project.slug}`,
@@ -186,8 +189,7 @@ export async function generateProjectMetadata(
     );
 
   return {
-    title:
-      project.title,
+    title: seoTitle,
 
     description,
 
@@ -222,7 +224,7 @@ export async function generateProjectMetadata(
         "article",
 
       title:
-        `${project.title} — NATSX`,
+        `${seoTitle} — NATSX`,
 
       description,
 
@@ -274,7 +276,7 @@ export async function generateProjectMetadata(
                   socialPreviewImage,
 
                 alt:
-                  `${project.title} — NATSX`,
+                  `${seoTitle} — NATSX`,
               },
             ]
           : undefined,
@@ -285,7 +287,7 @@ export async function generateProjectMetadata(
         "summary_large_image",
 
       title:
-        `${project.title} — NATSX`,
+        `${seoTitle} — NATSX`,
 
       description,
 
@@ -514,6 +516,22 @@ export async function ProjectPageContent({
       : undefined,
   };
 
+  const breadcrumbLabels = {
+    en: ["Home", "Work"],
+    id: ["Beranda", "Karya"],
+    de: ["Startseite", "Arbeiten"],
+  } as const;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: breadcrumbLabels[locale][0], item: getAbsoluteUrl(localizePath("/", locale)) },
+      { "@type": "ListItem", position: 2, name: breadcrumbLabels[locale][1], item: getAbsoluteUrl(localizePath("/work", locale)) },
+      { "@type": "ListItem", position: 3, name: project.title, item: projectUrl },
+    ],
+  };
+
   const databaseStack =
     pickTechnicalSubset(
       project.techStack,
@@ -558,6 +576,7 @@ export async function ProjectPageContent({
       <SiteHeader />
 
       <StructuredData data={projectSchema} />
+      <StructuredData data={breadcrumbSchema} />
 
       <ProjectOpenAnalytics
         slug={

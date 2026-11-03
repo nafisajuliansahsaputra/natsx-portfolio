@@ -553,6 +553,7 @@ export default async function SelectedWork({
                         className={
                           styles.projectLink
                         }
+                        aria-label={`${copy.viewProject}: ${displayTitle}`}
                       >
                         {
                           copy.viewProject
