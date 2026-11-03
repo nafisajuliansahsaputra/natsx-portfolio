@@ -149,3 +149,14 @@ test("image-free project details still provide a shareable social image", async 
   expect(image).toBe(origin + "/opengraph-image");
   expect((await request.get("/opengraph-image")).ok()).toBe(true);
 });
+
+test("sitemap exposes discoverable portfolio images", async ({ request }) => {
+  const response = await request.get("/sitemap.xml");
+  expect(response.ok()).toBe(true);
+  const body = await response.text();
+
+  expect(body).toContain("<image:image>");
+  expect(body).toContain("https://natsx.my.id/images/natsx-portrait-hero-bases.png");
+  expect(body).toContain("https://natsx.my.id/images/work-thumbnails/attendance.webp");
+  expect(body).toContain("https://natsx.my.id/images/work-thumbnails/bast.webp");
+});
