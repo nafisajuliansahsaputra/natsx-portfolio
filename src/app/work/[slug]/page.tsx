@@ -186,6 +186,9 @@ export async function generateProjectMetadata(
   const socialPreviewImage =
     getSocialPreviewImageUrl(
       previewImage,
+    ) ??
+    getAbsoluteUrl(
+      "/opengraph-image",
     );
 
   return {
@@ -1072,6 +1075,9 @@ export async function ProjectPageContent({
                   }
                   locale={
                     locale
+                  }
+                  projectTitle={
+                    project.title
                   }
                   key={
                     section.id

@@ -463,12 +463,16 @@ function StatementSection({
 function ImageSection({
   section,
   locale,
+  projectTitle,
 }: {
   section:
     PublicProjectSection;
 
   locale:
     Locale;
+
+  projectTitle:
+    string;
 }) {
   const copy =
     getProjectMessages(
@@ -541,9 +545,8 @@ function ImageSection({
                 }
                 alt={
                   media.alt ||
-                  section.heading ||
-                  copy.sections
-                    .imageAlt
+                  media.caption ||
+                  `${projectTitle} — ${section.heading || copy.sections.imageAlt}`
                 }
                 fill
                 sizes="100vw"
@@ -726,12 +729,16 @@ function getBentoPlacementStyle(
 function GallerySection({
   section,
   locale,
+  projectTitle,
 }: {
   section:
     PublicProjectSection;
 
   locale:
     Locale;
+
+  projectTitle:
+    string;
 }) {
   const copy =
     getProjectMessages(
@@ -912,7 +919,8 @@ function GallerySection({
                         }
                         alt={
                           item.alt ||
-                          `${copy.sections.galleryImageAlt} ${
+                          item.caption ||
+                          `${projectTitle} — ${section.heading || copy.sections.galleryImageAlt} ${
                             index +
                             1
                           }`
@@ -1364,12 +1372,16 @@ function FinaleSection({
 export default function ProjectSectionRenderer({
   section,
   locale,
+  projectTitle,
 }: {
   section:
     PublicProjectSection;
 
   locale:
     Locale;
+
+  projectTitle:
+    string;
 }) {
   switch (
     section.sectionType
@@ -1419,6 +1431,9 @@ export default function ProjectSectionRenderer({
           locale={
             locale
           }
+          projectTitle={
+            projectTitle
+          }
         />
       );
 
@@ -1430,6 +1445,9 @@ export default function ProjectSectionRenderer({
           }
           locale={
             locale
+          }
+          projectTitle={
+            projectTitle
           }
         />
       );
