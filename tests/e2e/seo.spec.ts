@@ -82,3 +82,38 @@ test("personal identity is explicit on About and CV search metadata", async ({ p
     await expect(page).toHaveTitle(new RegExp(title));
   }
 });
+
+test("case studies describe their topics and expose breadcrumbs", async ({ page }) => {
+  const cases = [
+    ["/work/smart-attendance-system", /RFID & Face Verification/],
+    ["/work/bast-management-system", /Laravel Document Management System/],
+    ["/work/natsx-controller", /Android to Windows Gamepad/],
+    ["/work/5am-vision", /Brand Identity & Art Direction/],
+  ] as const;
+  for (const [path, title] of cases) {
+    expect((await page.goto(path, { waitUntil: "domcontentloaded" }))?.status()).toBe(200);
+    await expect(page).toHaveTitle(title);
+    const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+    const crumbs = schemas.map((raw) => JSON.parse(raw)).find((item) => item["@type"] === "BreadcrumbList");
+    expect(crumbs?.itemListElement).toHaveLength(3);
+    expect(crumbs?.itemListElement[2].item).toBe(origin + path);
+  }
+});
+
+test("localized project titles are distinct", async ({ page }) => {
+  await page.goto("/id/work/smart-attendance-system", { waitUntil: "domcontentloaded" });
+  await expect(page).toHaveTitle(/Absensi RFID & Verifikasi Wajah/);
+  await page.goto("/de/work/bast-management-system", { waitUntil: "domcontentloaded" });
+  await expect(page).toHaveTitle(/Dokumentenverwaltung mit Laravel/);
+});
+
+test("homepage links to projects with descriptive accessible names", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("link", { name: /View Project: Smart Attendance System/ }))
+    .toHaveAttribute("href", "/work/smart-attendance-system");
+});
+
+test("work archive advertises case studies", async ({ page }) => {
+  await page.goto("/work", { waitUntil: "domcontentloaded" });
+  await expect(page).toHaveTitle(/Full-Stack Projects & Case Studies/);
+});

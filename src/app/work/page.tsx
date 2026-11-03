@@ -59,7 +59,7 @@ const description =
 export const metadata =
   createPageMetadata({
     title:
-      "Work",
+      "Full-Stack Projects & Case Studies",
 
     description,
 

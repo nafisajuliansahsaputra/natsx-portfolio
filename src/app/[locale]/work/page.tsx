@@ -85,7 +85,9 @@ export async function generateMetadata({
 
   return createLocalizedPageMetadata({
     title:
-      copy.hero.heading,
+      locale === "id"
+        ? "Proyek Full-Stack & Studi Kasus"
+        : "Full-Stack-Projekte & Fallstudien",
 
     description:
       copy.hero.description,
