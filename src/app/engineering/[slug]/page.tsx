@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 import StructuredData from "@/components/seo/StructuredData";
+import { site } from "@/data/site";
 import {
   engineeringNotes,
   engineeringNotesPublishedOn,
@@ -69,8 +70,8 @@ export default async function EngineeringDetailPage({ params }: EngineeringDetai
     inLanguage: "en",
     datePublished: engineeringNotesPublishedOn,
     dateModified: engineeringNotesPublishedOn,
-    author: { "@id": getAbsoluteUrl("/#person") },
-    publisher: { "@id": getAbsoluteUrl("/#person") },
+    author: { "@type": "Person", "@id": getAbsoluteUrl("/#person"), name: site.person, url: getAbsoluteUrl("/about") },
+    publisher: { "@type": "Person", "@id": getAbsoluteUrl("/#person"), name: site.person, url: getAbsoluteUrl("/about") },
     isPartOf: { "@id": getAbsoluteUrl("/#website") },
     keywords: note.topics.join(", "),
     citation: note.sourceUrl,
