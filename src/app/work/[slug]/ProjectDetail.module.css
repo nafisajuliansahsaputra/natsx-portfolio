@@ -2444,3 +2444,16 @@
     animation: none;
   }
 }
+/* Contextual link from an existing case study to its source-backed deep dive. */
+.engineeringNoteLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  padding: 8px 0;
+  border-bottom: 1px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  transition: color 180ms ease;
+}
+.engineeringNoteLink:hover { color: var(--project-accent); }

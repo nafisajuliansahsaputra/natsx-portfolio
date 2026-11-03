@@ -38,6 +38,7 @@ import {
   getProjectPreviewImage,
 } from "@/lib/public-media";
 import { getProjectSeoTitle } from "@/lib/project-seo";
+import { getEngineeringNoteByProjectSlug } from "@/lib/engineering-notes";
 
 import {
   getPublishedProjectPage,
@@ -482,6 +483,8 @@ export async function ProjectPageContent({
         locale,
       ),
     );
+
+  const engineeringNote = getEngineeringNoteByProjectSlug(project.slug);
 
   const projectLinks = [
     project.website,
@@ -1051,6 +1054,24 @@ export async function ProjectPageContent({
                       ),
                     )}
                   </ul>
+
+                  {engineeringNote ? (
+                    <Link
+                      href={"/engineering/" + engineeringNote.slug}
+                      hrefLang="en"
+                      lang="en"
+                      className={styles.engineeringNoteLink}
+                    >
+                      <span>
+                        {locale === "id"
+                          ? "Baca analisis teknis (Inggris)"
+                          : locale === "de"
+                            ? "Technische Analyse lesen (Englisch)"
+                            : "Read the full engineering analysis"}
+                      </span>
+                      <span aria-hidden="true">↗</span>
+                    </Link>
+                  ) : null}
                 </div>
               ) : null}
             </div>

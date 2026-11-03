@@ -166,3 +166,47 @@ test("route transition identity matches current full-stack role", async ({ page 
   await expect(page.locator('[data-route-transition-part="bottom"]'))
     .toContainText("FULL-STACK DEVELOPER");
 });
+
+test("original engineering notes are crawlable and linked to source evidence", async ({ page }) => {
+  const response = await page.goto("/engineering", { waitUntil: "domcontentloaded" });
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveTitle(/Engineering Notes/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", origin + "/engineering");
+  for (const [slug, subject] of [
+    ["rfid-face-verification-attendance-system", /RFID/],
+    ["laravel-document-workflow-rbac", /Laravel/],
+    ["android-windows-gamepad-connection-recovery", /Android/],
+  ] as const) {
+    const path = "/engineering/" + slug;
+    const articleResponse = await page.goto(path, { waitUntil: "domcontentloaded" });
+    expect(articleResponse?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(subject);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", origin + path);
+    await expect(page.locator('link[rel="alternate"][hreflang="id"]')).toHaveCount(0);
+    const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+    const article = schemas.map((s) => JSON.parse(s)).find((data) => data["@type"] === "Article");
+    expect(article?.author?.["@id"]).toBe(origin + "/#person");
+    expect(article?.citation).toMatch(/^https:\/\/github\.com\/nafisajuliansahsaputra\//);
+    await expect(page.getByRole("link", { name: /Read source code and documentation/ }))
+      .toHaveAttribute("href", article.citation);
+  }
+});
+
+test("engineering notes appear in the sitemap with no invented translations", async ({ request }) => {
+  const response = await request.get("/sitemap.xml");
+  expect(response.ok()).toBe(true);
+  const xml = await response.text();
+  expect(xml).toContain("<loc>" + origin + "/engineering</loc>");
+  expect(xml).toContain("<loc>" + origin + "/engineering/laravel-document-workflow-rbac</loc>");
+  expect(xml).not.toContain(origin + "/id/engineering");
+  expect(xml).not.toContain(origin + "/de/engineering");
+});
+
+test("flagship case studies link to relevant technical analyses", async ({ page }) => {
+  await page.goto("/work/smart-attendance-system", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("link", { name: /Read the full engineering analysis/ }))
+    .toHaveAttribute("href", "/engineering/rfid-face-verification-attendance-system");
+  await page.goto("/work/natsx-controller", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("link", { name: /Read the full engineering analysis/ }))
+    .toHaveAttribute("href", "/engineering/android-windows-gamepad-connection-recovery");
+});
