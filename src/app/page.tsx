@@ -19,10 +19,10 @@ const copy =
 export const metadata =
   createPageMetadata({
     title:
-      "NATSX — Full-Stack Developer",
+      "NATSX | Nafisa Juliansah Saputra, Full-Stack Developer",
 
     description:
-      copy.hero.description,
+      `Nafisa Juliansah Saputra (NATSX). ${copy.hero.description}`,
 
     path:
       "/",
