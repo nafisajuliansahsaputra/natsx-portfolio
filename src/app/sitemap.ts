@@ -23,6 +23,7 @@ import {
 } from "@/lib/site-url";
 
 import { isPlaygroundPublic } from "@/lib/public-visibility";
+import { engineeringNotes, engineeringNotesPublishedOn } from "@/lib/engineering-notes";
 
 export const revalidate =
   300;
@@ -264,8 +265,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     );
 
+  // Original English-only technical articles have no untranslated
+  // /id or /de counterparts, so they deliberately omit hreflang alternates.
+  const engineeringRoutes: MetadataRoute.Sitemap = [
+    {
+      url: getAbsoluteUrl("/engineering"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...engineeringNotes.map((note) => ({
+      url: getAbsoluteUrl("/engineering/" + note.slug),
+      lastModified: new Date(engineeringNotesPublishedOn + "T00:00:00+07:00"),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ];
+
   return [
     ...staticRoutes,
     ...projectRoutes,
+    ...engineeringRoutes,
   ];
 }
