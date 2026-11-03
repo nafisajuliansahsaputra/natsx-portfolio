@@ -53,3 +53,32 @@ test("unpublished playground is excluded from sitemap", async ({ request }) => {
   expect(response.ok()).toBe(true);
   expect(await response.text()).not.toContain("/playground");
 });
+
+test("personal identity is explicit on About and CV search metadata", async ({ page }) => {
+  const aboutPages = [
+    ["/about", "About Nafisa Juliansah Saputra"],
+    ["/id/about", "Tentang Nafisa Juliansah Saputra"],
+    ["/de/about", "Über Nafisa Juliansah Saputra"],
+  ] as const;
+
+  for (const [path, title] of aboutPages) {
+    const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(200);
+    await expect(page).toHaveTitle(new RegExp(title));
+
+    const scripts = await page.locator('script[type="application/ld+json"]').allTextContents();
+    const profile = scripts.map((text) => JSON.parse(text)).find((data) => data["@type"] === "ProfilePage");
+    expect(profile?.mainEntity["@id"]).toBe(origin + "/#person");
+    expect(profile?.url).toBe(origin + path);
+  }
+
+  for (const [path, title] of [
+    ["/cv", "CV of Nafisa Juliansah Saputra"],
+    ["/id/cv", "CV Nafisa Juliansah Saputra"],
+    ["/de/cv", "Lebenslauf Nafisa Juliansah Saputra"],
+  ]) {
+    const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(200);
+    await expect(page).toHaveTitle(new RegExp(title));
+  }
+});
