@@ -117,3 +117,10 @@ test("work archive advertises case studies", async ({ page }) => {
   await page.goto("/work", { waitUntil: "domcontentloaded" });
   await expect(page).toHaveTitle(/Full-Stack Projects & Case Studies/);
 });
+
+test("homepage project headings contain descriptive crawlable links", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const heading = page.getByRole("heading", { name: "Smart Attendance System" });
+  await expect(heading.getByRole("link", { name: "Smart Attendance System" }))
+    .toHaveAttribute("href", "/work/smart-attendance-system");
+});
