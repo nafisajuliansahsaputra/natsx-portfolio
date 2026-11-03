@@ -7,11 +7,11 @@ test("homepage serves canonical, hreflang and NATSX identity schema", async ({ p
   expect(response?.status()).toBe(200);
 
   await expect(page).toHaveTitle(/NATSX.*Nafisa Juliansah Saputra.*Full-Stack Developer/);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", origin + "/");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", origin);
 
   for (const [lang, path] of [["en", "/"], ["id", "/id"], ["de", "/de"]]) {
     await expect(page.locator('link[rel="alternate"][hreflang="' + lang + '"]'))
-      .toHaveAttribute("href", origin + path);
+      .toHaveAttribute("href", path === "/" ? origin : origin + path);
   }
 
   const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
