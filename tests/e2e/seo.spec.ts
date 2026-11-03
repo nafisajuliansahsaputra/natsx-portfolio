@@ -124,3 +124,28 @@ test("homepage project headings contain descriptive crawlable links", async ({ p
   await expect(heading.getByRole("link", { name: "Smart Attendance System" }))
     .toHaveAttribute("href", "/work/smart-attendance-system");
 });
+
+test("project galleries use meaningful contextual alt text when CMS alt is missing", async ({ page }) => {
+  const cases = [
+    ["/work/bast-management-system", "BAST"],
+    ["/work/smart-attendance-system", "Smart Attendance System"],
+    ["/work/5am-vision", "5AM Vision"],
+  ] as const;
+
+  for (const [path, projectName] of cases) {
+    const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('img[alt="Gallery image 1"]')).toHaveCount(0);
+    const altTexts = await page.locator('main img[alt]').evaluateAll((elements) =>
+      elements.map((element) => element.getAttribute("alt")),
+    );
+    expect(altTexts.some((alt) => Boolean(alt?.includes(projectName)))).toBe(true);
+  }
+});
+
+test("image-free project details still provide a shareable social image", async ({ page, request }) => {
+  await page.goto("/work/natsx-controller", { waitUntil: "domcontentloaded" });
+  const image = await page.locator('meta[property="og:image"]').getAttribute("content");
+  expect(image).toBe(origin + "/opengraph-image");
+  expect((await request.get("/opengraph-image")).ok()).toBe(true);
+});
