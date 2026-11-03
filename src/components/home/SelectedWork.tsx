@@ -430,9 +430,17 @@ export default async function SelectedWork({
                           styles.projectTitle
                         }
                       >
-                        {
-                          displayTitle
-                        }
+                        <Link
+                          href={localizePath(`/work/${project.slug}`, locale)}
+                          style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                          }}
+                        >
+                          {
+                            displayTitle
+                          }
+                        </Link>
                       </h3>
 
                       <span
