@@ -333,3 +333,65 @@ test(
     }
   },
 );
+
+test(
+  "contact hero title does not overlap description in any locale",
+  async ({
+    page,
+  }) => {
+    test.setTimeout(90_000);
+
+    await page.emulateMedia({
+      reducedMotion: "reduce",
+    });
+
+    for (const width of [375, 768, 1024, 1440]) {
+      await page.setViewportSize({
+        width,
+        height: 900,
+      });
+
+      for (const route of ["/contact", "/id/contact", "/de/contact"]) {
+        const response = await page.goto(route, {
+          waitUntil: "domcontentloaded",
+        });
+
+        expect(response?.status(), `${width}px:${route}`).toBeLessThan(400);
+
+        await page.evaluate(async () => {
+          await document.fonts.ready;
+        });
+
+        const bounds = await page.evaluate(() => {
+          const title = document.querySelector<HTMLElement>(
+            '[data-motion-contact-hero-piece="title"]',
+          );
+          const intro = document.querySelector<HTMLElement>(
+            '[data-motion-contact-hero-piece="intro"]',
+          );
+
+          if (!title || !intro) {
+            return null;
+          }
+
+          const titleRect = title.getBoundingClientRect();
+          const introRect = intro.getBoundingClientRect();
+
+          return {
+            titleBottom: titleRect.bottom,
+            introTop: introRect.top,
+          };
+        });
+
+        expect(bounds, `${width}px:${route}`).not.toBeNull();
+
+        if (bounds) {
+          expect(
+            bounds.introTop,
+            `${width}px:${route} hero description overlaps title`,
+          ).toBeGreaterThanOrEqual(bounds.titleBottom + 8);
+        }
+      }
+    }
+  },
+);

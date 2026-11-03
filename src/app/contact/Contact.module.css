@@ -78,12 +78,13 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
 
   column-gap: clamp(18px, 2.2vw, 36px);
+  row-gap: clamp(48px, 5vw, 80px);
 
   align-items: end;
 }
 
 .heading {
-  grid-column: 1 / span 9;
+  grid-column: 1 / -1;
 
   margin: 0;
 
@@ -101,6 +102,7 @@
 
 .heroIntro {
   grid-column: 9 / -1;
+  grid-row: 2;
 
   padding-bottom: 4px;
 
@@ -918,7 +920,7 @@
   }
 
   .heading {
-    grid-column: 1 / span 8;
+    grid-column: 1 / -1;
 
     max-width: none;
 

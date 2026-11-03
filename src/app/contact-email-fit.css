@@ -99,8 +99,9 @@
         134px
       );
 
+    /* Allow long localized headlines to wrap inside the hero. */
     white-space:
-      nowrap;
+      normal;
   }
 }
 
