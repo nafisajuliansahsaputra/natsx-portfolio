@@ -160,3 +160,9 @@ test("sitemap exposes discoverable portfolio images", async ({ request }) => {
   expect(body).toContain("https://natsx.my.id/images/work-thumbnails/attendance.webp");
   expect(body).toContain("https://natsx.my.id/images/work-thumbnails/bast.webp");
 });
+
+test("route transition identity matches current full-stack role", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator('[data-route-transition-part="bottom"]'))
+    .toContainText("FULL-STACK DEVELOPER");
+});

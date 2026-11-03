@@ -1752,7 +1752,7 @@ export default function RouteTransitionController() {
             data-route-transition-part="bottom"
           >
             <span>
-              DIGITAL CREATOR
+              {site.role.toUpperCase()}
             </span>
 
             <span>
