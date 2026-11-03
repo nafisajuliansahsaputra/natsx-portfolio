@@ -10,7 +10,13 @@ import {
 
 import {
   getPublishedProjectSitemapEntries,
+  getPublishedProjects,
 } from "@/lib/public-projects";
+
+import {
+  getProjectPrimaryVisualUrl,
+  getProjectSecondaryVisualUrl,
+} from "@/lib/public-media";
 
 import {
   getAbsoluteUrl,
@@ -131,9 +137,44 @@ function getLanguageAlternates(
   };
 }
 
+const staticImagePaths: Record<string, string[]> = {
+  "/": [
+    "/images/natsx-portrait-hero-bases.png",
+  ],
+  "/work": [
+    "/images/work-thumbnails/spall.webp",
+    "/images/work-thumbnails/vision.webp",
+    "/images/work-thumbnails/bast.webp",
+    "/images/work-thumbnails/attendance.webp",
+  ],
+  "/about": [
+    "/images/natsx-abt.webp",
+  ],
+};
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const projects =
-    await getPublishedProjectSitemapEntries();
+  const [projects, publishedProjects] =
+    await Promise.all([
+      getPublishedProjectSitemapEntries(),
+      getPublishedProjects("en"),
+    ]);
+
+  // Cover assets are not always rendered in an HTML <img>. Publishing them
+  // in the sitemap makes these already-public visuals discoverable as images.
+  const imagesBySlug = new Map(
+    publishedProjects.map((project) => [
+      project.slug,
+      Array.from(
+        new Set([
+          getProjectPrimaryVisualUrl(project),
+          getProjectSecondaryVisualUrl(project),
+        ].filter(
+          (url): url is string =>
+            Boolean(url) && /^https:\/\//i.test(url!),
+        )),
+      ),
+    ]),
+  );
 
   const staticRoutes:
     MetadataRoute.Sitemap =
@@ -163,6 +204,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
             priority:
               page.priority,
+
+            images: staticImagePaths[page.path]?.map(
+              (imagePath) => getAbsoluteUrl(imagePath),
+            ),
 
             alternates: {
               languages:
@@ -207,6 +252,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
             priority:
               0.8,
+
+            images: imagesBySlug.get(project.slug),
 
             alternates: {
               languages:
