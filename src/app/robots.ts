@@ -9,18 +9,20 @@ import {
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent:
-        "*",
-
-      allow:
-        "/",
-
-      disallow: [
-        "/admin",
-        "/admin/",
-      ],
-    },
+    rules:
+      process.env.VERCEL_ENV === "preview"
+        ? {
+            userAgent: "*",
+            disallow: "/",
+          }
+        : {
+            userAgent: "*",
+            allow: "/",
+            disallow: [
+              "/admin",
+              "/admin/",
+            ],
+          },
 
     sitemap:
       getAbsoluteUrl(

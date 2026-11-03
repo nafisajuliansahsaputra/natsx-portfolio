@@ -53,7 +53,7 @@ export const revalidate =
 
 
 const description =
-  "Selected projects by NATSX across product design, development, identity, and creative direction.";
+  "Explore projects by Nafisa Juliansah Saputra (NATSX) spanning full-stack development, web applications, software systems, API integrations, and product design.";
 
 
 export const metadata =

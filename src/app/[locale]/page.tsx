@@ -45,12 +45,16 @@ export async function generateMetadata({
       locale,
     );
 
+  const title =
+    locale === "id"
+      ? "NATSX | Nafisa Juliansah Saputra, Pengembang Full-Stack"
+      : "NATSX | Nafisa Juliansah Saputra, Full-Stack-Entwickler";
+
   return createLocalizedPageMetadata({
-    title:
-      "NATSX — Full-Stack Developer",
+    title,
 
     description:
-      copy.hero.description,
+      `Nafisa Juliansah Saputra (NATSX). ${copy.hero.description}`,
 
     path:
       "/",

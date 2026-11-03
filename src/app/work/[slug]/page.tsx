@@ -17,6 +17,7 @@ import "@/app/project-fit.css";
 import Link from "next/link";
 
 import ProjectOpenAnalytics from "@/components/analytics/ProjectOpenAnalytics";
+import StructuredData from "@/components/seo/StructuredData";
 import TrackedAnchor from "@/components/analytics/TrackedAnchor";
 import InnerFooter from "@/components/layout/InnerFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -469,6 +470,50 @@ export async function ProjectPageContent({
     totalProjects,
   } = data;
 
+  const projectUrl =
+    getAbsoluteUrl(
+      localizePath(
+        "/work/" + project.slug,
+        locale,
+      ),
+    );
+
+  const projectLinks = [
+    project.website,
+    project.repositoryUrl,
+  ].filter(
+    (value): value is string => Boolean(value),
+  );
+
+  const projectSchema = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": projectUrl + "#project",
+    name: project.title,
+    description: project.summary,
+    url: projectUrl,
+    mainEntityOfPage: projectUrl,
+    inLanguage: locale,
+    creator: {
+      "@id": getAbsoluteUrl("/#person"),
+    },
+    datePublished: project.publishedAt ?? undefined,
+    dateModified: project.updatedAt,
+    image: getProjectPreviewImage(
+      sections,
+      project,
+    ) ?? undefined,
+    keywords: [
+      ...new Set([
+        ...project.disciplines,
+        ...project.techStack,
+      ]),
+    ].join(", "),
+    sameAs: projectLinks.length > 0
+      ? projectLinks
+      : undefined,
+  };
+
   const databaseStack =
     pickTechnicalSubset(
       project.techStack,
@@ -511,6 +556,8 @@ export async function ProjectPageContent({
   return (
     <>
       <SiteHeader />
+
+      <StructuredData data={projectSchema} />
 
       <ProjectOpenAnalytics
         slug={

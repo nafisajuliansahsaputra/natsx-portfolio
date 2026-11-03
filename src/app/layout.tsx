@@ -13,6 +13,7 @@ import {
 import PortfolioIntro from "@/components/intro/PortfolioIntro";
 import MotionController from "@/components/motion/MotionController";
 import RouteTransitionController from "@/components/motion/RouteTransitionController";
+import StructuredData from "@/components/seo/StructuredData";
 
 import {
   site,
@@ -24,6 +25,7 @@ import {
 } from "@/i18n/config";
 
 import {
+  getAbsoluteUrl,
   getSiteUrl,
 } from "@/lib/site-url";
 
@@ -93,7 +95,7 @@ const plusJakartaSans =
   });
 
 const description =
-  "Portfolio of NATSX / Nafisa Juliansah Saputra, a full-stack developer building reliable web products and systems across frontend, backend, databases, APIs, testing, deployment, and product design.";
+  "Nafisa Juliansah Saputra (NATSX) is a full-stack developer in Indonesia building web applications, APIs, and reliable digital products with Next.js, React, Laravel, and PostgreSQL.";
 
 /*
  * =========================================================
@@ -241,6 +243,52 @@ const isVercelDeployment =
   process.env.VERCEL ===
   "1";
 
+const personId =
+  getAbsoluteUrl("/#person");
+
+const identitySchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": personId,
+      name: site.person,
+      alternateName: site.name,
+      url: getSiteUrl(),
+      jobTitle: site.role,
+      description,
+      image: getAbsoluteUrl(
+        "/images/natsx-portrait-hero-bases.png",
+      ),
+      knowsAbout: [
+        "Full-Stack Development",
+        "Web Application Development",
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Laravel",
+        "PostgreSQL",
+        "API Development",
+        "UI/UX Design",
+      ],
+      sameAs: site.socials.map(
+        (social) => social.href,
+      ),
+    },
+    {
+      "@type": "WebSite",
+      "@id": getAbsoluteUrl("/#website"),
+      name: site.name,
+      alternateName: "NATSX Portfolio",
+      url: getSiteUrl(),
+      description,
+      inLanguage: ["en", "id", "de"],
+      creator: { "@id": personId },
+      publisher: { "@id": personId },
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase:
     new URL(
@@ -252,7 +300,7 @@ export const metadata: Metadata = {
 
   title: {
     default:
-      "NATSX — Full-Stack Developer",
+      "NATSX | Nafisa Juliansah Saputra, Full-Stack Developer",
 
     template:
       "%s — NATSX",
@@ -276,6 +324,7 @@ export const metadata: Metadata = {
 
   keywords: [
     "NATSX",
+    "Nafisa Juliansah Saputra",
     "Full-Stack Developer",
     "Software Developer",
     "Web Developer",
@@ -293,7 +342,7 @@ export const metadata: Metadata = {
       "website",
 
     title:
-      "NATSX — Full-Stack Developer",
+      "NATSX | Nafisa Juliansah Saputra, Full-Stack Developer",
 
     description,
 
@@ -312,7 +361,7 @@ export const metadata: Metadata = {
       "summary_large_image",
 
     title:
-      "NATSX — Full-Stack Developer",
+      "NATSX | Nafisa Juliansah Saputra, Full-Stack Developer",
 
     description,
   },
@@ -383,6 +432,8 @@ export default function RootLayout({
               introBootstrapScript,
           }}
         />
+
+        <StructuredData data={identitySchema} />
 
         {publicMediaOrigin ? (
           <>
