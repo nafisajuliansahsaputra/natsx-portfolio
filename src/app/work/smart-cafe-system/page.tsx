@@ -12,6 +12,7 @@ import styles from "./SmartCafe.module.css";
 const SOURCE = "https://github.com/nafisajuliansahsaputra/smart-cafe-system";
 const CANDIDATE = SOURCE + "/tree/integration/m6-v30-release-candidate";
 const DOCUMENTATION = SOURCE + "/blob/integration/m6-v30-release-candidate/docs/PORTFOLIO-CASE-STUDY.md";
+const SETUP = SOURCE + "/blob/integration/m6-v30-release-candidate/docs/M7-LOCAL-FULLSTACK-PORTFOLIO-SETUP.md";
 const ROUTE = "/work/smart-cafe-system";
 
 type LanguageCopy = {
@@ -33,6 +34,7 @@ type LanguageCopy = {
   limits: string[];
   code: string;
   docs: string;
+  setup: string;
   back: string;
   footer: string;
 };
@@ -77,6 +79,7 @@ const messages: Record<Locale, LanguageCopy> = {
     ],
     code: "Explore source and current candidate",
     docs: "Read the technical case study",
+    setup: "Run the real full-stack app locally",
     back: "Back to all work",
     footer: "Self-initiated engineering project · 2026",
   },
@@ -119,6 +122,7 @@ const messages: Record<Locale, LanguageCopy> = {
     ],
     code: "Lihat kode dan kandidat terbaru",
     docs: "Baca studi kasus teknis",
+    setup: "Jalankan aplikasi full-stack asli di laptop",
     back: "Kembali ke daftar proyek",
     footer: "Proyek pengembangan independen · 2026",
   },
@@ -161,6 +165,7 @@ const messages: Record<Locale, LanguageCopy> = {
     ],
     code: "Quellcode und aktuellen Kandidaten ansehen",
     docs: "Technische Fallstudie lesen",
+    setup: "Echte Full-Stack-Anwendung lokal starten",
     back: "Zurück zu allen Projekten",
     footer: "Eigenständiges Entwicklungsprojekt · 2026",
   },
@@ -281,6 +286,7 @@ export function SmartCafeCaseStudy({ locale }: { locale: Locale }) {
             <div className={styles.links}>
               <a href={CANDIDATE} target="_blank" rel="noopener noreferrer">{copy.code} <span aria-hidden="true">↗</span></a>
               <a href={DOCUMENTATION} target="_blank" rel="noopener noreferrer">{copy.docs} <span aria-hidden="true">↗</span></a>
+              <a href={SETUP} target="_blank" rel="noopener noreferrer">{copy.setup} <span aria-hidden="true">↗</span></a>
             </div>
           </div>
         </section>
