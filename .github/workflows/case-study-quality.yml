@@ -25,6 +25,12 @@ jobs:
     name: Next.js production build and multilingual Chromium acceptance
     runs-on: ubuntu-24.04
     timeout-minutes: 35
+    # Deliberately unreachable synthetic project: never use production CMS
+    # credentials in PR tests. Public readers must use their checked-in
+    # fallback data when the external source is unavailable.
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://portfolio-ci.invalid
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_synthetic_ci_no_real_project
     steps:
       - name: Checkout exact PR commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
