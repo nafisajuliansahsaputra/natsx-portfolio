@@ -184,10 +184,7 @@ export function warmSceneResource(
     return existing;
   }
 
-  let request:
-    Promise<void>;
-
-  request =
+  const request: Promise<void> =
     fetch(
       url,
       {
