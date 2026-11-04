@@ -442,37 +442,6 @@ export async function WorkPageContent({
           </div>
         </section>
 
-        {/* Independent case study while the primary project archive stays CMS-driven. */}
-        {!projects.some((project) => project.slug === "smart-cafe-system") && (
-          <section className={styles.smartCafeSpotlight} aria-labelledby="smart-cafe-spotlight-title">
-            <div className="site-container">
-              <div className={styles.smartCafeSpotlightTop}>
-                <span>2026 / FULL-STACK SYSTEM</span>
-                <span>{locale === "id" ? "Studi kasus independen" : locale === "de" ? "Eigenständige Fallstudie" : "Independent case study"}</span>
-              </div>
-              <div className={styles.smartCafeSpotlightMain}>
-                <div>
-                  <h2 id="smart-cafe-spotlight-title">Smart Cafe <span>System.</span></h2>
-                  <p>{locale === "id"
-                    ? "Pemesanan QR/NFC, kasir, dapur, waiter dan pembayaran tunai. Backend Java, PostgreSQL dan pengujian browser end-to-end."
-                    : locale === "de"
-                    ? "QR/NFC-Bestellungen, Kasse, Küche, Service und Bargeld. Java-Backend, PostgreSQL und durchgängige Browsertests."
-                    : "QR/NFC guest ordering, cashier, kitchen, waiter and verified cash. Java backend, PostgreSQL and end-to-end browser tests."}</p>
-                  <small>{locale === "id"
-                    ? "MVP fungsional · Belum deployment produksi"
-                    : locale === "de"
-                    ? "Funktionaler MVP · Nicht produktiv eingesetzt"
-                    : "Functional MVP · Not production deployed"}</small>
-                </div>
-                <Link href={localizePath("/work/smart-cafe-system", locale)} className={styles.smartCafeSpotlightLink}>
-                  {locale === "id" ? "Lihat studi kasus" : locale === "de" ? "Fallstudie ansehen" : "Explore case study"}
-                  <span aria-hidden="true">↗</span>
-                </Link>
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* =========================
             ARCHIVE
         ========================= */}
