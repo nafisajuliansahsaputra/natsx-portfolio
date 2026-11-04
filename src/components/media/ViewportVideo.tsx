@@ -51,11 +51,12 @@ export default function ViewportVideo({
       typeof IntersectionObserver ===
       "undefined"
     ) {
-      setShouldLoad(
-        true,
-      );
-
-      return;
+      // Schedule the fallback outside the synchronous effect body.
+      // This preserves SSR hydration and avoids cascading renders.
+      const frame = window.requestAnimationFrame(() => {
+        setShouldLoad(true);
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
 
     const observer =
