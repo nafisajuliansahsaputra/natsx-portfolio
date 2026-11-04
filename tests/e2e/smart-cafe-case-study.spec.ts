@@ -51,7 +51,7 @@ for (const item of cases) {
     await expect(page.getByRole("link", { name: /case study|studi kasus|Fallstudie/i }).first())
       .toBeVisible();
     await expect(page.locator('a[href*="github.com/nafisajuliansahsaputra/smart-cafe-system"]'))
-      .toHaveCount(2);
+      .toHaveCount(3);
     const html = await page.locator("main").innerText();
     expect(html).toContain("PostgreSQL");
     expect(html).toContain("Spring Boot");
