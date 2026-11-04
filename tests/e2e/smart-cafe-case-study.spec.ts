@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { getSiteUrl } from "../../src/lib/site-url";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -45,7 +46,7 @@ for (const item of cases) {
     await expect(page.getByRole("heading", { level: 1, name: item.title })).toBeVisible();
     await expect(page.getByText(item.disclaimer, { exact: false }).first()).toBeVisible();
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-      "href", `https://natsx.my.id${item.detail}`,
+      "href", `${getSiteUrl()}${item.detail}`,
     );
     await expect(page.getByRole("link", { name: /case study|studi kasus|Fallstudie/i }).first())
       .toBeVisible();
@@ -69,5 +70,5 @@ test("Smart Cafe case study is indexed with three locale entries", async ({ requ
   expect(response.status()).toBe(200);
   const xml = await response.text();
   for (const uri of ["/work/smart-cafe-system", "/id/work/smart-cafe-system", "/de/work/smart-cafe-system"])
-    expect(xml).toContain(`https://natsx.my.id${uri}`);
+    expect(xml).toContain(`${getSiteUrl()}${uri}`);
 });
