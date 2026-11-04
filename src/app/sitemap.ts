@@ -221,7 +221,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const projectRoutes:
     MetadataRoute.Sitemap =
-    projects.flatMap(
+    projects.filter((project) => project.slug !== "smart-cafe-system").flatMap(
       (
         project,
       ) => {
@@ -265,6 +265,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     );
 
+  // This source-backed project case study exists as a native route even
+  // before a CMS project record is published. Avoid duplicate URLs if the
+  // same slug is later added to the Supabase portfolio archive.
+  const smartCafeRoutes: MetadataRoute.Sitemap =
+    locales.map((locale) => ({
+      url: getLocalizedUrl("/work/smart-cafe-system", locale),
+      lastModified: new Date("2026-11-04T00:00:00+07:00"),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+      alternates: {
+        languages: getLanguageAlternates("/work/smart-cafe-system"),
+      },
+    }));
+
   // Original English-only technical articles have no untranslated
   // /id or /de counterparts, so they deliberately omit hreflang alternates.
   const engineeringRoutes: MetadataRoute.Sitemap = [
@@ -284,6 +298,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes,
     ...projectRoutes,
+    ...smartCafeRoutes,
     ...engineeringRoutes,
   ];
 }
